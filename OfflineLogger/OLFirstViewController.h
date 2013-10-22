@@ -10,4 +10,10 @@
 
 @interface OLFirstViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
+
+- (IBAction)toggleLogging:(id)sender;
+- (IBAction)sendIntervalChanged:(id)sender;
+
+
 @end
