@@ -41,11 +41,12 @@
                                 <color key="textColor" red="0.50196081399917603" green="0.50196081399917603" blue="0.50196081399917603" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="11" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUX-e0-F1D">
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="10" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUX-e0-F1D">
                                 <rect key="frame" x="61" y="144" width="241" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="sendIntervalChanged:" destination="CZ4-MO-1fc" eventType="valueChanged" id="XGb-Gz-5de"/>
+                                    <action selector="sendIntervalChanged:" destination="CZ4-MO-1fc" eventType="valueChanged" id="xL8-eC-Bg5"/>
+                                    <action selector="sendIntervalDragged:" destination="CZ4-MO-1fc" eventType="touchDragInside" id="CTM-7B-q1s"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1s" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHm-qP-pk4">
@@ -142,6 +143,7 @@
                     <tabBarItem key="tabBarItem" title="First" image="first" id="u1e-5L-l1D"/>
                     <connections>
                         <outlet property="sendIntervalLabel" destination="wHm-qP-pk4" id="oL6-vz-FA6"/>
+                        <outlet property="sendIntervalSlider" destination="FUX-e0-F1D" id="xn3-sw-pqm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>

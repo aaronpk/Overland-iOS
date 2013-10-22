@@ -23,7 +23,6 @@
 		0FF4AE6B1815CF0E009994BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE471815CF0E009994BA /* UIKit.framework */; };
 		0FF4AE731815CF0E009994BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE711815CF0E009994BA /* InfoPlist.strings */; };
 		0FF4AE751815CF0E009994BA /* OfflineLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */; };
-		0FF4AE811815F9F4009994BA /* LQMappedSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE801815F9F4009994BA /* LQMappedSlider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +58,6 @@
 		0FF4AE701815CF0E009994BA /* OfflineLoggerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OfflineLoggerTests-Info.plist"; sourceTree = "<group>"; };
 		0FF4AE721815CF0E009994BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OfflineLoggerTests.m; sourceTree = "<group>"; };
-		0FF4AE7F1815F9F4009994BA /* LQMappedSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQMappedSlider.h; sourceTree = "<group>"; };
-		0FF4AE801815F9F4009994BA /* LQMappedSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQMappedSlider.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +126,6 @@
 				0FF4AE5E1815CF0E009994BA /* OLSecondViewController.h */,
 				0FF4AE5F1815CF0E009994BA /* OLSecondViewController.m */,
 				0FF4AE611815CF0E009994BA /* Images.xcassets */,
-				0FF4AE7E1815F9A5009994BA /* MappedSlider */,
 				0FF4AE4A1815CF0E009994BA /* Supporting Files */,
 			);
 			path = OfflineLogger;
@@ -162,15 +158,6 @@
 				0FF4AE711815CF0E009994BA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		0FF4AE7E1815F9A5009994BA /* MappedSlider */ = {
-			isa = PBXGroup;
-			children = (
-				0FF4AE7F1815F9F4009994BA /* LQMappedSlider.h */,
-				0FF4AE801815F9F4009994BA /* LQMappedSlider.m */,
-			);
-			name = MappedSlider;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,7 +263,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0FF4AE5D1815CF0E009994BA /* OLFirstViewController.m in Sources */,
-				0FF4AE811815F9F4009994BA /* LQMappedSlider.m in Sources */,
 				0FF4AE601815CF0E009994BA /* OLSecondViewController.m in Sources */,
 				0FF4AE501815CF0E009994BA /* main.m in Sources */,
 				0FF4AE541815CF0E009994BA /* OLAppDelegate.m in Sources */,

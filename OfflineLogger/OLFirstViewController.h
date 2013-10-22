@@ -10,10 +10,12 @@
 
 @interface OLFirstViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
 
+- (IBAction)sendIntervalDragged:(UISlider *)sender;
+- (IBAction)sendIntervalChanged:(UISlider *)sender;
 - (IBAction)toggleLogging:(id)sender;
-- (IBAction)sendIntervalChanged:(id)sender;
 
 
 @end
