@@ -13,6 +13,16 @@
 @property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
 
+@property (strong, nonatomic) IBOutlet UILabel *locationLabel;
+@property (strong, nonatomic) IBOutlet UILabel *locationSpeedLabel;
+@property (strong, nonatomic) IBOutlet UILabel *locationAccuracyLabel;
+@property (strong, nonatomic) IBOutlet UILabel *locationAgeLabel;
+
+@property (strong, nonatomic) IBOutlet UILabel *motionStepsLabel;
+
+@property (strong, nonatomic) IBOutlet UILabel *queueLabel;
+@property (strong, nonatomic) IBOutlet UILabel *queueAgeLabel;
+
 - (IBAction)sendIntervalDragged:(UISlider *)sender;
 - (IBAction)sendIntervalChanged:(UISlider *)sender;
 - (IBAction)toggleLogging:(id)sender;

@@ -47,7 +47,9 @@ NSArray *intervalMapStrings;
 }
 
 - (IBAction)sendIntervalChanged:(UISlider *)sender {
-    NSLog(@"Changed - Send Every: %f", roundf([sender value]));
+    sender.value = roundf([sender value]);
+    NSString *val = intervalMap[(int)roundf([self.sendIntervalSlider value])];
+    NSLog(@"Changed - Send Every: %@", val);
     [self updateSendIntervalLabel];
 }
 
