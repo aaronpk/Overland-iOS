@@ -63,7 +63,9 @@ NSArray *intervalMapStrings;
     CLLocation *location = [OLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAccuracyLabel.text = [NSString stringWithFormat:@"+/- %dm", (int)round(location.horizontalAccuracy)];
-    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%dkm/h", (int)(round(location.speed*3.6))];
+    int speed = (int)(round(location.speed*3.6));
+    if(speed < 0) speed = 0;
+    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%dkm/h", speed];
     
     int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     self.locationAgeLabel.text = [NSString stringWithFormat:@"%d", age == 1 ? 0 : age];
