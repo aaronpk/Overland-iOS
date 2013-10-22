@@ -30,8 +30,8 @@ NSArray *intervalMapStrings;
 
 - (void)viewDidAppear:(BOOL)animated {
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(refreshView)
-												 name:OLDataViewNeedsUpdateNotification
+											 selector:@selector(newDataReceived)
+												 name:OLNewDataNotification
 											   object:nil];
 
 	self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
@@ -39,6 +39,7 @@ NSArray *intervalMapStrings;
                                                            selector:@selector(refreshView)
                                                            userInfo:nil
                                                             repeats:YES];
+    [[OLManager sharedManager] queryStepCount:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -51,8 +52,14 @@ NSArray *intervalMapStrings;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)newDataReceived {
+//    NSLog(@"New data received!");
+//    NSLog(@"Location: %@", [OLManager sharedManager].lastLocation);
+//    NSLog(@"Activity: %@", [OLManager sharedManager].lastMotion);
+    [self refreshView];
+}
+
 - (void)refreshView {
-    NSLog(@"Refreshing View");
     CLLocation *location = [OLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAccuracyLabel.text = [NSString stringWithFormat:@"+/- %dm", (int)round(location.horizontalAccuracy)];
@@ -60,6 +67,20 @@ NSArray *intervalMapStrings;
     
     int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     self.locationAgeLabel.text = [NSString stringWithFormat:@"%d", age == 1 ? 0 : age];
+    
+    NSMutableArray *motionTextParts = [[NSMutableArray alloc] init];
+    CMMotionActivity *activity = [OLManager sharedManager].lastMotion;
+    if(activity.walking)
+        [motionTextParts addObject:@"Walking"];
+    if(activity.running)
+        [motionTextParts addObject:@"Running"];
+    if(activity.automotive)
+        [motionTextParts addObject:@"Driving"];
+    if(activity.stationary)
+        [motionTextParts addObject:@"Stationary"];
+    self.motionTypeLabel.text = [motionTextParts componentsJoinedByString:@", "];
+    
+    self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [OLManager sharedManager].lastStepCount];
 }
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
