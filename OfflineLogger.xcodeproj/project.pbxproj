@@ -23,6 +23,9 @@
 		0FF4AE6B1815CF0E009994BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE471815CF0E009994BA /* UIKit.framework */; };
 		0FF4AE731815CF0E009994BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE711815CF0E009994BA /* InfoPlist.strings */; };
 		0FF4AE751815CF0E009994BA /* OfflineLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */; };
+		0FF4AE8418164287009994BA /* OLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE8318164287009994BA /* OLManager.m */; };
+		0FF4AE86181643CF009994BA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE85181643CF009994BA /* CoreLocation.framework */; };
+		0FF4AE88181643DB009994BA /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE87181643DB009994BA /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,10 @@
 		0FF4AE701815CF0E009994BA /* OfflineLoggerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OfflineLoggerTests-Info.plist"; sourceTree = "<group>"; };
 		0FF4AE721815CF0E009994BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OfflineLoggerTests.m; sourceTree = "<group>"; };
+		0FF4AE8218164287009994BA /* OLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLManager.h; sourceTree = "<group>"; };
+		0FF4AE8318164287009994BA /* OLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLManager.m; sourceTree = "<group>"; };
+		0FF4AE85181643CF009994BA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0FF4AE87181643DB009994BA /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FF4AE88181643DB009994BA /* CoreMotion.framework in Frameworks */,
+				0FF4AE86181643CF009994BA /* CoreLocation.framework in Frameworks */,
 				0FF4AE461815CF0E009994BA /* CoreGraphics.framework in Frameworks */,
 				0FF4AE481815CF0E009994BA /* UIKit.framework in Frameworks */,
 				0FF4AE441815CF0E009994BA /* Foundation.framework in Frameworks */,
@@ -106,6 +115,8 @@
 		0FF4AE421815CF0E009994BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0FF4AE87181643DB009994BA /* CoreMotion.framework */,
+				0FF4AE85181643CF009994BA /* CoreLocation.framework */,
 				0FF4AE431815CF0E009994BA /* Foundation.framework */,
 				0FF4AE451815CF0E009994BA /* CoreGraphics.framework */,
 				0FF4AE471815CF0E009994BA /* UIKit.framework */,
@@ -125,6 +136,8 @@
 				0FF4AE5C1815CF0E009994BA /* OLFirstViewController.m */,
 				0FF4AE5E1815CF0E009994BA /* OLSecondViewController.h */,
 				0FF4AE5F1815CF0E009994BA /* OLSecondViewController.m */,
+				0FF4AE8218164287009994BA /* OLManager.h */,
+				0FF4AE8318164287009994BA /* OLManager.m */,
 				0FF4AE611815CF0E009994BA /* Images.xcassets */,
 				0FF4AE4A1815CF0E009994BA /* Supporting Files */,
 			);
@@ -210,6 +223,11 @@
 				TargetAttributes = {
 					0FF4AE3F1815CF0E009994BA = {
 						DevelopmentTeam = 37LZZ7EKS9;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					0FF4AE661815CF0E009994BA = {
 						TestTargetID = 0FF4AE3F1815CF0E009994BA;
@@ -264,6 +282,7 @@
 			files = (
 				0FF4AE5D1815CF0E009994BA /* OLFirstViewController.m in Sources */,
 				0FF4AE601815CF0E009994BA /* OLSecondViewController.m in Sources */,
+				0FF4AE8418164287009994BA /* OLManager.m in Sources */,
 				0FF4AE501815CF0E009994BA /* main.m in Sources */,
 				0FF4AE541815CF0E009994BA /* OLAppDelegate.m in Sources */,
 			);

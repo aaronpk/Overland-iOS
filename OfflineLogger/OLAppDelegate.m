@@ -7,11 +7,14 @@
 //
 
 #import "OLAppDelegate.h"
+#import "OLManager.h"
 
 @implementation OLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [OLManager sharedManager];
+    
     // Override point for customization after application launch.
     return YES;
 }

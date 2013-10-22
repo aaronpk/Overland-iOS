@@ -7,8 +7,11 @@
 //
 
 #import "OLFirstViewController.h"
+#import "OLManager.h"
 
 @interface OLFirstViewController ()
+
+@property (strong, nonatomic) NSTimer *viewRefreshTimer;
 
 @end
 
@@ -25,14 +28,47 @@ NSArray *intervalMapStrings;
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(refreshView)
+												 name:OLDataViewNeedsUpdateNotification
+											   object:nil];
+
+	self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                             target:self
+                                                           selector:@selector(refreshView)
+                                                           userInfo:nil
+                                                            repeats:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (void)refreshView {
+    NSLog(@"Refreshing View");
+    CLLocation *location = [OLManager sharedManager].lastLocation;
+    self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f", location.coordinate.latitude, location.coordinate.longitude];
+    self.locationAccuracyLabel.text = [NSString stringWithFormat:@"+/- %dm", (int)round(location.horizontalAccuracy)];
+    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%dkm/h", (int)(round(location.speed*3.6))];
+    
+    int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
+    self.locationAgeLabel.text = [NSString stringWithFormat:@"%d", age == 1 ? 0 : age];
+}
+
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
     NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
+    if(sender.selectedSegmentIndex == 0) {
+        [[OLManager sharedManager] startAllUpdates];
+    } else {
+        [[OLManager sharedManager] stopAllUpdates];
+    }
 }
 
 - (void)updateSendIntervalLabel {
