@@ -23,6 +23,7 @@ static NSString *const OLNewDataNotification = @"OLNewDataNotification";
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
+@property (strong, nonatomic, readonly) NSDate *lastSentDate;
 
 - (void)startAllUpdates;
 - (void)stopAllUpdates;

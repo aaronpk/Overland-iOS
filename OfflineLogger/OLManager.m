@@ -18,6 +18,7 @@
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSNumber *lastStepCount;
+@property (strong, nonatomic) NSDate *lastSentDate;
 
 @property (strong, nonatomic) LOLDatabase *db;
 
@@ -184,14 +185,30 @@ static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
 }
 
 - (void)sendQueueNow {
+    NSMutableSet *syncedUpdates = [NSMutableSet set];
+
     [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSMutableArray *locationUpdates = [NSMutableArray array];
 
         [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object, BOOL *stop) {
             NSLog(@"Found %@ : %@", key, object);
-            
+            [syncedUpdates addObject:key];
+            [locationUpdates addObject:object];
         }];
+        
     }];
+
+    /*
+    self.lastSentDate = NSDate.date;
+
+    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        for(NSString *key in syncedUpdates) {
+            // [accessor removeDictionaryForKey:key];
+        }
+    }];
+    */
+    
+    
 }
 
 @end
