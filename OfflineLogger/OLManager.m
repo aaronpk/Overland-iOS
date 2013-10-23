@@ -8,6 +8,7 @@
 
 #import "OLManager.h"
 #import "LOLDatabase.h"
+#import "AFHTTPSessionManager.h"
 
 @interface OLManager()
 
@@ -29,6 +30,8 @@
 static NSString *const OLLocationQueueName = @"OLLocationQueue";
 static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
 
+AFHTTPSessionManager *_httpClient;
+
 + (OLManager *)sharedManager {
     static OLManager *_instance = nil;
     
@@ -43,6 +46,10 @@ static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
             _instance.db.deserializer = ^(NSData *data) {
                 return [self objectFromJSONData:data error:NULL];
             };
+
+            _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:@"http://aaronparecki.com/micropub/phone.php"]];
+            _httpClient.requestSerializer = [AFHTTPRequestSerializer serializer];
+            _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
         }
     }
     
@@ -198,6 +205,7 @@ static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
         
     }];
 
+    
     /*
     self.lastSentDate = NSDate.date;
 
