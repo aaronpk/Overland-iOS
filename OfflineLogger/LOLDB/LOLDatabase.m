@@ -47,23 +47,13 @@
 - (void)dealloc {
     sqlite3_close(db);
 	
-	
-#if !__has_feature(objc_arc)
-	[serializer release];
-	[deserializer release];
-	[super dealloc];
-#endif
-
-}
+	}
 
 - (void)accessCollection:(NSString *)collection withBlock:(void (^)(id <LOLDatabaseAccessor>))block;
 {
 	_LOLDatabaseAccessor *a = [[_LOLDatabaseAccessor alloc] initWithDatabase:self collection:collection];
 	block(a);
 	[a done];
-#if !__has_feature(objc_arc)
-	[a release];
-#endif
 }
 
 @end
@@ -76,14 +66,6 @@
 	sqlite3_stmt *setByKeyStatement;
 	sqlite3_stmt *removeByKeyStatement;
 	sqlite3_stmt *enumerateStatement;
-}
-
-- (void)dealloc;
-{
-#if !__has_feature(objc_arc)
-	[_collection release];
-	[super dealloc];
-#endif
 }
 
 - (id)initWithDatabase:(LOLDatabase *)db collection:(NSString *)collection;
@@ -106,51 +88,34 @@
 		NSLog(@"table failed to be created %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-#if !__has_feature(objc_arc)
-	[q release];
-#endif
 
-	
-	q = [[NSString alloc] initWithFormat:@"SELECT data FROM '%@' WHERE key = ? ;", collection];
-	status = sqlite3_prepare_v2(_d->db, [q UTF8String], q.length+1, &getByKeyStatement, NULL);
+    q = [[NSString alloc] initWithFormat:@"SELECT data FROM '%@' WHERE key = ? ;", collection];
+	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &getByKeyStatement, NULL);
 	if (status != SQLITE_OK) {
 		NSLog(@"Error with get query! %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-#if !__has_feature(objc_arc)
-	[q release];
-#endif
 	
 	q = [[NSString alloc] initWithFormat:@"SELECT key,data FROM '%@';", collection];
-	status = sqlite3_prepare_v2(_d->db, [q UTF8String], q.length+1, &enumerateStatement, NULL);
+	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &enumerateStatement, NULL);
 	if (status != SQLITE_OK) {
 		NSLog(@"Error with enumerate query! %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-#if !__has_feature(objc_arc)
-	[q release];
-#endif
     
 	q = [[NSString alloc] initWithFormat:@"INSERT OR REPLACE INTO '%@' ('key', 'data') VALUES (?, ?);", collection];
-	status = sqlite3_prepare_v2(_d->db, [q UTF8String], q.length+1, &setByKeyStatement, NULL);
+	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &setByKeyStatement, NULL);
 	if (status != SQLITE_OK) {
 		NSLog(@"Error with set query! %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-#if !__has_feature(objc_arc)
-	[q release];
-#endif
 	
 	q = [[NSString alloc] initWithFormat:@"DELETE FROM '%@' WHERE key = ? ;", collection];
-	status = sqlite3_prepare_v2(_d->db, [q UTF8String], q.length+1, &removeByKeyStatement, NULL);
+	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &removeByKeyStatement, NULL);
 	if (status != SQLITE_OK) {
 		NSLog(@"Error with delete query! %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-#if !__has_feature(objc_arc)
-	[q release];
-#endif
-
 	
     return self;
 }
@@ -183,16 +148,13 @@
 	}
 	sqlite3_reset(getByKeyStatement);
 
-#if !__has_feature(objc_arc)
-	[fullData autorelease];
-#endif
 	return fullData;
 }
 
 - (void)setData:(NSData *)data forKey:(NSString *)key;
 {
 	sqlite3_bind_text(setByKeyStatement, 1, [key UTF8String], -1, SQLITE_TRANSIENT);
-	sqlite3_bind_blob(setByKeyStatement, 2, data.bytes, data.length, SQLITE_TRANSIENT);
+	sqlite3_bind_blob(setByKeyStatement, 2, data.bytes, (int)data.length, SQLITE_TRANSIENT);
 	
 	int status = sqlite3_step(setByKeyStatement);
 	if (status != SQLITE_DONE) {
@@ -251,10 +213,6 @@
 		NSDictionary *object = fullData ? _d.deserializer(fullData) : nil;	
 
 		block(key, object, &stop);
-#if !__has_feature(objc_arc)
-		[key release];
-		[fullData release];
-#endif
 		status = sqlite3_step(enumerateStatement);
 	}
 	sqlite3_reset(enumerateStatement);
