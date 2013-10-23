@@ -83,6 +83,10 @@ NSArray *intervalMapStrings;
     self.motionTypeLabel.text = [motionTextParts componentsJoinedByString:@", "];
     
     self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [OLManager sharedManager].lastStepCount];
+    
+    [[OLManager sharedManager] numberOfLocationsInQueue:^(long num) {
+        self.queueLabel.text = [NSString stringWithFormat:@"%ld locations", num];
+    }];
 }
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
@@ -92,6 +96,10 @@ NSArray *intervalMapStrings;
     } else {
         [[OLManager sharedManager] stopAllUpdates];
     }
+}
+
+- (IBAction)sendQueue:(id)sender {
+    [[OLManager sharedManager] sendQueueNow];
 }
 
 - (void)updateSendIntervalLabel {

@@ -29,4 +29,7 @@ static NSString *const OLNewDataNotification = @"OLNewDataNotification";
 
 - (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))callback;
 
+- (void)numberOfLocationsInQueue:(void(^)(long num))callback;
+- (void)sendQueueNow;
+
 @end

@@ -23,6 +23,7 @@
 - (void)removeDictionaryForKey:(NSString *)key;
 
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(NSString *key, NSDictionary *object, BOOL *stop))block;
+- (void)countObjectsUsingBlock:(void (^)(long num))block;
 
 @end
 

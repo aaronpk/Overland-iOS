@@ -27,6 +27,7 @@
 - (IBAction)sendIntervalDragged:(UISlider *)sender;
 - (IBAction)sendIntervalChanged:(UISlider *)sender;
 - (IBAction)toggleLogging:(id)sender;
+- (IBAction)sendQueue:(id)sender;
 
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "OLManager.h"
+#import "LOLDatabase.h"
 
 @interface OLManager()
 
@@ -18,9 +19,14 @@
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSNumber *lastStepCount;
 
+@property (strong, nonatomic) LOLDatabase *db;
+
 @end
 
 @implementation OLManager
+
+static NSString *const OLLocationQueueName = @"OLLocationQueue";
+static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
 
 + (OLManager *)sharedManager {
     static OLManager *_instance = nil;
@@ -28,11 +34,39 @@
     @synchronized (self) {
         if (_instance == nil) {
             _instance = [[self alloc] init];
+
+            _instance.db = [[LOLDatabase alloc] initWithPath:[self cacheDatabasePath]];
+            _instance.db.serializer = ^(id object){
+                return [self dataWithJSONObject:object error:NULL];
+            };
+            _instance.db.deserializer = ^(NSData *data) {
+                return [self objectFromJSONData:data error:NULL];
+            };
         }
     }
     
     return _instance;
 }
+
+#pragma mark LOLDB
+
++ (NSString *)cacheDatabasePath
+{
+	NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	return [caches stringByAppendingPathComponent:@"OLLoggerCache.sqlite"];
+}
+
++ (id)objectFromJSONData:(NSData *)data error:(NSError **)error;
+{
+    return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
+}
+
++ (NSData *)dataWithJSONObject:(id)object error:(NSError **)error;
+{
+    return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
+}
+
+#pragma mark -
 
 + (NSDate *)last24Hours {
     return [NSDate dateWithTimeIntervalSinceNow:-86400.0];
@@ -84,6 +118,15 @@
     }
 }
 
+- (void)stopAllUpdates {
+    [self.locationManager stopUpdatingHeading];
+    [self.locationManager stopUpdatingLocation];
+    if(CMMotionActivityManager.isActivityAvailable) {
+        [self.motionActivityManager stopActivityUpdates];
+        self.lastMotion = nil;
+    }
+}
+
 - (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))callback {
     [self.stepCounter queryStepCountStartingFrom:[OLManager last24Hours]
                                               to:[NSDate date]
@@ -96,18 +139,59 @@
                                      }];
 }
 
-- (void)stopAllUpdates {
-    [self.locationManager stopUpdatingHeading];
-    [self.locationManager stopUpdatingLocation];
-    if(CMMotionActivityManager.isActivityAvailable) {
-        [self.motionActivityManager stopActivityUpdates];
-        self.lastMotion = nil;
-    }
-}
-
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [[NSNotificationCenter defaultCenter] postNotificationName:OLNewDataNotification object:self];
     self.lastLocation = (CLLocation *)locations[0];
+    
+    // Queue the point in the database
+	[self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+
+        NSMutableArray *motion = [[NSMutableArray alloc] init];
+        CMMotionActivity *activity = [OLManager sharedManager].lastMotion;
+        if(activity.walking)
+            [motion addObject:@"walking"];
+        if(activity.running)
+            [motion addObject:@"running"];
+        if(activity.automotive)
+            [motion addObject:@"driving"];
+        if(activity.stationary)
+            [motion addObject:@"stationary"];
+
+        for(int i=0; i<locations.count; i++) {
+            CLLocation *loc = locations[i];
+            NSDictionary *update = @{
+                @"timestamp": [NSString stringWithFormat:@"%d", (int)round([loc.timestamp timeIntervalSince1970])],
+                @"latitude": [NSString stringWithFormat:@"%f", loc.coordinate.latitude],
+                @"longitude": [NSString stringWithFormat:@"%f", loc.coordinate.longitude],
+                @"altitude": [NSString stringWithFormat:@"%d", (int)round(loc.altitude)],
+                @"speed": [NSString stringWithFormat:@"%d", (int)round(loc.speed)],
+                @"horizontal_accuracy": [NSString stringWithFormat:@"%d", (int)round(loc.horizontalAccuracy)],
+                @"vertical_accuracy": [NSString stringWithFormat:@"%d", (int)round(loc.verticalAccuracy)],
+                @"motion": motion
+            };
+            NSLog(@"Storing location update %@, for key: %@", update, [update objectForKey:@"timestamp"]);
+            [accessor setDictionary:update forKey:[update objectForKey:@"timestamp"]];
+        }
+        
+	}];
+    
+}
+
+- (void)numberOfLocationsInQueue:(void(^)(long num))callback {
+    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor countObjectsUsingBlock:callback];
+    }];
+}
+
+- (void)sendQueueNow {
+    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSMutableArray *locationUpdates = [NSMutableArray array];
+
+        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object, BOOL *stop) {
+            NSLog(@"Found %@ : %@", key, object);
+            
+        }];
+    }];
 }
 
 @end

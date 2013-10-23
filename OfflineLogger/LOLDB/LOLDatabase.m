@@ -66,6 +66,7 @@
 	sqlite3_stmt *setByKeyStatement;
 	sqlite3_stmt *removeByKeyStatement;
 	sqlite3_stmt *enumerateStatement;
+	sqlite3_stmt *countStatement;
 }
 
 - (id)initWithDatabase:(LOLDatabase *)db collection:(NSString *)collection;
@@ -102,7 +103,14 @@
 		NSLog(@"Error with enumerate query! %s", sqlite3_errmsg(_d->db));
 		return nil;
 	}
-    
+
+    q = [[NSString alloc] initWithFormat:@"SELECT COUNT(1) FROM '%@';", collection];
+	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &countStatement, NULL);
+	if (status != SQLITE_OK) {
+		NSLog(@"Error with count query! %s", sqlite3_errmsg(_d->db));
+		return nil;
+	}
+
 	q = [[NSString alloc] initWithFormat:@"INSERT OR REPLACE INTO '%@' ('key', 'data') VALUES (?, ?);", collection];
 	status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &setByKeyStatement, NULL);
 	if (status != SQLITE_OK) {
@@ -126,6 +134,7 @@
 	sqlite3_finalize(setByKeyStatement);
 	sqlite3_finalize(removeByKeyStatement);
 	sqlite3_finalize(enumerateStatement);
+	sqlite3_finalize(countStatement);
 
 	NSString *q = @"COMMIT TRANSACTION;";
 	if (sqlite3_exec(_d->db, [q UTF8String], NULL, NULL, NULL) != SQLITE_OK) {
@@ -216,6 +225,17 @@
 		status = sqlite3_step(enumerateStatement);
 	}
 	sqlite3_reset(enumerateStatement);
+}
+
+- (void)countObjectsUsingBlock:(void (^)(long num))block {
+    if (!block) return;
+
+    long count;
+    while( sqlite3_step(countStatement) == SQLITE_ROW ) {
+        count = (long)sqlite3_column_int(countStatement, 0);
+    }
+
+    block(count);
 }
 
 @end
