@@ -1,11 +1,12 @@
 Offline Logger for iOS
 ======================
 
-This app logs various sensor data from the iOS APIs and sends it up to server in batches.
+This app is an experiment at gathering data from the iPhone 5s with its new location and motion APIs. The app tracks:
+* GPS location
+* Motion State (walking, running, driving, stationary)
+* Step count
 
-
-
-
+The app gathers data with no network connection and stores locally on disk. The data is sent to the server in a batch when the user chooses.
 
 
 ## Contributing
