@@ -84,6 +84,13 @@ NSArray *intervalMapStrings;
     
     self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [OLManager sharedManager].lastStepCount];
     
+    if([OLManager sharedManager].lastSentDate) {
+        age = -(int)round([OLManager sharedManager].lastSentDate.timeIntervalSinceNow);
+        self.queueAgeLabel.text = [NSString stringWithFormat:@"%ds ago", age];
+    } else {
+        self.queueAgeLabel.text = @"not sent yet";
+    }
+    
     [[OLManager sharedManager] numberOfLocationsInQueue:^(long num) {
         self.queueLabel.text = [NSString stringWithFormat:@"%ld locations", num];
     }];

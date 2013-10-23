@@ -47,8 +47,10 @@ AFHTTPSessionManager *_httpClient;
                 return [self objectFromJSONData:data error:NULL];
             };
 
-            _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:@"http://aaronparecki.com/micropub/phone.php"]];
-            _httpClient.requestSerializer = [AFHTTPRequestSerializer serializer];
+            NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName]];
+            
+            _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
+            _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
             _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
         }
     }
@@ -177,7 +179,7 @@ AFHTTPSessionManager *_httpClient;
                 @"vertical_accuracy": [NSString stringWithFormat:@"%d", (int)round(loc.verticalAccuracy)],
                 @"motion": motion
             };
-            NSLog(@"Storing location update %@, for key: %@", update, [update objectForKey:@"timestamp"]);
+//            NSLog(@"Storing location update %@, for key: %@", update, [update objectForKey:@"timestamp"]);
             [accessor setDictionary:update forKey:[update objectForKey:@"timestamp"]];
         }
         
@@ -193,30 +195,59 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)sendQueueNow {
     NSMutableSet *syncedUpdates = [NSMutableSet set];
+    NSMutableArray *locationUpdates = [NSMutableArray array];
 
     [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        NSMutableArray *locationUpdates = [NSMutableArray array];
 
-        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object, BOOL *stop) {
-            NSLog(@"Found %@ : %@", key, object);
+        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
             [syncedUpdates addObject:key];
             [locationUpdates addObject:object];
+            return (BOOL)(locationUpdates.count >= 100); // N points per batch
         }];
-        
+
     }];
 
+    NSDictionary *postData = @{@"locations": locationUpdates};
     
-    /*
-    self.lastSentDate = NSDate.date;
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName];
+    NSLog(@"Endpoint: %@", endpoint);
+    NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
+    
+    [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Response: %@", responseObject);
 
-    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        for(NSString *key in syncedUpdates) {
-            // [accessor removeDictionaryForKey:key];
+        if([responseObject objectForKey:@"error"]) {
+            [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
+        } else {
+            self.lastSentDate = NSDate.date;
+            
+            [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+                for(NSString *key in syncedUpdates) {
+                    [accessor removeDictionaryForKey:key];
+                }
+            }];
         }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [self notify:error.description withTitle:@"Error"];
     }];
-    */
-    
     
 }
+
+- (void)notify:(NSString *)message withTitle:(NSString *)title
+{
+    if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@", title, message];
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+}
+
 
 @end

@@ -15,7 +15,6 @@
 {
     [OLManager sharedManager];
     
-    // Override point for customization after application launch.
     return YES;
 }
 							
@@ -35,6 +34,19 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+// App launched by clicking a URL
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if([[url host] isEqualToString:@"setup"]) {
+        NSString *endpoint = [[url query] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSLog(@"Saving new API Endpoint: %@", endpoint);
+        [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:OLAPIEndpointDefaultsName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    return YES;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

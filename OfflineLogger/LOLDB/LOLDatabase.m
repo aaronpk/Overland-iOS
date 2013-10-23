@@ -205,7 +205,7 @@
 
 }
 
-- (void)enumerateKeysAndObjectsUsingBlock:(void (^)(NSString *key, NSDictionary *object, BOOL *stop))block;
+- (void)enumerateKeysAndObjectsUsingBlock:(BOOL(^)(NSString *key, NSDictionary *object))block;
 {
 	if (!block) return;
 	NSData *fullData = nil;
@@ -221,7 +221,7 @@
 		
 		NSDictionary *object = fullData ? _d.deserializer(fullData) : nil;	
 
-		block(key, object, &stop);
+		stop = block(key, object);
 		status = sqlite3_step(enumerateStatement);
 	}
 	sqlite3_reset(enumerateStatement);

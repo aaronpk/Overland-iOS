@@ -11,6 +11,7 @@
 #import <CoreMotion/CoreMotion.h>
 
 static NSString *const OLNewDataNotification = @"OLNewDataNotification";
+static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
 
 @interface OLManager : NSObject <CLLocationManagerDelegate>
 
@@ -32,5 +33,7 @@ static NSString *const OLNewDataNotification = @"OLNewDataNotification";
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)sendQueueNow;
+
+- (void)notify:(NSString *)message withTitle:(NSString *)title;
 
 @end
