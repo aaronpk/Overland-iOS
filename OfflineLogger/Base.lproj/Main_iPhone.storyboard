@@ -165,6 +165,16 @@
                                 <rect key="frame" x="184" y="200" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l08-Re-aWX">
+                                <rect key="frame" x="263" y="413" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Pew">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="debugSteps:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="T55-2F-AC5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -182,6 +192,7 @@
                         <outlet property="sendIntervalSlider" destination="FUX-e0-F1D" id="xn3-sw-pqm"/>
                         <outlet property="sendNowButton" destination="MqD-wL-fGa" id="94t-c1-GGH"/>
                         <outlet property="sendingIndicator" destination="8bG-W9-LoA" id="I9S-TU-ytk"/>
+                        <outlet property="trackingEnabledToggle" destination="VhQ-wb-YUl" id="THV-WW-Crl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>

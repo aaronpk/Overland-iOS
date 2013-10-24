@@ -16,6 +16,7 @@
 @property (strong, nonatomic) CMMotionActivityManager *motionActivityManager;
 @property (strong, nonatomic) CMStepCounter *stepCounter;
 
+@property BOOL trackingEnabled;
 @property BOOL sendInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
@@ -48,11 +49,9 @@ AFHTTPSessionManager *_httpClient;
                 return [self objectFromJSONData:data error:NULL];
             };
 
-            NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName]];
-            
-            _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
-            _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
-            _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+            [_instance setupHTTPClient];
+            [_instance startStepCounting];
+            [_instance restoreTrackingState];
         }
     }
     
@@ -76,6 +75,70 @@ AFHTTPSessionManager *_httpClient;
 {
     return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
 }
+
+#pragma mark -
+
+- (void)startStepCounting {
+    if(CMStepCounter.isStepCountingAvailable) {
+        // Request step count updates every 5 steps, but don't use the step count reported because then I'd have to keep track of the time I started counting steps.
+        [self.stepCounter startStepCountingUpdatesToQueue:[NSOperationQueue mainQueue]
+                                                 updateOn:5
+                                              withHandler:^(NSInteger numberOfSteps, NSDate *timestamp, NSError *error) {
+                                                  [self queryStepCount:nil];
+                                              }];
+    }
+}
+
+- (void)setupHTTPClient {
+    NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName]];
+    
+    _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
+    _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
+    _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+}
+
+- (void)restoreTrackingState {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:OLTrackingStateDefaultsName]) {
+        [self enableTracking];
+    } else {
+        [self disableTracking];
+    }
+}
+
+- (void)startAllUpdates {
+    [self enableTracking];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:OLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)enableTracking {
+    self.trackingEnabled = YES;
+    [self.locationManager startUpdatingLocation];
+    [self.locationManager startUpdatingHeading];
+    if(CMMotionActivityManager.isActivityAvailable) {
+        [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:OLNewDataNotification object:self];
+            self.lastMotion = activity;
+        }];
+    }
+}
+
+- (void)stopAllUpdates {
+    [self disableTracking];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:OLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)disableTracking {
+    self.trackingEnabled = NO;
+    [self.locationManager stopUpdatingHeading];
+    [self.locationManager stopUpdatingLocation];
+    if(CMMotionActivityManager.isActivityAvailable) {
+        [self.motionActivityManager stopActivityUpdates];
+        self.lastMotion = nil;
+    }
+}
+
 
 #pragma mark -
 
@@ -110,42 +173,26 @@ AFHTTPSessionManager *_httpClient;
     return _stepCounter;
 }
 
-- (void)startAllUpdates {
-    [self.locationManager startUpdatingLocation];
-    [self.locationManager startUpdatingHeading];
-    if(CMMotionActivityManager.isActivityAvailable) {
-        [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:OLNewDataNotification object:self];
-            self.lastMotion = activity;
-        }];
-    }
-    if(CMStepCounter.isStepCountingAvailable) {
-        // Request step count updates every 5 steps, but don't use the step count reported because then I'd have to keep track of the time I started counting steps. Instead, query the step API for the last hour's worth of steps.
-        [self.stepCounter startStepCountingUpdatesToQueue:[NSOperationQueue mainQueue]
-                                                 updateOn:5
-                                              withHandler:^(NSInteger numberOfSteps, NSDate *timestamp, NSError *error) {
-            [self queryStepCount:nil];
-        }];
-    }
-}
-
-- (void)stopAllUpdates {
-    [self.locationManager stopUpdatingHeading];
-    [self.locationManager stopUpdatingLocation];
-    if(CMMotionActivityManager.isActivityAvailable) {
-        [self.motionActivityManager stopActivityUpdates];
-        self.lastMotion = nil;
-    }
-}
-
-- (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))callback {
+- (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
     [self.stepCounter queryStepCountStartingFrom:[OLManager last24Hours]
                                               to:[NSDate date]
                                          toQueue:[NSOperationQueue mainQueue]
                                      withHandler:^(NSInteger numberOfSteps, NSError *error) {
                                          self.lastStepCount = [NSNumber numberWithInteger:numberOfSteps];
-                                         if(callback) {
-                                             callback(numberOfSteps, error);
+                                         if(handler) {
+                                             handler(numberOfSteps, error);
+                                         }
+                                     }];
+}
+
+- (void)queryStepCountAtDate:(NSDate *)date withHandler:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
+    [self.stepCounter queryStepCountStartingFrom:[OLManager last24Hours]
+                                              to:[NSDate date]
+                                         toQueue:[NSOperationQueue mainQueue]
+                                     withHandler:^(NSInteger numberOfSteps, NSError *error) {
+                                         self.lastStepCount = [NSNumber numberWithInteger:numberOfSteps];
+                                         if(handler) {
+                                             handler(numberOfSteps, error);
                                          }
                                      }];
 }
@@ -252,6 +299,15 @@ AFHTTPSessionManager *_httpClient;
     
 }
 
+- (NSDate *)lastSentDate {
+    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:OLLastSentDateDefaultsName];
+}
+
+- (void)setLastSentDate:(NSDate *)lastSentDate {
+    [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:OLLastSentDateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)notify:(NSString *)message withTitle:(NSString *)title
 {
     if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
@@ -264,6 +320,13 @@ AFHTTPSessionManager *_httpClient;
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }
+}
+
+- (void)debugSteps
+{
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-86400];
+    
+    
 }
 
 

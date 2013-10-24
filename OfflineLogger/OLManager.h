@@ -13,7 +13,11 @@
 static NSString *const OLNewDataNotification = @"OLNewDataNotification";
 static NSString *const OLSendingStartedNotification = @"OLSendingStartedNotification";
 static NSString *const OLSendingFinishedNotification = @"OLSendingFinishedNotification";
+
 static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
+static NSString *const OLLastSentDateDefaultsName = @"OLLastSentDateDefaults";
+static NSString *const OLTrackingStateDefaultsName = @"OLTrackingStateDefaults";
+
 static int const PointsPerBatch = 200;
 
 @interface OLManager : NSObject <CLLocationManagerDelegate>
@@ -24,6 +28,7 @@ static int const PointsPerBatch = 200;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;
 @property (strong, nonatomic, readonly) CMStepCounter *stepCounter;
 
+@property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
@@ -39,5 +44,7 @@ static int const PointsPerBatch = 200;
 - (void)sendQueueNow;
 
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
+
+- (void)debugSteps;
 
 @end

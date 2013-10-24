@@ -10,6 +10,8 @@
 
 @interface OLFirstViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
+
 @property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *sendingIndicator;
@@ -31,5 +33,6 @@
 - (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 
+- (IBAction)debugSteps:(id)sender;
 
 @end

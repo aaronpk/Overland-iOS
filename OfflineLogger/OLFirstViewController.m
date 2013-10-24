@@ -30,6 +30,11 @@ NSArray *intervalMapStrings;
 
 - (void)viewDidAppear:(BOOL)animated {
     [self.sendingIndicator stopAnimating];
+    
+    if([OLManager sharedManager].trackingEnabled)
+        self.trackingEnabledToggle.selectedSegmentIndex = 0;
+    else
+        self.trackingEnabledToggle.selectedSegmentIndex = 1;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(newDataReceived)
@@ -134,6 +139,10 @@ NSArray *intervalMapStrings;
 
 - (IBAction)sendQueue:(id)sender {
     [[OLManager sharedManager] sendQueueNow];
+}
+
+- (IBAction)debugSteps:(id)sender {
+    [[OLManager sharedManager] debugSteps];
 }
 
 - (void)updateSendIntervalLabel {
