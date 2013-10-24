@@ -29,9 +29,21 @@ NSArray *intervalMapStrings;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [self.sendingIndicator stopAnimating];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(newDataReceived)
 												 name:OLNewDataNotification
+											   object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(sendingStarted)
+												 name:OLSendingStartedNotification
+											   object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(sendingFinished)
+												 name:OLSendingFinishedNotification
 											   object:nil];
 
 	self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
@@ -57,6 +69,16 @@ NSArray *intervalMapStrings;
 //    NSLog(@"Location: %@", [OLManager sharedManager].lastLocation);
 //    NSLog(@"Activity: %@", [OLManager sharedManager].lastMotion);
     [self refreshView];
+}
+
+- (void)sendingStarted {
+    [self.sendingIndicator startAnimating];
+    self.sendNowButton.enabled = NO;
+}
+
+- (void)sendingFinished {
+    [self.sendingIndicator stopAnimating];
+    self.sendNowButton.enabled = YES;
 }
 
 - (void)refreshView {
@@ -94,6 +116,11 @@ NSArray *intervalMapStrings;
     [[OLManager sharedManager] numberOfLocationsInQueue:^(long num) {
         self.queueLabel.text = [NSString stringWithFormat:@"%ld locations", num];
     }];
+    
+    if([OLManager sharedManager].sendInProgress)
+        [self.sendingIndicator startAnimating];
+    else
+        [self.sendingIndicator stopAnimating];
 }
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {

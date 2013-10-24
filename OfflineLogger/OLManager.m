@@ -16,6 +16,7 @@
 @property (strong, nonatomic) CMMotionActivityManager *motionActivityManager;
 @property (strong, nonatomic) CMStepCounter *stepCounter;
 
+@property BOOL sendInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSNumber *lastStepCount;
@@ -193,7 +194,19 @@ AFHTTPSessionManager *_httpClient;
     }];
 }
 
+- (void)sendingStarted {
+    self.sendInProgress = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:OLSendingStartedNotification object:self];
+}
+
+- (void)sendingFinished {
+    self.sendInProgress = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:OLSendingFinishedNotification object:self];
+}
+
 - (void)sendQueueNow {
+    [self sendingStarted];
+    
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
 
@@ -218,6 +231,7 @@ AFHTTPSessionManager *_httpClient;
 
         if([responseObject objectForKey:@"error"]) {
             [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
+            [self sendingFinished];
         } else {
             self.lastSentDate = NSDate.date;
             
@@ -226,11 +240,14 @@ AFHTTPSessionManager *_httpClient;
                     [accessor removeDictionaryForKey:key];
                 }
             }];
+
+            [self sendingFinished];
         }
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"Error: %@", error);
         [self notify:error.description withTitle:@"Error"];
+        [self sendingFinished];
     }];
     
 }

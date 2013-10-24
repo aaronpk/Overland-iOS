@@ -152,7 +152,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MqD-wL-fGa">
-                                <rect key="frame" x="83" y="195" width="72" height="30"/>
+                                <rect key="frame" x="105" y="195" width="72" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Send Now">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -161,6 +161,10 @@
                                     <action selector="sendQueue:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="U2w-eT-eZ1"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="8bG-W9-LoA">
+                                <rect key="frame" x="184" y="200" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -176,6 +180,8 @@
                         <outlet property="queueLabel" destination="d8N-Ch-t1N" id="hX3-7f-805"/>
                         <outlet property="sendIntervalLabel" destination="wHm-qP-pk4" id="oL6-vz-FA6"/>
                         <outlet property="sendIntervalSlider" destination="FUX-e0-F1D" id="xn3-sw-pqm"/>
+                        <outlet property="sendNowButton" destination="MqD-wL-fGa" id="94t-c1-GGH"/>
+                        <outlet property="sendingIndicator" destination="8bG-W9-LoA" id="I9S-TU-ytk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>

@@ -11,6 +11,8 @@
 #import <CoreMotion/CoreMotion.h>
 
 static NSString *const OLNewDataNotification = @"OLNewDataNotification";
+static NSString *const OLSendingStartedNotification = @"OLSendingStartedNotification";
+static NSString *const OLSendingFinishedNotification = @"OLSendingFinishedNotification";
 static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
 static int const PointsPerBatch = 200;
 
@@ -22,6 +24,7 @@ static int const PointsPerBatch = 200;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;
 @property (strong, nonatomic, readonly) CMStepCounter *stepCounter;
 
+@property (readonly) BOOL sendInProgress;
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;

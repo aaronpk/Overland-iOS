@@ -12,6 +12,8 @@
 
 @property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *sendingIndicator;
+@property (strong, nonatomic) IBOutlet UIButton *sendNowButton;
 
 @property (strong, nonatomic) IBOutlet UILabel *locationLabel;
 @property (strong, nonatomic) IBOutlet UILabel *locationSpeedLabel;
