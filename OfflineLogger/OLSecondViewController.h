@@ -10,4 +10,6 @@
 
 @interface OLSecondViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
+
 @end
