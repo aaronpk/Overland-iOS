@@ -202,7 +202,7 @@ AFHTTPSessionManager *_httpClient;
         [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
             [syncedUpdates addObject:key];
             [locationUpdates addObject:object];
-            return (BOOL)(locationUpdates.count >= 100); // N points per batch
+            return (BOOL)(locationUpdates.count >= PointsPerBatch);
         }];
 
     }];

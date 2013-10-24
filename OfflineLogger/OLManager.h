@@ -12,6 +12,7 @@
 
 static NSString *const OLNewDataNotification = @"OLNewDataNotification";
 static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
+static int const PointsPerBatch = 200;
 
 @interface OLManager : NSObject <CLLocationManagerDelegate>
 
