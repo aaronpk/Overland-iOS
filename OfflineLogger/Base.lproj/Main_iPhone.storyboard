@@ -92,7 +92,7 @@
                                 </attributedString>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zay-Zw-Ek1">
-                                <rect key="frame" x="124" y="341" width="90" height="21"/>
+                                <rect key="frame" x="152" y="341" width="108" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="highlightedColor"/>
@@ -134,7 +134,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXg-2K-RUJ">
-                                <rect key="frame" x="20" y="341" width="89" height="21"/>
+                                <rect key="frame" x="20" y="341" width="118" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="highlightedColor"/>
@@ -166,8 +166,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Logging" image="first" id="u1e-5L-l1D"/>
                     <connections>
-                        <outlet property="locationAccuracyLabel" destination="zay-Zw-Ek1" id="pXh-kj-3ZH"/>
                         <outlet property="locationAgeLabel" destination="wWd-tY-UxD" id="VvM-HH-qQO"/>
+                        <outlet property="locationAltitudeLabel" destination="zay-Zw-Ek1" id="VZL-oX-Ias"/>
                         <outlet property="locationLabel" destination="kaj-po-gN8" id="hZe-aL-24M"/>
                         <outlet property="locationSpeedLabel" destination="zXg-2K-RUJ" id="5va-Ov-5Up"/>
                         <outlet property="motionStepsLabel" destination="r4J-XR-zXW" id="XES-Cc-DhH"/>

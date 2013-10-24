@@ -61,14 +61,14 @@ NSArray *intervalMapStrings;
 
 - (void)refreshView {
     CLLocation *location = [OLManager sharedManager].lastLocation;
-    self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f", location.coordinate.latitude, location.coordinate.longitude];
-    self.locationAccuracyLabel.text = [NSString stringWithFormat:@"+/- %dm", (int)round(location.horizontalAccuracy)];
+    self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f +/- %dm", location.coordinate.latitude, location.coordinate.longitude, (int)round(location.horizontalAccuracy)];
+    self.locationAltitudeLabel.text = [NSString stringWithFormat:@"Alt: %dm", (int)round(location.altitude)];
     int speed = (int)(round(location.speed*3.6));
     if(speed < 0) speed = 0;
-    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%dkm/h", speed];
+    self.locationSpeedLabel.text = [NSString stringWithFormat:@"Spd: %dkm/h", speed];
     
     int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
-    self.locationAgeLabel.text = [NSString stringWithFormat:@"%d", age == 1 ? 0 : age];
+    self.locationAgeLabel.text = [NSString stringWithFormat:@"%ds", age == 1 ? 0 : age];
     
     NSMutableArray *motionTextParts = [[NSMutableArray alloc] init];
     CMMotionActivity *activity = [OLManager sharedManager].lastMotion;

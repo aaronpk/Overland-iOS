@@ -15,7 +15,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *locationLabel;
 @property (strong, nonatomic) IBOutlet UILabel *locationSpeedLabel;
-@property (strong, nonatomic) IBOutlet UILabel *locationAccuracyLabel;
+@property (strong, nonatomic) IBOutlet UILabel *locationAltitudeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *locationAgeLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel *motionStepsLabel;
