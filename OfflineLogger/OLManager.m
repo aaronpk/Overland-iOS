@@ -235,6 +235,7 @@ AFHTTPSessionManager *_httpClient;
         
 	}];
     
+    [self sendQueueIfNecessary];
 }
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback {
@@ -251,6 +252,15 @@ AFHTTPSessionManager *_httpClient;
 - (void)sendingFinished {
     self.sendInProgress = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:OLSendingFinishedNotification object:self];
+}
+
+- (void)sendQueueIfNecessary {
+    if(!self.sendInProgress &&
+       [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending) {
+        NSLog(@"Sending queue now");
+        [self sendQueueNow];
+        self.lastSentDate = NSDate.date;
+    }
 }
 
 - (void)sendQueueNow {
