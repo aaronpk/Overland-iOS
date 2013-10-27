@@ -24,7 +24,7 @@ NSArray *intervalMapStrings;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @10000];
+    intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @-1];
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
 }
 
@@ -35,6 +35,11 @@ NSArray *intervalMapStrings;
         self.trackingEnabledToggle.selectedSegmentIndex = 0;
     else
         self.trackingEnabledToggle.selectedSegmentIndex = 1;
+    
+    if([OLManager sharedManager].sendingInterval) {
+        self.sendIntervalSlider.value = [intervalMap indexOfObject:[OLManager sharedManager].sendingInterval];
+        [self updateSendIntervalLabel];
+    }
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(newDataReceived)
@@ -158,9 +163,10 @@ NSArray *intervalMapStrings;
 
 - (IBAction)sendIntervalChanged:(UISlider *)sender {
     sender.value = roundf([sender value]);
-    NSString *val = intervalMap[(int)roundf([self.sendIntervalSlider value])];
+    NSNumber *val = intervalMap[(int)roundf([self.sendIntervalSlider value])];
     NSLog(@"Changed - Send Every: %@", val);
     [self updateSendIntervalLabel];
+    [OLManager sharedManager].sendingInterval = val;
 }
 
 @end

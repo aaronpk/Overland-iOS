@@ -32,6 +32,8 @@
 static NSString *const OLLocationQueueName = @"OLLocationQueue";
 static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
 
+NSNumber *_sendingInterval;
+
 AFHTTPSessionManager *_httpClient;
 
 + (OLManager *)sharedManager {
@@ -329,5 +331,20 @@ AFHTTPSessionManager *_httpClient;
     
 }
 
+#pragma mark -
+
+- (void)setSendingInterval:(NSNumber *)newValue {
+    [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:OLSendIntervalDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    _sendingInterval = newValue;
+}
+
+- (NSNumber *)sendingInterval {
+    if(_sendingInterval)
+        return _sendingInterval;
+    
+    _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:OLSendIntervalDefaultsName];
+    return _sendingInterval;
+}
 
 @end

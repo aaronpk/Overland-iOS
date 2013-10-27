@@ -17,6 +17,7 @@ static NSString *const OLSendingFinishedNotification = @"OLSendingFinishedNotifi
 static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
 static NSString *const OLLastSentDateDefaultsName = @"OLLastSentDateDefaults";
 static NSString *const OLTrackingStateDefaultsName = @"OLTrackingStateDefaults";
+static NSString *const OLSendIntervalDefaultsName = @"OLSendIntervalDefaults";
 
 static int const PointsPerBatch = 200;
 
@@ -27,6 +28,8 @@ static int const PointsPerBatch = 200;
 @property (strong, nonatomic, readonly) CLLocationManager *locationManager;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;
 @property (strong, nonatomic, readonly) CMStepCounter *stepCounter;
+
+@property (strong, nonatomic) NSNumber *sendingInterval;
 
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;
