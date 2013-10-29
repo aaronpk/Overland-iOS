@@ -336,8 +336,9 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)debugSteps
 {
-    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-86400];
+    NSDate *startDate = self.lastSentDate;
     
+    NSLog(@"%@", startDate);
     
 }
 

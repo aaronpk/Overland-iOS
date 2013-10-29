@@ -100,7 +100,7 @@ NSArray *intervalMapStrings;
     self.locationSpeedLabel.text = [NSString stringWithFormat:@"Spd: %dkm/h", speed];
     
     int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
-    self.locationAgeLabel.text = [NSString stringWithFormat:@"%ds", age == 1 ? 0 : age];
+    self.locationAgeLabel.text = [NSString stringWithFormat:@"%@", [OLFirstViewController timeFormatted:age]];
     
     NSMutableArray *motionTextParts = [[NSMutableArray alloc] init];
     CMMotionActivity *activity = [OLManager sharedManager].lastMotion;
@@ -118,7 +118,7 @@ NSArray *intervalMapStrings;
     
     if([OLManager sharedManager].lastSentDate) {
         age = -(int)round([OLManager sharedManager].lastSentDate.timeIntervalSinceNow);
-        self.queueAgeLabel.text = [NSString stringWithFormat:@"%ds ago", age];
+        self.queueAgeLabel.text = [NSString stringWithFormat:@"%@ ago", [OLFirstViewController timeFormatted:age]];
     } else {
         self.queueAgeLabel.text = @"not sent yet";
     }
@@ -167,6 +167,18 @@ NSArray *intervalMapStrings;
     NSLog(@"Changed - Send Every: %@", val);
     [self updateSendIntervalLabel];
     [OLManager sharedManager].sendingInterval = val;
+}
+
++ (NSString *)timeFormatted:(int)totalSeconds {
+    int seconds = totalSeconds % 60;
+    int minutes = (totalSeconds / 60) % 60;
+    int hours = totalSeconds / 3600;
+    
+    if(hours == 0) {
+        return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+    } else {
+        return [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds];
+    }
 }
 
 @end
