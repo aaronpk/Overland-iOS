@@ -255,6 +255,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)sendQueueIfNecessary {
     if(!self.sendInProgress &&
+       [self.sendingInterval integerValue] > -1 &&
        [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending) {
         NSLog(@"Sending queue now");
         [self sendQueueNow];
