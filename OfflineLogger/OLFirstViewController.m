@@ -100,6 +100,7 @@ NSArray *intervalMapStrings;
     self.locationSpeedLabel.text = [NSString stringWithFormat:@"Spd: %dkm/h", speed];
     
     int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
+    if(age == 1) age = 0;
     self.locationAgeLabel.text = [NSString stringWithFormat:@"%@", [OLFirstViewController timeFormatted:age]];
     
     NSMutableArray *motionTextParts = [[NSMutableArray alloc] init];
