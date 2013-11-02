@@ -147,7 +147,9 @@ NSArray *intervalMapStrings;
 }
 
 - (IBAction)debugSteps:(id)sender {
-    [[OLManager sharedManager] debugSteps];
+    [[OLManager sharedManager] gatherSteps:^(NSMutableArray *data) {
+        NSLog(@"%@", data);
+    }];
 }
 
 - (void)updateSendIntervalLabel {

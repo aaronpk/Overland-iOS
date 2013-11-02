@@ -187,12 +187,11 @@ AFHTTPSessionManager *_httpClient;
                                      }];
 }
 
-- (void)queryStepCountAtDate:(NSDate *)date withHandler:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
-    [self.stepCounter queryStepCountStartingFrom:[OLManager last24Hours]
-                                              to:[NSDate date]
+- (void)queryStepCountForInterval:(NSDate *)date withHandler:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
+    [self.stepCounter queryStepCountStartingFrom:date
+                                              to:[date dateByAddingTimeInterval:(60*5)-1]
                                          toQueue:[NSOperationQueue mainQueue]
                                      withHandler:^(NSInteger numberOfSteps, NSError *error) {
-                                         self.lastStepCount = [NSNumber numberWithInteger:numberOfSteps];
                                          if(handler) {
                                              handler(numberOfSteps, error);
                                          }
@@ -334,11 +333,38 @@ AFHTTPSessionManager *_httpClient;
     }
 }
 
-- (void)debugSteps
+- (void)gatherSteps:(void(^)(NSMutableArray *data))handler
 {
     NSDate *startDate = self.lastSentDate;
+    startDate = [NSDate dateWithTimeIntervalSince1970:(1382989284 / 300) * 300];
     
-    NSLog(@"%@", startDate);
+    NSDate *currentDate = startDate;
+    NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([NSDate.date timeIntervalSince1970] / 300) * 300];
+    
+    __block NSUInteger remaining = 0;
+    while([endDate timeIntervalSinceDate:currentDate] > 60*5) {
+        remaining++;
+        currentDate = [currentDate dateByAddingTimeInterval:60*5];
+    }
+    
+    currentDate = startDate;
+    
+    __block NSMutableArray *data = [[NSMutableArray alloc] init];
+
+    // Iterate through 5-minute chunks until but not including the current in-progress 5-minute interval
+    while([endDate timeIntervalSinceDate:currentDate] > 60*5) {
+        [self queryStepCountForInterval:currentDate withHandler:^(NSInteger numberOfSteps, NSError *error) {
+            NSLog(@"%@ :: %@", [NSString stringWithFormat:@"%ld", (long)[currentDate timeIntervalSince1970]], [NSNumber numberWithInteger:numberOfSteps]);
+            
+            [data addObject:@{@"interval":[NSNumber numberWithInteger:[currentDate timeIntervalSince1970]], @"steps":[NSNumber numberWithInteger:numberOfSteps]}];
+            
+            remaining--;
+            if(remaining == 0) {
+                handler(data);
+            }
+        }];
+        currentDate = [currentDate dateByAddingTimeInterval:60*5];
+    }
     
 }
 

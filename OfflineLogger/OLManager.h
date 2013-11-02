@@ -48,6 +48,6 @@ static int const PointsPerBatch = 200;
 
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
 
-- (void)debugSteps;
+- (void)gatherSteps:(void(^)(NSMutableArray *data))handler;
 
 @end
