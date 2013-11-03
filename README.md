@@ -9,6 +9,28 @@ This app is an experiment at gathering data from the iPhone 5s with its new loca
 The app gathers data with no network connection and stores locally on disk. The data is sent to the server in a batch when the user chooses.
 
 
+## API
+
+The app will make a POST request to the configured endpoint that looks like the following:
+
+```
+{
+  "locations": [
+    {
+      "timestamp": 1383355053,
+      "latitude": 37.331800,
+      "longitude": -122.030581,
+      "altitude": 0,
+      "speed": 4,
+      "horizontal_accuracy": 30,
+      "vertical_accuracy": -1,
+      "motion": []
+    }
+  ]
+}
+```
+
+
 ## Contributing
 
 Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
