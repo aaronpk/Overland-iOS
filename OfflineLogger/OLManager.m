@@ -219,17 +219,17 @@ AFHTTPSessionManager *_httpClient;
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
             NSDictionary *update = @{
-                @"timestamp": [NSString stringWithFormat:@"%d", (int)round([loc.timestamp timeIntervalSince1970])],
-                @"latitude": [NSString stringWithFormat:@"%f", loc.coordinate.latitude],
-                @"longitude": [NSString stringWithFormat:@"%f", loc.coordinate.longitude],
-                @"altitude": [NSString stringWithFormat:@"%d", (int)round(loc.altitude)],
-                @"speed": [NSString stringWithFormat:@"%d", (int)round(loc.speed)],
-                @"horizontal_accuracy": [NSString stringWithFormat:@"%d", (int)round(loc.horizontalAccuracy)],
-                @"vertical_accuracy": [NSString stringWithFormat:@"%d", (int)round(loc.verticalAccuracy)],
+                @"timestamp": [NSNumber numberWithInt:(int)round([loc.timestamp timeIntervalSince1970])],
+                @"latitude": [NSNumber numberWithDouble:loc.coordinate.latitude],
+                @"longitude": [NSNumber numberWithDouble:loc.coordinate.longitude],
+                @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
+                @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
+                @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
                 @"motion": motion
             };
 //            NSLog(@"Storing location update %@, for key: %@", update, [update objectForKey:@"timestamp"]);
-            [accessor setDictionary:update forKey:[update objectForKey:@"timestamp"]];
+            [accessor setDictionary:update forKey:[[update objectForKey:@"timestamp"] stringValue]];
         }
         
 	}];
