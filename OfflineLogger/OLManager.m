@@ -288,10 +288,7 @@ AFHTTPSessionManager *_httpClient;
     [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Response: %@", responseObject);
 
-        if([responseObject objectForKey:@"error"]) {
-            [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
-            [self sendingFinished];
-        } else {
+        if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
             self.lastSentDate = NSDate.date;
             
             [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
@@ -299,10 +296,18 @@ AFHTTPSessionManager *_httpClient;
                     [accessor removeDictionaryForKey:key];
                 }
             }];
-
+            
             [self sendingFinished];
+        } else {
+
+            if([responseObject objectForKey:@"error"]) {
+                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
+                [self sendingFinished];
+            } else {
+                [self notify:[responseObject description] withTitle:@"Error"];
+                [self sendingFinished];
+            }
         }
-        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"Error: %@", error);
         [self notify:error.description withTitle:@"Error"];
