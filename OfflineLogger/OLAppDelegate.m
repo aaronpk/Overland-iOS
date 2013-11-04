@@ -36,13 +36,36 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
+// this should probably be put somewhere else, like a category or something
+- (NSDictionary *)paramsFromURL:(NSURL *)url
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:20];
+    NSString *queryString = [[url query] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSArray *paramsStrings = [queryString componentsSeparatedByString:@"&"]; // note this means URLs with un-encoded & will be broken
+    for (NSString *param in paramsStrings) {
+        NSArray *kvp = [param componentsSeparatedByString:@"="];
+        NSString *key = [kvp objectAtIndex:0];
+        NSString *value = [kvp objectAtIndex:1];
+        [params setObject:value forKey:key];
+    }
+    return [NSDictionary dictionaryWithDictionary:params];
+}
+
 // App launched by clicking a URL
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    // set the api endpoint by opening a url in safar with the format:
+    // olog://setup?hmac_key=super_secret_key&url=http://my.api.endpoint/for/locations
     if([[url host] isEqualToString:@"setup"]) {
-        NSString *endpoint = [[url query] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        // grab the query string components
+        NSDictionary *params = [self paramsFromURL:url];
+        NSString *endpoint = [params objectForKey:@"url"];
+        NSString *hmacKey = [params objectForKey:@"hmac_key"];
+      
         NSLog(@"Saving new API Endpoint: %@", endpoint);
+        NSLog(@"Saving new HMAC key: %@", hmacKey);
         [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:OLAPIEndpointDefaultsName];
+        [[NSUserDefaults standardUserDefaults] setObject:hmacKey forKey:OLAPIHMACSignatureKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     

@@ -15,6 +15,7 @@ static NSString *const OLSendingStartedNotification = @"OLSendingStartedNotifica
 static NSString *const OLSendingFinishedNotification = @"OLSendingFinishedNotification";
 
 static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
+static NSString *const OLAPIHMACSignatureKey = @"OLAPIHMACSignatureKey";
 static NSString *const OLLastSentDateDefaultsName = @"OLLastSentDateDefaults";
 static NSString *const OLTrackingStateDefaultsName = @"OLTrackingStateDefaults";
 static NSString *const OLSendIntervalDefaultsName = @"OLSendIntervalDefaults";
