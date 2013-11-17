@@ -65,6 +65,7 @@ NSArray *intervalMapStrings;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [self.viewRefreshTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
