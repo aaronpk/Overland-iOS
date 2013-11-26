@@ -154,6 +154,7 @@ AFHTTPSessionManager *_httpClient;
         _locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 1;
+        _locationManager.pausesLocationUpdatesAutomatically = NO;
     }
     
     return _locationManager;
