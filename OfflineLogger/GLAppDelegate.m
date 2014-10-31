@@ -1,19 +1,19 @@
 //
-//  OLAppDelegate.m
-//  OfflineLogger
+//  GLAppDelegate.m
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
 //
 
-#import "OLAppDelegate.h"
-#import "OLManager.h"
+#import "GLAppDelegate.h"
+#import "GLManager.h"
 
-@implementation OLAppDelegate
+@implementation GLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [OLManager sharedManager];
+    [GLManager sharedManager];
     
     return YES;
 }
@@ -42,7 +42,7 @@
     if([[url host] isEqualToString:@"setup"]) {
         NSString *endpoint = [[url query] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSLog(@"Saving new API Endpoint: %@", endpoint);
-        [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:OLAPIEndpointDefaultsName];
+        [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     

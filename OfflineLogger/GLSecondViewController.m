@@ -1,19 +1,19 @@
 //
-//  OLSecondViewController.m
-//  OfflineLogger
+//  GLSecondViewController.m
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
 //
 
-#import "OLSecondViewController.h"
-#import "OLManager.h"
+#import "GLSecondViewController.h"
+#import "GLManager.h"
 
-@interface OLSecondViewController ()
+@interface GLSecondViewController ()
 
 @end
 
-@implementation OLSecondViewController
+@implementation GLSecondViewController
 
 - (void)viewDidLoad
 {
@@ -23,7 +23,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName];
+    self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
 }
 
 - (void)didReceiveMemoryWarning

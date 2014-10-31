@@ -1,6 +1,6 @@
 //
-//  OLFirstViewController.h
-//  OfflineLogger
+//  GLFirstViewController.h
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLFirstViewController : UIViewController
+@interface GLFirstViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 

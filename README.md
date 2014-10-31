@@ -1,5 +1,5 @@
-Offline Logger for iOS
-======================
+GPS Logger for iOS
+==================
 
 This app is an experiment at gathering data from the iPhone 5s with its new location and motion APIs. The app tracks:
 * GPS location

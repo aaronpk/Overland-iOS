@@ -1,6 +1,6 @@
 //
-//  OLManager.h
-//  OfflineLogger
+//  GLManager.h
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
@@ -10,20 +10,20 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 
-static NSString *const OLNewDataNotification = @"OLNewDataNotification";
-static NSString *const OLSendingStartedNotification = @"OLSendingStartedNotification";
-static NSString *const OLSendingFinishedNotification = @"OLSendingFinishedNotification";
+static NSString *const GLNewDataNotification = @"GLNewDataNotification";
+static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotification";
+static NSString *const GLSendingFinishedNotification = @"GLSendingFinishedNotification";
 
-static NSString *const OLAPIEndpointDefaultsName = @"OLAPIEndpointDefaults";
-static NSString *const OLLastSentDateDefaultsName = @"OLLastSentDateDefaults";
-static NSString *const OLTrackingStateDefaultsName = @"OLTrackingStateDefaults";
-static NSString *const OLSendIntervalDefaultsName = @"OLSendIntervalDefaults";
+static NSString *const GLAPIEndpointDefaultsName = @"GLAPIEndpointDefaults";
+static NSString *const GLLastSentDateDefaultsName = @"GLLastSentDateDefaults";
+static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
+static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
 
 static int const PointsPerBatch = 200;
 
-@interface OLManager : NSObject <CLLocationManagerDelegate>
+@interface GLManager : NSObject <CLLocationManagerDelegate>
 
-+ (OLManager *)sharedManager;
++ (GLManager *)sharedManager;
 
 @property (strong, nonatomic, readonly) CLLocationManager *locationManager;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;

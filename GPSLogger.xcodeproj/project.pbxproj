@@ -12,18 +12,18 @@
 		0FF4AE481815CF0E009994BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE471815CF0E009994BA /* UIKit.framework */; };
 		0FF4AE4E1815CF0E009994BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE4C1815CF0E009994BA /* InfoPlist.strings */; };
 		0FF4AE501815CF0E009994BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE4F1815CF0E009994BA /* main.m */; };
-		0FF4AE541815CF0E009994BA /* OLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE531815CF0E009994BA /* OLAppDelegate.m */; };
+		0FF4AE541815CF0E009994BA /* GLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE531815CF0E009994BA /* GLAppDelegate.m */; };
 		0FF4AE571815CF0E009994BA /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE551815CF0E009994BA /* Main_iPhone.storyboard */; };
 		0FF4AE5A1815CF0E009994BA /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE581815CF0E009994BA /* Main_iPad.storyboard */; };
-		0FF4AE5D1815CF0E009994BA /* OLFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE5C1815CF0E009994BA /* OLFirstViewController.m */; };
-		0FF4AE601815CF0E009994BA /* OLSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE5F1815CF0E009994BA /* OLSecondViewController.m */; };
+		0FF4AE5D1815CF0E009994BA /* GLFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE5C1815CF0E009994BA /* GLFirstViewController.m */; };
+		0FF4AE601815CF0E009994BA /* GLSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE5F1815CF0E009994BA /* GLSecondViewController.m */; };
 		0FF4AE621815CF0E009994BA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE611815CF0E009994BA /* Images.xcassets */; };
 		0FF4AE691815CF0E009994BA /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE681815CF0E009994BA /* XCTest.framework */; };
 		0FF4AE6A1815CF0E009994BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE431815CF0E009994BA /* Foundation.framework */; };
 		0FF4AE6B1815CF0E009994BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE471815CF0E009994BA /* UIKit.framework */; };
 		0FF4AE731815CF0E009994BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0FF4AE711815CF0E009994BA /* InfoPlist.strings */; };
-		0FF4AE751815CF0E009994BA /* OfflineLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */; };
-		0FF4AE8418164287009994BA /* OLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE8318164287009994BA /* OLManager.m */; };
+		0FF4AE751815CF0E009994BA /* GPSLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE741815CF0E009994BA /* GPSLoggerTests.m */; };
+		0FF4AE8418164287009994BA /* GLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE8318164287009994BA /* GLManager.m */; };
 		0FF4AE86181643CF009994BA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE85181643CF009994BA /* CoreLocation.framework */; };
 		0FF4AE88181643DB009994BA /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE87181643DB009994BA /* CoreMotion.framework */; };
 		0FF4AE8C18174A00009994BA /* LOLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF4AE8B18174A00009994BA /* LOLDatabase.m */; };
@@ -42,30 +42,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0FF4AE401815CF0E009994BA /* OfflineLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FF4AE401815CF0E009994BA /* GPSLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF4AE431815CF0E009994BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0FF4AE451815CF0E009994BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0FF4AE471815CF0E009994BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0FF4AE4B1815CF0E009994BA /* OfflineLogger-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OfflineLogger-Info.plist"; sourceTree = "<group>"; };
+		0FF4AE4B1815CF0E009994BA /* GPSLogger-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GPSLogger-Info.plist"; sourceTree = "<group>"; };
 		0FF4AE4D1815CF0E009994BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0FF4AE4F1815CF0E009994BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0FF4AE511815CF0E009994BA /* OfflineLogger-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OfflineLogger-Prefix.pch"; sourceTree = "<group>"; };
-		0FF4AE521815CF0E009994BA /* OLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLAppDelegate.h; sourceTree = "<group>"; };
-		0FF4AE531815CF0E009994BA /* OLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLAppDelegate.m; sourceTree = "<group>"; };
+		0FF4AE511815CF0E009994BA /* GPSLogger-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GPSLogger-Prefix.pch"; sourceTree = "<group>"; };
+		0FF4AE521815CF0E009994BA /* GLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAppDelegate.h; sourceTree = "<group>"; };
+		0FF4AE531815CF0E009994BA /* GLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLAppDelegate.m; sourceTree = "<group>"; };
 		0FF4AE561815CF0E009994BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		0FF4AE591815CF0E009994BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		0FF4AE5B1815CF0E009994BA /* OLFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLFirstViewController.h; sourceTree = "<group>"; };
-		0FF4AE5C1815CF0E009994BA /* OLFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLFirstViewController.m; sourceTree = "<group>"; };
-		0FF4AE5E1815CF0E009994BA /* OLSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLSecondViewController.h; sourceTree = "<group>"; };
-		0FF4AE5F1815CF0E009994BA /* OLSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLSecondViewController.m; sourceTree = "<group>"; };
+		0FF4AE5B1815CF0E009994BA /* GLFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLFirstViewController.h; sourceTree = "<group>"; };
+		0FF4AE5C1815CF0E009994BA /* GLFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLFirstViewController.m; sourceTree = "<group>"; };
+		0FF4AE5E1815CF0E009994BA /* GLSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLSecondViewController.h; sourceTree = "<group>"; };
+		0FF4AE5F1815CF0E009994BA /* GLSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLSecondViewController.m; sourceTree = "<group>"; };
 		0FF4AE611815CF0E009994BA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		0FF4AE671815CF0E009994BA /* OfflineLoggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OfflineLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FF4AE671815CF0E009994BA /* GPSLoggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GPSLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF4AE681815CF0E009994BA /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		0FF4AE701815CF0E009994BA /* OfflineLoggerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OfflineLoggerTests-Info.plist"; sourceTree = "<group>"; };
+		0FF4AE701815CF0E009994BA /* GPSLoggerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GPSLoggerTests-Info.plist"; sourceTree = "<group>"; };
 		0FF4AE721815CF0E009994BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OfflineLoggerTests.m; sourceTree = "<group>"; };
-		0FF4AE8218164287009994BA /* OLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLManager.h; sourceTree = "<group>"; };
-		0FF4AE8318164287009994BA /* OLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLManager.m; sourceTree = "<group>"; };
+		0FF4AE741815CF0E009994BA /* GPSLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPSLoggerTests.m; sourceTree = "<group>"; };
+		0FF4AE8218164287009994BA /* GLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLManager.h; sourceTree = "<group>"; };
+		0FF4AE8318164287009994BA /* GLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLManager.m; sourceTree = "<group>"; };
 		0FF4AE85181643CF009994BA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0FF4AE87181643DB009994BA /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		0FF4AE8A18174A00009994BA /* LOLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LOLDatabase.h; path = LOLDB/LOLDatabase.h; sourceTree = "<group>"; };
@@ -106,8 +106,8 @@
 		0FF4AE371815CF0E009994BA = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE491815CF0E009994BA /* OfflineLogger */,
-				0FF4AE6E1815CF0E009994BA /* OfflineLoggerTests */,
+				0FF4AE491815CF0E009994BA /* GPSLogger */,
+				0FF4AE6E1815CF0E009994BA /* GPSLoggerTests */,
 				0FF4AE421815CF0E009994BA /* Frameworks */,
 				0FF4AE411815CF0E009994BA /* Products */,
 				424757434BB94BA29BA78D6B /* Pods.xcconfig */,
@@ -117,8 +117,8 @@
 		0FF4AE411815CF0E009994BA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE401815CF0E009994BA /* OfflineLogger.app */,
-				0FF4AE671815CF0E009994BA /* OfflineLoggerTests.xctest */,
+				0FF4AE401815CF0E009994BA /* GPSLogger.app */,
+				0FF4AE671815CF0E009994BA /* GPSLoggerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,50 +138,52 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0FF4AE491815CF0E009994BA /* OfflineLogger */ = {
+		0FF4AE491815CF0E009994BA /* GPSLogger */ = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE521815CF0E009994BA /* OLAppDelegate.h */,
-				0FF4AE531815CF0E009994BA /* OLAppDelegate.m */,
+				0FF4AE521815CF0E009994BA /* GLAppDelegate.h */,
+				0FF4AE531815CF0E009994BA /* GLAppDelegate.m */,
 				0FF4AE551815CF0E009994BA /* Main_iPhone.storyboard */,
 				0FF4AE581815CF0E009994BA /* Main_iPad.storyboard */,
-				0FF4AE5B1815CF0E009994BA /* OLFirstViewController.h */,
-				0FF4AE5C1815CF0E009994BA /* OLFirstViewController.m */,
-				0FF4AE5E1815CF0E009994BA /* OLSecondViewController.h */,
-				0FF4AE5F1815CF0E009994BA /* OLSecondViewController.m */,
-				0FF4AE8218164287009994BA /* OLManager.h */,
-				0FF4AE8318164287009994BA /* OLManager.m */,
+				0FF4AE5B1815CF0E009994BA /* GLFirstViewController.h */,
+				0FF4AE5C1815CF0E009994BA /* GLFirstViewController.m */,
+				0FF4AE5E1815CF0E009994BA /* GLSecondViewController.h */,
+				0FF4AE5F1815CF0E009994BA /* GLSecondViewController.m */,
+				0FF4AE8218164287009994BA /* GLManager.h */,
+				0FF4AE8318164287009994BA /* GLManager.m */,
 				0FF4AE89181749E1009994BA /* LOLDB */,
 				0FF4AE611815CF0E009994BA /* Images.xcassets */,
 				0FF4AE4A1815CF0E009994BA /* Supporting Files */,
 			);
+			name = GPSLogger;
 			path = OfflineLogger;
 			sourceTree = "<group>";
 		};
 		0FF4AE4A1815CF0E009994BA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE4B1815CF0E009994BA /* OfflineLogger-Info.plist */,
+				0FF4AE4B1815CF0E009994BA /* GPSLogger-Info.plist */,
 				0FF4AE4C1815CF0E009994BA /* InfoPlist.strings */,
 				0FF4AE4F1815CF0E009994BA /* main.m */,
-				0FF4AE511815CF0E009994BA /* OfflineLogger-Prefix.pch */,
+				0FF4AE511815CF0E009994BA /* GPSLogger-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		0FF4AE6E1815CF0E009994BA /* OfflineLoggerTests */ = {
+		0FF4AE6E1815CF0E009994BA /* GPSLoggerTests */ = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE741815CF0E009994BA /* OfflineLoggerTests.m */,
+				0FF4AE741815CF0E009994BA /* GPSLoggerTests.m */,
 				0FF4AE6F1815CF0E009994BA /* Supporting Files */,
 			);
+			name = GPSLoggerTests;
 			path = OfflineLoggerTests;
 			sourceTree = "<group>";
 		};
 		0FF4AE6F1815CF0E009994BA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0FF4AE701815CF0E009994BA /* OfflineLoggerTests-Info.plist */,
+				0FF4AE701815CF0E009994BA /* GPSLoggerTests-Info.plist */,
 				0FF4AE711815CF0E009994BA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -199,9 +201,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0FF4AE3F1815CF0E009994BA /* OfflineLogger */ = {
+		0FF4AE3F1815CF0E009994BA /* GPSLogger */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF4AE781815CF0E009994BA /* Build configuration list for PBXNativeTarget "OfflineLogger" */;
+			buildConfigurationList = 0FF4AE781815CF0E009994BA /* Build configuration list for PBXNativeTarget "GPSLogger" */;
 			buildPhases = (
 				9ADA11BA2FF24E9384A22873 /* Check Pods Manifest.lock */,
 				0FF4AE3C1815CF0E009994BA /* Sources */,
@@ -213,14 +215,14 @@
 			);
 			dependencies = (
 			);
-			name = OfflineLogger;
+			name = GPSLogger;
 			productName = OfflineLogger;
-			productReference = 0FF4AE401815CF0E009994BA /* OfflineLogger.app */;
+			productReference = 0FF4AE401815CF0E009994BA /* GPSLogger.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0FF4AE661815CF0E009994BA /* OfflineLoggerTests */ = {
+		0FF4AE661815CF0E009994BA /* GPSLoggerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF4AE7B1815CF0E009994BA /* Build configuration list for PBXNativeTarget "OfflineLoggerTests" */;
+			buildConfigurationList = 0FF4AE7B1815CF0E009994BA /* Build configuration list for PBXNativeTarget "GPSLoggerTests" */;
 			buildPhases = (
 				0FF4AE631815CF0E009994BA /* Sources */,
 				0FF4AE641815CF0E009994BA /* Frameworks */,
@@ -231,9 +233,9 @@
 			dependencies = (
 				0FF4AE6D1815CF0E009994BA /* PBXTargetDependency */,
 			);
-			name = OfflineLoggerTests;
+			name = GPSLoggerTests;
 			productName = OfflineLoggerTests;
-			productReference = 0FF4AE671815CF0E009994BA /* OfflineLoggerTests.xctest */;
+			productReference = 0FF4AE671815CF0E009994BA /* GPSLoggerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -259,7 +261,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0FF4AE3B1815CF0E009994BA /* Build configuration list for PBXProject "OfflineLogger" */;
+			buildConfigurationList = 0FF4AE3B1815CF0E009994BA /* Build configuration list for PBXProject "GPSLogger" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -272,8 +274,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0FF4AE3F1815CF0E009994BA /* OfflineLogger */,
-				0FF4AE661815CF0E009994BA /* OfflineLoggerTests */,
+				0FF4AE3F1815CF0E009994BA /* GPSLogger */,
+				0FF4AE661815CF0E009994BA /* GPSLoggerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -338,12 +340,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FF4AE5D1815CF0E009994BA /* OLFirstViewController.m in Sources */,
-				0FF4AE601815CF0E009994BA /* OLSecondViewController.m in Sources */,
-				0FF4AE8418164287009994BA /* OLManager.m in Sources */,
+				0FF4AE5D1815CF0E009994BA /* GLFirstViewController.m in Sources */,
+				0FF4AE601815CF0E009994BA /* GLSecondViewController.m in Sources */,
+				0FF4AE8418164287009994BA /* GLManager.m in Sources */,
 				0FF4AE501815CF0E009994BA /* main.m in Sources */,
 				0FF4AE8C18174A00009994BA /* LOLDatabase.m in Sources */,
-				0FF4AE541815CF0E009994BA /* OLAppDelegate.m in Sources */,
+				0FF4AE541815CF0E009994BA /* GLAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,7 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FF4AE751815CF0E009994BA /* OfflineLoggerTests.m in Sources */,
+				0FF4AE751815CF0E009994BA /* GPSLoggerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +362,7 @@
 /* Begin PBXTargetDependency section */
 		0FF4AE6D1815CF0E009994BA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0FF4AE3F1815CF0E009994BA /* OfflineLogger */;
+			target = 0FF4AE3F1815CF0E009994BA /* GPSLogger */;
 			targetProxy = 0FF4AE6C1815CF0E009994BA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -485,10 +487,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "OfflineLogger/OfflineLogger-Prefix.pch";
-				INFOPLIST_FILE = "OfflineLogger/OfflineLogger-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "43A2D139-4271-490D-8299-15F1F9800D08";
+				GCC_PREFIX_HEADER = "OfflineLogger/GPSLogger-Prefix.pch";
+				INFOPLIST_FILE = "OfflineLogger/GPSLogger-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = GPSLogger;
+				PROVISIONING_PROFILE = "3134d568-ec88-4b6b-84b6-eac9974da5a2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -503,10 +506,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "OfflineLogger/OfflineLogger-Prefix.pch";
-				INFOPLIST_FILE = "OfflineLogger/OfflineLogger-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "43A2D139-4271-490D-8299-15F1F9800D08";
+				GCC_PREFIX_HEADER = "OfflineLogger/GPSLogger-Prefix.pch";
+				INFOPLIST_FILE = "OfflineLogger/GPSLogger-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = GPSLogger;
+				PROVISIONING_PROFILE = "3134d568-ec88-4b6b-84b6-eac9974da5a2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -527,8 +531,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "OfflineLoggerTests/OfflineLoggerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "OfflineLoggerTests/GPSLoggerTests-Info.plist";
+				PRODUCT_NAME = GPSLoggerTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -546,8 +550,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OfflineLogger/OfflineLogger-Prefix.pch";
-				INFOPLIST_FILE = "OfflineLoggerTests/OfflineLoggerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "OfflineLoggerTests/GPSLoggerTests-Info.plist";
+				PRODUCT_NAME = GPSLoggerTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -556,7 +560,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF4AE3B1815CF0E009994BA /* Build configuration list for PBXProject "OfflineLogger" */ = {
+		0FF4AE3B1815CF0E009994BA /* Build configuration list for PBXProject "GPSLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF4AE761815CF0E009994BA /* Debug */,
@@ -565,7 +569,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0FF4AE781815CF0E009994BA /* Build configuration list for PBXNativeTarget "OfflineLogger" */ = {
+		0FF4AE781815CF0E009994BA /* Build configuration list for PBXNativeTarget "GPSLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF4AE791815CF0E009994BA /* Debug */,
@@ -574,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0FF4AE7B1815CF0E009994BA /* Build configuration list for PBXNativeTarget "OfflineLoggerTests" */ = {
+		0FF4AE7B1815CF0E009994BA /* Build configuration list for PBXNativeTarget "GPSLoggerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF4AE7C1815CF0E009994BA /* Debug */,

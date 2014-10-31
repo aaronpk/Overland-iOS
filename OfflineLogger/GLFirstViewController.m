@@ -1,21 +1,21 @@
 //
-//  OLFirstViewController.m
-//  OfflineLogger
+//  GLFirstViewController.m
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
 //
 
-#import "OLFirstViewController.h"
-#import "OLManager.h"
+#import "GLFirstViewController.h"
+#import "GLManager.h"
 
-@interface OLFirstViewController ()
+@interface GLFirstViewController ()
 
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;
 
 @end
 
-@implementation OLFirstViewController
+@implementation GLFirstViewController
 
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
@@ -31,29 +31,29 @@ NSArray *intervalMapStrings;
 - (void)viewDidAppear:(BOOL)animated {
     [self.sendingIndicator stopAnimating];
     
-    if([OLManager sharedManager].trackingEnabled)
+    if([GLManager sharedManager].trackingEnabled)
         self.trackingEnabledToggle.selectedSegmentIndex = 0;
     else
         self.trackingEnabledToggle.selectedSegmentIndex = 1;
     
-    if([OLManager sharedManager].sendingInterval) {
-        self.sendIntervalSlider.value = [intervalMap indexOfObject:[OLManager sharedManager].sendingInterval];
+    if([GLManager sharedManager].sendingInterval) {
+        self.sendIntervalSlider.value = [intervalMap indexOfObject:[GLManager sharedManager].sendingInterval];
         [self updateSendIntervalLabel];
     }
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(newDataReceived)
-												 name:OLNewDataNotification
+												 name:GLNewDataNotification
 											   object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(sendingStarted)
-												 name:OLSendingStartedNotification
+												 name:GLSendingStartedNotification
 											   object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(sendingFinished)
-												 name:OLSendingFinishedNotification
+												 name:GLSendingFinishedNotification
 											   object:nil];
 
 	self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
@@ -61,7 +61,7 @@ NSArray *intervalMapStrings;
                                                            selector:@selector(refreshView)
                                                            userInfo:nil
                                                             repeats:YES];
-    [[OLManager sharedManager] queryStepCount:nil];
+    [[GLManager sharedManager] queryStepCount:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -77,8 +77,8 @@ NSArray *intervalMapStrings;
 
 - (void)newDataReceived {
 //    NSLog(@"New data received!");
-//    NSLog(@"Location: %@", [OLManager sharedManager].lastLocation);
-//    NSLog(@"Activity: %@", [OLManager sharedManager].lastMotion);
+//    NSLog(@"Location: %@", [GLManager sharedManager].lastLocation);
+//    NSLog(@"Activity: %@", [GLManager sharedManager].lastMotion);
     [self refreshView];
 }
 
@@ -93,19 +93,19 @@ NSArray *intervalMapStrings;
 }
 
 - (void)refreshView {
-    CLLocation *location = [OLManager sharedManager].lastLocation;
+    CLLocation *location = [GLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%.5f, %.5f +/- %dm", location.coordinate.latitude, location.coordinate.longitude, (int)round(location.horizontalAccuracy)];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"Alt: %dm", (int)round(location.altitude)];
     int speed = (int)(round(location.speed*3.6));
     if(speed < 0) speed = 0;
     self.locationSpeedLabel.text = [NSString stringWithFormat:@"Spd: %dkm/h", speed];
     
-    int age = -(int)round([OLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
+    int age = -(int)round([GLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     if(age == 1) age = 0;
-    self.locationAgeLabel.text = [NSString stringWithFormat:@"%@", [OLFirstViewController timeFormatted:age]];
+    self.locationAgeLabel.text = [NSString stringWithFormat:@"%@", [GLFirstViewController timeFormatted:age]];
     
     NSMutableArray *motionTextParts = [[NSMutableArray alloc] init];
-    CMMotionActivity *activity = [OLManager sharedManager].lastMotion;
+    CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
     if(activity.walking)
         [motionTextParts addObject:@"Walking"];
     if(activity.running)
@@ -116,20 +116,20 @@ NSArray *intervalMapStrings;
         [motionTextParts addObject:@"Stationary"];
     self.motionTypeLabel.text = [motionTextParts componentsJoinedByString:@", "];
     
-    self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [OLManager sharedManager].lastStepCount];
+    self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [GLManager sharedManager].lastStepCount];
     
-    if([OLManager sharedManager].lastSentDate) {
-        age = -(int)round([OLManager sharedManager].lastSentDate.timeIntervalSinceNow);
-        self.queueAgeLabel.text = [NSString stringWithFormat:@"%@ ago", [OLFirstViewController timeFormatted:age]];
+    if([GLManager sharedManager].lastSentDate) {
+        age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
+        self.queueAgeLabel.text = [NSString stringWithFormat:@"%@ ago", [GLFirstViewController timeFormatted:age]];
     } else {
         self.queueAgeLabel.text = @"not sent yet";
     }
     
-    [[OLManager sharedManager] numberOfLocationsInQueue:^(long num) {
+    [[GLManager sharedManager] numberOfLocationsInQueue:^(long num) {
         self.queueLabel.text = [NSString stringWithFormat:@"%ld locations", num];
     }];
     
-    if([OLManager sharedManager].sendInProgress)
+    if([GLManager sharedManager].sendInProgress)
         [self.sendingIndicator startAnimating];
     else
         [self.sendingIndicator stopAnimating];
@@ -138,18 +138,18 @@ NSArray *intervalMapStrings;
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
     NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
     if(sender.selectedSegmentIndex == 0) {
-        [[OLManager sharedManager] startAllUpdates];
+        [[GLManager sharedManager] startAllUpdates];
     } else {
-        [[OLManager sharedManager] stopAllUpdates];
+        [[GLManager sharedManager] stopAllUpdates];
     }
 }
 
 - (IBAction)sendQueue:(id)sender {
-    [[OLManager sharedManager] sendQueueNow];
+    [[GLManager sharedManager] sendQueueNow];
 }
 
 - (IBAction)debugSteps:(id)sender {
-    [[OLManager sharedManager] gatherSteps:^(NSMutableArray *data) {
+    [[GLManager sharedManager] gatherSteps:^(NSMutableArray *data) {
         NSLog(@"%@", data);
     }];
 }
@@ -170,7 +170,7 @@ NSArray *intervalMapStrings;
     NSNumber *val = intervalMap[(int)roundf([self.sendIntervalSlider value])];
     NSLog(@"Changed - Send Every: %@", val);
     [self updateSendIntervalLabel];
-    [OLManager sharedManager].sendingInterval = val;
+    [GLManager sharedManager].sendingInterval = val;
 }
 
 + (NSString *)timeFormatted:(int)totalSeconds {

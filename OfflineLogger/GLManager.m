@@ -1,16 +1,16 @@
 //
-//  OLManager.m
-//  OfflineLogger
+//  GLManager.m
+//  GPSLogger
 //
 //  Created by Aaron Parecki on 10/21/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
 //
 
-#import "OLManager.h"
+#import "GLManager.h"
 #import "LOLDatabase.h"
 #import "AFHTTPSessionManager.h"
 
-@interface OLManager()
+@interface GLManager()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CMMotionActivityManager *motionActivityManager;
@@ -27,17 +27,17 @@
 
 @end
 
-@implementation OLManager
+@implementation GLManager
 
-static NSString *const OLLocationQueueName = @"OLLocationQueue";
-static NSString *const OLStepCountQueueName = @"OLStepCountQueue";
+static NSString *const GLLocationQueueName = @"GLLocationQueue";
+static NSString *const OLStepCountQueueName = @"GLStepCountQueue";
 
 NSNumber *_sendingInterval;
 
 AFHTTPSessionManager *_httpClient;
 
-+ (OLManager *)sharedManager {
-    static OLManager *_instance = nil;
++ (GLManager *)sharedManager {
+    static GLManager *_instance = nil;
     
     @synchronized (self) {
         if (_instance == nil) {
@@ -65,7 +65,7 @@ AFHTTPSessionManager *_httpClient;
 + (NSString *)cacheDatabasePath
 {
 	NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	return [caches stringByAppendingPathComponent:@"OLLoggerCache.sqlite"];
+	return [caches stringByAppendingPathComponent:@"GLLoggerCache.sqlite"];
 }
 
 + (id)objectFromJSONData:(NSData *)data error:(NSError **)error;
@@ -92,7 +92,7 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)setupHTTPClient {
-    NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName]];
+    NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
     
     _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
     _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -100,7 +100,7 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)restoreTrackingState {
-    if([[NSUserDefaults standardUserDefaults] boolForKey:OLTrackingStateDefaultsName]) {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:GLTrackingStateDefaultsName]) {
         [self enableTracking];
     } else {
         [self disableTracking];
@@ -109,7 +109,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)startAllUpdates {
     [self enableTracking];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:OLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -119,7 +119,7 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager startUpdatingHeading];
     if(CMMotionActivityManager.isActivityAvailable) {
         [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:OLNewDataNotification object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
             self.lastMotion = activity;
         }];
     }
@@ -127,7 +127,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)stopAllUpdates {
     [self disableTracking];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:OLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLTrackingStateDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -177,7 +177,7 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
-    [self.stepCounter queryStepCountStartingFrom:[OLManager last24Hours]
+    [self.stepCounter queryStepCountStartingFrom:[GLManager last24Hours]
                                               to:[NSDate date]
                                          toQueue:[NSOperationQueue mainQueue]
                                      withHandler:^(NSInteger numberOfSteps, NSError *error) {
@@ -200,14 +200,14 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    [[NSNotificationCenter defaultCenter] postNotificationName:OLNewDataNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     self.lastLocation = (CLLocation *)locations[0];
     
     // Queue the point in the database
-	[self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+	[self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
 
         NSMutableArray *motion = [[NSMutableArray alloc] init];
-        CMMotionActivity *activity = [OLManager sharedManager].lastMotion;
+        CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
         if(activity.walking)
             [motion addObject:@"walking"];
         if(activity.running)
@@ -239,19 +239,19 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback {
-    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         [accessor countObjectsUsingBlock:callback];
     }];
 }
 
 - (void)sendingStarted {
     self.sendInProgress = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:OLSendingStartedNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingStartedNotification object:self];
 }
 
 - (void)sendingFinished {
     self.sendInProgress = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:OLSendingFinishedNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self];
 }
 
 - (void)sendQueueIfNecessary {
@@ -270,7 +270,7 @@ AFHTTPSessionManager *_httpClient;
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
 
-    [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
 
         [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
             [syncedUpdates addObject:key];
@@ -282,7 +282,7 @@ AFHTTPSessionManager *_httpClient;
 
     NSDictionary *postData = @{@"locations": locationUpdates};
     
-    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:OLAPIEndpointDefaultsName];
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     NSLog(@"Endpoint: %@", endpoint);
     NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
     
@@ -292,7 +292,7 @@ AFHTTPSessionManager *_httpClient;
         if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
             self.lastSentDate = NSDate.date;
             
-            [self.db accessCollection:OLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
                 for(NSString *key in syncedUpdates) {
                     [accessor removeDictionaryForKey:key];
                 }
@@ -318,11 +318,11 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (NSDate *)lastSentDate {
-    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:OLLastSentDateDefaultsName];
+    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLLastSentDateDefaultsName];
 }
 
 - (void)setLastSentDate:(NSDate *)lastSentDate {
-    [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:OLLastSentDateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:GLLastSentDateDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -378,7 +378,7 @@ AFHTTPSessionManager *_httpClient;
 #pragma mark -
 
 - (void)setSendingInterval:(NSNumber *)newValue {
-    [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:OLSendIntervalDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:GLSendIntervalDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     _sendingInterval = newValue;
 }
@@ -387,7 +387,7 @@ AFHTTPSessionManager *_httpClient;
     if(_sendingInterval)
         return _sendingInterval;
     
-    _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:OLSendIntervalDefaultsName];
+    _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:GLSendIntervalDefaultsName];
     return _sendingInterval;
 }
 
