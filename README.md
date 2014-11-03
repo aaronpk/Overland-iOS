@@ -4,7 +4,7 @@ GPS Logger for iOS
 This app is an experiment at gathering data from the iPhone 5s with its new location and motion APIs. The app tracks:
 * GPS location
 * Motion State (walking, running, driving, stationary)
-* Step count
+* Step count (in progress)
 
 The app gathers data with no network connection and stores locally on disk. The data is sent to the server in a batch when the user chooses.
 
@@ -24,7 +24,7 @@ The app will make a POST request to the configured endpoint that looks like the 
       "speed": 4,
       "horizontal_accuracy": 30,
       "vertical_accuracy": -1,
-      "motion": []
+      "motion": ["driving","stationary"]
     }
   ]
 }
