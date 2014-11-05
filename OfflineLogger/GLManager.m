@@ -115,6 +115,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)enableTracking {
     self.trackingEnabled = YES;
+    [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startUpdatingLocation];
     [self.locationManager startUpdatingHeading];
     if(CMMotionActivityManager.isActivityAvailable) {

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GLSecondViewController : UIViewController
+@interface GLSecondViewController : NSObject  : UIViewController
 
 @property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
 
