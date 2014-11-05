@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FC8E27B1A0AE1FB00B03BB9 /* GLSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FC8E27A1A0AE1FB00B03BB9 /* GLSecondViewController.m */; };
 		0FF4AE441815CF0E009994BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE431815CF0E009994BA /* Foundation.framework */; };
 		0FF4AE461815CF0E009994BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE451815CF0E009994BA /* CoreGraphics.framework */; };
 		0FF4AE481815CF0E009994BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF4AE471815CF0E009994BA /* UIKit.framework */; };
@@ -26,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0FC8E2791A0AE1FB00B03BB9 /* GLSecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSecondViewController.h; sourceTree = "<group>"; };
+		0FC8E27A1A0AE1FB00B03BB9 /* GLSecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSecondViewController.m; sourceTree = "<group>"; };
 		0FF4AE401815CF0E009994BA /* GPSLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF4AE431815CF0E009994BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0FF4AE451815CF0E009994BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -118,6 +121,8 @@
 				0FF4AE581815CF0E009994BA /* Main_iPad.storyboard */,
 				0FF4AE5B1815CF0E009994BA /* GLFirstViewController.h */,
 				0FF4AE5C1815CF0E009994BA /* GLFirstViewController.m */,
+				0FC8E2791A0AE1FB00B03BB9 /* GLSecondViewController.h */,
+				0FC8E27A1A0AE1FB00B03BB9 /* GLSecondViewController.m */,
 				0FF4AE8218164287009994BA /* GLManager.h */,
 				0FF4AE8318164287009994BA /* GLManager.m */,
 				0FF4AE89181749E1009994BA /* LOLDB */,
@@ -293,6 +298,7 @@
 				0FF4AE501815CF0E009994BA /* main.m in Sources */,
 				0FF4AE8C18174A00009994BA /* LOLDatabase.m in Sources */,
 				0FF4AE541815CF0E009994BA /* GLAppDelegate.m in Sources */,
+				0FC8E27B1A0AE1FB00B03BB9 /* GLSecondViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
