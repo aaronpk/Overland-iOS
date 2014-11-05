@@ -115,7 +115,10 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)enableTracking {
     self.trackingEnabled = YES;
-    [self.locationManager requestAlwaysAuthorization];
+    SEL requestAlwaysAuthorization = NSSelectorFromString(@"requestWhenInUseAuthorization");
+    if([self.locationManager respondsToSelector:requestAlwaysAuthorization]) {
+        [self.locationManager performSelector:requestAlwaysAuthorization];
+    }
     [self.locationManager startUpdatingLocation];
     [self.locationManager startUpdatingHeading];
     if(CMMotionActivityManager.isActivityAvailable) {
