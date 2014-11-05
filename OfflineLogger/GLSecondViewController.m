@@ -9,10 +9,6 @@
 #import "GLSecondViewController.h"
 #import "GLManager.h"
 
-@interface GLSecondViewController ()
-
-@end
-
 @implementation GLSecondViewController
 
 - (void)viewDidLoad
