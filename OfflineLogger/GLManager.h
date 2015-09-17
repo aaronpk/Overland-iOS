@@ -27,7 +27,6 @@ static int const PointsPerBatch = 200;
 
 @property (strong, nonatomic, readonly) CLLocationManager *locationManager;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;
-@property (strong, nonatomic, readonly) CMStepCounter *stepCounter;
 
 @property (strong, nonatomic) NSNumber *sendingInterval;
 
@@ -41,13 +40,9 @@ static int const PointsPerBatch = 200;
 - (void)startAllUpdates;
 - (void)stopAllUpdates;
 
-- (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))callback;
-
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)sendQueueNow;
 
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
-
-- (void)gatherSteps:(void(^)(NSMutableArray *data))handler;
 
 @end

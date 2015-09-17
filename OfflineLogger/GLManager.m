@@ -14,13 +14,11 @@
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CMMotionActivityManager *motionActivityManager;
-@property (strong, nonatomic) CMStepCounter *stepCounter;
 
 @property BOOL trackingEnabled;
 @property BOOL sendInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
-@property (strong, nonatomic) NSNumber *lastStepCount;
 @property (strong, nonatomic) NSDate *lastSentDate;
 
 @property (strong, nonatomic) LOLDatabase *db;
@@ -30,7 +28,6 @@
 @implementation GLManager
 
 static NSString *const GLLocationQueueName = @"GLLocationQueue";
-static NSString *const OLStepCountQueueName = @"GLStepCountQueue";
 
 NSNumber *_sendingInterval;
 
@@ -52,7 +49,6 @@ AFHTTPSessionManager *_httpClient;
             };
 
             [_instance setupHTTPClient];
-            [_instance startStepCounting];
             [_instance restoreTrackingState];
         }
     }
@@ -79,17 +75,6 @@ AFHTTPSessionManager *_httpClient;
 }
 
 #pragma mark -
-
-- (void)startStepCounting {
-    if(CMStepCounter.isStepCountingAvailable) {
-        // Request step count updates every 5 steps, but don't use the step count reported because then I'd have to keep track of the time I started counting steps.
-        [self.stepCounter startStepCountingUpdatesToQueue:[NSOperationQueue mainQueue]
-                                                 updateOn:5
-                                              withHandler:^(NSInteger numberOfSteps, NSDate *timestamp, NSError *error) {
-                                                  [self queryStepCount:nil];
-                                              }];
-    }
-}
 
 - (void)setupHTTPClient {
     NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
@@ -170,37 +155,6 @@ AFHTTPSessionManager *_httpClient;
     }
     
     return _motionActivityManager;
-}
-
-- (CMStepCounter *)stepCounter {
-    if (!_stepCounter) {
-        _stepCounter = [[CMStepCounter alloc] init];
-    }
-    
-    return _stepCounter;
-}
-
-- (void)queryStepCount:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
-    [self.stepCounter queryStepCountStartingFrom:[GLManager last24Hours]
-                                              to:[NSDate date]
-                                         toQueue:[NSOperationQueue mainQueue]
-                                     withHandler:^(NSInteger numberOfSteps, NSError *error) {
-                                         self.lastStepCount = [NSNumber numberWithInteger:numberOfSteps];
-                                         if(handler) {
-                                             handler(numberOfSteps, error);
-                                         }
-                                     }];
-}
-
-- (void)queryStepCountForInterval:(NSDate *)date withHandler:(void(^)(NSInteger numberOfSteps, NSError *error))handler {
-    [self.stepCounter queryStepCountStartingFrom:date
-                                              to:[date dateByAddingTimeInterval:(60*5)-1]
-                                         toQueue:[NSOperationQueue mainQueue]
-                                     withHandler:^(NSInteger numberOfSteps, NSError *error) {
-                                         if(handler) {
-                                             handler(numberOfSteps, error);
-                                         }
-                                     }];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
@@ -342,41 +296,6 @@ AFHTTPSessionManager *_httpClient;
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }
-}
-
-- (void)gatherSteps:(void(^)(NSMutableArray *data))handler
-{
-    NSDate *startDate = self.lastSentDate;
-    startDate = [NSDate dateWithTimeIntervalSince1970:(1382989284 / 300) * 300];
-    
-    NSDate *currentDate = startDate;
-    NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([NSDate.date timeIntervalSince1970] / 300) * 300];
-    
-    __block NSUInteger remaining = 0;
-    while([endDate timeIntervalSinceDate:currentDate] > 60*5) {
-        remaining++;
-        currentDate = [currentDate dateByAddingTimeInterval:60*5];
-    }
-    
-    currentDate = startDate;
-    
-    __block NSMutableArray *data = [[NSMutableArray alloc] init];
-
-    // Iterate through 5-minute chunks until but not including the current in-progress 5-minute interval
-    while([endDate timeIntervalSinceDate:currentDate] > 60*5) {
-        [self queryStepCountForInterval:currentDate withHandler:^(NSInteger numberOfSteps, NSError *error) {
-            NSLog(@"%@ :: %@", [NSString stringWithFormat:@"%ld", (long)[currentDate timeIntervalSince1970]], [NSNumber numberWithInteger:numberOfSteps]);
-            
-            [data addObject:@{@"interval":[NSNumber numberWithInteger:[currentDate timeIntervalSince1970]], @"steps":[NSNumber numberWithInteger:numberOfSteps]}];
-            
-            remaining--;
-            if(remaining == 0) {
-                handler(data);
-            }
-        }];
-        currentDate = [currentDate dateByAddingTimeInterval:60*5];
-    }
-    
 }
 
 #pragma mark -

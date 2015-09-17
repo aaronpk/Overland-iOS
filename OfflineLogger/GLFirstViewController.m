@@ -61,7 +61,6 @@ NSArray *intervalMapStrings;
                                                            selector:@selector(refreshView)
                                                            userInfo:nil
                                                             repeats:YES];
-    [[GLManager sharedManager] queryStepCount:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -116,8 +115,6 @@ NSArray *intervalMapStrings;
         [motionTextParts addObject:@"Stationary"];
     self.motionTypeLabel.text = [motionTextParts componentsJoinedByString:@", "];
     
-    self.motionStepsLabel.text = [NSString stringWithFormat:@"%@ steps in the last 24 hours", [GLManager sharedManager].lastStepCount];
-    
     if([GLManager sharedManager].lastSentDate) {
         age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
         self.queueAgeLabel.text = [NSString stringWithFormat:@"%@ ago", [GLFirstViewController timeFormatted:age]];
@@ -146,12 +143,6 @@ NSArray *intervalMapStrings;
 
 - (IBAction)sendQueue:(id)sender {
     [[GLManager sharedManager] sendQueueNow];
-}
-
-- (IBAction)debugSteps:(id)sender {
-    [[GLManager sharedManager] gatherSteps:^(NSMutableArray *data) {
-        NSLog(@"%@", data);
-    }];
 }
 
 - (void)updateSendIntervalLabel {

@@ -33,6 +33,4 @@
 - (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 
-- (IBAction)debugSteps:(id)sender;
-
 @end
