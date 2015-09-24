@@ -25,6 +25,10 @@ NSArray *intervalMapStrings;
     // Do any additional setup after loading the view, typically from a nib.
     intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @-1];
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
+    
+    [[GLManager sharedManager] accountInfo:^(NSString *name) {
+        self.accountInfo.text = name;
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

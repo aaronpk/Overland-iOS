@@ -10,6 +10,8 @@
 
 @interface FirstViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UILabel *accountInfo;
+
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 
 @property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;

@@ -243,6 +243,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Tracker" image="map-pin" id="acW-dT-cKf"/>
                     <connections>
+                        <outlet property="accountInfo" destination="aT1-cg-Q8Y" id="QuK-e1-wK0"/>
                         <outlet property="locationAgeLabel" destination="rZc-jl-K4j" id="KGq-YC-32j"/>
                         <outlet property="locationAltitudeLabel" destination="tzf-yA-Lrh" id="VuF-QB-TXb"/>
                         <outlet property="locationLabel" destination="ItY-6C-yMI" id="QRC-ow-cvJ"/>

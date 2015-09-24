@@ -337,6 +337,16 @@ AFHTTPSessionManager *_httpClient;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
+- (void)accountInfo:(void(^)(NSString *name))block {
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    [_httpClient GET:endpoint parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        NSDictionary *dict = (NSDictionary *)responseObject;
+        block((NSString *)[dict objectForKey:@"name"]);
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        NSLog(@"Failed to get account info");
+    }];
+}
+
 #pragma mark -
 
 - (void)setSendingInterval:(NSNumber *)newValue {

@@ -50,4 +50,6 @@ static int const PointsPerBatch = 200;
 
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
 
+- (void)accountInfo:(void(^)(NSString *name))block;
+
 @end
