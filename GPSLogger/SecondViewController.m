@@ -20,9 +20,10 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,6 +33,10 @@
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender {
     [GLManager sharedManager].pausesAutomatically = sender.on;
+}
+
+- (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {
+    [GLManager sharedManager].activityType = sender.selectedSegmentIndex + 1; // activityType is an enum starting at 1
 }
 
 

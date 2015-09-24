@@ -138,7 +138,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="VE3-Mg-Sof">
                                         <rect key="frame" x="0.0" y="241" width="560" height="76"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" layoutMarginsRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PX9-dr-Z0E">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="PX9-dr-Z0E">
                                                 <rect key="frame" x="0.0" y="0.0" width="70" height="76"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AGE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sEo-GS-6gn">
@@ -306,6 +306,24 @@
                                     </switch>
                                 </subviews>
                             </stackView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
+                                <rect key="frame" x="20" y="210" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Other"/>
+                                    <segment title="Fitness"/>
+                                    <segment title="Automotive"/>
+                                    <segment title="Navigation"/>
+                                </segments>
+                                <connections>
+                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
+                                <rect key="frame" x="20" y="181" width="99" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -314,13 +332,19 @@
                             <constraint firstItem="h2n-eK-70s" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="697-Wa-gLu"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DNe-rr-Tyi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="YLk-nt-gvV" secondAttribute="trailing" id="ECc-7z-B3b"/>
+                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="h2n-eK-70s" secondAttribute="bottom" constant="20" id="ENR-Wc-p8r"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="30" id="XDy-Ga-QX0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
+                            <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="top" secondItem="YLk-nt-gvV" secondAttribute="bottom" constant="20" id="xE8-Ze-ZXG"/>
+                            <constraint firstItem="NGq-b5-JzA" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="zCT-th-AHj"/>
+                            <constraint firstItem="NGq-b5-JzA" firstAttribute="top" secondItem="cey-oi-wfE" secondAttribute="bottom" constant="8" id="zh8-XJ-37x"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Debug" image="second" id="cPa-gy-q4n"/>
                     <connections>
+                        <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
                         <outlet property="apiEndpointField" destination="YLk-nt-gvV" id="Aix-cO-kf4"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
                     </connections>

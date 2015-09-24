@@ -19,6 +19,7 @@ static NSString *const GLLastSentDateDefaultsName = @"GLLastSentDateDefaults";
 static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
 static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
 static NSString *const GLPausesAutomaticallyDefaultsName = @"GLPausesAutomaticallyDefaults";
+static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 
 static int const PointsPerBatch = 200;
 
@@ -31,6 +32,7 @@ static int const PointsPerBatch = 200;
 
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
+@property (nonatomic) CLActivityType activityType;
 
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;

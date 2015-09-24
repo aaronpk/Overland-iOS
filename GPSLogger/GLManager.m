@@ -143,6 +143,15 @@ AFHTTPSessionManager *_httpClient;
     self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
 }
 
+- (CLActivityType)activityType {
+    return self.locationManager.activityType;
+}
+- (void)setActivityType:(CLActivityType)activityType {
+    [[NSUserDefaults standardUserDefaults] setInteger:activityType forKey:GLActivityTypeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    self.locationManager.activityType = activityType;
+}
+
 #pragma mark -
 
 - (CLLocationManager *)locationManager {
@@ -152,7 +161,7 @@ AFHTTPSessionManager *_httpClient;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 1;
         _locationManager.pausesLocationUpdatesAutomatically = [[NSUserDefaults standardUserDefaults] boolForKey:GLPausesAutomaticallyDefaultsName];
-        // _locationManager.activityType = CLActivityTypeOther;
+        _locationManager.activityType = [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
     }
     
     return _locationManager;
@@ -174,15 +183,31 @@ AFHTTPSessionManager *_httpClient;
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         
         NSMutableArray *motion = [[NSMutableArray alloc] init];
-        CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
-        if(activity.walking)
+        CMMotionActivity *motionActivity = [GLManager sharedManager].lastMotion;
+        if(motionActivity.walking)
             [motion addObject:@"walking"];
-        if(activity.running)
+        if(motionActivity.running)
             [motion addObject:@"running"];
-        if(activity.automotive)
+        if(motionActivity.automotive)
             [motion addObject:@"driving"];
-        if(activity.stationary)
+        if(motionActivity.stationary)
             [motion addObject:@"stationary"];
+        
+        NSString *activityType = @"";
+        switch([GLManager sharedManager].activityType) {
+            case CLActivityTypeOther:
+                activityType = @"other";
+                break;
+            case CLActivityTypeAutomotiveNavigation:
+                activityType = @"automotive_navigation";
+                break;
+            case CLActivityTypeFitness:
+                activityType = @"fitness";
+                break;
+            case CLActivityTypeOtherNavigation:
+                activityType = @"other_navigation";
+                break;
+        }
         
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
@@ -203,7 +228,8 @@ AFHTTPSessionManager *_httpClient;
                                              @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
                                              @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
                                              @"motion": motion,
-                                             @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically]
+                                             @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
+                                             @"activity": activityType
                                              }
                                      };
             [accessor setDictionary:update forKey:[timestamp stringValue]];
