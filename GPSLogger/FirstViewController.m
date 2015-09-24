@@ -180,7 +180,7 @@ NSArray *intervalMapStrings;
     if(hours == 0) {
         return [NSString stringWithFormat:@"%2d:%02d", minutes, seconds];
     } else {
-        return [NSString stringWithFormat:@"%2d:%02d:%02d", hours, minutes, seconds];
+        return [NSString stringWithFormat:@"%2d:%02d", hours, minutes];
     }
 }
 
