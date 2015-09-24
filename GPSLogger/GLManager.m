@@ -175,6 +175,24 @@ AFHTTPSessionManager *_httpClient;
     self.locationManager.desiredAccuracy = desiredAccuracy;
 }
 
+- (CLLocationDistance)defersLocationUpdates {
+    if([self defaultsKeyExists:GLDefersLocationUpdatesDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDefersLocationUpdatesDefaultsName];
+    } else {
+        return 0;
+    }
+}
+- (void)setDefersLocationUpdates:(CLLocationDistance)distance {
+    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDefersLocationUpdatesDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(distance > 0) {
+        [self.locationManager allowDeferredLocationUpdatesUntilTraveled:distance timeout:[self.sendingInterval doubleValue]];
+    } else {
+        [self.locationManager disallowDeferredLocationUpdates];
+    }
+}
+
+
 - (BOOL)defaultsKeyExists:(NSString *)key {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
@@ -261,7 +279,8 @@ AFHTTPSessionManager *_httpClient;
                                              @"motion": motion,
                                              @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
                                              @"activity": activityType,
-                                             @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy]
+                                             @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
+                                             @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates]
                                              }
                                      };
             [accessor setDictionary:update forKey:[timestamp stringValue]];

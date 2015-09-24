@@ -345,24 +345,48 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
+                                <rect key="frame" x="20" y="369" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Never"/>
+                                    <segment title="100m"/>
+                                    <segment title="1km"/>
+                                    <segment title="5km"/>
+                                    <segment title="Max"/>
+                                </segments>
+                                <connections>
+                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="9Ov-1u-jm3"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
+                                <rect key="frame" x="20" y="338" width="190" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="151-P9-57o"/>
+                            <constraint firstItem="EhT-nM-dDF" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="2cX-9M-F76"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="60" id="65X-Fa-3LC"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="697-Wa-gLu"/>
+                            <constraint firstItem="i3F-i7-0BG" firstAttribute="top" secondItem="mZU-DS-xA9" secondAttribute="bottom" constant="20" id="9ok-40-EGQ"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DNe-rr-Tyi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="YLk-nt-gvV" secondAttribute="trailing" id="ECc-7z-B3b"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="h2n-eK-70s" secondAttribute="bottom" constant="20" id="ENR-Wc-p8r"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="NHo-tp-BjS"/>
+                            <constraint firstItem="i3F-i7-0BG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="RfY-ku-Qme"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="UAy-Sr-hlV"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="30" id="XDy-Ga-QX0"/>
+                            <constraint firstItem="EhT-nM-dDF" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="dIz-b2-p4Y"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="top" secondItem="NGq-b5-JzA" secondAttribute="bottom" constant="21" id="dTQ-Kq-ppd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="k8J-Yu-fe9"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="top" secondItem="VmK-UK-oxG" secondAttribute="bottom" constant="10" id="kAg-7B-9nZ"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
+                            <constraint firstItem="EhT-nM-dDF" firstAttribute="top" secondItem="i3F-i7-0BG" secondAttribute="bottom" constant="10" id="wss-b9-fOB"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="top" secondItem="YLk-nt-gvV" secondAttribute="bottom" constant="20" id="xE8-Ze-ZXG"/>
                             <constraint firstItem="NGq-b5-JzA" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="zCT-th-AHj"/>
                             <constraint firstItem="NGq-b5-JzA" firstAttribute="top" secondItem="cey-oi-wfE" secondAttribute="bottom" constant="8" id="zh8-XJ-37x"/>
@@ -372,6 +396,7 @@
                     <connections>
                         <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
                         <outlet property="apiEndpointField" destination="YLk-nt-gvV" id="Aix-cO-kf4"/>
+                        <outlet property="defersLocationUpdates" destination="EhT-nM-dDF" id="L1d-Pw-vrq"/>
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
                     </connections>

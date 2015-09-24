@@ -14,10 +14,12 @@
 @property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
+- (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 
 @end
 
