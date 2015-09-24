@@ -160,6 +160,7 @@ AFHTTPSessionManager *_httpClient;
         _locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 1;
+        _locationManager.allowsBackgroundLocationUpdates = YES;
         _locationManager.pausesLocationUpdatesAutomatically = [[NSUserDefaults standardUserDefaults] boolForKey:GLPausesAutomaticallyDefaultsName];
         _locationManager.activityType = [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
     }
@@ -178,6 +179,8 @@ AFHTTPSessionManager *_httpClient;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     self.lastLocation = (CLLocation *)locations[0];
+    
+    NSLog(@"Received %d locations", (int)locations.count);
     
     // Queue the point in the database
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
