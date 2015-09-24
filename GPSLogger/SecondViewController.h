@@ -13,9 +13,11 @@
 @property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 
-- (IBAction)togglePausesAutomatically:(id)sender;
-- (IBAction)activityTypeControlWasChanged:(id)sender;
+- (IBAction)togglePausesAutomatically:(UISwitch *)sender;
+- (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
+- (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 
 @end
 

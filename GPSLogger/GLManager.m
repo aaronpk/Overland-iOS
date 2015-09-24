@@ -22,7 +22,6 @@
 @property (strong, nonatomic) NSDate *lastSentDate;
 
 @property (strong, nonatomic) LOLDatabase *db;
-@property BOOL _pausesAutomatically;
 
 @end
 
@@ -134,8 +133,14 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
 }
 
+#pragma mark - LocationManager properties
+
 - (BOOL)pausesAutomatically {
-    return _locationManager.pausesLocationUpdatesAutomatically;
+    if([self defaultsKeyExists:GLPausesAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLPausesAutomaticallyDefaultsName];
+    } else {
+        return NO;
+    }
 }
 - (void)setPausesAutomatically:(BOOL)pausesAutomatically {
     [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
@@ -144,7 +149,11 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (CLActivityType)activityType {
-    return self.locationManager.activityType;
+    if([self defaultsKeyExists:GLActivityTypeDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
+    } else {
+        return CLActivityTypeOther;
+    }
 }
 - (void)setActivityType:(CLActivityType)activityType {
     [[NSUserDefaults standardUserDefaults] setInteger:activityType forKey:GLActivityTypeDefaultsName];
@@ -152,17 +161,36 @@ AFHTTPSessionManager *_httpClient;
     self.locationManager.activityType = activityType;
 }
 
+- (CLLocationAccuracy)desiredAccuracy {
+    if([self defaultsKeyExists:GLDesiredAccuracyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDesiredAccuracyDefaultsName];
+    } else {
+        return kCLLocationAccuracyHundredMeters;
+    }
+}
+- (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
+    NSLog(@"Setting desiredAccuracy: %f", desiredAccuracy);
+    [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLDesiredAccuracyDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    self.locationManager.desiredAccuracy = desiredAccuracy;
+}
+
+- (BOOL)defaultsKeyExists:(NSString *)key {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
+}
+        
 #pragma mark -
 
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.desiredAccuracy = self.desiredAccuracy;
         _locationManager.distanceFilter = 1;
         _locationManager.allowsBackgroundLocationUpdates = YES;
-        _locationManager.pausesLocationUpdatesAutomatically = [[NSUserDefaults standardUserDefaults] boolForKey:GLPausesAutomaticallyDefaultsName];
-        _locationManager.activityType = [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
+        _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
+        _locationManager.activityType = self.activityType;
     }
     
     return _locationManager;
@@ -232,7 +260,8 @@ AFHTTPSessionManager *_httpClient;
                                              @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
                                              @"motion": motion,
                                              @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
-                                             @"activity": activityType
+                                             @"activity": activityType,
+                                             @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy]
                                              }
                                      };
             [accessor setDictionary:update forKey:[timestamp stringValue]];

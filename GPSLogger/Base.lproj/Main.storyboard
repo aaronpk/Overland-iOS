@@ -325,6 +325,26 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
+                                <rect key="frame" x="20" y="290" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Nav"/>
+                                    <segment title="Best"/>
+                                    <segment title="10m"/>
+                                    <segment title="100m"/>
+                                    <segment title="1km"/>
+                                    <segment title="3km"/>
+                                </segments>
+                                <connections>
+                                    <action selector="desiredAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0qh-4p-SOv"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
+                                <rect key="frame" x="20" y="259" width="135" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -334,8 +354,13 @@
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DNe-rr-Tyi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="YLk-nt-gvV" secondAttribute="trailing" id="ECc-7z-B3b"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="h2n-eK-70s" secondAttribute="bottom" constant="20" id="ENR-Wc-p8r"/>
+                            <constraint firstItem="mZU-DS-xA9" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="NHo-tp-BjS"/>
+                            <constraint firstItem="mZU-DS-xA9" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="UAy-Sr-hlV"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="30" id="XDy-Ga-QX0"/>
+                            <constraint firstItem="VmK-UK-oxG" firstAttribute="top" secondItem="NGq-b5-JzA" secondAttribute="bottom" constant="21" id="dTQ-Kq-ppd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
+                            <constraint firstItem="VmK-UK-oxG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="k8J-Yu-fe9"/>
+                            <constraint firstItem="mZU-DS-xA9" firstAttribute="top" secondItem="VmK-UK-oxG" secondAttribute="bottom" constant="10" id="kAg-7B-9nZ"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="top" secondItem="YLk-nt-gvV" secondAttribute="bottom" constant="20" id="xE8-Ze-ZXG"/>
@@ -347,6 +372,7 @@
                     <connections>
                         <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
                         <outlet property="apiEndpointField" destination="YLk-nt-gvV" id="Aix-cO-kf4"/>
+                        <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
                     </connections>
                 </viewController>
