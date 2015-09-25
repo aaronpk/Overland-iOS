@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-//    [[NSUserDefaults standardUserDefaults] setObject:@"https://compass.esripdx.com/api/input?token=iL1aGzfqkHYKQ1awhrogKDEWO87wrnzYsUjSuKkn" forKey:GLAPIEndpointDefaultsName];
+//    [[NSUserDefaults standardUserDefaults] setObject:@"https://compass.esripdx.com/api/input?token=" forKey:GLAPIEndpointDefaultsName];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
 
     [GLManager sharedManager];

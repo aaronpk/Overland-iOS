@@ -17,6 +17,7 @@
 
 @property BOOL trackingEnabled;
 @property BOOL sendInProgress;
+@property BOOL batchInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSDate *lastSentDate;
@@ -308,10 +309,32 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)sendQueueIfNecessary {
-    if(!self.sendInProgress &&
-       [self.sendingInterval integerValue] > -1 &&
-       [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending) {
-        NSLog(@"Sending queue now");
+    BOOL sendingEnabled = [self.sendingInterval integerValue] > -1;
+    if(!sendingEnabled) {
+        return;
+    }
+    
+    if(self.sendInProgress) {
+        return;
+    }
+    
+    BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending;
+    
+    __block long numPending = 0;
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor countObjectsUsingBlock:^(long num) {
+            numPending = num;
+        }];
+    }];
+//    if(numPending < PointsPerBatch) {
+//        self.batchInProgress = NO;
+//    }
+
+    // Send if there is a full batch AND time has elapsed,
+    // or if we're in the middle of flushing
+    if((numPending >= PointsPerBatch && timeElapsed)
+        || self.batchInProgress) {
+        NSLog(@"Sending a batch now");
         [self sendQueueNow];
         self.lastSentDate = NSDate.date;
     }
@@ -339,6 +362,11 @@ AFHTTPSessionManager *_httpClient;
     NSLog(@"Endpoint: %@", endpoint);
     NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
     
+    if(locationUpdates.count == 0) {
+        self.batchInProgress = NO;
+        return;
+    }
+    
     [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Response: %@", responseObject);
         
@@ -349,11 +377,26 @@ AFHTTPSessionManager *_httpClient;
                 for(NSString *key in syncedUpdates) {
                     [accessor removeDictionaryForKey:key];
                 }
+
             }];
-            
+
+            // Try to send again in case there are more left
+            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+                [accessor countObjectsUsingBlock:^(long num) {
+                    if(num > 0) {
+                        NSLog(@"Number remaining: %ld", num);
+                        self.batchInProgress = YES;
+                    } else {
+                        self.batchInProgress = NO;
+                    }
+                }];
+            }];
+
             [self sendingFinished];
         } else {
-            
+
+            self.batchInProgress = NO;
+
             if([responseObject objectForKey:@"error"]) {
                 [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
                 [self sendingFinished];
@@ -363,6 +406,7 @@ AFHTTPSessionManager *_httpClient;
             }
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        self.batchInProgress = NO;
         NSLog(@"Error: %@", error);
         [self notify:error.description withTitle:@"Error"];
         [self sendingFinished];
