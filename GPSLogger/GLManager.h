@@ -56,4 +56,8 @@ static int const PointsPerBatch = 200;
 
 - (void)accountInfo:(void(^)(NSString *name))block;
 
+- (void)applicationWillTerminate;
+- (void)applicationDidEnterBackground;
+- (void)applicationWillResignActive;
+
 @end

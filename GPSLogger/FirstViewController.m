@@ -37,7 +37,7 @@ NSArray *intervalMapStrings;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.sendingIndicator stopAnimating];
+    [self sendingFinished];
     
     if([GLManager sharedManager].trackingEnabled)
         self.trackingEnabledToggle.selectedSegmentIndex = 0;
@@ -76,6 +76,16 @@ NSArray *intervalMapStrings;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewWillUnload {
+    [self.viewRefreshTimer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)dealloc {
+    NSLog(@"view is deallocd");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)newDataReceived {
     //    NSLog(@"New data received!");
     //    NSLog(@"Location: %@", [GLManager sharedManager].lastLocation);
@@ -85,12 +95,14 @@ NSArray *intervalMapStrings;
 }
 
 - (void)sendingStarted {
-    [self.sendingIndicator startAnimating];
+    self.sendNowButton.titleLabel.text = @"Sending...";
+    self.sendNowButton.backgroundColor = [UIColor colorWithRed:74.0/255.0 green:150.0/255.0 blue:107.0/255.0 alpha:1.0];
     self.sendNowButton.enabled = NO;
 }
 
 - (void)sendingFinished {
-    [self.sendingIndicator stopAnimating];
+    self.sendNowButton.titleLabel.text = @"Send Now";
+    self.sendNowButton.backgroundColor = [UIColor colorWithRed:106.0/255.0 green:212.0/255.0 blue:150.0/255.0 alpha:1.0];
     self.sendNowButton.enabled = YES;
 }
 
@@ -131,10 +143,10 @@ NSArray *intervalMapStrings;
         self.queueLabel.text = [NSString stringWithFormat:@"%ld", num];
     }];
     
-    if([GLManager sharedManager].sendInProgress)
-        [self.sendingIndicator startAnimating];
-    else
-        [self.sendingIndicator stopAnimating];
+    if(![GLManager sharedManager].sendInProgress)
+//        [self sendingStarted];
+//    else
+        [self sendingFinished];
 }
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {

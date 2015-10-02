@@ -51,6 +51,7 @@ AFHTTPSessionManager *_httpClient;
             
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
+            [_instance setupBatteryMonitoring];
         }
     }
     
@@ -75,6 +76,18 @@ AFHTTPSessionManager *_httpClient;
     return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
 }
 
++ (NSString *)iso8601DateStringFromDate:(NSDate *)date {
+    struct tm *timeinfo;
+    char buffer[80];
+    
+    time_t rawtime = (time_t)[date timeIntervalSince1970];
+    timeinfo = gmtime(&rawtime);
+    
+    strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
+    
+    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+}
+
 #pragma mark -
 
 - (void)setupHTTPClient {
@@ -93,6 +106,24 @@ AFHTTPSessionManager *_httpClient;
     }
 }
 
+- (void)setupBatteryMonitoring {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(batteryLevelChanged:)
+                                                 name:UIDeviceBatteryLevelDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(batteryStateChanged:)
+                                                 name:UIDeviceBatteryStateDidChangeNotification object:nil];
+}
+
+- (void)batteryLevelChanged:(NSNotification *)notification {
+
+}
+
+- (void)batteryStateChanged:(NSNotification *)notification {
+
+}
+
 - (void)startAllUpdates {
     [self enableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
@@ -104,6 +135,10 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startUpdatingLocation];
     [self.locationManager startUpdatingHeading];
+    [self.locationManager startMonitoringVisits];
+    
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+    
     if(CMMotionActivityManager.isActivityAvailable) {
         [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
             [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
@@ -120,6 +155,8 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)disableTracking {
     self.trackingEnabled = NO;
+    [UIDevice currentDevice].batteryMonitoringEnabled = NO;
+    [self.locationManager stopMonitoringVisits];
     [self.locationManager stopUpdatingHeading];
     [self.locationManager stopUpdatingLocation];
     if(CMMotionActivityManager.isActivityAvailable) {
@@ -223,6 +260,38 @@ AFHTTPSessionManager *_httpClient;
     return _motionActivityManager;
 }
 
+- (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+
+    NSLog(@"Got a visit event: %@", visit);
+    
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        NSDictionary *update = @{
+                                  @"type": @"Feature",
+                                  @"geometry": @{
+                                          @"type": @"Point",
+                                          @"coordinates": @[
+                                                  [NSNumber numberWithDouble:visit.coordinate.longitude],
+                                                  [NSNumber numberWithDouble:visit.coordinate.latitude]
+                                                  ]
+                                          },
+                                  @"properties": @{
+                                          @"timestamp": timestamp,
+                                          @"action": visit,
+                                          @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
+                                          @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
+                                          @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
+                                          @"battery_state": [self currentBatteryState],
+                                          @"battery_level": [self currentBatteryLevel]
+                                          }
+                                };
+        [accessor setDictionary:update forKey:timestamp];
+    }];
+
+    [self sendQueueIfNecessary];
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     self.lastLocation = (CLLocation *)locations[0];
@@ -261,7 +330,7 @@ AFHTTPSessionManager *_httpClient;
         
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
-            NSNumber *timestamp = [NSNumber numberWithInt:(int)round([loc.timestamp timeIntervalSince1970])];
+            NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
             NSDictionary *update = @{
                                      @"type": @"Feature",
                                      @"geometry": @{
@@ -281,15 +350,84 @@ AFHTTPSessionManager *_httpClient;
                                              @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
                                              @"activity": activityType,
                                              @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
-                                             @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates]
+                                             @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
+                                             @"locations_in_payload": [NSNumber numberWithLong:locations.count],
+                                             @"battery_state": [self currentBatteryState],
+                                             @"battery_level": [self currentBatteryLevel]
                                              }
                                      };
-            [accessor setDictionary:update forKey:[timestamp stringValue]];
+            [accessor setDictionary:update forKey:timestamp];
         }
         
     }];
     
     [self sendQueueIfNecessary];
+}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    [self logAction:@"paused_location_updates"];
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
+    [self logAction:@"resumed_location_updates"];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(nullable NSError *)error {
+    [self logAction:@"did_finish_deferred_updates"];
+}
+
+- (void)applicationDidEnterBackground {
+    [self logAction:@"did_enter_background"];
+}
+
+- (void)applicationWillTerminate {
+    [self logAction:@"will_terminate"];
+}
+
+- (void)applicationWillResignActive {
+    [self logAction:@"will_resign_active"];
+}
+
+- (void)logAction:(NSString *)action {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      @"type": @"Feature",
+                                                                                      @"properties": @{
+                                                                                              @"timestamp": timestamp,
+                                                                                              @"action": action,
+                                                                                              @"battery_state": [self currentBatteryState],
+                                                                                              @"battery_level": [self currentBatteryLevel]
+                                                                                              }
+                                                                                      }];
+        if(self.lastLocation) {
+            [update setObject:@{
+                                @"type": @"Point",
+                                @"coordinates": @[
+                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                        ]
+                                } forKey:@"geometry"];
+        }
+        [accessor setDictionary:update forKey:timestamp];
+    }];
+}
+
+- (NSString *)currentBatteryState {
+    switch([UIDevice currentDevice].batteryState) {
+        case UIDeviceBatteryStateUnknown:
+            return @"unknown";
+        case UIDeviceBatteryStateCharging:
+            return @"charging";
+        case UIDeviceBatteryStateFull:
+            return @"full";
+        case UIDeviceBatteryStateUnplugged:
+            return @"unplugged";
+    }
+}
+
+- (NSNumber *)currentBatteryLevel {
+    return [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
 }
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback {
@@ -315,6 +453,7 @@ AFHTTPSessionManager *_httpClient;
     }
     
     if(self.sendInProgress) {
+        NSLog(@"Send is already in progress");
         return;
     }
     
@@ -330,10 +469,11 @@ AFHTTPSessionManager *_httpClient;
 //        self.batchInProgress = NO;
 //    }
 
-    // Send if there is a full batch AND time has elapsed,
+    NSLog(@"Points in queue: %lu", numPending);
+    
+    // Send if time has elapsed,
     // or if we're in the middle of flushing
-    if((numPending >= PointsPerBatch && timeElapsed)
-        || self.batchInProgress) {
+    if(timeElapsed || self.batchInProgress) {
         NSLog(@"Sending a batch now");
         [self sendQueueNow];
         self.lastSentDate = NSDate.date;
@@ -341,8 +481,6 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)sendQueueNow {
-    [self sendingStarted];
-    
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
     
@@ -366,7 +504,9 @@ AFHTTPSessionManager *_httpClient;
         self.batchInProgress = NO;
         return;
     }
-    
+
+    [self sendingStarted];
+
     [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Response: %@", responseObject);
         
