@@ -278,7 +278,7 @@ AFHTTPSessionManager *_httpClient;
                                           },
                                   @"properties": @{
                                           @"timestamp": timestamp,
-                                          @"action": visit,
+                                          @"action": @"visit",
                                           @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
                                           @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
                                           @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
