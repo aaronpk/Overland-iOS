@@ -171,6 +171,10 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
 }
 
+- (NSSet *)monitoredRegions {
+    return self.locationManager.monitoredRegions;
+}
+
 #pragma mark - LocationManager properties
 
 - (BOOL)pausesAutomatically {
@@ -184,6 +188,18 @@ AFHTTPSessionManager *_httpClient;
     [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+}
+
+- (CLLocationDistance)resumesAfterDistance {
+    if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLResumesAutomaticallyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setResumesAfterDistance:(CLLocationDistance)resumesAfterDistance {
+    [[NSUserDefaults standardUserDefaults] setDouble:resumesAfterDistance forKey:GLResumesAutomaticallyDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (CLActivityType)activityType {
@@ -366,10 +382,28 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
     [self logAction:@"paused_location_updates"];
+    
+    [self notify:@"Location updates paused" withTitle:@"Paused"];
+    
+    // Create an exit geofence to help it resume automatically
+    if(self.resumesAfterDistance > 0) {
+        CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:self.lastLocation.coordinate radius:self.resumesAfterDistance identifier:@"resume-from-pause"];
+        region.notifyOnEntry = NO;
+        region.notifyOnExit = YES;
+        [self.locationManager startMonitoringForRegion:region];
+    }
+}
+
+-(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    [self enableTracking];
+    [self.locationManager stopMonitoringForRegion:region];
+    [self logAction:@"exited_pause_region"];
+    [self notify:@"Starting updates from exiting the geofence" withTitle:@"Resumed"];
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
     [self logAction:@"resumed_location_updates"];
+    [self notify:@"Location updates resumed" withTitle:@"Resumed"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(nullable NSError *)error {

@@ -25,6 +25,24 @@
     self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
     
+    CLLocationDistance gDist = [GLManager sharedManager].resumesAfterDistance;
+    int gIdx = 0;
+    switch((int)gDist) {
+        case -1:
+            gIdx = 0; break;
+        case 100:
+            gIdx = 1; break;
+        case 200:
+            gIdx = 2; break;
+        case 500:
+            gIdx = 3; break;
+        case 1000:
+            gIdx = 4; break;
+        case 2000:
+            gIdx = 5; break;
+    }
+    self.resumesWithGeofence.selectedSegmentIndex = gIdx;
+    
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracy;
     if(d == kCLLocationAccuracyBestForNavigation) {
         self.desiredAccuracy.selectedSegmentIndex = 0;
@@ -61,6 +79,33 @@
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender {
     [GLManager sharedManager].pausesAutomatically = sender.on;
+    if(sender.on == NO) {
+        self.resumesWithGeofence.selectedSegmentIndex = 0;
+        [GLManager sharedManager].resumesAfterDistance = -1;
+    }
+}
+
+- (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender {
+    CLLocationDistance distance = -1;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            distance = -1; break;
+        case 1:
+            distance = 100; break;
+        case 2:
+            distance = 200; break;
+        case 3:
+            distance = 500; break;
+        case 4:
+            distance = 1000; break;
+        case 5:
+            distance = 2000; break;
+    }
+    if(distance > 0) {
+        self.pausesAutomatically.on = YES;
+        [GLManager sharedManager].pausesAutomatically = YES;
+    }
+    [GLManager sharedManager].resumesAfterDistance = distance;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

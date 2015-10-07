@@ -19,6 +19,7 @@ static NSString *const GLLastSentDateDefaultsName = @"GLLastSentDateDefaults";
 static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
 static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
 static NSString *const GLPausesAutomaticallyDefaultsName = @"GLPausesAutomaticallyDefaults";
+static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomaticallyDefaults";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
@@ -34,6 +35,7 @@ static int const PointsPerBatch = 200;
 
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
+@property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance defersLocationUpdates;
@@ -59,5 +61,7 @@ static int const PointsPerBatch = 200;
 - (void)applicationWillTerminate;
 - (void)applicationDidEnterBackground;
 - (void)applicationWillResignActive;
+
+- (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
 @end
