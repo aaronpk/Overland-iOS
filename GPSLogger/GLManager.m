@@ -305,7 +305,7 @@ AFHTTPSessionManager *_httpClient;
         [accessor setDictionary:update forKey:timestamp];
     }];
 
-    [self sendQueueIfNecessary];
+    [self sendQueueIfTimeElapsed];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
@@ -377,7 +377,7 @@ AFHTTPSessionManager *_httpClient;
         
     }];
     
-    [self sendQueueIfNecessary];
+    [self sendQueueIfTimeElapsed];
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
@@ -392,6 +392,9 @@ AFHTTPSessionManager *_httpClient;
         region.notifyOnExit = YES;
         [self.locationManager startMonitoringForRegion:region];
     }
+    
+    // Send the queue now to flush all remaining points
+    [self sendQueueIfNotInProgress];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
@@ -480,7 +483,7 @@ AFHTTPSessionManager *_httpClient;
     [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self];
 }
 
-- (void)sendQueueIfNecessary {
+- (void)sendQueueIfTimeElapsed {
     BOOL sendingEnabled = [self.sendingInterval integerValue] > -1;
     if(!sendingEnabled) {
         return;
@@ -512,6 +515,15 @@ AFHTTPSessionManager *_httpClient;
         [self sendQueueNow];
         self.lastSentDate = NSDate.date;
     }
+}
+
+- (void)sendQueueIfNotInProgress {
+    if(self.sendInProgress) {
+        return;
+    }
+    
+    [self sendQueueNow];
+    self.lastSentDate = NSDate.date;
 }
 
 - (void)sendQueueNow {
