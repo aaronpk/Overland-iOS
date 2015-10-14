@@ -23,6 +23,7 @@ static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomatic
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
+static NSString *const GLUsesSignificantLocationDefaultsName = @"GLUsesSignificantLocationDefaults";
 
 static int const PointsPerBatch = 200;
 
@@ -36,6 +37,7 @@ static int const PointsPerBatch = 200;
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
+@property BOOL usesSignificantLocation;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance defersLocationUpdates;

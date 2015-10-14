@@ -13,12 +13,14 @@
 @property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resumesWithGeofence;
+@property (strong, nonatomic) IBOutlet UISwitch *useSignificantLocation;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
+- (IBAction)toggleUseSignificantLocation:(UISwitch *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;

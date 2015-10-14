@@ -314,59 +314,8 @@ IAogA
                                     </switch>
                                 </subviews>
                             </stackView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
-                                <rect key="frame" x="20" y="225" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Other"/>
-                                    <segment title="Fitness"/>
-                                    <segment title="Automotive"/>
-                                    <segment title="Navigation"/>
-                                </segments>
-                                <connections>
-                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
-                                <rect key="frame" x="20" y="199" width="99" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
-                                <rect key="frame" x="20" y="289" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Nav"/>
-                                    <segment title="Best"/>
-                                    <segment title="10m"/>
-                                    <segment title="100m"/>
-                                    <segment title="1km"/>
-                                    <segment title="3km"/>
-                                </segments>
-                                <connections>
-                                    <action selector="desiredAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0qh-4p-SOv"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
-                                <rect key="frame" x="20" y="263" width="135" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
-                                <rect key="frame" x="20" y="353" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Never"/>
-                                    <segment title="100m"/>
-                                    <segment title="1km"/>
-                                    <segment title="5km"/>
-                                    <segment title="Max"/>
-                                </segments>
-                                <connections>
-                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="9Ov-1u-jm3"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
-                                <rect key="frame" x="20" y="327" width="190" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
+                                <rect key="frame" x="20" y="136" width="177" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -386,12 +335,80 @@ IAogA
                                     <action selector="resumeWithGeofenceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="15A-Kw-rgd"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
-                                <rect key="frame" x="20" y="136" width="177" height="21"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zvi-RT-NBX">
+                                <rect key="frame" x="20" y="205" width="560" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use Significant Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8II-WQ-5Df">
+                                        <rect key="frame" x="0.0" y="0.0" width="511" height="31"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Am-NJ-3fB">
+                                        <rect key="frame" x="511" y="0.0" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="toggleUseSignificantLocation:" destination="8rJ-Kc-sve" eventType="valueChanged" id="hV3-pA-K2g"/>
+                                        </connections>
+                                    </switch>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
+                                <rect key="frame" x="20" y="246" width="99" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
+                                <rect key="frame" x="20" y="272" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Other"/>
+                                    <segment title="Fitness"/>
+                                    <segment title="Automotive"/>
+                                    <segment title="Navigation"/>
+                                </segments>
+                                <connections>
+                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
+                                <rect key="frame" x="20" y="310" width="135" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
+                                <rect key="frame" x="20" y="336" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Nav"/>
+                                    <segment title="Best"/>
+                                    <segment title="10m"/>
+                                    <segment title="100m"/>
+                                    <segment title="1km"/>
+                                    <segment title="3km"/>
+                                </segments>
+                                <connections>
+                                    <action selector="desiredAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0qh-4p-SOv"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
+                                <rect key="frame" x="20" y="374" width="190" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
+                                <rect key="frame" x="20" y="400" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Never"/>
+                                    <segment title="100m"/>
+                                    <segment title="1km"/>
+                                    <segment title="5km"/>
+                                    <segment title="Max"/>
+                                </segments>
+                                <connections>
+                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="9Ov-1u-jm3"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -409,15 +426,18 @@ IAogA
                             <constraint firstItem="i3F-i7-0BG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="RfY-ku-Qme"/>
                             <constraint firstItem="DzI-vO-swH" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="Ry3-kf-a9q"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="UAy-Sr-hlV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="zvi-RT-NBX" secondAttribute="trailing" id="WMb-6W-aHU"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="10" id="XDy-Ga-QX0"/>
                             <constraint firstItem="Fur-qf-dnD" firstAttribute="top" secondItem="DzI-vO-swH" secondAttribute="bottom" constant="4" id="XKR-M5-5Jb"/>
                             <constraint firstItem="EhT-nM-dDF" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="dIz-b2-p4Y"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="top" secondItem="NGq-b5-JzA" secondAttribute="bottom" constant="10" id="dTQ-Kq-ppd"/>
+                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="zvi-RT-NBX" secondAttribute="bottom" constant="10" id="e0s-Mo-QeL"/>
+                            <constraint firstItem="zvi-RT-NBX" firstAttribute="top" secondItem="Fur-qf-dnD" secondAttribute="bottom" constant="16" id="foV-LA-PPP"/>
+                            <constraint firstItem="zvi-RT-NBX" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="gb2-zS-dyL"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="k8J-Yu-fe9"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="top" secondItem="VmK-UK-oxG" secondAttribute="bottom" constant="5" id="kAg-7B-9nZ"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
-                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="Fur-qf-dnD" secondAttribute="bottom" constant="10" id="tfy-Aj-fHZ"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
                             <constraint firstItem="EhT-nM-dDF" firstAttribute="top" secondItem="i3F-i7-0BG" secondAttribute="bottom" constant="5" id="wss-b9-fOB"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="top" secondItem="YLk-nt-gvV" secondAttribute="bottom" constant="15" id="xE8-Ze-ZXG"/>
@@ -433,6 +453,7 @@ IAogA
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
                         <outlet property="resumesWithGeofence" destination="Fur-qf-dnD" id="scS-ec-2Kf"/>
+                        <outlet property="useSignificantLocation" destination="3Am-NJ-3fB" id="NKu-6Q-N60"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>

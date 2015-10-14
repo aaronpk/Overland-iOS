@@ -25,6 +25,8 @@
     self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
     
+    self.useSignificantLocation.on = [GLManager sharedManager].usesSignificantLocation;
+        
     CLLocationDistance gDist = [GLManager sharedManager].resumesAfterDistance;
     int gIdx = 0;
     switch((int)gDist) {
@@ -106,6 +108,10 @@
         [GLManager sharedManager].pausesAutomatically = YES;
     }
     [GLManager sharedManager].resumesAfterDistance = distance;
+}
+
+- (IBAction)toggleUseSignificantLocation:(UISwitch *)sender {
+    [GLManager sharedManager].usesSignificantLocation = sender.on;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

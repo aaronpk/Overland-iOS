@@ -136,6 +136,10 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager startUpdatingLocation];
     [self.locationManager startUpdatingHeading];
     [self.locationManager startMonitoringVisits];
+    if(self.usesSignificantLocation) {
+        [self.locationManager startMonitoringSignificantLocationChanges];
+        NSLog(@"Monitoring significant location changes");
+    }
     
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     
@@ -159,6 +163,7 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager stopMonitoringVisits];
     [self.locationManager stopUpdatingHeading];
     [self.locationManager stopUpdatingLocation];
+    [self.locationManager stopMonitoringSignificantLocationChanges];
     if(CMMotionActivityManager.isActivityAvailable) {
         [self.motionActivityManager stopActivityUpdates];
         self.lastMotion = nil;
@@ -200,6 +205,23 @@ AFHTTPSessionManager *_httpClient;
 - (void)setResumesAfterDistance:(CLLocationDistance)resumesAfterDistance {
     [[NSUserDefaults standardUserDefaults] setDouble:resumesAfterDistance forKey:GLResumesAutomaticallyDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)usesSignificantLocation {
+    if([self defaultsKeyExists:GLUsesSignificantLocationDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLUsesSignificantLocationDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setUsesSignificantLocation:(BOOL)usesSignificantLocation {
+    [[NSUserDefaults standardUserDefaults] setBool:usesSignificantLocation forKey:GLUsesSignificantLocationDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(usesSignificantLocation) {
+        [self.locationManager startMonitoringSignificantLocationChanges];
+    } else {
+        [self.locationManager stopMonitoringSignificantLocationChanges];
+    }
 }
 
 - (CLActivityType)activityType {
@@ -367,6 +389,7 @@ AFHTTPSessionManager *_httpClient;
                                              @"activity": activityType,
                                              @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
                                              @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
+                                             @"significant_change": [NSNumber numberWithBool:self.usesSignificantLocation],
                                              @"locations_in_payload": [NSNumber numberWithLong:locations.count],
                                              @"battery_state": [self currentBatteryState],
                                              @"battery_level": [self currentBatteryLevel]
