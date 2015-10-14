@@ -25,7 +25,13 @@
     UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
     
+    NSLog(@"Application launched with options: %@", launchOptions);
+    
     [GLManager sharedManager];
+    
+    if([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {
+        [[GLManager sharedManager] logAction:@"application_launched_with_location"];
+    }
 
     return YES;
 }

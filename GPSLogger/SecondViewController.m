@@ -24,9 +24,20 @@
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
+
+    GLSignificantLocationMode slMode = [GLManager sharedManager].significantLocationMode;
+    switch(slMode) {
+        case kGLSignificantLocationDisabled:
+            self.significantLocationMode.selectedSegmentIndex = 0;
+            break;
+        case kGLSignificantLocationEnabled:
+            self.significantLocationMode.selectedSegmentIndex = 1;
+            break;
+        case kGLSignificantLocationExclusive:
+            self.significantLocationMode.selectedSegmentIndex = 2;
+            break;
+    }
     
-    self.useSignificantLocation.on = [GLManager sharedManager].usesSignificantLocation;
-        
     CLLocationDistance gDist = [GLManager sharedManager].resumesAfterDistance;
     int gIdx = 0;
     switch((int)gDist) {
@@ -110,8 +121,17 @@
     [GLManager sharedManager].resumesAfterDistance = distance;
 }
 
-- (IBAction)toggleUseSignificantLocation:(UISwitch *)sender {
-    [GLManager sharedManager].usesSignificantLocation = sender.on;
+- (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender {
+    GLSignificantLocationMode m = kGLSignificantLocationDisabled;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            m = kGLSignificantLocationDisabled; break;
+        case 1:
+            m = kGLSignificantLocationEnabled; break;
+        case 2:
+            m = kGLSignificantLocationExclusive; break;
+    }
+    [GLManager sharedManager].significantLocationMode = m;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

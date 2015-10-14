@@ -23,9 +23,15 @@ static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomatic
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
-static NSString *const GLUsesSignificantLocationDefaultsName = @"GLUsesSignificantLocationDefaults";
+static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLocationModeDefaults";
 
 static int const PointsPerBatch = 200;
+
+typedef enum {
+    kGLSignificantLocationDisabled,
+    kGLSignificantLocationEnabled,
+    kGLSignificantLocationExclusive
+} GLSignificantLocationMode;
 
 @interface GLManager : NSObject <CLLocationManagerDelegate>
 
@@ -37,7 +43,7 @@ static int const PointsPerBatch = 200;
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
-@property BOOL usesSignificantLocation;
+@property (nonatomic) GLSignificantLocationMode significantLocationMode;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance defersLocationUpdates;
@@ -53,6 +59,7 @@ static int const PointsPerBatch = 200;
 - (void)stopAllUpdates;
 - (void)refreshLocation;
 
+- (void)logAction:(NSString *)action;
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)sendQueueNow;
 

@@ -335,31 +335,14 @@ IAogA
                                     <action selector="resumeWithGeofenceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="15A-Kw-rgd"/>
                                 </connections>
                             </segmentedControl>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zvi-RT-NBX">
-                                <rect key="frame" x="20" y="205" width="560" height="31"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use Significant Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8II-WQ-5Df">
-                                        <rect key="frame" x="0.0" y="0.0" width="511" height="31"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Am-NJ-3fB">
-                                        <rect key="frame" x="511" y="0.0" width="51" height="31"/>
-                                        <connections>
-                                            <action selector="toggleUseSignificantLocation:" destination="8rJ-Kc-sve" eventType="valueChanged" id="hV3-pA-K2g"/>
-                                        </connections>
-                                    </switch>
-                                </subviews>
-                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
-                                <rect key="frame" x="20" y="246" width="99" height="21"/>
+                                <rect key="frame" x="20" y="263" width="99" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
-                                <rect key="frame" x="20" y="272" width="560" height="29"/>
+                                <rect key="frame" x="20" y="289" width="560" height="29"/>
                                 <segments>
                                     <segment title="Other"/>
                                     <segment title="Fitness"/>
@@ -370,14 +353,32 @@ IAogA
                                     <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
                                 </connections>
                             </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Significant Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
+                                <rect key="frame" x="20" y="199" width="151" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Akh-qL-9sA">
+                                <rect key="frame" x="20" y="225" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Disabled"/>
+                                    <segment title="Enabled"/>
+                                    <segment title="Significant Only"/>
+                                </segments>
+                                <connections>
+                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="8Ds-5Q-CI2"/>
+                                    <action selector="significantLocationModeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="7HG-bu-QSw"/>
+                                </connections>
+                            </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
-                                <rect key="frame" x="20" y="310" width="135" height="21"/>
+                                <rect key="frame" x="20" y="327" width="135" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
-                                <rect key="frame" x="20" y="336" width="560" height="29"/>
+                                <rect key="frame" x="20" y="353" width="560" height="29"/>
                                 <segments>
                                     <segment title="Nav"/>
                                     <segment title="Best"/>
@@ -391,13 +392,13 @@ IAogA
                                 </connections>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
-                                <rect key="frame" x="20" y="374" width="190" height="21"/>
+                                <rect key="frame" x="20" y="391" width="190" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
-                                <rect key="frame" x="20" y="400" width="560" height="29"/>
+                                <rect key="frame" x="20" y="417" width="560" height="29"/>
                                 <segments>
                                     <segment title="Never"/>
                                     <segment title="100m"/>
@@ -415,10 +416,14 @@ IAogA
                             <constraint firstItem="DzI-vO-swH" firstAttribute="top" secondItem="62p-Pg-v4g" secondAttribute="bottom" constant="10" id="0WS-A1-0gf"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="151-P9-57o"/>
                             <constraint firstItem="EhT-nM-dDF" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="2cX-9M-F76"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="qiD-TW-rUL" secondAttribute="leading" id="2lE-gU-oS5"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="30" id="65X-Fa-3LC"/>
                             <constraint firstItem="h2n-eK-70s" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="697-Wa-gLu"/>
+                            <constraint firstItem="Akh-qL-9sA" firstAttribute="top" secondItem="qiD-TW-rUL" secondAttribute="bottom" constant="5" id="8OQ-VH-Y0a"/>
                             <constraint firstItem="i3F-i7-0BG" firstAttribute="top" secondItem="mZU-DS-xA9" secondAttribute="bottom" constant="10" id="9ok-40-EGQ"/>
+                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="Akh-qL-9sA" secondAttribute="bottom" constant="10" id="A2k-gC-LvX"/>
                             <constraint firstItem="Fur-qf-dnD" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="CJ4-Lf-tD7"/>
+                            <constraint firstItem="qiD-TW-rUL" firstAttribute="top" secondItem="Fur-qf-dnD" secondAttribute="bottom" constant="10" id="DEw-hz-Gjn"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DNe-rr-Tyi"/>
                             <constraint firstItem="Fur-qf-dnD" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DhJ-If-q4M"/>
                             <constraint firstAttribute="trailingMargin" secondItem="YLk-nt-gvV" secondAttribute="trailing" id="ECc-7z-B3b"/>
@@ -426,17 +431,15 @@ IAogA
                             <constraint firstItem="i3F-i7-0BG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="RfY-ku-Qme"/>
                             <constraint firstItem="DzI-vO-swH" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="Ry3-kf-a9q"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="UAy-Sr-hlV"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="zvi-RT-NBX" secondAttribute="trailing" id="WMb-6W-aHU"/>
                             <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="10" id="XDy-Ga-QX0"/>
                             <constraint firstItem="Fur-qf-dnD" firstAttribute="top" secondItem="DzI-vO-swH" secondAttribute="bottom" constant="4" id="XKR-M5-5Jb"/>
+                            <constraint firstItem="Akh-qL-9sA" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="brs-Ld-xqi"/>
                             <constraint firstItem="EhT-nM-dDF" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="dIz-b2-p4Y"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="top" secondItem="NGq-b5-JzA" secondAttribute="bottom" constant="10" id="dTQ-Kq-ppd"/>
-                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="zvi-RT-NBX" secondAttribute="bottom" constant="10" id="e0s-Mo-QeL"/>
-                            <constraint firstItem="zvi-RT-NBX" firstAttribute="top" secondItem="Fur-qf-dnD" secondAttribute="bottom" constant="16" id="foV-LA-PPP"/>
-                            <constraint firstItem="zvi-RT-NBX" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="gb2-zS-dyL"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
                             <constraint firstItem="VmK-UK-oxG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="k8J-Yu-fe9"/>
                             <constraint firstItem="mZU-DS-xA9" firstAttribute="top" secondItem="VmK-UK-oxG" secondAttribute="bottom" constant="5" id="kAg-7B-9nZ"/>
+                            <constraint firstItem="Akh-qL-9sA" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nK9-Jk-3uu"/>
                             <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
                             <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
                             <constraint firstItem="EhT-nM-dDF" firstAttribute="top" secondItem="i3F-i7-0BG" secondAttribute="bottom" constant="5" id="wss-b9-fOB"/>
@@ -453,7 +456,7 @@ IAogA
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
                         <outlet property="resumesWithGeofence" destination="Fur-qf-dnD" id="scS-ec-2Kf"/>
-                        <outlet property="useSignificantLocation" destination="3Am-NJ-3fB" id="NKu-6Q-N60"/>
+                        <outlet property="significantLocationMode" destination="Akh-qL-9sA" id="fzx-Or-Dnd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>

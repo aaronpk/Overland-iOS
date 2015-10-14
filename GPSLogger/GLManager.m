@@ -136,7 +136,7 @@ AFHTTPSessionManager *_httpClient;
     [self.locationManager startUpdatingLocation];
     [self.locationManager startUpdatingHeading];
     [self.locationManager startMonitoringVisits];
-    if(self.usesSignificantLocation) {
+    if(self.significantLocationMode != kGLSignificantLocationDisabled) {
         [self.locationManager startMonitoringSignificantLocationChanges];
         NSLog(@"Monitoring significant location changes");
     }
@@ -148,6 +148,13 @@ AFHTTPSessionManager *_httpClient;
             [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
             self.lastMotion = activity;
         }];
+    }
+
+    // Set the last location if location manager has a last location.
+    // This will be set for example when the app launches due to a signification location change,
+    // the locationmanager has a location already before a location event is delivered to the delegate.
+    if(self.locationManager.location) {
+        self.lastLocation = self.locationManager.location;
     }
 }
 
@@ -207,17 +214,17 @@ AFHTTPSessionManager *_httpClient;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (BOOL)usesSignificantLocation {
-    if([self defaultsKeyExists:GLUsesSignificantLocationDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:GLUsesSignificantLocationDefaultsName];
+- (GLSignificantLocationMode)significantLocationMode {
+    if([self defaultsKeyExists:GLSignificantLocationModeDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] integerForKey:GLSignificantLocationModeDefaultsName];
     } else {
-        return NO;
+        return kGLSignificantLocationDisabled;
     }
 }
-- (void)setUsesSignificantLocation:(BOOL)usesSignificantLocation {
-    [[NSUserDefaults standardUserDefaults] setBool:usesSignificantLocation forKey:GLUsesSignificantLocationDefaultsName];
+- (void)setSignificantLocationMode:(GLSignificantLocationMode)significantLocationMode {
+    [[NSUserDefaults standardUserDefaults] setInteger:significantLocationMode forKey:GLSignificantLocationModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    if(usesSignificantLocation) {
+    if(significantLocationMode != kGLSignificantLocationDisabled) {
         [self.locationManager startMonitoringSignificantLocationChanges];
     } else {
         [self.locationManager stopMonitoringSignificantLocationChanges];
@@ -389,7 +396,7 @@ AFHTTPSessionManager *_httpClient;
                                              @"activity": activityType,
                                              @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
                                              @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
-                                             @"significant_change": [NSNumber numberWithBool:self.usesSignificantLocation],
+                                             @"significant_change": [NSNumber numberWithInt:self.significantLocationMode],
                                              @"locations_in_payload": [NSNumber numberWithLong:locations.count],
                                              @"battery_state": [self currentBatteryState],
                                              @"battery_level": [self currentBatteryLevel]
