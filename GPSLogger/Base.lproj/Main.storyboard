@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Tracker-->
@@ -298,170 +297,199 @@ IAogA
                         <viewControllerLayoutGuide type="top" id="L7p-HK-0SC"/>
                         <viewControllerLayoutGuide type="bottom" id="Djb-ko-YwX"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
+                    <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW" userLabel="View">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLk-nt-gvV">
-                                <rect key="frame" x="20" y="50" width="560" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="URL"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receiver Endpoint" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILL-W2-BJa">
-                                <rect key="frame" x="20" y="30" width="139" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-eK-70s">
-                                <rect key="frame" x="20" y="95" width="560" height="31"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" bounces="NO" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pz2-ZM-9gF">
+                                <rect key="frame" x="0.0" y="20" width="600" height="540"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pauses Updates Automatically" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62p-Pg-v4g">
-                                        <rect key="frame" x="0.0" y="0.0" width="511" height="31"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xLV-fG-cAQ">
-                                        <rect key="frame" x="511" y="0.0" width="51" height="31"/>
-                                        <connections>
-                                            <action selector="togglePausesAutomatically:" destination="8rJ-Kc-sve" eventType="valueChanged" id="12C-xi-Cna"/>
-                                        </connections>
-                                    </switch>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f2q-WF-B7N" userLabel="ContentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
+                                                <rect key="frame" x="20" y="10" width="560" height="387"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="R0r-Sm-3gD">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="51"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receiver Endpoint" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILL-W2-BJa">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLk-nt-gvV">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="30"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" keyboardType="URL"/>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-eK-70s">
+                                                        <rect key="frame" x="0.0" y="61" width="560" height="31"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pause Updates Automatically" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62p-Pg-v4g">
+                                                                <rect key="frame" x="0.0" y="0.0" width="511" height="31"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xLV-fG-cAQ">
+                                                                <rect key="frame" x="511" y="0.0" width="51" height="31"/>
+                                                                <connections>
+                                                                    <action selector="togglePausesAutomatically:" destination="8rJ-Kc-sve" eventType="valueChanged" id="12C-xi-Cna"/>
+                                                                </connections>
+                                                            </switch>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uzB-j5-cmR">
+                                                        <rect key="frame" x="0.0" y="102" width="560" height="49"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Fur-qf-dnD">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="29"/>
+                                                                <segments>
+                                                                    <segment title="Off"/>
+                                                                    <segment title="100m"/>
+                                                                    <segment title="200m"/>
+                                                                    <segment title="500m"/>
+                                                                    <segment title="1km"/>
+                                                                    <segment title="2km"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="y0v-On-jXr"/>
+                                                                    <action selector="resumeWithGeofenceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="15A-Kw-rgd"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4T0-JJ-3R5">
+                                                        <rect key="frame" x="0.0" y="161" width="560" height="49"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Significant Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Akh-qL-9sA">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="29"/>
+                                                                <segments>
+                                                                    <segment title="Disabled"/>
+                                                                    <segment title="Enabled"/>
+                                                                    <segment title="Significant Only"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="8Ds-5Q-CI2"/>
+                                                                    <action selector="significantLocationModeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="7HG-bu-QSw"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="duh-Mr-XgI">
+                                                        <rect key="frame" x="0.0" y="220" width="560" height="49"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="29"/>
+                                                                <segments>
+                                                                    <segment title="Other"/>
+                                                                    <segment title="Fitness"/>
+                                                                    <segment title="Automotive"/>
+                                                                    <segment title="Navigation"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tYe-0x-91L">
+                                                        <rect key="frame" x="0.0" y="279" width="560" height="49"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="29"/>
+                                                                <segments>
+                                                                    <segment title="Nav"/>
+                                                                    <segment title="Best"/>
+                                                                    <segment title="10m"/>
+                                                                    <segment title="100m"/>
+                                                                    <segment title="1km"/>
+                                                                    <segment title="3km"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="desiredAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0qh-4p-SOv"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XS6-gW-dHE">
+                                                        <rect key="frame" x="0.0" y="338" width="560" height="49"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
+                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="29"/>
+                                                                <segments>
+                                                                    <segment title="Never"/>
+                                                                    <segment title="100m"/>
+                                                                    <segment title="1km"/>
+                                                                    <segment title="5km"/>
+                                                                    <segment title="Max"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="9Ov-1u-jm3"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="iRd-Km-HqH" firstAttribute="top" secondItem="f2q-WF-B7N" secondAttribute="top" constant="10" id="F6U-zq-ksH"/>
+                                            <constraint firstAttribute="trailing" secondItem="iRd-Km-HqH" secondAttribute="trailing" constant="20" id="MGR-J3-e8J"/>
+                                            <constraint firstItem="iRd-Km-HqH" firstAttribute="leading" secondItem="f2q-WF-B7N" secondAttribute="leading" constant="20" id="cBx-ug-eed"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
-                            </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
-                                <rect key="frame" x="20" y="136" width="177" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Fur-qf-dnD">
-                                <rect key="frame" x="20" y="161" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Off"/>
-                                    <segment title="100m"/>
-                                    <segment title="200m"/>
-                                    <segment title="500m"/>
-                                    <segment title="1km"/>
-                                    <segment title="2km"/>
-                                </segments>
-                                <connections>
-                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="y0v-On-jXr"/>
-                                    <action selector="resumeWithGeofenceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="15A-Kw-rgd"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
-                                <rect key="frame" x="20" y="263" width="99" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NGq-b5-JzA">
-                                <rect key="frame" x="20" y="289" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Other"/>
-                                    <segment title="Fitness"/>
-                                    <segment title="Automotive"/>
-                                    <segment title="Navigation"/>
-                                </segments>
-                                <connections>
-                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Significant Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
-                                <rect key="frame" x="20" y="199" width="151" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Akh-qL-9sA">
-                                <rect key="frame" x="20" y="225" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Disabled"/>
-                                    <segment title="Enabled"/>
-                                    <segment title="Significant Only"/>
-                                </segments>
-                                <connections>
-                                    <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="8Ds-5Q-CI2"/>
-                                    <action selector="significantLocationModeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="7HG-bu-QSw"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
-                                <rect key="frame" x="20" y="327" width="135" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mZU-DS-xA9">
-                                <rect key="frame" x="20" y="353" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Nav"/>
-                                    <segment title="Best"/>
-                                    <segment title="10m"/>
-                                    <segment title="100m"/>
-                                    <segment title="1km"/>
-                                    <segment title="3km"/>
-                                </segments>
-                                <connections>
-                                    <action selector="desiredAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0qh-4p-SOv"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
-                                <rect key="frame" x="20" y="391" width="190" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-nM-dDF">
-                                <rect key="frame" x="20" y="417" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Never"/>
-                                    <segment title="100m"/>
-                                    <segment title="1km"/>
-                                    <segment title="5km"/>
-                                    <segment title="Max"/>
-                                </segments>
-                                <connections>
-                                    <action selector="defersLocationUpdatesWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="9Ov-1u-jm3"/>
-                                </connections>
-                            </segmentedControl>
+                                <constraints>
+                                    <constraint firstItem="f2q-WF-B7N" firstAttribute="leading" secondItem="Pz2-ZM-9gF" secondAttribute="leading" id="1zq-6I-bG2"/>
+                                    <constraint firstAttribute="bottom" secondItem="f2q-WF-B7N" secondAttribute="bottom" id="hYC-Cd-ci8"/>
+                                    <constraint firstItem="f2q-WF-B7N" firstAttribute="trailing" secondItem="Pz2-ZM-9gF" secondAttribute="trailing" id="wye-FO-CIQ"/>
+                                    <constraint firstItem="f2q-WF-B7N" firstAttribute="top" secondItem="Pz2-ZM-9gF" secondAttribute="top" id="xeu-5a-qnf"/>
+                                </constraints>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="DzI-vO-swH" firstAttribute="top" secondItem="62p-Pg-v4g" secondAttribute="bottom" constant="10" id="0WS-A1-0gf"/>
-                            <constraint firstItem="h2n-eK-70s" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="151-P9-57o"/>
-                            <constraint firstItem="EhT-nM-dDF" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="2cX-9M-F76"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="qiD-TW-rUL" secondAttribute="leading" id="2lE-gU-oS5"/>
-                            <constraint firstItem="YLk-nt-gvV" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="30" id="65X-Fa-3LC"/>
-                            <constraint firstItem="h2n-eK-70s" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="697-Wa-gLu"/>
-                            <constraint firstItem="Akh-qL-9sA" firstAttribute="top" secondItem="qiD-TW-rUL" secondAttribute="bottom" constant="5" id="8OQ-VH-Y0a"/>
-                            <constraint firstItem="i3F-i7-0BG" firstAttribute="top" secondItem="mZU-DS-xA9" secondAttribute="bottom" constant="10" id="9ok-40-EGQ"/>
-                            <constraint firstItem="cey-oi-wfE" firstAttribute="top" secondItem="Akh-qL-9sA" secondAttribute="bottom" constant="10" id="A2k-gC-LvX"/>
-                            <constraint firstItem="Fur-qf-dnD" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="CJ4-Lf-tD7"/>
-                            <constraint firstItem="qiD-TW-rUL" firstAttribute="top" secondItem="Fur-qf-dnD" secondAttribute="bottom" constant="10" id="DEw-hz-Gjn"/>
-                            <constraint firstItem="ILL-W2-BJa" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DNe-rr-Tyi"/>
-                            <constraint firstItem="Fur-qf-dnD" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="DhJ-If-q4M"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="YLk-nt-gvV" secondAttribute="trailing" id="ECc-7z-B3b"/>
-                            <constraint firstItem="mZU-DS-xA9" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="NHo-tp-BjS"/>
-                            <constraint firstItem="i3F-i7-0BG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="RfY-ku-Qme"/>
-                            <constraint firstItem="DzI-vO-swH" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="Ry3-kf-a9q"/>
-                            <constraint firstItem="mZU-DS-xA9" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="UAy-Sr-hlV"/>
-                            <constraint firstItem="ILL-W2-BJa" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="10" id="XDy-Ga-QX0"/>
-                            <constraint firstItem="Fur-qf-dnD" firstAttribute="top" secondItem="DzI-vO-swH" secondAttribute="bottom" constant="4" id="XKR-M5-5Jb"/>
-                            <constraint firstItem="Akh-qL-9sA" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="brs-Ld-xqi"/>
-                            <constraint firstItem="EhT-nM-dDF" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="dIz-b2-p4Y"/>
-                            <constraint firstItem="VmK-UK-oxG" firstAttribute="top" secondItem="NGq-b5-JzA" secondAttribute="bottom" constant="10" id="dTQ-Kq-ppd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="NGq-b5-JzA" secondAttribute="trailing" id="k3Y-Ic-Ntb"/>
-                            <constraint firstItem="VmK-UK-oxG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="k8J-Yu-fe9"/>
-                            <constraint firstItem="mZU-DS-xA9" firstAttribute="top" secondItem="VmK-UK-oxG" secondAttribute="bottom" constant="5" id="kAg-7B-9nZ"/>
-                            <constraint firstItem="Akh-qL-9sA" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nK9-Jk-3uu"/>
-                            <constraint firstItem="YLk-nt-gvV" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="nuy-l4-zOE"/>
-                            <constraint firstItem="cey-oi-wfE" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="v8W-31-Ckv"/>
-                            <constraint firstItem="EhT-nM-dDF" firstAttribute="top" secondItem="i3F-i7-0BG" secondAttribute="bottom" constant="5" id="wss-b9-fOB"/>
-                            <constraint firstItem="h2n-eK-70s" firstAttribute="top" secondItem="YLk-nt-gvV" secondAttribute="bottom" constant="15" id="xE8-Ze-ZXG"/>
-                            <constraint firstItem="NGq-b5-JzA" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="zCT-th-AHj"/>
-                            <constraint firstItem="NGq-b5-JzA" firstAttribute="top" secondItem="cey-oi-wfE" secondAttribute="bottom" constant="5" id="zh8-XJ-37x"/>
+                            <constraint firstItem="Pz2-ZM-9gF" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailing" id="DQK-b9-UCz"/>
+                            <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="Pz2-ZM-9gF" secondAttribute="bottom" id="TwR-1K-qto"/>
+                            <constraint firstItem="Pz2-ZM-9gF" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="XBR-zy-HTZ"/>
+                            <constraint firstItem="f2q-WF-B7N" firstAttribute="width" secondItem="QS5-Rx-YEW" secondAttribute="width" id="cqS-bw-gVx"/>
+                            <constraint firstItem="Pz2-ZM-9gF" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" id="zFo-Ua-bv8"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings" id="cPa-gy-q4n"/>
