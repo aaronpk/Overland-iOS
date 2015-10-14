@@ -92,10 +92,12 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)setupHTTPClient {
     NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
-    
-    _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
-    _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
-    _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+
+    if(endpoint) {
+        _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
+        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
+        _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+    }
 }
 
 - (void)restoreTrackingState {
@@ -559,6 +561,13 @@ AFHTTPSessionManager *_httpClient;
 - (void)sendQueueNow {
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
+
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+
+    if(endpoint == nil) {
+        NSLog(@"No API endpoint is set, not sending data");
+        return;
+    }
     
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         
@@ -572,7 +581,6 @@ AFHTTPSessionManager *_httpClient;
     
     NSDictionary *postData = @{@"locations": locationUpdates};
     
-    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     NSLog(@"Endpoint: %@", endpoint);
     NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
     
