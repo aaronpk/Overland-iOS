@@ -55,6 +55,8 @@ typedef enum {
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
 
+- (void)saveNewAPIEndpoint:(NSString *)endpoint;
+
 - (void)startAllUpdates;
 - (void)stopAllUpdates;
 - (void)refreshLocation;

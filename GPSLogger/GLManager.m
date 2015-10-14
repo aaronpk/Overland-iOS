@@ -90,6 +90,12 @@ AFHTTPSessionManager *_httpClient;
 
 #pragma mark -
 
+- (void)saveNewAPIEndpoint:(NSString *)endpoint {
+    [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self setupHTTPClient];
+}
+
 - (void)setupHTTPClient {
     NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
 

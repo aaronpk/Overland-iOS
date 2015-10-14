@@ -28,8 +28,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *queueLabel;
 @property (strong, nonatomic) IBOutlet UILabel *queueAgeLabel;
 
-@property (strong, nonatomic) IBOutlet UILabel *monitoredRegionsLabel;
-
 - (IBAction)sendIntervalDragged:(UISlider *)sender;
 - (IBAction)sendIntervalChanged:(UISlider *)sender;
 - (IBAction)toggleLogging:(id)sender;

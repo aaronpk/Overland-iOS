@@ -48,13 +48,13 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="30"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="5m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oY1-xa-GJD">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="13" height="30"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="5" height="30"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="Iqb-TJ-kXO">
-                                                                        <rect key="frame" x="21" y="0.0" width="541" height="31"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="549" height="31"/>
                                                                         <connections>
                                                                             <action selector="sendIntervalChanged:" destination="9pv-A4-QxB" eventType="valueChanged" id="fSz-CU-uq5"/>
                                                                             <action selector="sendIntervalDragged:" destination="9pv-A4-QxB" eventType="touchDragInside" id="oFc-bd-pfU"/>
@@ -230,12 +230,6 @@ IAogA
                                                     <constraint firstAttribute="trailing" secondItem="Yxz-bO-Rru" secondAttribute="trailing" constant="20" id="tCY-sY-rnd"/>
                                                 </constraints>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e7P-FD-3Ue">
-                                                <rect key="frame" x="-160" y="30" width="560" height="69"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -270,7 +264,6 @@ IAogA
                         <outlet property="locationAltitudeLabel" destination="tzf-yA-Lrh" id="VuF-QB-TXb"/>
                         <outlet property="locationLabel" destination="ItY-6C-yMI" id="QRC-ow-cvJ"/>
                         <outlet property="locationSpeedLabel" destination="lUu-nu-3KF" id="lF5-yW-pUS"/>
-                        <outlet property="monitoredRegionsLabel" destination="e7P-FD-3Ue" id="K4w-V4-VAa"/>
                         <outlet property="motionTypeLabel" destination="8X5-fD-MuK" id="dfK-fr-lDA"/>
                         <outlet property="queueAgeLabel" destination="Xbg-DY-m0J" id="Cf0-F3-owu"/>
                         <outlet property="queueLabel" destination="R3Y-wx-aZ1" id="92I-tv-JHg"/>
@@ -308,10 +301,10 @@ IAogA
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                                <rect key="frame" x="20" y="10" width="560" height="387"/>
+                                                <rect key="frame" x="20" y="10" width="560" height="378"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="R0r-Sm-3gD">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="51"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="42"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receiver Endpoint" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILL-W2-BJa">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -319,15 +312,19 @@ IAogA
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLk-nt-gvV">
-                                                                <rect key="frame" x="0.0" y="21" width="560" height="30"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" keyboardType="URL"/>
-                                                            </textField>
+                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No API endpoint configured" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="Pue-Fa-qpM">
+                                                                <rect key="frame" x="0.0" y="21" width="560" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <connections>
+                                                                    <outletCollection property="gestureRecognizers" destination="RTx-NV-iAU" appends="YES" id="Rca-9w-4C1"/>
+                                                                </connections>
+                                                            </label>
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-eK-70s">
-                                                        <rect key="frame" x="0.0" y="61" width="560" height="31"/>
+                                                        <rect key="frame" x="0.0" y="52" width="560" height="31"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pause Updates Automatically" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62p-Pg-v4g">
                                                                 <rect key="frame" x="0.0" y="0.0" width="511" height="31"/>
@@ -344,7 +341,7 @@ IAogA
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uzB-j5-cmR">
-                                                        <rect key="frame" x="0.0" y="102" width="560" height="49"/>
+                                                        <rect key="frame" x="0.0" y="93" width="560" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -370,7 +367,7 @@ IAogA
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4T0-JJ-3R5">
-                                                        <rect key="frame" x="0.0" y="161" width="560" height="49"/>
+                                                        <rect key="frame" x="0.0" y="152" width="560" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Significant Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -393,7 +390,7 @@ IAogA
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="duh-Mr-XgI">
-                                                        <rect key="frame" x="0.0" y="220" width="560" height="49"/>
+                                                        <rect key="frame" x="0.0" y="211" width="560" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-oi-wfE">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -416,7 +413,7 @@ IAogA
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tYe-0x-91L">
-                                                        <rect key="frame" x="0.0" y="279" width="560" height="49"/>
+                                                        <rect key="frame" x="0.0" y="270" width="560" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desired Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmK-UK-oxG">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -441,7 +438,7 @@ IAogA
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XS6-gW-dHE">
-                                                        <rect key="frame" x="0.0" y="338" width="560" height="49"/>
+                                                        <rect key="frame" x="0.0" y="329" width="560" height="49"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defers Location Updates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3F-i7-0BG">
                                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -495,7 +492,7 @@ IAogA
                     <tabBarItem key="tabBarItem" title="Settings" image="settings" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
-                        <outlet property="apiEndpointField" destination="YLk-nt-gvV" id="Aix-cO-kf4"/>
+                        <outlet property="apiEndpointField" destination="Pue-Fa-qpM" id="cPa-CF-GxR"/>
                         <outlet property="defersLocationUpdates" destination="EhT-nM-dDF" id="L1d-Pw-vrq"/>
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="pausesAutomatically" destination="xLV-fG-cAQ" id="XH8-PU-Nj1"/>
@@ -504,6 +501,11 @@ IAogA
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="RTx-NV-iAU">
+                    <connections>
+                        <action selector="apiEndpointFieldWasPressed:" destination="8rJ-Kc-sve" id="7Gs-fU-bG6"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="750" y="360"/>
         </scene>

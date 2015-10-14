@@ -90,6 +90,49 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)apiEndpointFieldWasPressed:(UILongPressGestureRecognizer *)sender {
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        NSString *message = [UIPasteboard generalPasteboard].string;
+        NSURL *newURL = [NSURL URLWithString:message];
+
+        NSLog(@"URL: %@", newURL.scheme);
+        
+        BOOL clipboardIsValid;
+        if(message && newURL && [newURL.scheme isEqualToString:@"https"]) {
+            message = [UIPasteboard generalPasteboard].string;
+            clipboardIsValid = YES;
+        } else {
+            if(newURL && newURL.scheme != nil) {
+                message = @"Only https URLs are supported. Copy a URL to your clipboard first";
+            } else {
+                message = @"Copy a URL to your clipboard first, then come back here to paste it";
+            }
+            clipboardIsValid = NO;
+        }
+        
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Set API Endpoint"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {
+                                                              }];
+        [alert addAction:cancelAction];
+
+        if(clipboardIsValid) {
+            UIAlertAction* confirmAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction * action) {
+                                                                      NSLog(@"Setting API endpoint to %@", [UIPasteboard generalPasteboard].string);
+                                                                      [[GLManager sharedManager] saveNewAPIEndpoint:[UIPasteboard generalPasteboard].string];
+                                                                      self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+                                                                  }];
+            [alert addAction:confirmAction];
+        }
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender {
     [GLManager sharedManager].pausesAutomatically = sender.on;
     if(sender.on == NO) {

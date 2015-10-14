@@ -10,13 +10,15 @@
 
 @interface SecondViewController : UIViewController
 
-@property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
+@property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resumesWithGeofence;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *significantLocationMode;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
+
+- (IBAction)apiEndpointFieldWasPressed:(UILongPressGestureRecognizer *)sender;
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
