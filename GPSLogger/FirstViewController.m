@@ -9,6 +9,8 @@
 #import "FirstViewController.h"
 #import "GLManager.h"
 
+static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
+
 @interface FirstViewController ()
 
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;
@@ -49,6 +51,8 @@ NSArray *intervalMapStrings;
         [self updateSendIntervalLabel];
     }
     
+    [self updateTripState];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newDataReceived)
                                                  name:GLNewDataNotification
@@ -86,6 +90,8 @@ NSArray *intervalMapStrings;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - Tracking Interface
+
 - (void)newDataReceived {
     //    NSLog(@"New data received!");
     //    NSLog(@"Location: %@", [GLManager sharedManager].lastLocation);
@@ -107,6 +113,8 @@ NSArray *intervalMapStrings;
 }
 
 - (void)refreshView {
+    self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 0 : 1);
+    
     CLLocation *location = [GLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%.5f\n%.5f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
@@ -142,7 +150,9 @@ NSArray *intervalMapStrings;
     [[GLManager sharedManager] numberOfLocationsInQueue:^(long num) {
         self.queueLabel.text = [NSString stringWithFormat:@"%ld", num];
     }];
-    
+
+    [self updateTripState];
+
     if(![GLManager sharedManager].sendInProgress)
 //        [self sendingStarted];
 //    else
@@ -191,15 +201,53 @@ NSArray *intervalMapStrings;
 }
 
 - (IBAction)locationAgeWasTapped:(id)sender {
-    self.locationAgeLabel.textColor = [UIColor colorWithRed:(180.0/255.f) green:0 blue:0 alpha:1];
+    self.locationAgeLabel.textColor = [UIColor colorWithRed:(180.f/255.f) green:0 blue:0 alpha:1];
     [[GLManager sharedManager] refreshLocation];
 }
 
-- (IBAction)tripModeWasTapped:(id)sender {
-    NSLog(@"Trip mode was tapped");
-    
+#pragma mark - Trip Interface
+
+- (void)updateTripState {
+    if([GLManager sharedManager].tripInProgress) {
+        [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
+        self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
+        self.tripDurationLabel.text = [FirstViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
+        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [GLManager sharedManager].currentTripDistance];
+    } else {
+        [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
+        self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:106.f/255.f green:212.f/255.f blue:150.f/255.f alpha:1];
+        self.tripDistanceLabel.text = @" ";
+        self.tripDurationLabel.text = @" ";
+    }
 }
 
+- (IBAction)tripModeWasTapped:(UILongPressGestureRecognizer *)sender {
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Trip mode was tapped");
+    }
+}
+
+- (IBAction)tripStartStopWasTapped:(id)sender {
+    if([GLManager sharedManager].tripInProgress) {
+        [[GLManager sharedManager] endTrip];
+        
+        // If tracking was off when the trip started, turn it off now
+        if([[NSUserDefaults standardUserDefaults] boolForKey:GLTripTrackingEnabledDefaultsName] == NO) {
+            [[GLManager sharedManager] stopAllUpdates];
+        }
+    } else {
+        // Keep track of whether tracking was on or off when this trip started
+        [[NSUserDefaults standardUserDefaults] setBool:[GLManager sharedManager].trackingEnabled forKey:GLTripTrackingEnabledDefaultsName];
+
+        [[GLManager sharedManager] startAllUpdates];
+
+        NSString *mode = GLTripModeDrive;
+        [[GLManager sharedManager] startTripWithMode:mode];
+    }
+    [self updateTripState];
+}
+
+#pragma mark -
 
 + (NSString *)timeFormatted:(int)totalSeconds {
     int seconds = totalSeconds % 60;

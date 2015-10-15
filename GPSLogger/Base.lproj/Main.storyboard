@@ -219,7 +219,7 @@ IAogA
                                                             </stackView>
                                                         </subviews>
                                                     </stackView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FAz-8W-iDJ">
+                                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAz-8W-iDJ">
                                                         <rect key="frame" x="0.0" y="337" width="560" height="79"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-hO-75N">
@@ -228,7 +228,7 @@ IAogA
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9Yk-67-SNk">
                                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="79"/>
                                                                         <subviews>
-                                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cycling" translatesAutoresizingMaskIntoConstraints="NO" id="kvv-zo-7Tv">
+                                                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cycling" translatesAutoresizingMaskIntoConstraints="NO" id="kvv-zo-7Tv">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                                                 <gestureRecognizers/>
                                                                                 <constraints>
@@ -255,13 +255,13 @@ IAogA
                                                                         <rect key="frame" x="74" y="0.0" width="347" height="79"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="DURATION" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="APc-F8-1NL">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="347" height="17"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="347" height="22"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sy2-au-4W7">
-                                                                                <rect key="frame" x="0.0" y="21" width="347" height="34"/>
+                                                                                <rect key="frame" x="0.0" y="26" width="347" height="34"/>
                                                                                 <string key="text" base64-UTF8="YES">
 IAogA
 </string>
@@ -270,7 +270,7 @@ IAogA
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="minutes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Imb-OC-pQY">
-                                                                                <rect key="frame" x="0.0" y="59" width="347" height="20"/>
+                                                                                <rect key="frame" x="0.0" y="64" width="347" height="15"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -310,6 +310,9 @@ IAogA
                                                                         <state key="normal" title="Stop">
                                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                         </state>
+                                                                        <connections>
+                                                                            <action selector="tripStartStopWasTapped:" destination="9pv-A4-QxB" eventType="touchUpInside" id="jj5-iT-BX8"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                                 <constraints>
@@ -387,6 +390,9 @@ IAogA
                         <outlet property="sendIntervalSlider" destination="Iqb-TJ-kXO" id="lhd-JM-Y3V"/>
                         <outlet property="sendNowButton" destination="EfA-aB-cPb" id="j7M-i6-8EL"/>
                         <outlet property="trackingEnabledToggle" destination="Yxz-bO-Rru" id="eiS-PJ-X1B"/>
+                        <outlet property="tripDistanceLabel" destination="YKJ-cC-bu6" id="kjw-uf-cSP"/>
+                        <outlet property="tripDurationLabel" destination="sy2-au-4W7" id="Fye-k6-PsP"/>
+                        <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

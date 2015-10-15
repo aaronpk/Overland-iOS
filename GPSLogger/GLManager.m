@@ -31,7 +31,7 @@
 static NSString *const GLLocationQueueName = @"GLLocationQueue";
 
 NSNumber *_sendingInterval;
-
+NSArray *_tripModes;
 AFHTTPSessionManager *_httpClient;
 
 + (GLManager *)sharedManager {
@@ -325,6 +325,92 @@ AFHTTPSessionManager *_httpClient;
     
     [self sendQueueNow];
     self.lastSentDate = NSDate.date;
+}
+
+#pragma mark - Trips
+
++ (NSArray *)GLTripModes {
+    if(!_tripModes) {
+        _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
+                       GLTripModeDrive, GLTripModeCar2go, GLTripModeTaxi,
+                       GLTripModeBus, GLTripModeTrain, GLTripModePlane];
+        }
+    return _tripModes;
+}
+
+- (BOOL)tripInProgress {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:GLTripModeDefaultsName] != nil;
+}
+
+- (NSString *)currentTripMode {
+    if(!self.tripInProgress) {
+        return nil;
+    }
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:GLTripModeDefaultsName];
+}
+
+- (NSDate *)currentTripStart {
+    if(!self.tripInProgress) {
+        return nil;
+    }
+    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLTripStartTimeDefaultsName];
+}
+
+- (NSTimeInterval)currentTripDuration {
+    if(!self.tripInProgress) {
+        return -1;
+    }
+    
+    NSDate *startDate = self.currentTripStart;
+    return abs([startDate timeIntervalSinceNow]);
+}
+
+- (CLLocationDistance)currentTripDistance {
+    if(!self.tripInProgress) {
+        return -1;
+    }
+    
+    return 20.0;
+}
+
+- (void)startTripWithMode:(NSString *)mode {
+    if(self.tripInProgress) {
+        return;
+    }
+    
+    NSDate *startDate = [NSDate date];
+    [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setObject:mode forKey:GLTripModeDefaultsName];
+}
+
+- (void)endTrip {
+    if(!self.tripInProgress) {
+        return;
+    }
+    
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        NSDictionary *update = @{
+                                 @"type": @"Feature",
+                                 @"geometry": @{
+                                         @"type": @"Point",
+                                         @"coordinates": @[
+                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                                 ]
+                                         },
+                                 @"properties": @{
+                                         @"type": @"trip",
+                                         @"mode": self.currentTripMode,
+                                         @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
+                                         @"end": timestamp
+                                         }
+                                 };
+        [accessor setDictionary:update forKey:timestamp];
+    }];
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripModeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripStartTimeDefaultsName];
 }
 
 #pragma mark - Properties

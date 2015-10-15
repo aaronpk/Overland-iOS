@@ -33,7 +33,12 @@
 - (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 - (IBAction)locationAgeWasTapped:(id)sender;
+
 - (IBAction)tripModeWasTapped:(id)sender;
+@property (strong, nonatomic) IBOutlet UILabel *tripDurationLabel;
+@property (strong, nonatomic) IBOutlet UILabel *tripDistanceLabel;
+@property (strong, nonatomic) IBOutlet UIButton *tripStartStopButton;
+- (IBAction)tripStartStopWasTapped:(id)sender;
 
 @end
 

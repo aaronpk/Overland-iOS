@@ -25,6 +25,18 @@ static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaul
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
 static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLocationModeDefaults";
 
+static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
+static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
+static NSString *const GLTripModeWalk = @"walk";
+static NSString *const GLTripModeRun = @"run";
+static NSString *const GLTripModeBicycle = @"bicycle";
+static NSString *const GLTripModeDrive = @"drive";
+static NSString *const GLTripModeCar2go = @"car2go";
+static NSString *const GLTripModeTaxi = @"taxi";
+static NSString *const GLTripModeBus = @"bus";
+static NSString *const GLTripModeTrain = @"train";
+static NSString *const GLTripModePlane = @"plane";
+
 static int const PointsPerBatch = 200;
 
 typedef enum {
@@ -68,6 +80,15 @@ typedef enum {
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)accountInfo:(void(^)(NSString *name))block;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
+
++ (NSArray *)GLTripModes;
+- (BOOL)tripInProgress;
+- (NSString *)currentTripMode;
+- (NSDate *)currentTripStart;
+- (CLLocationDistance)currentTripDistance;
+- (NSTimeInterval)currentTripDuration;
+- (void)startTripWithMode:(NSString *)mode;
+- (void)endTrip;
 
 - (void)applicationWillTerminate;
 - (void)applicationDidEnterBackground;
