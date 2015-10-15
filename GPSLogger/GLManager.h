@@ -55,24 +55,22 @@ typedef enum {
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
 
-- (void)saveNewAPIEndpoint:(NSString *)endpoint;
-
 - (void)startAllUpdates;
 - (void)stopAllUpdates;
 - (void)refreshLocation;
 
-- (void)logAction:(NSString *)action;
-- (void)numberOfLocationsInQueue:(void(^)(long num))callback;
-- (void)sendQueueNow;
+- (void)saveNewAPIEndpoint:(NSString *)endpoint;
 
+- (void)logAction:(NSString *)action;
+- (void)sendQueueNow;
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
 
+- (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)accountInfo:(void(^)(NSString *name))block;
+- (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
 - (void)applicationWillTerminate;
 - (void)applicationDidEnterBackground;
 - (void)applicationWillResignActive;
-
-- (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
 @end

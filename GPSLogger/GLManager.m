@@ -51,44 +51,13 @@ AFHTTPSessionManager *_httpClient;
             
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
-            [_instance setupBatteryMonitoring];
         }
     }
     
     return _instance;
 }
 
-#pragma mark LOLDB
-
-+ (NSString *)cacheDatabasePath
-{
-    NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [caches stringByAppendingPathComponent:@"GLLoggerCache.sqlite"];
-}
-
-+ (id)objectFromJSONData:(NSData *)data error:(NSError **)error;
-{
-    return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
-}
-
-+ (NSData *)dataWithJSONObject:(id)object error:(NSError **)error;
-{
-    return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
-}
-
-+ (NSString *)iso8601DateStringFromDate:(NSDate *)date {
-    struct tm *timeinfo;
-    char buffer[80];
-    
-    time_t rawtime = (time_t)[date timeIntervalSince1970];
-    timeinfo = gmtime(&rawtime);
-    
-    strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
-    
-    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
-}
-
-#pragma mark -
+#pragma mark - GLManager control (public)
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint {
     [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
@@ -96,9 +65,159 @@ AFHTTPSessionManager *_httpClient;
     [self setupHTTPClient];
 }
 
+- (void)startAllUpdates {
+    [self enableTracking];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)stopAllUpdates {
+    [self disableTracking];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLTrackingStateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)refreshLocation {
+    NSLog(@"Trying to update location now");
+    [self.locationManager stopUpdatingLocation];
+    [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
+}
+
+- (void)sendQueueNow {
+    NSMutableSet *syncedUpdates = [NSMutableSet set];
+    NSMutableArray *locationUpdates = [NSMutableArray array];
+    
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    
+    if(endpoint == nil) {
+        NSLog(@"No API endpoint is set, not sending data");
+        return;
+    }
+    
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        
+        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
+            [syncedUpdates addObject:key];
+            [locationUpdates addObject:object];
+            return (BOOL)(locationUpdates.count >= PointsPerBatch);
+        }];
+        
+    }];
+    
+    NSDictionary *postData = @{@"locations": locationUpdates};
+    
+    NSLog(@"Endpoint: %@", endpoint);
+    NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
+    
+    if(locationUpdates.count == 0) {
+        self.batchInProgress = NO;
+        return;
+    }
+    
+    [self sendingStarted];
+    
+    [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Response: %@", responseObject);
+        
+        if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
+            self.lastSentDate = NSDate.date;
+            
+            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+                for(NSString *key in syncedUpdates) {
+                    [accessor removeDictionaryForKey:key];
+                }
+                
+            }];
+            
+            // Try to send again in case there are more left
+            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+                [accessor countObjectsUsingBlock:^(long num) {
+                    if(num > 0) {
+                        NSLog(@"Number remaining: %ld", num);
+                        self.batchInProgress = YES;
+                    } else {
+                        self.batchInProgress = NO;
+                    }
+                }];
+            }];
+            
+            [self sendingFinished];
+        } else {
+            
+            self.batchInProgress = NO;
+            
+            if([responseObject objectForKey:@"error"]) {
+                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
+                [self sendingFinished];
+            } else {
+                [self notify:[responseObject description] withTitle:@"Error"];
+                [self sendingFinished];
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        self.batchInProgress = NO;
+        NSLog(@"Error: %@", error);
+        [self notify:error.description withTitle:@"Error"];
+        [self sendingFinished];
+    }];
+    
+}
+
+- (void)logAction:(NSString *)action {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      @"type": @"Feature",
+                                                                                      @"properties": @{
+                                                                                              @"timestamp": timestamp,
+                                                                                              @"action": action,
+                                                                                              @"battery_state": [self currentBatteryState],
+                                                                                              @"battery_level": [self currentBatteryLevel]
+                                                                                              }
+                                                                                      }];
+        if(self.lastLocation) {
+            [update setObject:@{
+                                @"type": @"Point",
+                                @"coordinates": @[
+                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                        ]
+                                } forKey:@"geometry"];
+        }
+        [accessor setDictionary:update forKey:timestamp];
+    }];
+}
+
+- (void)notify:(NSString *)message withTitle:(NSString *)title
+{
+    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    localNotification.alertBody = [NSString stringWithFormat:@"%@: %@", title, message];
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+- (void)accountInfo:(void(^)(NSString *name))block {
+    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    [_httpClient GET:endpoint parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        NSDictionary *dict = (NSDictionary *)responseObject;
+        block((NSString *)[dict objectForKey:@"name"]);
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        NSLog(@"Failed to get account info");
+    }];
+}
+
+- (void)numberOfLocationsInQueue:(void(^)(long num))callback {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor countObjectsUsingBlock:callback];
+    }];
+}
+
+#pragma mark - GLManager control (private)
+
 - (void)setupHTTPClient {
     NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
-
+    
     if(endpoint) {
         _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -112,30 +231,6 @@ AFHTTPSessionManager *_httpClient;
     } else {
         [self disableTracking];
     }
-}
-
-- (void)setupBatteryMonitoring {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(batteryLevelChanged:)
-                                                 name:UIDeviceBatteryLevelDidChangeNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(batteryStateChanged:)
-                                                 name:UIDeviceBatteryStateDidChangeNotification object:nil];
-}
-
-- (void)batteryLevelChanged:(NSNotification *)notification {
-
-}
-
-- (void)batteryStateChanged:(NSNotification *)notification {
-
-}
-
-- (void)startAllUpdates {
-    [self enableTracking];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)enableTracking {
@@ -157,19 +252,13 @@ AFHTTPSessionManager *_httpClient;
             self.lastMotion = activity;
         }];
     }
-
+    
     // Set the last location if location manager has a last location.
     // This will be set for example when the app launches due to a signification location change,
     // the locationmanager has a location already before a location event is delivered to the delegate.
     if(self.locationManager.location) {
         self.lastLocation = self.locationManager.location;
     }
-}
-
-- (void)stopAllUpdates {
-    [self disableTracking];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLTrackingStateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)disableTracking {
@@ -185,17 +274,105 @@ AFHTTPSessionManager *_httpClient;
     }
 }
 
-- (void)refreshLocation {
-    NSLog(@"Trying to update location now");
-    [self.locationManager stopUpdatingLocation];
-    [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
+- (void)sendingStarted {
+    self.sendInProgress = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingStartedNotification object:self];
 }
+
+- (void)sendingFinished {
+    self.sendInProgress = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self];
+}
+
+- (void)sendQueueIfTimeElapsed {
+    BOOL sendingEnabled = [self.sendingInterval integerValue] > -1;
+    if(!sendingEnabled) {
+        return;
+    }
+    
+    if(self.sendInProgress) {
+        NSLog(@"Send is already in progress");
+        return;
+    }
+    
+    BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending;
+    
+    __block long numPending = 0;
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor countObjectsUsingBlock:^(long num) {
+            numPending = num;
+        }];
+    }];
+    //    if(numPending < PointsPerBatch) {
+    //        self.batchInProgress = NO;
+    //    }
+    
+    NSLog(@"Points in queue: %lu", numPending);
+    
+    // Send if time has elapsed,
+    // or if we're in the middle of flushing
+    if(timeElapsed || self.batchInProgress) {
+        NSLog(@"Sending a batch now");
+        [self sendQueueNow];
+        self.lastSentDate = NSDate.date;
+    }
+}
+
+- (void)sendQueueIfNotInProgress {
+    if(self.sendInProgress) {
+        return;
+    }
+    
+    [self sendQueueNow];
+    self.lastSentDate = NSDate.date;
+}
+
+#pragma mark - Properties
+
+- (CLLocationManager *)locationManager {
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.desiredAccuracy = self.desiredAccuracy;
+        _locationManager.distanceFilter = 1;
+        _locationManager.allowsBackgroundLocationUpdates = YES;
+        _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
+        _locationManager.activityType = self.activityType;
+    }
+    
+    return _locationManager;
+}
+
+- (CMMotionActivityManager *)motionActivityManager {
+    if (!_motionActivityManager) {
+        _motionActivityManager = [[CMMotionActivityManager alloc] init];
+    }
+    
+    return _motionActivityManager;
+}
+
+- (NSString *)currentBatteryState {
+    switch([UIDevice currentDevice].batteryState) {
+        case UIDeviceBatteryStateUnknown:
+            return @"unknown";
+        case UIDeviceBatteryStateCharging:
+            return @"charging";
+        case UIDeviceBatteryStateFull:
+            return @"full";
+        case UIDeviceBatteryStateUnplugged:
+            return @"unplugged";
+    }
+}
+
+- (NSNumber *)currentBatteryLevel {
+    return [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
+}
+
+#pragma mark CLLocationManager
 
 - (NSSet *)monitoredRegions {
     return self.locationManager.monitoredRegions;
 }
-
-#pragma mark - LocationManager properties
 
 - (BOOL)pausesAutomatically {
     if([self defaultsKeyExists:GLPausesAutomaticallyDefaultsName]) {
@@ -224,7 +401,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (GLSignificantLocationMode)significantLocationMode {
     if([self defaultsKeyExists:GLSignificantLocationModeDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] integerForKey:GLSignificantLocationModeDefaultsName];
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLSignificantLocationModeDefaultsName];
     } else {
         return kGLSignificantLocationDisabled;
     }
@@ -283,35 +460,32 @@ AFHTTPSessionManager *_httpClient;
     }
 }
 
+#pragma mark GLManager
 
-- (BOOL)defaultsKeyExists:(NSString *)key {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
-}
-        
-#pragma mark -
-
-- (CLLocationManager *)locationManager {
-    if (!_locationManager) {
-        _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = self.desiredAccuracy;
-        _locationManager.distanceFilter = 1;
-        _locationManager.allowsBackgroundLocationUpdates = YES;
-        _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
-        _locationManager.activityType = self.activityType;
-    }
+- (NSNumber *)sendingInterval {
+    if(_sendingInterval)
+        return _sendingInterval;
     
-    return _locationManager;
+    _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:GLSendIntervalDefaultsName];
+    return _sendingInterval;
 }
 
-- (CMMotionActivityManager *)motionActivityManager {
-    if (!_motionActivityManager) {
-        _motionActivityManager = [[CMMotionActivityManager alloc] init];
-    }
-    
-    return _motionActivityManager;
+- (void)setSendingInterval:(NSNumber *)newValue {
+    [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:GLSendIntervalDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    _sendingInterval = newValue;
 }
+
+- (NSDate *)lastSentDate {
+    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLLastSentDateDefaultsName];
+}
+
+- (void)setLastSentDate:(NSDate *)lastSentDate {
+    [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:GLLastSentDateDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+#pragma mark - CLLocationManager Delegate Methods
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
@@ -451,6 +625,8 @@ AFHTTPSessionManager *_httpClient;
     [self logAction:@"did_finish_deferred_updates"];
 }
 
+#pragma mark - AppDelegate Methods
+
 - (void)applicationDidEnterBackground {
     [self logAction:@"did_enter_background"];
 }
@@ -463,229 +639,42 @@ AFHTTPSessionManager *_httpClient;
     [self logAction:@"will_resign_active"];
 }
 
-- (void)logAction:(NSString *)action {
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
-        NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                      @"type": @"Feature",
-                                                                                      @"properties": @{
-                                                                                              @"timestamp": timestamp,
-                                                                                              @"action": action,
-                                                                                              @"battery_state": [self currentBatteryState],
-                                                                                              @"battery_level": [self currentBatteryLevel]
-                                                                                              }
-                                                                                      }];
-        if(self.lastLocation) {
-            [update setObject:@{
-                                @"type": @"Point",
-                                @"coordinates": @[
-                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
-                                        [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
-                                        ]
-                                } forKey:@"geometry"];
-        }
-        [accessor setDictionary:update forKey:timestamp];
-    }];
-}
-
-- (NSString *)currentBatteryState {
-    switch([UIDevice currentDevice].batteryState) {
-        case UIDeviceBatteryStateUnknown:
-            return @"unknown";
-        case UIDeviceBatteryStateCharging:
-            return @"charging";
-        case UIDeviceBatteryStateFull:
-            return @"full";
-        case UIDeviceBatteryStateUnplugged:
-            return @"unplugged";
-    }
-}
-
-- (NSNumber *)currentBatteryLevel {
-    return [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
-}
-
-- (void)numberOfLocationsInQueue:(void(^)(long num))callback {
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        [accessor countObjectsUsingBlock:callback];
-    }];
-}
-
-- (void)sendingStarted {
-    self.sendInProgress = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingStartedNotification object:self];
-}
-
-- (void)sendingFinished {
-    self.sendInProgress = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self];
-}
-
-- (void)sendQueueIfTimeElapsed {
-    BOOL sendingEnabled = [self.sendingInterval integerValue] > -1;
-    if(!sendingEnabled) {
-        return;
-    }
-    
-    if(self.sendInProgress) {
-        NSLog(@"Send is already in progress");
-        return;
-    }
-    
-    BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending;
-    
-    __block long numPending = 0;
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        [accessor countObjectsUsingBlock:^(long num) {
-            numPending = num;
-        }];
-    }];
-//    if(numPending < PointsPerBatch) {
-//        self.batchInProgress = NO;
-//    }
-
-    NSLog(@"Points in queue: %lu", numPending);
-    
-    // Send if time has elapsed,
-    // or if we're in the middle of flushing
-    if(timeElapsed || self.batchInProgress) {
-        NSLog(@"Sending a batch now");
-        [self sendQueueNow];
-        self.lastSentDate = NSDate.date;
-    }
-}
-
-- (void)sendQueueIfNotInProgress {
-    if(self.sendInProgress) {
-        return;
-    }
-    
-    [self sendQueueNow];
-    self.lastSentDate = NSDate.date;
-}
-
-- (void)sendQueueNow {
-    NSMutableSet *syncedUpdates = [NSMutableSet set];
-    NSMutableArray *locationUpdates = [NSMutableArray array];
-
-    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-
-    if(endpoint == nil) {
-        NSLog(@"No API endpoint is set, not sending data");
-        return;
-    }
-    
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        
-        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
-            [syncedUpdates addObject:key];
-            [locationUpdates addObject:object];
-            return (BOOL)(locationUpdates.count >= PointsPerBatch);
-        }];
-        
-    }];
-    
-    NSDictionary *postData = @{@"locations": locationUpdates};
-    
-    NSLog(@"Endpoint: %@", endpoint);
-    NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
-    
-    if(locationUpdates.count == 0) {
-        self.batchInProgress = NO;
-        return;
-    }
-
-    [self sendingStarted];
-
-    [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"Response: %@", responseObject);
-        
-        if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
-            self.lastSentDate = NSDate.date;
-            
-            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-                for(NSString *key in syncedUpdates) {
-                    [accessor removeDictionaryForKey:key];
-                }
-
-            }];
-
-            // Try to send again in case there are more left
-            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-                [accessor countObjectsUsingBlock:^(long num) {
-                    if(num > 0) {
-                        NSLog(@"Number remaining: %ld", num);
-                        self.batchInProgress = YES;
-                    } else {
-                        self.batchInProgress = NO;
-                    }
-                }];
-            }];
-
-            [self sendingFinished];
-        } else {
-
-            self.batchInProgress = NO;
-
-            if([responseObject objectForKey:@"error"]) {
-                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
-                [self sendingFinished];
-            } else {
-                [self notify:[responseObject description] withTitle:@"Error"];
-                [self sendingFinished];
-            }
-        }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        self.batchInProgress = NO;
-        NSLog(@"Error: %@", error);
-        [self notify:error.description withTitle:@"Error"];
-        [self sendingFinished];
-    }];
-    
-}
-
-- (NSDate *)lastSentDate {
-    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLLastSentDateDefaultsName];
-}
-
-- (void)setLastSentDate:(NSDate *)lastSentDate {
-    [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:GLLastSentDateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)notify:(NSString *)message withTitle:(NSString *)title
-{
-    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
-    localNotification.alertBody = [NSString stringWithFormat:@"%@: %@", title, message];
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-}
-
-- (void)accountInfo:(void(^)(NSString *name))block {
-    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-    [_httpClient GET:endpoint parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-        NSDictionary *dict = (NSDictionary *)responseObject;
-        block((NSString *)[dict objectForKey:@"name"]);
-    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-        NSLog(@"Failed to get account info");
-    }];
-}
-
 #pragma mark -
 
-- (void)setSendingInterval:(NSNumber *)newValue {
-    [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:GLSendIntervalDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    _sendingInterval = newValue;
+
+- (BOOL)defaultsKeyExists:(NSString *)key {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
 }
 
-- (NSNumber *)sendingInterval {
-    if(_sendingInterval)
-        return _sendingInterval;
+#pragma mark - LOLDB
+
++ (NSString *)cacheDatabasePath
+{
+    NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [caches stringByAppendingPathComponent:@"GLLoggerCache.sqlite"];
+}
+
++ (id)objectFromJSONData:(NSData *)data error:(NSError **)error;
+{
+    return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
+}
+
++ (NSData *)dataWithJSONObject:(id)object error:(NSError **)error;
+{
+    return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
+}
+
++ (NSString *)iso8601DateStringFromDate:(NSDate *)date {
+    struct tm *timeinfo;
+    char buffer[80];
     
-    _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:GLSendIntervalDefaultsName];
-    return _sendingInterval;
+    time_t rawtime = (time_t)[date timeIntervalSince1970];
+    timeinfo = gmtime(&rawtime);
+    
+    strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
+    
+    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 }
 
 @end
