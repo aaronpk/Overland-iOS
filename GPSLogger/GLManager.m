@@ -436,10 +436,10 @@ AFHTTPSessionManager *_httpClient;
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-    [self enableTracking];
-    [self.locationManager stopMonitoringForRegion:region];
     [self logAction:@"exited_pause_region"];
     [self notify:@"Starting updates from exiting the geofence" withTitle:@"Resumed"];
+    [self.locationManager stopMonitoringForRegion:region];
+    [self enableTracking];
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
