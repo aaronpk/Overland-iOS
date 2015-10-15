@@ -195,6 +195,11 @@ NSArray *intervalMapStrings;
     [[GLManager sharedManager] refreshLocation];
 }
 
+- (IBAction)tripModeWasTapped:(id)sender {
+    NSLog(@"Trip mode was tapped");
+    
+}
+
 
 + (NSString *)timeFormatted:(int)totalSeconds {
     int seconds = totalSeconds % 60;

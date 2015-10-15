@@ -33,6 +33,7 @@
 - (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 - (IBAction)locationAgeWasTapped:(id)sender;
+- (IBAction)tripModeWasTapped:(id)sender;
 
 @end
 
