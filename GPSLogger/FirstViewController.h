@@ -34,6 +34,8 @@
 - (IBAction)sendQueue:(id)sender;
 - (IBAction)locationAgeWasTapped:(id)sender;
 
+@property (strong, nonatomic) IBOutlet UIImageView *currentModeImage;
+@property (strong, nonatomic) IBOutlet UILabel *currentModeLabel;
 - (IBAction)tripModeWasTapped:(id)sender;
 @property (strong, nonatomic) IBOutlet UILabel *tripDurationLabel;
 @property (strong, nonatomic) IBOutlet UILabel *tripDistanceLabel;

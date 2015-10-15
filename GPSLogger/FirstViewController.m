@@ -52,7 +52,9 @@ NSArray *intervalMapStrings;
     }
     
     [self updateTripState];
-    
+    self.currentModeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [GLManager sharedManager].currentTripMode]];
+    self.currentModeLabel.text = [GLManager sharedManager].currentTripMode;
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newDataReceived)
                                                  name:GLNewDataNotification
@@ -67,7 +69,7 @@ NSArray *intervalMapStrings;
                                              selector:@selector(sendingFinished)
                                                  name:GLSendingFinishedNotification
                                                object:nil];
-    
+
     self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                              target:self
                                                            selector:@selector(refreshView)
@@ -224,10 +226,12 @@ NSArray *intervalMapStrings;
 - (IBAction)tripModeWasTapped:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Trip mode was tapped");
+        [self performSegueWithIdentifier:@"tripMode" sender:self];
     }
 }
 
 - (IBAction)tripStartStopWasTapped:(id)sender {
+    NSLog(@"trip start/stop was tapped");
     if([GLManager sharedManager].tripInProgress) {
         [[GLManager sharedManager] endTrip];
         
@@ -240,9 +244,7 @@ NSArray *intervalMapStrings;
         [[NSUserDefaults standardUserDefaults] setBool:[GLManager sharedManager].trackingEnabled forKey:GLTripTrackingEnabledDefaultsName];
 
         [[GLManager sharedManager] startAllUpdates];
-
-        NSString *mode = GLTripModeDrive;
-        [[GLManager sharedManager] startTripWithMode:mode];
+        [[GLManager sharedManager] startTrip];
     }
     [self updateTripState];
 }

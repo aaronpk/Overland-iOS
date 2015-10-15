@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Tracker-->
@@ -219,7 +220,7 @@ IAogA
                                                             </stackView>
                                                         </subviews>
                                                     </stackView>
-                                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAz-8W-iDJ">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FAz-8W-iDJ">
                                                         <rect key="frame" x="0.0" y="337" width="560" height="79"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-hO-75N">
@@ -228,7 +229,7 @@ IAogA
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9Yk-67-SNk">
                                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="79"/>
                                                                         <subviews>
-                                                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cycling" translatesAutoresizingMaskIntoConstraints="NO" id="kvv-zo-7Tv">
+                                                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kvv-zo-7Tv">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                                                 <gestureRecognizers/>
                                                                                 <constraints>
@@ -379,6 +380,8 @@ IAogA
                     <tabBarItem key="tabBarItem" title="Tracker" image="map-pin" id="acW-dT-cKf"/>
                     <connections>
                         <outlet property="accountInfo" destination="aT1-cg-Q8Y" id="QuK-e1-wK0"/>
+                        <outlet property="currentModeImage" destination="kvv-zo-7Tv" id="tOC-J3-9Fr"/>
+                        <outlet property="currentModeLabel" destination="3p1-MV-Fnk" id="KjG-uk-bE4"/>
                         <outlet property="locationAgeLabel" destination="rZc-jl-K4j" id="KGq-YC-32j"/>
                         <outlet property="locationAltitudeLabel" destination="tzf-yA-Lrh" id="VuF-QB-TXb"/>
                         <outlet property="locationLabel" destination="ItY-6C-yMI" id="QRC-ow-cvJ"/>
@@ -393,6 +396,7 @@ IAogA
                         <outlet property="tripDistanceLabel" destination="YKJ-cC-bu6" id="kjw-uf-cSP"/>
                         <outlet property="tripDurationLabel" destination="sy2-au-4W7" id="Fye-k6-PsP"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
+                        <segue destination="zgY-Zn-asN" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -408,6 +412,214 @@ IAogA
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="750" y="-320"/>
+        </scene>
+        <!--Trip Mode View Controller-->
+        <scene sceneID="lKK-yr-4p2">
+            <objects>
+                <viewController id="zgY-Zn-asN" customClass="TripModeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iHK-p2-bo2"/>
+                        <viewControllerLayoutGuide type="bottom" id="H0t-Xv-xUH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7Tm-An-2bT">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="MXr-Y7-cet">
+                                <rect key="frame" x="20" y="20" width="560" height="580"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wua-lz-cny">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="240"/>
+                                        <subviews>
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walk" translatesAutoresizingMaskIntoConstraints="NO" id="UhZ-Ml-AUK">
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="ybO-mS-X33" appends="YES" id="F0h-lX-kyr"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="walk" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZ4-eV-Bkj">
+                                                <rect key="frame" x="18" y="64" width="28" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drive" translatesAutoresizingMaskIntoConstraints="NO" id="Krl-Yx-Qwr">
+                                                <rect key="frame" x="0.0" y="80" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="bb4-Ml-NdK" appends="YES" id="rwq-wY-78c"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="drive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fpM-Ha-yNh">
+                                                <rect key="frame" x="17" y="144" width="31" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="6" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bus" translatesAutoresizingMaskIntoConstraints="NO" id="iNh-qw-EQR">
+                                                <rect key="frame" x="0.0" y="160" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="qZz-Ku-fUZ" appends="YES" id="gtd-i2-9bl"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLh-ml-xKc">
+                                                <rect key="frame" x="21" y="224" width="23" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="WbM-S5-rnl">
+                                        <rect key="frame" x="248" y="0.0" width="64" height="240"/>
+                                        <subviews>
+                                            <imageView tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="run" translatesAutoresizingMaskIntoConstraints="NO" id="7tG-2e-09y">
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="F2S-LI-UWo" appends="YES" id="Apj-JB-s9r"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="run" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sFr-gW-fGD">
+                                                <rect key="frame" x="22" y="64" width="20" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car2go" translatesAutoresizingMaskIntoConstraints="NO" id="HZ6-fi-A8N">
+                                                <rect key="frame" x="0.0" y="80" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="exk-qA-djw" appends="YES" id="fIh-4A-zXn"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="car2go" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T86-ud-cOh">
+                                                <rect key="frame" x="11" y="144" width="43" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="7" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="train" translatesAutoresizingMaskIntoConstraints="NO" id="GSf-JG-I3i">
+                                                <rect key="frame" x="0.0" y="160" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="Iyu-SZ-V4D" appends="YES" id="7s2-0Q-ssK"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="train" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hzf-hd-Hht">
+                                                <rect key="frame" x="18" y="224" width="28" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wU8-3R-1Q6">
+                                        <rect key="frame" x="496" y="0.0" width="64" height="240"/>
+                                        <subviews>
+                                            <imageView tag="2" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bicycle" translatesAutoresizingMaskIntoConstraints="NO" id="Rce-mJ-me9">
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="b3M-9j-gxx" appends="YES" id="wJE-Kx-Lbg"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bicycle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9aS-Uk-wcq">
+                                                <rect key="frame" x="11" y="64" width="43" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="taxi" translatesAutoresizingMaskIntoConstraints="NO" id="Gsi-ZX-DnK">
+                                                <rect key="frame" x="0.0" y="80" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="TPM-1g-9HR" appends="YES" id="Yhv-LX-0zj"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="taxi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apA-Qa-22G">
+                                                <rect key="frame" x="21" y="144" width="22" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView tag="8" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plane" translatesAutoresizingMaskIntoConstraints="NO" id="7y2-hC-4La">
+                                                <rect key="frame" x="0.0" y="160" width="64" height="64"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="rTh-Bt-lSP" appends="YES" id="lxj-ah-3aR"/>
+                                                </connections>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="plane" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLw-Mi-eHv">
+                                                <rect key="frame" x="15" y="224" width="34" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="MXr-Y7-cet" firstAttribute="leading" secondItem="7Tm-An-2bT" secondAttribute="leadingMargin" id="9oH-GW-bM0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="MXr-Y7-cet" secondAttribute="trailing" id="VfD-Je-ChP"/>
+                            <constraint firstItem="MXr-Y7-cet" firstAttribute="top" secondItem="iHK-p2-bo2" secondAttribute="bottom" id="ZTu-Fh-ySd"/>
+                            <constraint firstItem="H0t-Xv-xUH" firstAttribute="top" secondItem="MXr-Y7-cet" secondAttribute="bottom" id="jEv-Nq-8C9"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2FK-m7-7BU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ybO-mS-X33">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="yV9-yu-oMd"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="F2S-LI-UWo">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="Zm6-W5-P5k"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="b3M-9j-gxx">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="TYH-4i-4LE"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="bb4-Ml-NdK">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="GXQ-iF-aRf"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="qZz-Ku-fUZ">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="XG3-NW-QpO"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="exk-qA-djw">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="3ZI-F2-a3e"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="Iyu-SZ-V4D">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="LA5-4U-FtN"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="TPM-1g-9HR">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="hlD-tp-IRk"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="rTh-Bt-lSP">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="WsM-Mr-nEl"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1517" y="-320"/>
         </scene>
         <!--Settings-->
         <scene sceneID="wg7-f3-ORb">
@@ -657,8 +869,16 @@ IAogA
         </scene>
     </scenes>
     <resources>
-        <image name="cycling" width="64" height="64"/>
+        <image name="bicycle" width="64" height="64"/>
+        <image name="bus" width="64" height="64"/>
+        <image name="car2go" width="64" height="64"/>
+        <image name="drive" width="64" height="64"/>
         <image name="map-pin" width="30" height="30"/>
+        <image name="plane" width="64" height="64"/>
+        <image name="run" width="64" height="64"/>
         <image name="settings" width="28" height="29"/>
+        <image name="taxi" width="64" height="64"/>
+        <image name="train" width="64" height="64"/>
+        <image name="walk" width="64" height="64"/>
     </resources>
 </document>

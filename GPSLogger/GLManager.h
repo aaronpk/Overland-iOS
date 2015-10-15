@@ -83,11 +83,11 @@ typedef enum {
 
 + (NSArray *)GLTripModes;
 - (BOOL)tripInProgress;
-- (NSString *)currentTripMode;
+@property (nonatomic) NSString *currentTripMode;
 - (NSDate *)currentTripStart;
 - (CLLocationDistance)currentTripDistance;
 - (NSTimeInterval)currentTripDuration;
-- (void)startTripWithMode:(NSString *)mode;
+- (void)startTrip;
 - (void)endTrip;
 
 - (void)applicationWillTerminate;

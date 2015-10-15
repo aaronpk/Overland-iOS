@@ -339,14 +339,20 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (BOOL)tripInProgress {
-    return [[NSUserDefaults standardUserDefaults] stringForKey:GLTripModeDefaultsName] != nil;
+    return [[NSUserDefaults standardUserDefaults] objectForKey:GLTripStartTimeDefaultsName] != nil;
 }
 
 - (NSString *)currentTripMode {
-    if(!self.tripInProgress) {
-        return nil;
+    NSString *mode = [[NSUserDefaults standardUserDefaults] stringForKey:GLTripModeDefaultsName];
+    if(!mode) {
+        mode = @"bicycle";
     }
-    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:GLTripModeDefaultsName];
+    return mode;
+}
+
+- (void)setCurrentTripMode:(NSString *)mode {
+    [[NSUserDefaults standardUserDefaults] setObject:mode forKey:GLTripModeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSDate *)currentTripStart {
@@ -362,7 +368,7 @@ AFHTTPSessionManager *_httpClient;
     }
     
     NSDate *startDate = self.currentTripStart;
-    return abs([startDate timeIntervalSinceNow]);
+    return [startDate timeIntervalSinceNow] * -1.0;
 }
 
 - (CLLocationDistance)currentTripDistance {
@@ -373,14 +379,16 @@ AFHTTPSessionManager *_httpClient;
     return 20.0;
 }
 
-- (void)startTripWithMode:(NSString *)mode {
+- (void)startTrip {
     if(self.tripInProgress) {
         return;
     }
     
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] setObject:mode forKey:GLTripModeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    NSLog(@"Started a trip");
 }
 
 - (void)endTrip {
@@ -409,8 +417,9 @@ AFHTTPSessionManager *_httpClient;
         [accessor setDictionary:update forKey:timestamp];
     }];
     
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripStartTimeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    NSLog(@"Ended a %@ trip", self.currentTripMode);
 }
 
 #pragma mark - Properties
