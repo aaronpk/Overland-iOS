@@ -408,6 +408,7 @@ AFHTTPSessionManager *_httpClient;
                                                  ]
                                          },
                                  @"properties": @{
+                                         @"timestamp": timestamp,
                                          @"type": @"trip",
                                          @"mode": self.currentTripMode,
                                          @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],

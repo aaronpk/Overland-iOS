@@ -38,7 +38,8 @@ NSArray *intervalMapStrings;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+
+- (void)viewWillAppear:(BOOL)animated {
     [self sendingFinished];
     
     if([GLManager sharedManager].trackingEnabled)
@@ -225,13 +226,11 @@ NSArray *intervalMapStrings;
 
 - (IBAction)tripModeWasTapped:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"Trip mode was tapped");
         [self performSegueWithIdentifier:@"tripMode" sender:self];
     }
 }
 
 - (IBAction)tripStartStopWasTapped:(id)sender {
-    NSLog(@"trip start/stop was tapped");
     if([GLManager sharedManager].tripInProgress) {
         [[GLManager sharedManager] endTrip];
         
