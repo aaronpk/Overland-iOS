@@ -392,13 +392,17 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)endTrip {
+    [self endTripFromAutopause:NO];
+}
+
+- (void)endTripFromAutopause:(BOOL)autopause {
     if(!self.tripInProgress) {
         return;
     }
     
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
-        NSDictionary *update = @{
+        NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
                                  @"type": @"Feature",
                                  @"geometry": @{
                                          @"type": @"Point",
@@ -414,7 +418,11 @@ AFHTTPSessionManager *_httpClient;
                                          @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
                                          @"end": timestamp
                                          }
-                                 };
+                                 }];
+        if(autopause) {
+            [update setValue:@(YES) forKey:@"stopped_automatically"];
+            [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
+        }
         [accessor setDictionary:update forKey:timestamp];
     }];
     
@@ -621,6 +629,8 @@ AFHTTPSessionManager *_httpClient;
     
     NSLog(@"Received %d locations", (int)locations.count);
     
+    NSLog(@"%@", locations);
+    
     // Queue the point in the database
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         
@@ -703,6 +713,11 @@ AFHTTPSessionManager *_httpClient;
     
     // Send the queue now to flush all remaining points
     [self sendQueueIfNotInProgress];
+    
+    // If a trip was in progress, stop it now
+    if(self.tripInProgress) {
+        [self endTripFromAutopause:YES];
+    }
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
