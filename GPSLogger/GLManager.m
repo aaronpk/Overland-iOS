@@ -7,8 +7,9 @@
 //
 
 #import "GLManager.h"
-#import "LOLDatabase.h"
 #import "AFHTTPSessionManager.h"
+#import "LOLDatabase.h"
+#import "FMDatabase.h"
 
 @interface GLManager()
 
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) NSDate *lastSentDate;
 
 @property (strong, nonatomic) LOLDatabase *db;
+@property (strong, nonatomic) FMDatabase *tripdb;
 
 @end
 
@@ -32,6 +34,8 @@ static NSString *const GLLocationQueueName = @"GLLocationQueue";
 
 NSNumber *_sendingInterval;
 NSArray *_tripModes;
+bool _currentTripHasNewData;
+CLLocationDistance _currentTripDistanceCached;
 AFHTTPSessionManager *_httpClient;
 
 + (GLManager *)sharedManager {
@@ -48,6 +52,9 @@ AFHTTPSessionManager *_httpClient;
             _instance.db.deserializer = ^(NSData *data) {
                 return [self objectFromJSONData:data error:NULL];
             };
+            
+            _instance.tripdb = [FMDatabase databaseWithPath:[self tripDatabasePath]];
+            [_instance setUpTripDB];
             
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
@@ -228,6 +235,10 @@ AFHTTPSessionManager *_httpClient;
 - (void)restoreTrackingState {
     if([[NSUserDefaults standardUserDefaults] boolForKey:GLTrackingStateDefaultsName]) {
         [self enableTracking];
+        if(self.tripInProgress) {
+            // If a trip is in progress, open the trip DB now
+            [self.tripdb open];
+        }
     } else {
         [self disableTracking];
     }
@@ -376,7 +387,26 @@ AFHTTPSessionManager *_httpClient;
         return -1;
     }
     
-    return 20.0;
+    if(!_currentTripHasNewData) {
+        return _currentTripDistanceCached;
+    }
+
+    CLLocationDistance distance = 0;
+    CLLocation *lastLocation;
+    CLLocation *loc;
+    
+    FMResultSet *s = [self.tripdb executeQuery:@"SELECT latitude, longitude FROM trips ORDER BY timestamp"];
+    while([s next]) {
+        loc = [[CLLocation alloc] initWithLatitude:[s doubleForColumnIndex:0] longitude:[s doubleForColumnIndex:1]];
+        
+        if(lastLocation) {
+            distance += [lastLocation distanceFromLocation:loc];
+        }
+        
+        lastLocation = loc;
+    }
+    
+    return distance;
 }
 
 - (void)startTrip {
@@ -387,6 +417,10 @@ AFHTTPSessionManager *_httpClient;
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self.tripdb open];
+    _currentTripDistanceCached = 0;
+    _currentTripHasNewData = NO;
     
     NSLog(@"Started a trip");
 }
@@ -399,7 +433,7 @@ AFHTTPSessionManager *_httpClient;
     if(!self.tripInProgress) {
         return;
     }
-    
+
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -416,7 +450,9 @@ AFHTTPSessionManager *_httpClient;
                                          @"type": @"trip",
                                          @"mode": self.currentTripMode,
                                          @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
-                                         @"end": timestamp
+                                         @"end": timestamp,
+                                         @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
+                                         @"distance": [NSNumber numberWithDouble:self.currentTripDistance]
                                          }
                                  }];
         if(autopause) {
@@ -425,7 +461,11 @@ AFHTTPSessionManager *_httpClient;
         }
         [accessor setDictionary:update forKey:timestamp];
     }];
-    
+
+    _currentTripDistanceCached = 0;
+    [self clearTripDB];
+    [self.tripdb close];
+
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripStartTimeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     NSLog(@"Ended a %@ trip", self.currentTripMode);
@@ -691,6 +731,13 @@ AFHTTPSessionManager *_httpClient;
                                              }
                                      };
             [accessor setDictionary:update forKey:timestamp];
+
+            // If a trip is in progress, add to the trip's list too
+            if(self.tripInProgress && loc.horizontalAccuracy <= 100) {
+                [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
+                _currentTripHasNewData = YES;
+            }
+
         }
         
     }];
@@ -757,6 +804,31 @@ AFHTTPSessionManager *_httpClient;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
 }
+
+#pragma mark - FMDB
+
++ (NSString *)tripDatabasePath {
+    NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    return [docsPath stringByAppendingPathComponent:@"trips.sqlite"];
+}
+
+- (void)setUpTripDB {
+    [self.tripdb open];
+    if(![self.tripdb executeUpdate:@"CREATE TABLE IF NOT EXISTS trips (\
+       id INTEGER PRIMARY KEY AUTOINCREMENT, \
+       timestamp INTEGER, \
+       latitude REAL, \
+       longitude REAL \
+     )"]) {
+        NSLog(@"Error creating trip DB: %@", self.tripdb.lastErrorMessage);
+    }
+    [self.tripdb close];
+}
+
+- (void)clearTripDB {
+    [self.tripdb executeUpdate:@"DELETE FROM trips"];
+}
+
 
 #pragma mark - LOLDB
 

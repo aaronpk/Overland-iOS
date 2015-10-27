@@ -81,6 +81,8 @@ typedef enum {
 - (void)accountInfo:(void(^)(NSString *name))block;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
+#pragma mark - Trips
+
 + (NSArray *)GLTripModes;
 - (BOOL)tripInProgress;
 @property (nonatomic) NSString *currentTripMode;
@@ -89,6 +91,8 @@ typedef enum {
 - (NSTimeInterval)currentTripDuration;
 - (void)startTrip;
 - (void)endTrip;
+
+#pragma mark -
 
 - (void)applicationWillTerminate;
 - (void)applicationDidEnterBackground;

@@ -3,5 +3,6 @@
 
 target 'GPSLogger' do
 pod 'AFNetworking'
+pod 'FMDB'
 end
 
