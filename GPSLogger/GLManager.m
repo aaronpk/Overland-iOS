@@ -10,6 +10,7 @@
 #import "AFHTTPSessionManager.h"
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
+#import "PebbleManager.h"
 
 @interface GLManager()
 
@@ -238,6 +239,7 @@ AFHTTPSessionManager *_httpClient;
         if(self.tripInProgress) {
             // If a trip is in progress, open the trip DB now
             [self.tripdb open];
+            [[PebbleManager sharedManager] startWatchSession];
         }
     } else {
         [self disableTracking];
@@ -409,10 +411,24 @@ AFHTTPSessionManager *_httpClient;
     return distance;
 }
 
+/**
+ * speed in miles per hour
+ */
+- (double)currentTripSpeed {
+    if(!self.tripInProgress) {
+        return -1;
+    }
+    
+    double speedMS = self.currentTripDistance / self.currentTripDuration;
+    return speedMS * 2.23694;
+}
+
 - (void)startTrip {
     if(self.tripInProgress) {
         return;
     }
+    
+    [[PebbleManager sharedManager] startWatchSession];
     
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
@@ -433,6 +449,8 @@ AFHTTPSessionManager *_httpClient;
     if(!self.tripInProgress) {
         return;
     }
+
+    [[PebbleManager sharedManager] stopWatchSession];
 
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
@@ -669,7 +687,7 @@ AFHTTPSessionManager *_httpClient;
     
     NSLog(@"Received %d locations", (int)locations.count);
     
-    NSLog(@"%@", locations);
+    // NSLog(@"%@", locations);
     
     // Queue the point in the database
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
@@ -735,6 +753,7 @@ AFHTTPSessionManager *_httpClient;
             // If a trip is in progress, add to the trip's list too
             if(self.tripInProgress && loc.horizontalAccuracy <= 100) {
                 [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
+                [[PebbleManager sharedManager] refreshWatchface];
                 _currentTripHasNewData = YES;
             }
 

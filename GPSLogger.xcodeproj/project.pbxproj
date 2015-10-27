@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; settings = {ASSET_TAGS = (); }; };
+		0FB85ABC1BE0048300F25126 /* PebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FB85ABB1BE0048300F25126 /* PebbleManager.m */; settings = {ASSET_TAGS = (); }; };
+		0FB85ABE1BE0151300F25126 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */; };
+		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
 		0FFD31571BAB7A34009B3A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31561BAB7A34009B3A03 /* main.m */; };
 		0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31591BAB7A34009B3A03 /* AppDelegate.m */; };
 		0FFD315D1BAB7A34009B3A03 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315C1BAB7A34009B3A03 /* FirstViewController.m */; };
@@ -27,6 +30,10 @@
 /* Begin PBXFileReference section */
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
+		0FB85ABA1BE0048300F25126 /* PebbleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PebbleManager.h; sourceTree = "<group>"; };
+		0FB85ABB1BE0048300F25126 /* PebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PebbleManager.m; sourceTree = "<group>"; };
+		0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		0FFD31521BAB7A34009B3A03 /* GPSLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FFD31561BAB7A34009B3A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0FFD31581BAB7A34009B3A03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -57,6 +64,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */,
+				0FB85ABE1BE0151300F25126 /* CoreBluetooth.framework in Frameworks */,
 				0FFD31781BAB7C7F009B3A03 /* CoreLocation.framework in Frameworks */,
 				0FFD31791BAB7C7F009B3A03 /* CoreMotion.framework in Frameworks */,
 				0FFD317A1BAB7C7F009B3A03 /* libsqlite3.tbd in Frameworks */,
@@ -71,6 +80,8 @@
 		0BE775F16162CE9DF6AE0775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */,
+				0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */,
 				0FFD31741BAB7C7F009B3A03 /* CoreLocation.framework */,
 				0FFD31751BAB7C7F009B3A03 /* CoreMotion.framework */,
 				0FFD31761BAB7C7F009B3A03 /* libsqlite3.tbd */,
@@ -111,6 +122,8 @@
 				0FFD315F1BAB7A34009B3A03 /* SecondViewController.m */,
 				0FFD31711BAB7BEA009B3A03 /* GLManager.h */,
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
+				0FB85ABA1BE0048300F25126 /* PebbleManager.h */,
+				0FB85ABB1BE0048300F25126 /* PebbleManager.m */,
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
 				0FFD31641BAB7A34009B3A03 /* Assets.xcassets */,
 				0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */,
@@ -264,6 +277,7 @@
 				0FFD315D1BAB7A34009B3A03 /* FirstViewController.m in Sources */,
 				0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */,
 				0FFD31571BAB7A34009B3A03 /* main.m in Sources */,
+				0FB85ABC1BE0048300F25126 /* PebbleManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

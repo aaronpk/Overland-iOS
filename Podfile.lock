@@ -25,13 +25,16 @@ PODS:
   - FMDB/common (2.5)
   - FMDB/standard (2.5):
     - FMDB/common
+  - PebbleKit (3.0.0)
 
 DEPENDENCIES:
   - AFNetworking
   - FMDB
+  - PebbleKit
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
+  PebbleKit: 575087dc3e7ca1687929dd4903baabcf8f224cff
 
 COCOAPODS: 0.38.2

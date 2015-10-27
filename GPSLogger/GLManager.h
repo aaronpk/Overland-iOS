@@ -38,6 +38,7 @@ static NSString *const GLTripModeTrain = @"train";
 static NSString *const GLTripModePlane = @"plane";
 
 static int const PointsPerBatch = 200;
+static double const MetersToMiles = 0.000621371;
 
 typedef enum {
     kGLSignificantLocationDisabled,
@@ -89,6 +90,7 @@ typedef enum {
 - (NSDate *)currentTripStart;
 - (CLLocationDistance)currentTripDistance;
 - (NSTimeInterval)currentTripDuration;
+- (double)currentTripSpeed;
 - (void)startTrip;
 - (void)endTrip;
 

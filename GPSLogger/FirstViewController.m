@@ -8,6 +8,7 @@
 
 #import "FirstViewController.h"
 #import "GLManager.h"
+#import "PebbleManager.h"
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 
@@ -215,7 +216,8 @@ NSArray *intervalMapStrings;
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
         self.tripDurationLabel.text = [FirstViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
-        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [GLManager sharedManager].currentTripDistance * 0.000621371];
+        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [GLManager sharedManager].currentTripDistance * MetersToMiles];
+        [[PebbleManager sharedManager] refreshWatchface];
     } else {
         [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:106.f/255.f green:212.f/255.f blue:150.f/255.f alpha:1];
