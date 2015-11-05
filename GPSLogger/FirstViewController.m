@@ -132,17 +132,17 @@ NSArray *intervalMapStrings;
     
     CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
     if(activity.walking)
-        self.motionTypeLabel.text = @"walking";
+        self.motionTypeLabel.text = @"mph, walking";
     else if(activity.running)
-        self.motionTypeLabel.text = @"running";
+        self.motionTypeLabel.text = @"mph, running";
     else if(activity.cycling)
-        self.motionTypeLabel.text = @"cycling";
+        self.motionTypeLabel.text = @"mph, cycling";
     else if(activity.automotive)
-        self.motionTypeLabel.text = @"driving";
+        self.motionTypeLabel.text = @"mph, driving";
     else if(activity.stationary)
-        self.motionTypeLabel.text = @"stationary";
+        self.motionTypeLabel.text = @"mph, stationary";
     else
-        self.motionTypeLabel.text = @" ";
+        self.motionTypeLabel.text = @"mph";
     
     if([GLManager sharedManager].lastSentDate) {
         age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
