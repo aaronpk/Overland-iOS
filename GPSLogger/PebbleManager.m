@@ -12,6 +12,7 @@
 @implementation PebbleManager {
     PBWatch *_targetWatch;
     bool sportsEnabled;
+    NSDate *lastSent;
 }
 
 + (PebbleManager *)sharedManager {
@@ -79,8 +80,11 @@
 }
 
 - (void)refreshWatchface {
-    GLManager *m = [GLManager sharedManager];
-    [self updateTripInfoWithTime:m.currentTripDuration distance:m.currentTripDistance*MetersToMiles speed:m.currentTripSpeed];
+    // Avoid sending more than one update per second to the watch
+    if(lastSent == nil || [lastSent timeIntervalSinceNow] <= 1.0) {
+        GLManager *m = [GLManager sharedManager];
+        [self updateTripInfoWithTime:m.currentTripDuration distance:m.currentTripDistance*MetersToMiles speed:m.currentTripSpeed];
+    }
 }
 
 - (void)updateTripInfoWithTime:(NSTimeInterval)time distance:(double)distance speed:(double)speed {
