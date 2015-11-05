@@ -419,7 +419,7 @@ AFHTTPSessionManager *_httpClient;
         return -1;
     }
     
-    double speedMS = self.currentTripDistance / self.currentTripDuration;
+    double speedMS = self.lastLocation.speed;
     return speedMS * 2.23694;
 }
 
