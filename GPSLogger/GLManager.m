@@ -411,6 +411,18 @@ AFHTTPSessionManager *_httpClient;
     return distance;
 }
 
+- (CLLocationCoordinate2D)currentTripStartLocation {
+    if(!self.tripInProgress)
+        return kCLLocationCoordinate2DInvalid;
+    
+    CLLocationCoordinate2D result = kCLLocationCoordinate2DInvalid;
+    FMResultSet *s = [self.tripdb executeQuery:@"SELECT latitude, longitude FROM trips ORDER BY timestamp LIMIT 1"];
+    while([s next]) {
+        result = CLLocationCoordinate2DMake([s doubleForColumnIndex:0], [s doubleForColumnIndex:1]);
+    }
+    return result;
+}
+
 /**
  * speed in miles per hour
  */
@@ -454,6 +466,7 @@ AFHTTPSessionManager *_httpClient;
 
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        CLLocationCoordinate2D startLocation = [self currentTripStartLocation];
         NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
                                  @"type": @"Feature",
                                  @"geometry": @{
@@ -469,6 +482,14 @@ AFHTTPSessionManager *_httpClient;
                                          @"mode": self.currentTripMode,
                                          @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
                                          @"end": timestamp,
+                                         @"start-coordinates": @[
+                                                 [NSNumber numberWithDouble:startLocation.longitude],
+                                                 [NSNumber numberWithDouble:startLocation.latitude]
+                                                 ],
+                                         @"end-coordinates":@[
+                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                                 ],
                                          @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
                                          @"distance": [NSNumber numberWithDouble:self.currentTripDistance]
                                          }
