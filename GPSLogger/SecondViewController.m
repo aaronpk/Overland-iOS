@@ -22,7 +22,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
-    self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    if([[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName] != nil) {
+        self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+    } else {
+        self.apiEndpointField.text = @"No API endpoint configured";
+    }
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
 
     GLSignificantLocationMode slMode = [GLManager sharedManager].significantLocationMode;
@@ -98,12 +102,12 @@
         NSLog(@"URL: %@", newURL.scheme);
         
         BOOL clipboardIsValid;
-        if(message && newURL && [newURL.scheme isEqualToString:@"https"]) {
+        if(message && newURL && ([newURL.scheme isEqualToString:@"https"] || [newURL.scheme isEqualToString:@"http"])) {
             message = [UIPasteboard generalPasteboard].string;
             clipboardIsValid = YES;
         } else {
             if(newURL && newURL.scheme != nil) {
-                message = @"Only https URLs are supported. Copy a URL to your clipboard first";
+                message = @"Only https and http URLs are supported. Copy a URL to your clipboard first";
             } else {
                 message = @"Copy a URL to your clipboard first, then come back here to paste it";
             }
