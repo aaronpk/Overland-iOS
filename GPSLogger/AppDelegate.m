@@ -18,9 +18,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-//    [[NSUserDefaults standardUserDefaults] setObject:@"https://compass.esripdx.com/api/input?token=" forKey:GLAPIEndpointDefaultsName];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-
     UIUserNotificationType types = UIUserNotificationTypeAlert;
     UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
