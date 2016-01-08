@@ -8,6 +8,13 @@ This app is an experiment at gathering data from an iPhone to test the Core Loca
 
 The app gathers data with no network connection and stores locally on disk. The data is sent to the server in a batch at an interval set by the user.
 
+There are many settings available in the settings tab which allow you to adjust properties of the Core Location API.
+
+## Screenshots
+
+![Main](screenshot-main.png)
+![Settings](screenshot-settings.png)
+
 
 ## API
 
