@@ -491,11 +491,11 @@ AFHTTPSessionManager *_httpClient;
                                                  [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
                                                  ],
                                          @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
-                                         @"distance": [NSNumber numberWithDouble:self.currentTripDistance]
+                                         @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
+                                         @"stopped_automatically": @(autopause)
                                          }
                                  }];
         if(autopause) {
-            [update setValue:@(YES) forKey:@"stopped_automatically"];
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
         }
         [accessor setDictionary:update forKey:timestamp];
