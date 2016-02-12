@@ -826,7 +826,7 @@ AFHTTPSessionManager *_httpClient;
 #pragma mark - AppDelegate Methods
 
 - (void)applicationDidEnterBackground {
-    [self logAction:@"did_enter_background"];
+    // [self logAction:@"did_enter_background"];
 }
 
 - (void)applicationWillTerminate {
@@ -834,7 +834,7 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)applicationWillResignActive {
-    [self logAction:@"will_resign_active"];
+    // [self logAction:@"will_resign_active"];
 }
 
 #pragma mark -
