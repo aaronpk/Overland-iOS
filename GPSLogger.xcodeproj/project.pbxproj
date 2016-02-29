@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; settings = {ASSET_TAGS = (); }; };
-		0FB85ABC1BE0048300F25126 /* PebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FB85ABB1BE0048300F25126 /* PebbleManager.m */; settings = {ASSET_TAGS = (); }; };
+		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
+		0FB85ABC1BE0048300F25126 /* PebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FB85ABB1BE0048300F25126 /* PebbleManager.m */; };
 		0FB85ABE1BE0151300F25126 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */; };
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
 		0FFD31571BAB7A34009B3A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31561BAB7A34009B3A03 /* main.m */; };
@@ -18,12 +18,12 @@
 		0FFD31631BAB7A34009B3A03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31611BAB7A34009B3A03 /* Main.storyboard */; };
 		0FFD31651BAB7A34009B3A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31641BAB7A34009B3A03 /* Assets.xcassets */; };
 		0FFD31681BAB7A34009B3A03 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */; };
-		0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31721BAB7BEA009B3A03 /* GLManager.m */; settings = {ASSET_TAGS = (); }; };
+		0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31721BAB7BEA009B3A03 /* GLManager.m */; };
 		0FFD31781BAB7C7F009B3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31741BAB7C7F009B3A03 /* CoreLocation.framework */; };
 		0FFD31791BAB7C7F009B3A03 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31751BAB7C7F009B3A03 /* CoreMotion.framework */; };
 		0FFD317A1BAB7C7F009B3A03 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31761BAB7C7F009B3A03 /* libsqlite3.tbd */; };
 		0FFD317B1BAB7C7F009B3A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31771BAB7C7F009B3A03 /* UIKit.framework */; };
-		0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD317E1BAB7CC7009B3A03 /* LOLDatabase.m */; settings = {ASSET_TAGS = (); }; };
+		0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD317E1BAB7CC7009B3A03 /* LOLDatabase.m */; };
 		3C7DA13EAA9F815EF28DCB8C /* libPods-GPSLogger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4703A9854A7451EC4C58B1C9 /* libPods-GPSLogger.a */; };
 /* End PBXBuildFile section */
 
@@ -172,6 +172,7 @@
 				0FFD314F1BAB7A34009B3A03 /* Frameworks */,
 				0FFD31501BAB7A34009B3A03 /* Resources */,
 				326E8FD0B03C055C1101E906 /* Copy Pods Resources */,
+				D3550B7E97DA3E4FD8513456 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -193,6 +194,7 @@
 				TargetAttributes = {
 					0FFD31511BAB7A34009B3A03 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 7MC6UZR2UV;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -261,6 +263,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D3550B7E97DA3E4FD8513456 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GPSLogger/Pods-GPSLogger-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

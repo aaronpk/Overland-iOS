@@ -108,8 +108,8 @@
     _targetWatch = watch;
     
     // Test if the Pebble's firmware supports AppMessages / Sports:
-    [watch appMessagesGetIsSupported:^(PBWatch *watch, BOOL isAppMessagesSupported) {
-        if (isAppMessagesSupported) {
+    [watch getVersionInfo:^(PBWatch * _Nonnull watch, PBVersionInfo * _Nonnull versionInfo) {
+        if(versionInfo.appMessagesSupported) {
             [[PBPebbleCentral defaultCentral] setAppUUID:PBSportsUUID];
             
             NSLog(@"Pebble: %@ supports AppMessages :D", [watch name]);
@@ -117,10 +117,11 @@
             
             [self configureWatchSession];
         } else {
-            
             NSLog(@"Pebble: %@ does NOT support AppMessages :'(", [watch name]);
             sportsEnabled = NO;
         }
+    } onTimeout:^(PBWatch * _Nonnull watch) {
+        NSLog(@"Timed out getting watch version info");
     }];
 }
 
