@@ -124,7 +124,7 @@ AFHTTPSessionManager *_httpClient;
     
     [self sendingStarted];
     
-    [_httpClient POST:endpoint parameters:postData success:^(NSURLSessionDataTask *task, id responseObject) {
+    [_httpClient POST:endpoint parameters:postData progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
         if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
@@ -162,7 +162,7 @@ AFHTTPSessionManager *_httpClient;
                 [self sendingFinished];
             }
         }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         self.batchInProgress = NO;
         NSLog(@"Error: %@", error);
         [self notify:error.description withTitle:@"Error"];
@@ -207,10 +207,10 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)accountInfo:(void(^)(NSString *name))block {
     NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-    [_httpClient GET:endpoint parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [_httpClient GET:endpoint parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dict = (NSDictionary *)responseObject;
         block((NSString *)[dict objectForKey:@"name"]);
-    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"Failed to get account info");
     }];
 }
