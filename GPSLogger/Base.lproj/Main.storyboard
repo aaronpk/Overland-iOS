@@ -25,8 +25,8 @@
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kI1-mz-g9B" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9iG-7h-Ohb">
-                                                <rect key="frame" x="20" y="0.0" width="560" height="415"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9iG-7h-Ohb">
+                                                <rect key="frame" x="20" y="0.0" width="560" height="455"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GPS Logger" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aT1-cg-Q8Y">
                                                         <rect key="frame" x="216" y="0.0" width="128" height="29"/>
@@ -283,13 +283,13 @@ IAogA
                                                                         <rect key="frame" x="431" y="0.0" width="83" height="79"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="DISTANCE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38k-HU-zkk">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="83" height="17"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="83" height="23"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKJ-cC-bu6">
-                                                                                <rect key="frame" x="0.0" y="21" width="83" height="34"/>
+                                                                                <rect key="frame" x="0.0" y="27" width="83" height="34"/>
                                                                                 <string key="text" base64-UTF8="YES">
 IAogA
 </string>
@@ -298,7 +298,7 @@ IAogA
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="miles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHo-Ub-xRD">
-                                                                                <rect key="frame" x="0.0" y="59" width="83" height="21"/>
+                                                                                <rect key="frame" x="0.0" y="65" width="83" height="15"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -337,10 +337,28 @@ IAogA
                                                             </mask>
                                                         </variation>
                                                     </view>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="nH7-jm-mJB">
+                                                        <rect key="frame" x="0.0" y="435" width="560" height="21"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="DB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Upg-kC-Qzm">
+                                                                <rect key="frame" x="0.0" y="0.0" width="101" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Example Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hb-0f-YtE">
+                                                                <rect key="frame" x="101" y="0.0" width="460" height="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="FAz-8W-iDJ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="39d-Id-jax"/>
                                                     <constraint firstAttribute="trailing" secondItem="FAz-8W-iDJ" secondAttribute="trailing" id="8gu-GY-o3l"/>
+                                                    <constraint firstItem="nH7-jm-mJB" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="98C-YE-j2A"/>
                                                     <constraint firstAttribute="trailing" secondItem="tIR-7Y-EzQ" secondAttribute="trailing" id="9zl-mW-13Z"/>
                                                     <constraint firstItem="Yxz-bO-Rru" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" constant="20" id="HNx-rY-lEF"/>
                                                     <constraint firstAttribute="trailing" secondItem="AEs-fE-5WC" secondAttribute="trailing" id="JOb-Yc-3As"/>
@@ -349,6 +367,7 @@ IAogA
                                                     <constraint firstItem="VE3-Mg-Sof" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="cRV-s3-fur"/>
                                                     <constraint firstItem="AEs-fE-5WC" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="qwi-Qy-FiP"/>
                                                     <constraint firstAttribute="trailing" secondItem="Yxz-bO-Rru" secondAttribute="trailing" constant="20" id="tCY-sY-rnd"/>
+                                                    <constraint firstAttribute="trailing" secondItem="nH7-jm-mJB" secondAttribute="trailing" id="zVf-0k-OaU"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -397,6 +416,7 @@ IAogA
                         <outlet property="tripDistanceLabel" destination="YKJ-cC-bu6" id="kjw-uf-cSP"/>
                         <outlet property="tripDurationLabel" destination="sy2-au-4W7" id="Fye-k6-PsP"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
+                        <outlet property="tripStats" destination="2hb-0f-YtE" id="u6b-6g-6aj"/>
                         <segue destination="zgY-Zn-asN" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
                 </viewController>

@@ -221,6 +221,27 @@ AFHTTPSessionManager *_httpClient;
     }];
 }
 
+- (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        __block long locations = 0;
+        __block long trips = 0;
+        __block long stats = 0;
+        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
+            NSDictionary *properties = [object objectForKey:@"properties"];
+            if([properties objectForKey:@"action"]) {
+                stats++;
+            } else if([[properties objectForKey:@"type"] isEqualToString:@"trip"]) {
+                trips++;
+            } else {
+                locations++;
+            }
+            return NO;
+        }];
+        //NSLog(@"Queue stats: %ld %ld %ld", locations, trips, stats);
+        callback(locations, trips, stats);
+    }];
+}
+
 #pragma mark - GLManager control (private)
 
 - (void)setupHTTPClient {
@@ -427,7 +448,7 @@ AFHTTPSessionManager *_httpClient;
  * speed in miles per hour
  */
 - (double)currentTripSpeed {
-    if(!self.tripInProgress) {
+    if(!self.tripInProgress || self.lastLocation.speed < 0) {
         return -1;
     }
     

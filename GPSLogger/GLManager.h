@@ -79,6 +79,7 @@ typedef enum {
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
+- (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback;
 - (void)accountInfo:(void(^)(NSString *name))block;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
