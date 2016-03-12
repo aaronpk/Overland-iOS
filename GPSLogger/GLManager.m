@@ -345,7 +345,7 @@ AFHTTPSessionManager *_httpClient;
 + (NSArray *)GLTripModes {
     if(!_tripModes) {
         _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
-                       GLTripModeDrive, GLTripModeCar2go, GLTripModeTaxi,
+                       GLTripModeCar, GLTripModeCar2go, GLTripModeTaxi,
                        GLTripModeBus, GLTripModeTrain, GLTripModePlane];
         }
     return _tripModes;
