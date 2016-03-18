@@ -192,7 +192,7 @@ AFHTTPSessionManager *_httpClient;
                                         ]
                                 } forKey:@"geometry"];
         }
-        [accessor setDictionary:update forKey:timestamp];
+        [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-log", timestamp]];
     }];
 }
 
@@ -717,7 +717,7 @@ AFHTTPSessionManager *_httpClient;
                                           @"battery_level": [self currentBatteryLevel]
                                           }
                                 };
-        [accessor setDictionary:update forKey:timestamp];
+        [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
     }];
 
     [self sendQueueIfTimeElapsed];
