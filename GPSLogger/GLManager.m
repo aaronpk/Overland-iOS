@@ -488,7 +488,7 @@ AFHTTPSessionManager *_httpClient;
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         CLLocationCoordinate2D startLocation = [self currentTripStartLocation];
-        NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
+        NSDictionary *currentTrip = @{
                                  @"type": @"Feature",
                                  @"geometry": @{
                                          @"type": @"Point",
@@ -515,11 +515,11 @@ AFHTTPSessionManager *_httpClient;
                                          @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
                                          @"stopped_automatically": @(autopause)
                                          }
-                                 }];
+                                 };
         if(autopause) {
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
         }
-        [accessor setDictionary:update forKey:timestamp];
+        [accessor setDictionary:currentTrip forKey:[NSString stringWithFormat:@"%@-trip",timestamp]];
     }];
 
     _currentTripDistanceCached = 0;
@@ -792,7 +792,7 @@ AFHTTPSessionManager *_httpClient;
                                      };
             [accessor setDictionary:update forKey:timestamp];
 
-            // If a trip is in progress, add to the trip's list too
+            // If a trip is in progress, add to the trip's list too (for calculating trip distance)
             if(self.tripInProgress && loc.horizontalAccuracy <= 100) {
                 [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
                 [[PebbleManager sharedManager] refreshWatchface];
