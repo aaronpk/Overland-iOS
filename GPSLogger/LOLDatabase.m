@@ -66,6 +66,7 @@
     sqlite3_stmt *setByKeyStatement;
     sqlite3_stmt *removeByKeyStatement;
     sqlite3_stmt *enumerateStatement;
+    sqlite3_stmt *lastRowStatement;
     sqlite3_stmt *countStatement;
 }
 
@@ -103,7 +104,14 @@
         NSLog(@"Error with enumerate query! %s", sqlite3_errmsg(_d->db));
         return nil;
     }
-    
+
+    q = [[NSString alloc] initWithFormat:@"SELECT key,data FROM '%@' ORDER BY key DESC LIMIT 1;", collection];
+    status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &lastRowStatement, NULL);
+    if (status != SQLITE_OK) {
+        NSLog(@"Error with last row query! %s", sqlite3_errmsg(_d->db));
+        return nil;
+    }
+
     q = [[NSString alloc] initWithFormat:@"SELECT COUNT(1) FROM '%@';", collection];
     status = sqlite3_prepare_v2(_d->db, [q UTF8String], (int)q.length+1, &countStatement, NULL);
     if (status != SQLITE_OK) {
@@ -134,6 +142,7 @@
     sqlite3_finalize(setByKeyStatement);
     sqlite3_finalize(removeByKeyStatement);
     sqlite3_finalize(enumerateStatement);
+    sqlite3_finalize(lastRowStatement);
     sqlite3_finalize(countStatement);
     
     NSString *q = @"COMMIT TRANSACTION;";
@@ -225,6 +234,25 @@
         status = sqlite3_step(enumerateStatement);
     }
     sqlite3_reset(enumerateStatement);
+}
+
+- (void)lastRowUsingBlock:(BOOL(^)(NSString *key, NSDictionary *object))block;
+{
+    if (!block) return;
+    NSData *fullData = nil;
+    int status = sqlite3_step(lastRowStatement);
+    
+    if(status == SQLITE_ROW) {
+        NSString *key = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(lastRowStatement, 0)];
+        
+        const void *dataPtr = sqlite3_column_blob(enumerateStatement, 1);
+        size_t size = sqlite3_column_bytes(enumerateStatement, 1);
+        fullData = [[NSData alloc] initWithBytes:dataPtr length:size];
+        
+        NSDictionary *object = fullData ? _d.deserializer(fullData) : nil;
+        
+        block(key, object);
+    }
 }
 
 - (void)countObjectsUsingBlock:(void (^)(long num))block {

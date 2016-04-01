@@ -11,6 +11,7 @@
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
 #import "PebbleManager.h"
+#import "BTManager.h"
 
 @interface GLManager()
 
@@ -57,6 +58,8 @@ AFHTTPSessionManager *_httpClient;
             _instance.tripdb = [FMDatabase databaseWithPath:[self tripDatabasePath]];
             [_instance setUpTripDB];
             
+            [BTManager sharedManager];
+            
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
         }
@@ -77,6 +80,7 @@ AFHTTPSessionManager *_httpClient;
     [self enableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [[BTManager sharedManager] scanForBluetoothDevices];
 }
 
 - (void)stopAllUpdates {
