@@ -105,8 +105,13 @@ AFHTTPSessionManager *_httpClient;
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         
         [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
-            [syncedUpdates addObject:key];
-            [locationUpdates addObject:object];
+            if(key && object) {
+                [syncedUpdates addObject:key];
+                [locationUpdates addObject:object];
+            } else if(key) {
+                // Remove nil objects
+                [accessor removeDictionaryForKey:key];
+            }
             return (BOOL)(locationUpdates.count >= PointsPerBatch);
         }];
         
