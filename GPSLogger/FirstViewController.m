@@ -164,6 +164,8 @@ NSArray *intervalMapStrings;
 
     [self updateTripDBStats];
     
+    self.locationNameLabel.text = [GLManager sharedManager].lastLocationName;
+    
     /*
     NSSet *regions = [GLManager sharedManager].monitoredRegions;
     self.monitoredRegionsLabel.text = @"";

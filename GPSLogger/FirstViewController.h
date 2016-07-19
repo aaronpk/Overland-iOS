@@ -44,5 +44,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *tripStats;
 
+@property (strong, nonatomic) IBOutlet UILabel *locationNameLabel;
+
 @end
 

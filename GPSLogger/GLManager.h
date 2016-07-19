@@ -67,6 +67,7 @@ typedef enum {
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
+@property (strong, nonatomic, readonly) NSString *lastLocationName;
 
 - (void)startAllUpdates;
 - (void)stopAllUpdates;

@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CMMotionActivityManager *motionActivityManager;
+@property (strong, nonatomic) CMPedometer *pedometer;
 
 @property BOOL trackingEnabled;
 @property BOOL sendInProgress;
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSDate *lastSentDate;
+@property (strong, nonatomic) NSString *lastLocationName;
 
 @property (strong, nonatomic) LOLDatabase *db;
 @property (strong, nonatomic) FMDatabase *tripdb;
@@ -134,6 +136,12 @@ AFHTTPSessionManager *_httpClient;
         
         if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
             self.lastSentDate = NSDate.date;
+            NSDictionary *geocode = [responseObject objectForKey:@"geocode"];
+            if(geocode && ![geocode isEqual:[NSNull null]]) {
+                self.lastLocationName = [geocode objectForKey:@"full_name"];
+            } else {
+                self.lastLocationName = @"";
+            }
             
             [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
                 for(NSString *key in syncedUpdates) {
@@ -490,47 +498,62 @@ AFHTTPSessionManager *_httpClient;
 
     [[PebbleManager sharedManager] stopWatchSession];
 
+    if(false && [CMPedometer isStepCountingAvailable]) {
+        [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
+            if(pedometerData) {
+                [self writeTripToDB:autopause steps:[pedometerData.numberOfSteps integerValue]];
+            } else {
+                [self writeTripToDB:autopause steps:0];
+            }
+        }];
+    } else {
+        [self writeTripToDB:autopause steps:0];
+    }
+}
+
+- (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps {
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         CLLocationCoordinate2D startLocation = [self currentTripStartLocation];
         NSDictionary *currentTrip = @{
-                                 @"type": @"Feature",
-                                 @"geometry": @{
-                                         @"type": @"Point",
-                                         @"coordinates": @[
-                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
-                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
-                                                 ]
-                                         },
-                                 @"properties": @{
-                                         @"timestamp": timestamp,
-                                         @"type": @"trip",
-                                         @"mode": self.currentTripMode,
-                                         @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
-                                         @"end": timestamp,
-                                         @"start-coordinates": @[
-                                                 [NSNumber numberWithDouble:startLocation.longitude],
-                                                 [NSNumber numberWithDouble:startLocation.latitude]
-                                                 ],
-                                         @"end-coordinates":@[
-                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
-                                                 [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
-                                                 ],
-                                         @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
-                                         @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
-                                         @"stopped_automatically": @(autopause)
-                                         }
-                                 };
+                                      @"type": @"Feature",
+                                      @"geometry": @{
+                                              @"type": @"Point",
+                                              @"coordinates": @[
+                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                                      ]
+                                              },
+                                      @"properties": @{
+                                              @"timestamp": timestamp,
+                                              @"type": @"trip",
+                                              @"mode": self.currentTripMode,
+                                              @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
+                                              @"end": timestamp,
+                                              @"start-coordinates": @[
+                                                      [NSNumber numberWithDouble:startLocation.longitude],
+                                                      [NSNumber numberWithDouble:startLocation.latitude]
+                                                      ],
+                                              @"end-coordinates":@[
+                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
+                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                                      ],
+                                              @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
+                                              @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
+                                              @"stopped_automatically": @(autopause),
+                                              @"steps": [NSNumber numberWithInteger:numberOfSteps]
+                                              }
+                                      };
         if(autopause) {
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
         }
         [accessor setDictionary:currentTrip forKey:[NSString stringWithFormat:@"%@-trip",timestamp]];
     }];
-
+    
     _currentTripDistanceCached = 0;
     [self clearTripDB];
     [self.tripdb close];
-
+    
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripStartTimeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     NSLog(@"Ended a %@ trip", self.currentTripMode);
