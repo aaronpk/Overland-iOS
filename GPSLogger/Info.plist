@@ -29,10 +29,14 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Enable Bluetooth access to sync heart rate data</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Please enable location services to allow the app to track in the background</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Please enable location services</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Please enable motion to allow step counting</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
@@ -61,9 +65,7 @@
 		</dict>
 	</dict>
 	<key>UISupportedExternalAccessoryProtocols</key>
-	<array>
-		<string>com.getpebble.public</string>
-	</array>
+	<array/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

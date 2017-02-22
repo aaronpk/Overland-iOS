@@ -10,7 +10,6 @@
 #import "AFHTTPSessionManager.h"
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
-#import "PebbleManager.h"
 
 @interface GLManager()
 
@@ -273,7 +272,6 @@ AFHTTPSessionManager *_httpClient;
         if(self.tripInProgress) {
             // If a trip is in progress, open the trip DB now
             [self.tripdb open];
-            [[PebbleManager sharedManager] startWatchSession];
         }
     } else {
         [self disableTracking];
@@ -474,8 +472,6 @@ AFHTTPSessionManager *_httpClient;
         return;
     }
     
-    [[PebbleManager sharedManager] startWatchSession];
-    
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -495,8 +491,6 @@ AFHTTPSessionManager *_httpClient;
     if(!self.tripInProgress) {
         return;
     }
-
-    [[PebbleManager sharedManager] stopWatchSession];
 
     if(false && [CMPedometer isStepCountingAvailable]) {
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
@@ -823,7 +817,6 @@ AFHTTPSessionManager *_httpClient;
             // If a trip is in progress, add to the trip's list too (for calculating trip distance)
             if(self.tripInProgress && loc.horizontalAccuracy <= 100) {
                 [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
-                [[PebbleManager sharedManager] refreshWatchface];
                 _currentTripHasNewData = YES;
             }
 

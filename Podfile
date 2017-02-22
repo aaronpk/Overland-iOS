@@ -4,6 +4,5 @@
 target 'GPSLogger' do
 pod 'AFNetworking'
 pod 'FMDB'
-pod 'PebbleKit'
 end
 
