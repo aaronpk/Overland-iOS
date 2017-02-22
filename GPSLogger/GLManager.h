@@ -24,6 +24,7 @@ static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
 static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLocationModeDefaults";
+static NSString *const GLPointsPerBatchDefaultsName = @"GLPointsPerBatchDefaults";
 
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
@@ -37,7 +38,6 @@ static NSString *const GLTripModeBus = @"bus";
 static NSString *const GLTripModeTrain = @"train";
 static NSString *const GLTripModePlane = @"plane";
 
-static int const PointsPerBatch = 200;
 static double const MetersToMiles = 0.000621371;
 
 typedef enum {
@@ -60,6 +60,7 @@ typedef enum {
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance defersLocationUpdates;
+@property (nonatomic) int pointsPerBatch;
 
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;

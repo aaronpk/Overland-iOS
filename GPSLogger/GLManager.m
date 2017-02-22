@@ -37,6 +37,7 @@ static NSString *const GLLocationQueueName = @"GLLocationQueue";
 NSNumber *_sendingInterval;
 NSArray *_tripModes;
 bool _currentTripHasNewData;
+int _pointsPerBatch;
 CLLocationDistance _currentTripDistanceCached;
 AFHTTPSessionManager *_httpClient;
 
@@ -113,7 +114,7 @@ AFHTTPSessionManager *_httpClient;
                 // Remove nil objects
                 [accessor removeDictionaryForKey:key];
             }
-            return (BOOL)(locationUpdates.count >= PointsPerBatch);
+            return (BOOL)(locationUpdates.count >= _pointsPerBatch);
         }];
         
     }];
@@ -297,6 +298,8 @@ AFHTTPSessionManager *_httpClient;
             self.lastMotion = activity;
         }];
     }
+    
+    _pointsPerBatch = self.pointsPerBatch;
     
     // Set the last location if location manager has a last location.
     // This will be set for example when the app launches due to a signification location change,
@@ -685,6 +688,20 @@ AFHTTPSessionManager *_httpClient;
         [self.locationManager disallowDeferredLocationUpdates];
     }
 }
+
+- (int)pointsPerBatch {
+    if([self defaultsKeyExists:GLPointsPerBatchDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] integerForKey:GLPointsPerBatchDefaultsName];
+    } else {
+        return 200;
+    }
+}
+- (void)setPointsPerBatch:(int)points {
+    [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLPointsPerBatchDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    _pointsPerBatch = points;
+}
+
 
 #pragma mark GLManager
 

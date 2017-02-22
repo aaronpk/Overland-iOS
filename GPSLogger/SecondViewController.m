@@ -87,6 +87,19 @@
     } else {
         self.defersLocationUpdates.selectedSegmentIndex = 4;
     }
+    
+    int pointsPerBatch = [GLManager sharedManager].pointsPerBatch;
+    if(pointsPerBatch == 50) {
+        self.pointsPerBatchControl.selectedSegmentIndex = 0;
+    } else if(pointsPerBatch == 100) {
+        self.pointsPerBatchControl.selectedSegmentIndex = 1;
+    } else if(pointsPerBatch == 200) {
+        self.pointsPerBatchControl.selectedSegmentIndex = 2;
+    } else if(pointsPerBatch == 500) {
+        self.pointsPerBatchControl.selectedSegmentIndex = 3;
+    } else if(pointsPerBatch == 1000) {
+        self.pointsPerBatchControl.selectedSegmentIndex = 4;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -234,5 +247,21 @@
     [GLManager sharedManager].defersLocationUpdates = d;
 }
 
+- (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender {
+    int pointsPerBatch;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            pointsPerBatch = 50; break;
+        case 1:
+            pointsPerBatch = 100; break;
+        case 2:
+            pointsPerBatch = 200; break;
+        case 3:
+            pointsPerBatch = 500; break;
+        case 4:
+            pointsPerBatch = 1000; break;
+    }
+    [GLManager sharedManager].pointsPerBatch = pointsPerBatch;
+}
 
 @end
