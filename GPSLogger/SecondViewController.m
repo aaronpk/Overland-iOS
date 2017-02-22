@@ -25,7 +25,7 @@
     if([[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName] != nil) {
         self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     } else {
-        self.apiEndpointField.text = @"No API endpoint configured";
+        self.apiEndpointField.text = @"Long-press to paste an endpoint URL";
     }
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
 
