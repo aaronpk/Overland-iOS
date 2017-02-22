@@ -54,6 +54,41 @@ These controls all set various properties of the CoreLocation LocationManager ob
 * `Defers Location Updates` - This allows the app to be paused, while the OS continues to collect location updates in the background, delivering them to the app in a batch at some interval. It is worth reading Apple's documentation of [deferred location updates](https://developer.apple.com/reference/corelocation/cllocationmanager/1620547-allowdeferredlocationupdates) for more information. This can have an effect on improving battery life.
 
 
+### Usage Profiles
+
+You should decide what kind of data you are hoping to get out of this application. The controls provided will give you a lot of knobs you can turn to adjust the way the app collects data. Below are some recommended presets for different applications.
+
+
+#### High Resolution Tracking
+
+To get high resolution data, you should set the following:
+
+* Pause Updates Automatically: Off
+* Resume with Geofence: Off
+* Significant Location: Enabled
+* Activity Type: Other
+* Desired Accuracy: Best
+* Defers Location Updates: 100m or 1km
+
+While moving, you will receive up to one point per second. When you're not moving, such as when you're at your desk, etc, there may be several minutes between location updates received. This will use a lot of battery, but will result in data that can be used to generate a picture similar to this level of detail.
+
+![GPS Logs](https://aaronparecki.com/gps/pdx-gps.jpg)
+
+
+#### Battery Saving / Low Resolution
+
+To use very little battery, you can still get enough location info to know what neighborhood you're in, and likely also when you leave and return home.
+
+* Pause Updates Automatically: On
+* Resume with Geofence: 500m
+* Significant Location: Enabled
+* Activity Type: Other
+* Desired Accuracy: 100m
+* Defers Location Updates: 5km
+
+This will use much less battery than high resolution, while still gathering enough data you can use to roughly geotag posts or know what neighborhood you're in. For even more battery savings, you can set Significant Location Only, which will drastically reduce the amount of data you log but will use almost no battery.
+
+
 ## API
 
 The app will post the location data to the configured endpoint. The POST request will be an array of GeoJSON objects inside a property called "locations". The batch size is 200 but can be set [in the configuration](https://github.com/aaronpk/GPS-Logger-iOS/blob/master/GPSLogger/GLManager.h#L40). This request may look like the following:
