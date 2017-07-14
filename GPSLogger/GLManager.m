@@ -381,7 +381,8 @@ AFHTTPSessionManager *_httpClient;
     if(!_tripModes) {
         _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
                        GLTripModeCar, GLTripModeCar2go, GLTripModeTaxi,
-                       GLTripModeBus, GLTripModeTrain, GLTripModePlane];
+                       GLTripModeBus, GLTripModeTrain, GLTripModePlane,
+                       GLTripModeTram, GLTripModeMetro, GLTripModeBoat];
         }
     return _tripModes;
 }
