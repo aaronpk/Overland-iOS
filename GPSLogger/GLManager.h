@@ -37,6 +37,10 @@ static NSString *const GLTripModeTaxi = @"taxi";
 static NSString *const GLTripModeBus = @"bus";
 static NSString *const GLTripModeTrain = @"train";
 static NSString *const GLTripModePlane = @"plane";
+static NSString *const GLTripModeTram = @"tram";
+static NSString *const GLTripModeMetro = @"metro";
+static NSString *const GLTripModeBoat = @"boat";
+
 
 static double const MetersToMiles = 0.000621371;
 
