@@ -76,6 +76,14 @@ NSArray *intervalMapStrings;
                                                            selector:@selector(refreshView)
                                                            userInfo:nil
                                                             repeats:YES];
+
+    NSLocale *locale = [NSLocale currentLocale];
+    self.usesMetricSystem = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
+    if(self.usesMetricSystem) {
+        self.tripDistanceUnitLabel.text = @"km";
+    } else {
+        self.tripDistanceUnitLabel.text = @"miles";
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -115,34 +123,55 @@ NSArray *intervalMapStrings;
     self.sendNowButton.enabled = YES;
 }
 
+- (NSString *)speedUnitText {
+    if(self.usesMetricSystem) {
+        return @"km/h";
+    } else {
+        return @"mph";
+    }
+}
+
 - (void)refreshView {
     self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 0 : 1);
     
     CLLocation *location = [GLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%.5f\n%.5f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
-    int speed = (int)(round(location.speed*2.23694));
+
+    int speed;
+    if(self.usesMetricSystem) {
+        speed = (int)(round(location.speed*3.6));
+    } else {
+        speed = (int)(round(location.speed*2.23694));
+    }
     if(speed < 0) speed = 0;
     self.locationSpeedLabel.text = [NSString stringWithFormat:@"%d", speed];
-    
+
     int age = -(int)round([GLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     if(age == 1) age = 0;
     self.locationAgeLabel.text = [FirstViewController timeFormatted:age];
     
+    NSString *motionTypeString;
     CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
     if(activity.walking)
-        self.motionTypeLabel.text = @"mph, walking";
+        motionTypeString = @"walking";
     else if(activity.running)
-        self.motionTypeLabel.text = @"mph, running";
+        motionTypeString = @"running";
     else if(activity.cycling)
-        self.motionTypeLabel.text = @"mph, cycling";
+        motionTypeString = @"cycling";
     else if(activity.automotive)
-        self.motionTypeLabel.text = @"mph, driving";
+        motionTypeString = @"driving";
     else if(activity.stationary)
-        self.motionTypeLabel.text = @"mph, stationary";
+        motionTypeString = @"stationary";
     else
-        self.motionTypeLabel.text = @"mph";
-    
+        motionTypeString = nil;
+
+    if(motionTypeString != nil) {
+        self.motionTypeLabel.text = [NSString stringWithFormat:@"%@, %@", [self speedUnitText], motionTypeString];
+    } else {
+        self.motionTypeLabel.text = [self speedUnitText];
+    }
+
     if([GLManager sharedManager].lastSentDate) {
         age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
         self.queueAgeLabel.text = [NSString stringWithFormat:@"%@", [FirstViewController timeFormatted:age]];
@@ -214,12 +243,20 @@ NSArray *intervalMapStrings;
 
 #pragma mark - Trip Interface
 
+- (double)metersToDisplayUnits:(double)meters {
+    if(self.usesMetricSystem) {
+        return meters * 0.001;
+    } else {
+        return meters * 0.000621371;
+    }
+}
+
 - (void)updateTripState {
     if([GLManager sharedManager].tripInProgress) {
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
         self.tripDurationLabel.text = [FirstViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
-        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [GLManager sharedManager].currentTripDistance * MetersToMiles];
+        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [self metersToDisplayUnits:[GLManager sharedManager].currentTripDistance]];
     } else {
         [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:106.f/255.f green:212.f/255.f blue:150.f/255.f alpha:1];
