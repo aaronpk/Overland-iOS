@@ -248,7 +248,7 @@
 }
 
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender {
-    int pointsPerBatch;
+    int pointsPerBatch = 50;
     switch(sender.selectedSegmentIndex) {
         case 0:
             pointsPerBatch = 50; break;
@@ -259,7 +259,7 @@
         case 3:
             pointsPerBatch = 500; break;
         case 4:
-            pointsPerBatch = 1000; break;
+            pointsPerBatch = 1000; break;        
     }
     [GLManager sharedManager].pointsPerBatch = pointsPerBatch;
 }

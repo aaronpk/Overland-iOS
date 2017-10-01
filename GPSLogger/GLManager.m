@@ -512,7 +512,7 @@ AFHTTPSessionManager *_httpClient;
         return;
     }
 
-    if(false && [CMPedometer isStepCountingAvailable]) {
+    if((false) && [CMPedometer isStepCountingAvailable]) {
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
             if(pedometerData) {
                 [self writeTripToDB:autopause steps:[pedometerData.numberOfSteps integerValue]];
@@ -708,7 +708,7 @@ AFHTTPSessionManager *_httpClient;
 
 - (int)pointsPerBatch {
     if([self defaultsKeyExists:GLPointsPerBatchDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] integerForKey:GLPointsPerBatchDefaultsName];
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLPointsPerBatchDefaultsName];
     } else {
         return 200;
     }
