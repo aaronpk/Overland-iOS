@@ -10,6 +10,7 @@
 #import "AFHTTPSessionManager.h"
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
+@import UserNotifications;
 
 @interface GLManager()
 
@@ -211,11 +212,27 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)notify:(NSString *)message withTitle:(NSString *)title
 {
-    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
-    localNotification.alertBody = [NSString stringWithFormat:@"%@: %@", title, message];
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+
+    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+    content.title = title;
+    content.body = message;
+    content.sound = [UNNotificationSound defaultSound];
+    
+    /* UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO]; */
+    
+    NSString *identifier = @"GLLocalNotification";
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
+                                                                          content:content
+                                                                          trigger:nil];
+
+    [notificationCenter addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"Something went wrong: %@",error);
+        } else {
+            NSLog(@"Notification sent");
+        }
+    }];
 }
 
 - (void)accountInfo:(void(^)(NSString *name))block {
