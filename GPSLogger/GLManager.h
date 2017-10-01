@@ -41,9 +41,6 @@ static NSString *const GLTripModeTram = @"tram";
 static NSString *const GLTripModeMetro = @"metro";
 static NSString *const GLTripModeBoat = @"boat";
 
-
-static double const MetersToMiles = 0.000621371;
-
 typedef enum {
     kGLSignificantLocationDisabled,
     kGLSignificantLocationEnabled,
