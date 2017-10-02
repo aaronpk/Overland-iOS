@@ -76,6 +76,10 @@ AFHTTPSessionManager *_httpClient;
     [self setupHTTPClient];
 }
 
+- (NSString *)apiEndpointURL {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+}
+
 - (void)startAllUpdates {
     [self enableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];

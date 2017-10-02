@@ -76,6 +76,7 @@ typedef enum {
 - (void)refreshLocation;
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint;
+- (NSString *)apiEndpointURL;
 
 - (void)logAction:(NSString *)action;
 - (void)sendQueueNow;

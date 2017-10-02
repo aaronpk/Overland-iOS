@@ -119,8 +119,13 @@ NSArray *intervalMapStrings;
 
 - (void)sendingFinished {
     self.sendNowButton.titleLabel.text = @"Send Now";
-    self.sendNowButton.backgroundColor = [UIColor colorWithRed:106.0/255.0 green:212.0/255.0 blue:150.0/255.0 alpha:1.0];
-    self.sendNowButton.enabled = YES;
+    if([[GLManager sharedManager] apiEndpointURL] == nil) {
+        self.sendNowButton.backgroundColor = [UIColor colorWithRed:150.0/255.0 green:150.0/255.0 blue:150.0/255.0 alpha:1.0];
+        self.sendNowButton.enabled = NO;
+    } else {
+        self.sendNowButton.backgroundColor = [UIColor colorWithRed:106.0/255.0 green:212.0/255.0 blue:150.0/255.0 alpha:1.0];
+        self.sendNowButton.enabled = YES;
+    }
 }
 
 - (NSString *)speedUnitText {
@@ -185,10 +190,10 @@ NSArray *intervalMapStrings;
 
     [self updateTripState];
 
-    if(![GLManager sharedManager].sendInProgress)
+    //if(![GLManager sharedManager].sendInProgress)
 //        [self sendingStarted];
 //    else
-        [self sendingFinished];
+    //    [self sendingFinished];
 
     [self updateTripDBStats];
     
