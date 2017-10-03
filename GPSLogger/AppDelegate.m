@@ -16,17 +16,6 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
-    notificationCenter.delegate = self;
-
-    UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
-    
-    [notificationCenter requestAuthorizationWithOptions:options
-                                      completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                                          if (!granted) {
-                                              NSLog(@"User did not allow notifications");
-                                          }
-                                      }];
     return YES;
 }
 
@@ -42,14 +31,6 @@
 
     return YES;
 }
-
-/* Force notifications to display as normal when the app is active */
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
-    completionHandler(UNNotificationPresentationOptionAlert);
-}
-
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

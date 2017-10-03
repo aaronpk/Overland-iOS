@@ -415,7 +415,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
 				INFOPLIST_FILE = GPSLogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -432,8 +431,7 @@
 			baseConfigurationReference = 378F9BC146097DEF5A9CCBF9 /* Pods-GPSLogger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
 				INFOPLIST_FILE = GPSLogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

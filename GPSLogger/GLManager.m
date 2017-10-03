@@ -63,6 +63,7 @@ AFHTTPSessionManager *_httpClient;
             
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
+            [_instance initializeNotifications];
         }
     }
     
@@ -219,31 +220,6 @@ AFHTTPSessionManager *_httpClient;
     }];
 }
 
-- (void)notify:(NSString *)message withTitle:(NSString *)title
-{
-    UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
-
-    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    content.title = title;
-    content.body = message;
-    content.sound = [UNNotificationSound defaultSound];
-    
-    /* UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO]; */
-    
-    NSString *identifier = @"GLLocalNotification";
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
-                                                                          content:content
-                                                                          trigger:nil];
-
-    [notificationCenter addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-        if (error != nil) {
-            NSLog(@"Something went wrong: %@",error);
-        } else {
-            NSLog(@"Notification sent");
-        }
-    }];
-}
-
 - (void)accountInfo:(void(^)(NSString *name))block {
     NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     [_httpClient GET:endpoint parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -320,8 +296,8 @@ AFHTTPSessionManager *_httpClient;
     
     if(CMMotionActivityManager.isActivityAvailable) {
         [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
             self.lastMotion = activity;
+            [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
         }];
     }
     
@@ -823,6 +799,8 @@ AFHTTPSessionManager *_httpClient;
             [motion addObject:@"walking"];
         if(motionActivity.running)
             [motion addObject:@"running"];
+        if(motionActivity.cycling)
+            [motion addObject:@"cycling"];
         if(motionActivity.automotive)
             [motion addObject:@"driving"];
         if(motionActivity.stationary)
@@ -964,6 +942,85 @@ AFHTTPSessionManager *_httpClient;
 
 - (void)applicationWillResignActive {
     // [self logAction:@"will_resign_active"];
+}
+
+#pragma mark - Notifications
+
+- (BOOL)notificationsEnabled {
+    if([self defaultsKeyExists:GLNotificationsEnabledDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLNotificationsEnabledDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setNotificationsEnabled:(BOOL)enabled {
+    if(enabled) {
+        [self requestNotificationPermission];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLNotificationsEnabledDefaultsName];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLNotificationPermissionRequestedDefaultsName];
+    }
+}
+
+- (void)initializeNotifications {
+    UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+    notificationCenter.delegate = self;
+    
+    // If notifications were successfully requested previously, initialize again for this app launch
+    if([[NSUserDefaults standardUserDefaults] boolForKey:GLNotificationPermissionRequestedDefaultsName]) {
+        [self requestNotificationPermission];
+    }
+}
+
+- (void)requestNotificationPermission {
+    UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+
+    UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
+    [notificationCenter requestAuthorizationWithOptions:options
+                                      completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                                          // If the user denies permission, set requested=NO so that if they ever enable it in settings again the permission will be requested again
+                                          [[NSUserDefaults standardUserDefaults] setBool:granted forKey:GLNotificationPermissionRequestedDefaultsName];
+                                          [[NSUserDefaults standardUserDefaults] setBool:granted forKey:GLNotificationsEnabledDefaultsName];
+                                          [[NSUserDefaults standardUserDefaults] synchronize];
+                                          if(!granted) {
+                                              NSLog(@"User did not allow notifications");
+                                          }
+                                      }];
+}
+
+- (void)notify:(NSString *)message withTitle:(NSString *)title
+{
+    if([self notificationsEnabled]) {
+        UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+        
+        UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+        content.title = title;
+        content.body = message;
+        content.sound = [UNNotificationSound defaultSound];
+        
+        /* UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO]; */
+        
+        NSString *identifier = @"GLLocalNotification";
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
+                                                                              content:content
+                                                                              trigger:nil];
+        
+        [notificationCenter addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+            if (error != nil) {
+                NSLog(@"Something went wrong: %@",error);
+            } else {
+                NSLog(@"Notification sent");
+            }
+        }];
+    }
+}
+
+/* Force notifications to display as normal when the app is active */
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    
+    completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 #pragma mark -

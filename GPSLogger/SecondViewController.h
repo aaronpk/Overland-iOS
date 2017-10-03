@@ -19,6 +19,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
+@property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
@@ -28,6 +29,7 @@
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleTrackingStats:(UISwitch *)sender;
+- (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
 
 @end
 

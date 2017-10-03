@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
+@import UserNotifications;
 
 static NSString *const GLNewDataNotification = @"GLNewDataNotification";
 static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotification";
@@ -26,6 +27,8 @@ static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaul
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
 static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLocationModeDefaults";
 static NSString *const GLPointsPerBatchDefaultsName = @"GLPointsPerBatchDefaults";
+static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotificationPermissionRequestedDefaults";
+static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
 
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
@@ -48,7 +51,7 @@ typedef enum {
     kGLSignificantLocationExclusive
 } GLSignificantLocationMode;
 
-@interface GLManager : NSObject <CLLocationManagerDelegate>
+@interface GLManager : NSObject <CLLocationManagerDelegate, UNUserNotificationCenterDelegate>
 
 + (GLManager *)sharedManager;
 
@@ -58,6 +61,7 @@ typedef enum {
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
 @property BOOL includeTrackingStats;
+@property BOOL notificationsEnabled;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) GLSignificantLocationMode significantLocationMode;
 @property (nonatomic) CLActivityType activityType;
@@ -88,6 +92,8 @@ typedef enum {
 - (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback;
 - (void)accountInfo:(void(^)(NSString *name))block;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
+
+- (void)requestNotificationPermission;
 
 #pragma mark - Trips
 

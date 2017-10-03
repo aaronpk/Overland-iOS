@@ -36,7 +36,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Please enable location services to allow the app to track in the background</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please enable location services</string>
+	<string>Please enable location services to allow the app to track</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Please enable motion to allow step counting</string>
 	<key>UIBackgroundModes</key>

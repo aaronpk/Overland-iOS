@@ -24,7 +24,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.includeTrackingStats.on = [GLManager sharedManager].includeTrackingStats;
-    NSLog(@"Endpoint %@", [GLManager sharedManager].apiEndpointURL);
+    self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
+
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
@@ -116,10 +117,6 @@
         self.resumesWithGeofence.selectedSegmentIndex = 0;
         [GLManager sharedManager].resumesAfterDistance = -1;
     }
-}
-
-- (IBAction)toggleTrackingStats:(UISwitch *)sender {
-    [GLManager sharedManager].includeTrackingStats = sender.on;
 }
 
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender {
@@ -226,6 +223,18 @@
             pointsPerBatch = 1000; break;        
     }
     [GLManager sharedManager].pointsPerBatch = pointsPerBatch;
+}
+
+- (IBAction)toggleTrackingStats:(UISwitch *)sender {
+    [GLManager sharedManager].includeTrackingStats = sender.on;
+}
+
+- (IBAction)toggleNotificationsEnabled:(UISwitch *)sender {
+    if(sender.on) {
+        [[GLManager sharedManager] requestNotificationPermission];
+    } else {
+        [GLManager sharedManager].notificationsEnabled = NO;
+    }
 }
 
 @end
