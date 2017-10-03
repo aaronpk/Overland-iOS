@@ -37,7 +37,7 @@
 		0FCF53241F81AB0800577A0F /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
 		0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
-		0FFD31521BAB7A34009B3A03 /* GPSLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FFD31521BAB7A34009B3A03 /* Overland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Overland.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FFD31561BAB7A34009B3A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0FFD31581BAB7A34009B3A03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0FFD31591BAB7A34009B3A03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 		0FFD31531BAB7A34009B3A03 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0FFD31521BAB7A34009B3A03 /* GPSLogger.app */,
+				0FFD31521BAB7A34009B3A03 /* Overland.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,9 +169,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0FFD31511BAB7A34009B3A03 /* GPSLogger */ = {
+		0FFD31511BAB7A34009B3A03 /* Overland */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FFD316C1BAB7A34009B3A03 /* Build configuration list for PBXNativeTarget "GPSLogger" */;
+			buildConfigurationList = 0FFD316C1BAB7A34009B3A03 /* Build configuration list for PBXNativeTarget "Overland" */;
 			buildPhases = (
 				42A683883C70BDF3169358D5 /* [CP] Check Pods Manifest.lock */,
 				0FFD314E1BAB7A34009B3A03 /* Sources */,
@@ -184,9 +184,9 @@
 			);
 			dependencies = (
 			);
-			name = GPSLogger;
+			name = Overland;
 			productName = GPSLogger;
-			productReference = 0FFD31521BAB7A34009B3A03 /* GPSLogger.app */;
+			productReference = 0FFD31521BAB7A34009B3A03 /* Overland.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -212,7 +212,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0FFD314D1BAB7A34009B3A03 /* Build configuration list for PBXProject "GPSLogger" */;
+			buildConfigurationList = 0FFD314D1BAB7A34009B3A03 /* Build configuration list for PBXProject "Overland" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -225,7 +225,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0FFD31511BAB7A34009B3A03 /* GPSLogger */,
+				0FFD31511BAB7A34009B3A03 /* Overland */,
 			);
 		};
 /* End PBXProject section */
@@ -446,7 +446,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FFD314D1BAB7A34009B3A03 /* Build configuration list for PBXProject "GPSLogger" */ = {
+		0FFD314D1BAB7A34009B3A03 /* Build configuration list for PBXProject "Overland" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFD316A1BAB7A34009B3A03 /* Debug */,
@@ -455,7 +455,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0FFD316C1BAB7A34009B3A03 /* Build configuration list for PBXNativeTarget "GPSLogger" */ = {
+		0FFD316C1BAB7A34009B3A03 /* Build configuration list for PBXNativeTarget "Overland" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFD316D1BAB7A34009B3A03 /* Debug */,
