@@ -20,8 +20,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
 
-- (IBAction)apiEndpointFieldWasPressed:(UILongPressGestureRecognizer *)sender;
-
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender;

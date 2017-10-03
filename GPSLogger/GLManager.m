@@ -4,6 +4,7 @@
 //
 //  Created by Aaron Parecki on 9/17/15.
 //  Copyright © 2015 Esri. All rights reserved.
+//  Copyright © 2017 Aaron Parecki. All rights reserved.
 //
 
 #import "GLManager.h"
