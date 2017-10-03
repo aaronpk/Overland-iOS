@@ -35,6 +35,7 @@
 - (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 - (IBAction)locationAgeWasTapped:(id)sender;
+- (IBAction)locationCoordinatesWasTapped:(UILongPressGestureRecognizer *)sender;
 
 @property (strong, nonatomic) IBOutlet UIImageView *currentModeImage;
 @property (strong, nonatomic) IBOutlet UILabel *currentModeLabel;
@@ -44,10 +45,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *tripDistanceUnitLabel;
 @property (strong, nonatomic) IBOutlet UIButton *tripStartStopButton;
 - (IBAction)tripStartStopWasTapped:(id)sender;
-
-@property (strong, nonatomic) IBOutlet UILabel *tripStats;
-
-@property (strong, nonatomic) IBOutlet UILabel *locationNameLabel;
 
 @end
 

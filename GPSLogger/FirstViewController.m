@@ -195,9 +195,7 @@ NSArray *intervalMapStrings;
 //    else
     //    [self sendingFinished];
 
-    [self updateTripDBStats];
-    
-    self.locationNameLabel.text = [GLManager sharedManager].lastLocationName;
+    // [self updateTripDBStats];
     
     /*
     NSSet *regions = [GLManager sharedManager].monitoredRegions;
@@ -246,6 +244,26 @@ NSArray *intervalMapStrings;
     [[GLManager sharedManager] refreshLocation];
 }
 
+- (IBAction)locationCoordinatesWasTapped:(UILongPressGestureRecognizer *)sender {
+    if(sender.state == UIGestureRecognizerStateBegan) {
+        CLLocation *location = [GLManager sharedManager].lastLocation;
+        NSString *string = [NSString stringWithFormat:@"%.5f,%.5f", location.coordinate.latitude, location.coordinate.longitude];
+
+        UIPasteboard *pb = [UIPasteboard generalPasteboard];
+        [pb setString:string];
+        NSLog(@"Copied %@", string);
+
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Copied"
+                                                                       message:string
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* closeAction = [UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action) {
+                                                             }];
+        [alert addAction:closeAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
 #pragma mark - Trip Interface
 
 - (double)metersToDisplayUnits:(double)meters {
@@ -270,13 +288,15 @@ NSArray *intervalMapStrings;
     }
 }
 
+/*
 - (void)updateTripDBStats {
     GLManager *m = [GLManager sharedManager];
     [m numberOfObjectsInQueue:^(long locations, long trips, long stats) {
         self.tripStats.text = [NSString stringWithFormat:@"Locations: %ld Trips: %ld Stats: %ld", locations, trips, stats];
     }];
 }
-
+*/
+ 
 - (IBAction)tripModeWasTapped:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan) {
         [self performSegueWithIdentifier:@"tripMode" sender:self];

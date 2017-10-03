@@ -28,7 +28,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9iG-7h-Ohb">
-                                                <rect key="frame" x="20" y="0.0" width="335" height="512.5"/>
+                                                <rect key="frame" x="20" y="0.0" width="335" height="431.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GPS Logger" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aT1-cg-Q8Y">
                                                         <rect key="frame" x="105" y="0.0" width="125" height="29"/>
@@ -226,6 +226,10 @@ IAogA
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                 </subviews>
+                                                                <gestureRecognizers/>
+                                                                <connections>
+                                                                    <outletCollection property="gestureRecognizers" destination="cCE-pA-RBN" appends="YES" id="5y0-Ig-ZAB"/>
+                                                                </connections>
                                                             </stackView>
                                                         </subviews>
                                                     </stackView>
@@ -345,44 +349,18 @@ IAogA
                                                             </mask>
                                                         </variation>
                                                     </view>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="nH7-jm-mJB">
-                                                        <rect key="frame" x="0.0" y="451.5" width="335" height="20.5"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Upg-kC-Qzm">
-                                                                <rect key="frame" x="0.0" y="0.0" width="60" height="20.5"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Example Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hb-0f-YtE">
-                                                                <rect key="frame" x="60" y="0.0" width="275" height="20.5"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </stackView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ixf-yz-ZVq">
-                                                        <rect key="frame" x="0.0" y="492" width="335" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="FAz-8W-iDJ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="39d-Id-jax"/>
                                                     <constraint firstAttribute="trailing" secondItem="FAz-8W-iDJ" secondAttribute="trailing" id="8gu-GY-o3l"/>
-                                                    <constraint firstItem="nH7-jm-mJB" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="98C-YE-j2A"/>
                                                     <constraint firstAttribute="trailing" secondItem="tIR-7Y-EzQ" secondAttribute="trailing" id="9zl-mW-13Z"/>
                                                     <constraint firstItem="Yxz-bO-Rru" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" constant="20" id="HNx-rY-lEF"/>
                                                     <constraint firstAttribute="trailing" secondItem="AEs-fE-5WC" secondAttribute="trailing" id="JOb-Yc-3As"/>
                                                     <constraint firstAttribute="trailing" secondItem="VE3-Mg-Sof" secondAttribute="trailing" id="Vz4-vd-n9q"/>
                                                     <constraint firstItem="tIR-7Y-EzQ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="bVL-KY-bY2"/>
                                                     <constraint firstItem="VE3-Mg-Sof" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="cRV-s3-fur"/>
-                                                    <constraint firstItem="Ixf-yz-ZVq" firstAttribute="width" secondItem="9iG-7h-Ohb" secondAttribute="width" id="gdA-iG-vzh"/>
                                                     <constraint firstItem="AEs-fE-5WC" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="qwi-Qy-FiP"/>
                                                     <constraint firstAttribute="trailing" secondItem="Yxz-bO-Rru" secondAttribute="trailing" constant="20" id="tCY-sY-rnd"/>
-                                                    <constraint firstAttribute="trailing" secondItem="nH7-jm-mJB" secondAttribute="trailing" id="zVf-0k-OaU"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -420,7 +398,6 @@ IAogA
                         <outlet property="locationAgeLabel" destination="rZc-jl-K4j" id="KGq-YC-32j"/>
                         <outlet property="locationAltitudeLabel" destination="tzf-yA-Lrh" id="VuF-QB-TXb"/>
                         <outlet property="locationLabel" destination="ItY-6C-yMI" id="T7t-0O-z3B"/>
-                        <outlet property="locationNameLabel" destination="Ixf-yz-ZVq" id="nuS-Kp-mcu"/>
                         <outlet property="locationSpeedLabel" destination="lUu-nu-3KF" id="lF5-yW-pUS"/>
                         <outlet property="motionTypeLabel" destination="8X5-fD-MuK" id="dfK-fr-lDA"/>
                         <outlet property="queueAgeLabel" destination="Xbg-DY-m0J" id="Cf0-F3-owu"/>
@@ -433,7 +410,6 @@ IAogA
                         <outlet property="tripDistanceUnitLabel" destination="DHo-Ub-xRD" id="TdK-XS-zZT"/>
                         <outlet property="tripDurationLabel" destination="sy2-au-4W7" id="Fye-k6-PsP"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
-                        <outlet property="tripStats" destination="2hb-0f-YtE" id="u6b-6g-6aj"/>
                         <segue destination="zgY-Zn-asN" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
                 </viewController>
@@ -446,6 +422,11 @@ IAogA
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="FFl-rf-04E">
                     <connections>
                         <action selector="tripModeWasTapped:" destination="9pv-A4-QxB" id="D2W-aG-PUg"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="cCE-pA-RBN">
+                    <connections>
+                        <action selector="locationCoordinatesWasTapped:" destination="9pv-A4-QxB" id="dJg-b0-5En"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
