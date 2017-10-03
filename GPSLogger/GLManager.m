@@ -749,6 +749,9 @@ AFHTTPSessionManager *_httpClient;
         return _sendingInterval;
     
     _sendingInterval = (NSNumber *)[[NSUserDefaults standardUserDefaults] valueForKey:GLSendIntervalDefaultsName];
+    if(_sendingInterval == nil) {
+        _sendingInterval = [NSNumber numberWithInteger:300];
+    }
     return _sendingInterval;
 }
 
