@@ -31,6 +31,12 @@ NSArray *intervalMapStrings;
     [[GLManager sharedManager] accountInfo:^(NSString *name) {
         self.accountInfo.text = name;
     }];
+    
+    UIImage *pattern = [UIImage imageNamed:@"topobkg"];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
+    [self.tripView.layer setCornerRadius:6.0];
+    [self.sendNowButton.layer setCornerRadius:4.0];
+    [self.tripStartStopButton.layer setCornerRadius:4.0];
 }
 
 - (void)didReceiveMemoryWarning {

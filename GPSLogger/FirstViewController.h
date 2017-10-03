@@ -37,6 +37,7 @@
 - (IBAction)locationAgeWasTapped:(id)sender;
 - (IBAction)locationCoordinatesWasTapped:(UILongPressGestureRecognizer *)sender;
 
+@property (strong, nonatomic) IBOutlet UIView *tripView;
 @property (strong, nonatomic) IBOutlet UIImageView *currentModeImage;
 @property (strong, nonatomic) IBOutlet UILabel *currentModeLabel;
 - (IBAction)tripModeWasTapped:(id)sender;
