@@ -1,5 +1,5 @@
-GPS Logger for iOS
-==================
+Overland GPS Tracker for iOS
+============================
 
 This app is an experiment at gathering data from an iPhone to test the Core Location API and its various settings. The app tracks:
 * GPS location
@@ -10,7 +10,10 @@ The app gathers data with no network connection and stores locally on disk. The 
 
 There are many settings available in the settings tab which allow you to adjust properties of the Core Location API.
 
-You can write your own backend for receiving the data, or use [Compass](https://github.com/aaronpk/Compass) which is built to accept data in the format this app sends.
+The app sends data to an HTTP endpoint. You can use an existing backend or build your own. The app works with:
+
+* [Compass](https://github.com/aaronpk/Compass) - a self-hosted PHP app built to save and review data from this app
+* [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
 
 ## Documentation
 
@@ -92,7 +95,7 @@ This will use much less battery than high resolution, while still gathering enou
 
 ## API
 
-The app will post the location data to the configured endpoint. The POST request will be an array of GeoJSON objects inside a property called "locations". The batch size is 200 but can be set [in the configuration](https://github.com/aaronpk/GPS-Logger-iOS/blob/master/GPSLogger/GLManager.h#L40). This request may look like the following:
+The app will post the location data to the configured endpoint. The POST request will be an array of GeoJSON objects inside a property called "locations". The batch size is 200 but can be set [in the configuration](https://github.com/aaronpk/Overland-iOS/blob/master/GPSLogger/GLManager.h#L40). This request may look like the following:
 
 ```
 {
@@ -135,15 +138,17 @@ The properties on the location object are as follows:
 * `horizontal_accuracy` - accuracy of the position in meters
 * `vertical_accuracy` - accuracy of the altitude in meters
 * `motion` - an array of motion states detected by the motion coprocessor. Possible values are: `driving`, `walking`, `running`, `cycling`, `stationary`. A common combination is `driving` and `stationary` when the phone is resting on the dashboard of a moving car.
+* `battery_state` - `unknown`, `charging`, `full`, `unplugged`
+* `battery_level` - a value from 0 to 1 indicating the percent battery remaining.
+* `locations_in_payload` - the number of locations that were sent in the batch along with this location
+
+The following properties are included only if the "include tracking stats" option is selected:
+
 * `pauses` - boolean, whether the "pause updates automatically" preference is checked
 * `activity` - a string denoting the type of activity as indicated by the setting. Possible values are `automotive_navigation`, `fitness`, `other_navigation` and `other`. This can be set on the settings screen.
 * `desired_accuracy` - the requested accuracy in meters as configured on the settings screen.
 * `deferred` - the distance in meters to defer location updates, configured on the settings screen.
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
-* `locations_in_payload` - the number of locations that were sent in the batch along with this location
-* `battery_state` - `unknown`, `charging`, `full`, `unplugged`
-* `battery_level` - a value from 0 to 1 indicating the percent battery remaining.
-
 
 Your receiving endpoint should reply with a JSON response containing 
 
