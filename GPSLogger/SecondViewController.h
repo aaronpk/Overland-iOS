@@ -18,6 +18,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
+@property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
 
 - (IBAction)apiEndpointFieldWasPressed:(UILongPressGestureRecognizer *)sender;
 
@@ -28,6 +29,7 @@
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
+- (IBAction)toggleTrackingStats:(UISwitch *)sender;
 
 @end
 

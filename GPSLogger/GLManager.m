@@ -190,6 +190,10 @@ AFHTTPSessionManager *_httpClient;
 }
 
 - (void)logAction:(NSString *)action {
+    if(!self.includeTrackingStats) {
+        return;
+    }
+
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -376,7 +380,7 @@ AFHTTPSessionManager *_httpClient;
     //        self.batchInProgress = NO;
     //    }
     
-    NSLog(@"Points in queue: %lu", numPending);
+    // NSLog(@"Points in queue: %lu", numPending);
     
     // Send if time has elapsed,
     // or if we're in the middle of flushing
@@ -638,6 +642,18 @@ AFHTTPSessionManager *_httpClient;
     self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
 }
 
+- (BOOL)includeTrackingStats {
+    if([self defaultsKeyExists:GLIncludeTrackingStatsDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLIncludeTrackingStatsDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setIncludeTrackingStats:(BOOL)enabled {
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLIncludeTrackingStatsDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (CLLocationDistance)resumesAfterDistance {
     if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
         return [[NSUserDefaults standardUserDefaults] doubleForKey:GLResumesAutomaticallyDefaultsName];
@@ -755,32 +771,34 @@ AFHTTPSessionManager *_httpClient;
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
 
-    NSLog(@"Got a visit event: %@", visit);
-    
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
-        NSDictionary *update = @{
-                                  @"type": @"Feature",
-                                  @"geometry": @{
-                                          @"type": @"Point",
-                                          @"coordinates": @[
-                                                  [NSNumber numberWithDouble:visit.coordinate.longitude],
-                                                  [NSNumber numberWithDouble:visit.coordinate.latitude]
-                                                  ]
-                                          },
-                                  @"properties": @{
-                                          @"timestamp": timestamp,
-                                          @"action": @"visit",
-                                          @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
-                                          @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
-                                          @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
-                                          @"battery_state": [self currentBatteryState],
-                                          @"battery_level": [self currentBatteryLevel]
-                                          }
-                                };
-        [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
-    }];
+    if(self.includeTrackingStats) {
+        NSLog(@"Got a visit event: %@", visit);
+        
+        [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+            NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+            NSDictionary *update = @{
+                                      @"type": @"Feature",
+                                      @"geometry": @{
+                                              @"type": @"Point",
+                                              @"coordinates": @[
+                                                      [NSNumber numberWithDouble:visit.coordinate.longitude],
+                                                      [NSNumber numberWithDouble:visit.coordinate.latitude]
+                                                      ]
+                                              },
+                                      @"properties": @{
+                                              @"timestamp": timestamp,
+                                              @"action": @"visit",
+                                              @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
+                                              @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
+                                              @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
+                                              @"battery_state": [self currentBatteryState],
+                                              @"battery_level": [self currentBatteryLevel]
+                                              }
+                                    };
+            [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
+        }];
 
+    }
     [self sendQueueIfTimeElapsed];
 }
 
@@ -788,7 +806,7 @@ AFHTTPSessionManager *_httpClient;
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     self.lastLocation = (CLLocation *)locations[0];
     
-    NSLog(@"Received %d locations", (int)locations.count);
+    // NSLog(@"Received %d locations", (int)locations.count);
     
     // NSLog(@"%@", locations);
     
@@ -825,32 +843,58 @@ AFHTTPSessionManager *_httpClient;
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
             NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
-            NSDictionary *update = @{
-                                     @"type": @"Feature",
-                                     @"geometry": @{
-                                             @"type": @"Point",
-                                             @"coordinates": @[
-                                                     [NSNumber numberWithDouble:loc.coordinate.longitude],
-                                                     [NSNumber numberWithDouble:loc.coordinate.latitude]
-                                                     ]
-                                             },
-                                     @"properties": @{
-                                             @"timestamp": timestamp,
-                                             @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
-                                             @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
-                                             @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
-                                             @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
-                                             @"motion": motion,
-                                             @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
-                                             @"activity": activityType,
-                                             @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
-                                             @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
-                                             @"significant_change": [NSNumber numberWithInt:self.significantLocationMode],
-                                             @"locations_in_payload": [NSNumber numberWithLong:locations.count],
-                                             @"battery_state": [self currentBatteryState],
-                                             @"battery_level": [self currentBatteryLevel]
-                                             }
-                                     };
+            NSDictionary *update;
+            if(self.includeTrackingStats) {
+                update = @{
+                             @"type": @"Feature",
+                             @"geometry": @{
+                                     @"type": @"Point",
+                                     @"coordinates": @[
+                                             [NSNumber numberWithDouble:loc.coordinate.longitude],
+                                             [NSNumber numberWithDouble:loc.coordinate.latitude]
+                                             ]
+                                     },
+                             @"properties": @{
+                                     @"timestamp": timestamp,
+                                     @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
+                                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                                     @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
+                                     @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
+                                     @"motion": motion,
+                                     @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
+                                     @"activity": activityType,
+                                     @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
+                                     @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
+                                     @"significant_change": [NSNumber numberWithInt:self.significantLocationMode],
+                                     @"locations_in_payload": [NSNumber numberWithLong:locations.count],
+                                     @"battery_state": [self currentBatteryState],
+                                     @"battery_level": [self currentBatteryLevel]
+                                     }
+                             };
+            } else {
+                update = @{
+                             @"type": @"Feature",
+                             @"geometry": @{
+                                     @"type": @"Point",
+                                     @"coordinates": @[
+                                             [NSNumber numberWithDouble:loc.coordinate.longitude],
+                                             [NSNumber numberWithDouble:loc.coordinate.latitude]
+                                             ]
+                                     },
+                             @"properties": @{
+                                     @"timestamp": timestamp,
+                                     @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
+                                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                                     @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
+                                     @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
+                                     @"motion": motion,
+                                     @"locations_in_payload": [NSNumber numberWithLong:locations.count],
+                                     @"battery_state": [self currentBatteryState],
+                                     @"battery_level": [self currentBatteryLevel]
+                                     }
+                             };
+
+            }
             [accessor setDictionary:update forKey:timestamp];
 
             // If a trip is in progress, add to the trip's list too (for calculating trip distance)

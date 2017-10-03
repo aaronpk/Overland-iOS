@@ -22,6 +22,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
+    self.includeTrackingStats.on = [GLManager sharedManager].includeTrackingStats;
     if([[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName] != nil) {
         self.apiEndpointField.text = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
     } else {
@@ -156,6 +157,10 @@
         self.resumesWithGeofence.selectedSegmentIndex = 0;
         [GLManager sharedManager].resumesAfterDistance = -1;
     }
+}
+
+- (IBAction)toggleTrackingStats:(UISwitch *)sender {
+    [GLManager sharedManager].includeTrackingStats = sender.on;
 }
 
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender {

@@ -20,6 +20,7 @@ static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
 static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
 static NSString *const GLPausesAutomaticallyDefaultsName = @"GLPausesAutomaticallyDefaults";
 static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomaticallyDefaults";
+static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
 static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
@@ -56,6 +57,7 @@ typedef enum {
 
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
+@property BOOL includeTrackingStats;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) GLSignificantLocationMode significantLocationMode;
 @property (nonatomic) CLActivityType activityType;
