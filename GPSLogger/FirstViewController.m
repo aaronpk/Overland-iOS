@@ -279,7 +279,17 @@ NSArray *intervalMapStrings;
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
         self.tripDurationLabel.text = [FirstViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
-        self.tripDistanceLabel.text = [NSString stringWithFormat:@"%0.2f", [self metersToDisplayUnits:[GLManager sharedManager].currentTripDistance]];
+        self.tripDurationUnitLabel.text = [FirstViewController timeUnits:[GLManager sharedManager].currentTripDuration];
+        double distance = [self metersToDisplayUnits:[GLManager sharedManager].currentTripDistance];
+        NSString *format;
+        if(distance >= 1000) {
+            format = @"%0.0f";
+        } else if(distance >= 100) {
+            format = @"%0.1f";
+        } else {
+            format = @"%0.2f";
+        }
+        self.tripDistanceLabel.text = [NSString stringWithFormat:format, distance];
     } else {
         [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:106.f/255.f green:212.f/255.f blue:150.f/255.f alpha:1];
@@ -332,6 +342,15 @@ NSArray *intervalMapStrings;
         return [NSString stringWithFormat:@"%2d:%02d", minutes, seconds];
     } else {
         return [NSString stringWithFormat:@"%2d:%02d", hours, minutes];
+    }
+}
+
++ (NSString *)timeUnits:(int)totalSeconds {
+    int hours = totalSeconds / 3600;
+    if(hours == 0) {
+        return @"minutes";
+    } else {
+        return @"hours";
     }
 }
 

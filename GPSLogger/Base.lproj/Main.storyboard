@@ -409,6 +409,7 @@ IAogA
                         <outlet property="tripDistanceLabel" destination="YKJ-cC-bu6" id="kjw-uf-cSP"/>
                         <outlet property="tripDistanceUnitLabel" destination="DHo-Ub-xRD" id="TdK-XS-zZT"/>
                         <outlet property="tripDurationLabel" destination="sy2-au-4W7" id="Fye-k6-PsP"/>
+                        <outlet property="tripDurationUnitLabel" destination="Imb-OC-pQY" id="taa-vd-MH0"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
                         <segue destination="zgY-Zn-asN" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
