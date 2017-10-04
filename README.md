@@ -18,7 +18,7 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 ## Documentation
 
 ### Tracker Screen
-![Tracker](Screenshots/main.png)
+<img src="Screenshots/main.png" width="300">
 
 The Tracker screen is where you control whether the app is active, and shows you some basic stats of what the app is doing. This is also where you start and stop trips.
 
@@ -40,7 +40,7 @@ The Tracker screen is where you control whether the app is active, and shows you
 
 ### Settings
 
-![Tracker](Screenshots/settings.png)
+<img src="Screenshots/settings.png" width="300">
 
 The Settings screen allows you to set the parameters of the iOS CoreLocation API, which gives you fine-grained control over how the tracker behaves.
 
