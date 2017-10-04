@@ -18,7 +18,7 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 ## Documentation
 
 ### Tracker Screen
-![Tracker](screenshot-main.png)
+![Tracker](Screenshots/main.png)
 
 The Tracker screen is where you control whether the app is active, and shows you some basic stats of what the app is doing. This is also where you start and stop trips.
 
@@ -40,7 +40,7 @@ The Tracker screen is where you control whether the app is active, and shows you
 
 ### Settings
 
-![Settings](screenshot-settings.png)
+![Tracker](Screenshots/settings.png)
 
 The Settings screen allows you to set the parameters of the iOS CoreLocation API, which gives you fine-grained control over how the tracker behaves.
 
@@ -56,6 +56,8 @@ These controls all set various properties of the CoreLocation LocationManager ob
 * `Desired Accuracy` - Sets the [desiredAccuracy](https://developer.apple.com/reference/corelocation/cllocationmanager/1423836-desiredaccuracy) property of the location manager. This is only a request for the general level of accuracy, not a guarantee. Setting to "Best" will use the most battery but will get highest accuracy location updates. Setting to "3km" will save the most battery but will result in infrequent location updates.
 * `Defers Location Updates` - This allows the app to be paused, while the OS continues to collect location updates in the background, delivering them to the app in a batch at some interval. It is worth reading Apple's documentation of [deferred location updates](https://developer.apple.com/reference/corelocation/cllocationmanager/1620547-allowdeferredlocationupdates) for more information. This can have an effect on improving battery life.
 * `Points per Batch` - Controls the number of location updates that will be sent with each HTTP request. Setting this to 50 will mean more requests to the server are required to flush the queue, but each request will be smaller. Setting this to 1000 means you'll be able to flush the queue with fewer requests, but each request will be much larger. Each location point can be around 600 bytes when serialized as JSON, so sending 1000 points in a request will mean the request body may be around 600kb. Lower batch sizes are likely better for flaky network connections, and larger batch sizes are good when on a reliable connection. Note that this does not affect the frequency at which data is sent to the server.
+* `Include tracking stats` - Toggle whether to include visit and app metadata in the log as well. This is useful when trying to understand the app lifecycle and how the various tracking settings affect the app's behavior, but you probably don't want it enabled for production passive tracking usage.
+* `Enable notifications` - Toggle whether the app should send notifications about events such as when tracking has been automatically stopped and started.
 
 
 ### Usage Profiles
