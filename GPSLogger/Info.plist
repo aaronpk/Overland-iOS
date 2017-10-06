@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>4</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -29,8 +29,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Enable Bluetooth access to sync heart rate data</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Please enable location services to allow the app to track in the background</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -41,9 +39,6 @@
 	<string>Please enable motion to allow step counting</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>bluetooth-central</string>
-		<string>bluetooth-peripheral</string>
-		<string>external-accessory</string>
 		<string>fetch</string>
 		<string>location</string>
 	</array>
@@ -65,8 +60,6 @@
 			<false/>
 		</dict>
 	</dict>
-	<key>UISupportedExternalAccessoryProtocols</key>
-	<array/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
