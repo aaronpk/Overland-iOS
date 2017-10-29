@@ -160,7 +160,7 @@ AFHTTPSessionManager *_httpClient;
             // Try to send again in case there are more left
             [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
                 [accessor countObjectsUsingBlock:^(long num) {
-                    if(num > 0) {
+                    if(num >= _pointsPerBatch) {
                         NSLog(@"Number remaining: %ld", num);
                         self.batchInProgress = YES;
                     } else {
