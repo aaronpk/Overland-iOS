@@ -1032,8 +1032,8 @@ IAogA
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="YYm-TU-Ryi">
-                                <rect key="frame" x="20" y="40" width="335" height="397"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="YYm-TU-Ryi">
+                                <rect key="frame" x="20" y="40" width="335" height="627"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SET RECEIVER ENDPOINT URL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="veb-CN-Tnc">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="17"/>
@@ -1066,11 +1066,11 @@ IAogA
                                             <action selector="saveButtonWasTapped:" destination="oz3-vM-59N" eventType="touchUpInside" id="cGG-Ai-1Y3"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H9G-cG-Gsg">
-                                        <rect key="frame" x="0.0" y="144" width="335" height="253"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H9G-cG-Gsg">
+                                        <rect key="frame" x="0.0" y="144" width="335" height="483"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="168" id="SNz-9b-NAI"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="SNz-9b-NAI"/>
                                         </constraints>
                                         <string key="text">This app can send its location data to a server of your choosing. Enter a URL above and the app will send its data there. Note that there is no authentication other than this URL, so make sure the URL you enter contains your API key or other token. 
 
@@ -1081,10 +1081,14 @@ For details on the format of the data this app sends to the server, please visit
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="H9G-cG-Gsg" firstAttribute="top" secondItem="dhm-5d-E1l" secondAttribute="bottom" constant="4" id="w6k-pj-Szd"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="V5p-dJ-dmQ" firstAttribute="top" secondItem="H9G-cG-Gsg" secondAttribute="bottom" id="5Rt-fh-mu8"/>
                             <constraint firstItem="YYm-TU-Ryi" firstAttribute="top" secondItem="3Bo-lK-m1Y" secondAttribute="bottom" constant="20" id="KfP-sx-d3f"/>
                             <constraint firstAttribute="trailing" secondItem="YYm-TU-Ryi" secondAttribute="trailing" constant="20" id="QoX-Kj-B3w"/>
                             <constraint firstItem="YYm-TU-Ryi" firstAttribute="leading" secondItem="53t-1M-Pvt" secondAttribute="leading" constant="20" id="Zij-Wl-BUU"/>
