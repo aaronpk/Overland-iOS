@@ -46,7 +46,7 @@ The Settings screen allows you to set the parameters of the iOS CoreLocation API
 
 These controls all set various properties of the CoreLocation LocationManager object. It is worth reading the [iOS documentation](https://developer.apple.com/reference/corelocation) for more details, but a summary of them is below.
 
-* `Receiver Endpoint` - Long-press on this line to set the endpoint that the app will send data to.
+* `Receiver Endpoint` - Tap this line to set the endpoint that the app will send data to. You can also configure a device ID which will be included in each record.
 * `Pause Updates Automatically` - Enabling this will use the iOS API for automatically pausing location updates. When disabled, it will prevent the OS from pausing location updates. Pausing location updates automatically is a great way to save battery when you are not moving for extended periods of time, although it does not always pick up tracking again immediately when you start moving. In some initial testing, the automatic pause tends to trigger about 10 minutes after you've stopped moving.
 * `Resume with Geofence` - This is not an core API, but is an attempt at overcoming the automatic pausing limitations. Setting a radius here will register an "exit" geofence whenever location updates are paused at that location. This will attempt to get the app woken up when the user leaves the area again, and when triggered, will resume tracking with the previous settings.
 * `Significant Location`
@@ -125,7 +125,9 @@ The app will post the location data to the configured endpoint. The POST request
         "significant_change": "disabled",
         "locations_in_payload": 1,
         "battery_state": "charging",
-        "battery_level": 0.89
+        "battery_level": 0.89,
+        "device_id": "",
+        "wifi": ""
       }
     }
   ]
@@ -142,7 +144,8 @@ The properties on the location object are as follows:
 * `motion` - an array of motion states detected by the motion coprocessor. Possible values are: `driving`, `walking`, `running`, `cycling`, `stationary`. A common combination is `driving` and `stationary` when the phone is resting on the dashboard of a moving car.
 * `battery_state` - `unknown`, `charging`, `full`, `unplugged`
 * `battery_level` - a value from 0 to 1 indicating the percent battery remaining.
-* `locations_in_payload` - the number of locations that were sent in the batch along with this location
+* `wifi` - If the device is connected to a wifi hotspot, the name of the SSID will be included
+* `device_id` - The device ID configured in the settings, or an empty string
 
 The following properties are included only if the "include tracking stats" option is selected:
 
@@ -151,6 +154,7 @@ The following properties are included only if the "include tracking stats" optio
 * `desired_accuracy` - the requested accuracy in meters as configured on the settings screen.
 * `deferred` - the distance in meters to defer location updates, configured on the settings screen.
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
+* `locations_in_payload` - the number of locations that were sent in the batch along with this location
 
 Your receiving endpoint should reply with a JSON response containing 
 
@@ -160,7 +164,7 @@ Your receiving endpoint should reply with a JSON response containing
 }
 ```
 
-This indicates to the app that the batch was received, and it will delete those points from the local cache.
+This indicates to the app that the batch was received, and it will delete those points from the local cache. If the app receives any other response, it will keep the data locally and try to send it again at the next interval.
 
 
 
