@@ -154,7 +154,6 @@ AFHTTPSessionManager *_httpClient;
                 for(NSString *key in syncedUpdates) {
                     [accessor removeDictionaryForKey:key];
                 }
-                
             }];
             
             // Try to send again in case there are more left
@@ -175,17 +174,16 @@ AFHTTPSessionManager *_httpClient;
             self.batchInProgress = NO;
             
             if([responseObject objectForKey:@"error"]) {
-                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Error"];
+                [self notify:[responseObject objectForKey:@"error"] withTitle:@"HTTP Error"];
                 [self sendingFinished];
             } else {
-                [self notify:[responseObject description] withTitle:@"Error"];
+                [self notify:@"Server did not acknowledge the data was received, and did not return an error message" withTitle:@"HTTP Error"];
                 [self sendingFinished];
             }
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         self.batchInProgress = NO;
-        NSLog(@"Error: %@", error);
-        [self notify:error.description withTitle:@"Error"];
+        [self notify:error.localizedDescription withTitle:@"HTTP Error"];
         [self sendingFinished];
     }];
     
