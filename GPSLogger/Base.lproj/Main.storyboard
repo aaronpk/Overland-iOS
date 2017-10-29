@@ -802,8 +802,8 @@ IAogA
                                                         <rect key="frame" x="0.0" y="20.5" width="335" height="29"/>
                                                         <segments>
                                                             <segment title="Other"/>
-                                                            <segment title="Fitness"/>
                                                             <segment title="Automotive"/>
+                                                            <segment title="Fitness"/>
                                                             <segment title="Navigation"/>
                                                         </segments>
                                                         <connections>
