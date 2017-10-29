@@ -41,6 +41,7 @@ NSNumber *_sendingInterval;
 NSArray *_tripModes;
 bool _currentTripHasNewData;
 int _pointsPerBatch;
+NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
 AFHTTPSessionManager *_httpClient;
 
@@ -81,6 +82,20 @@ AFHTTPSessionManager *_httpClient;
 
 - (NSString *)apiEndpointURL {
     return [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+}
+
+- (void)saveNewDeviceId:(NSString *)deviceId {
+    _deviceId = deviceId;
+    [[NSUserDefaults standardUserDefaults] setObject:deviceId forKey:GLDeviceIdDefaultsName];
+    // Always call saveNewAPIEndpoint after saveNewDeviceId to synchronize changes
+}
+
+- (NSString *)deviceId {
+    NSString *d = [[NSUserDefaults standardUserDefaults] stringForKey:GLDeviceIdDefaultsName];
+    if(d == nil) {
+        d = @"";
+    }
+    return d;
 }
 
 - (void)startAllUpdates {
@@ -203,7 +218,9 @@ AFHTTPSessionManager *_httpClient;
                                                                                               @"timestamp": timestamp,
                                                                                               @"action": action,
                                                                                               @"battery_state": [self currentBatteryState],
-                                                                                              @"battery_level": [self currentBatteryLevel]
+                                                                                              @"battery_level": [self currentBatteryLevel],
+                                                                                              @"wifi": [GLManager currentWifiHotSpotName],
+                                                                                              @"device_id": _deviceId
                                                                                               }
                                                                                       }];
         if(self.lastLocation) {
@@ -266,6 +283,8 @@ AFHTTPSessionManager *_httpClient;
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
         _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
     }
+    
+    _deviceId = [self deviceId];
 }
 
 - (void)restoreTrackingState {
@@ -540,7 +559,9 @@ AFHTTPSessionManager *_httpClient;
                                               @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
                                               @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
                                               @"stopped_automatically": @(autopause),
-                                              @"steps": [NSNumber numberWithInteger:numberOfSteps]
+                                              @"steps": [NSNumber numberWithInteger:numberOfSteps],
+                                              @"wifi": [GLManager currentWifiHotSpotName],
+                                              @"device_id": _deviceId
                                               }
                                       };
         if(autopause) {
@@ -771,7 +792,9 @@ AFHTTPSessionManager *_httpClient;
                                               @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
                                               @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
                                               @"battery_state": [self currentBatteryState],
-                                              @"battery_level": [self currentBatteryLevel]
+                                              @"battery_level": [self currentBatteryLevel],
+                                              @"wifi": [GLManager currentWifiHotSpotName],
+                                              @"device_id": _deviceId
                                               }
                                     };
             [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
@@ -822,9 +845,6 @@ AFHTTPSessionManager *_httpClient;
         }
         
         NSString *currentWifi = [GLManager currentWifiHotSpotName];
-        if(currentWifi == nil) {
-            currentWifi = @"";
-        }
         
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
@@ -855,7 +875,8 @@ AFHTTPSessionManager *_httpClient;
                                      @"locations_in_payload": [NSNumber numberWithLong:locations.count],
                                      @"battery_state": [self currentBatteryState],
                                      @"battery_level": [self currentBatteryLevel],
-                                     @"wifi": currentWifi
+                                     @"wifi": currentWifi,
+                                     @"device_id": _deviceId
                                      }
                              };
             } else {
@@ -877,7 +898,8 @@ AFHTTPSessionManager *_httpClient;
                                      @"motion": motion,
                                      @"battery_state": [self currentBatteryState],
                                      @"battery_level": [self currentBatteryLevel],
-                                     @"wifi": currentWifi
+                                     @"wifi": currentWifi,
+                                     @"device_id": _deviceId
                                      }
                              };
 
@@ -1037,7 +1059,7 @@ AFHTTPSessionManager *_httpClient;
 }
 
 + (NSString *)currentWifiHotSpotName {
-    NSString *wifiName = nil;
+    NSString *wifiName = @"";
     NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
     for (NSString *ifnam in ifs) {
         NSDictionary *info = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)ifnam);

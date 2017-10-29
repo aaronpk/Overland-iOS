@@ -17,6 +17,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
+    self.deviceIdField.text = [GLManager sharedManager].deviceId;
     self.apiEndpointField.backgroundColor = [UIColor clearColor];
 }
 
@@ -26,11 +27,13 @@
     if(newURL != nil && ([newURL.scheme isEqualToString:@"https"] || [newURL.scheme isEqualToString:@"http"])) {
         self.apiEndpointField.backgroundColor = [UIColor clearColor];
         
+        [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text];
-        
+
         [self dismissViewControllerAnimated:YES completion:nil];
     } else if(self.apiEndpointField.text.length == 0) {
 
+        [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
 

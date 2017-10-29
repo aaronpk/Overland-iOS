@@ -16,6 +16,7 @@ static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotifica
 static NSString *const GLSendingFinishedNotification = @"GLSendingFinishedNotification";
 
 static NSString *const GLAPIEndpointDefaultsName = @"GLAPIEndpointDefaults";
+static NSString *const GLDeviceIdDefaultsName = @"GLDeviceIdDefaults";
 static NSString *const GLLastSentDateDefaultsName = @"GLLastSentDateDefaults";
 static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
 static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
@@ -83,6 +84,8 @@ typedef enum {
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint;
 - (NSString *)apiEndpointURL;
+- (void)saveNewDeviceId:(NSString *)deviceId;
+- (NSString *)deviceId;
 
 - (void)logAction:(NSString *)action;
 - (void)sendQueueNow;
