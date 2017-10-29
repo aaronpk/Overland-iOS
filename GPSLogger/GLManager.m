@@ -11,6 +11,7 @@
 #import "AFHTTPSessionManager.h"
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
+#import "SystemConfiguration/CaptiveNetwork.h"
 @import UserNotifications;
 
 @interface GLManager()
@@ -820,6 +821,11 @@ AFHTTPSessionManager *_httpClient;
                 break;
         }
         
+        NSString *currentWifi = [GLManager currentWifiHotSpotName];
+        if(currentWifi == nil) {
+            currentWifi = @"";
+        }
+        
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
             NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
@@ -848,7 +854,8 @@ AFHTTPSessionManager *_httpClient;
                                      @"significant_change": [NSNumber numberWithInt:self.significantLocationMode],
                                      @"locations_in_payload": [NSNumber numberWithLong:locations.count],
                                      @"battery_state": [self currentBatteryState],
-                                     @"battery_level": [self currentBatteryLevel]
+                                     @"battery_level": [self currentBatteryLevel],
+                                     @"wifi": currentWifi
                                      }
                              };
             } else {
@@ -868,9 +875,9 @@ AFHTTPSessionManager *_httpClient;
                                      @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
                                      @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
                                      @"motion": motion,
-                                     @"locations_in_payload": [NSNumber numberWithLong:locations.count],
                                      @"battery_state": [self currentBatteryState],
-                                     @"battery_level": [self currentBatteryLevel]
+                                     @"battery_level": [self currentBatteryLevel],
+                                     @"wifi": currentWifi
                                      }
                              };
 
@@ -1027,6 +1034,18 @@ AFHTTPSessionManager *_httpClient;
 - (BOOL)defaultsKeyExists:(NSString *)key {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
+}
+
++ (NSString *)currentWifiHotSpotName {
+    NSString *wifiName = nil;
+    NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
+    for (NSString *ifnam in ifs) {
+        NSDictionary *info = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)ifnam);
+        if (info[@"SSID"]) {
+            wifiName = info[@"SSID"];
+        }
+    }
+    return wifiName;
 }
 
 #pragma mark - FMDB
