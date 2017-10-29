@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
-		0FB85ABE1BE0151300F25126 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */; };
+		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
 		0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FCF53241F81AB0800577A0F /* UserNotifications.framework */; };
 		0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */; };
@@ -31,6 +31,7 @@
 /* Begin PBXFileReference section */
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
+		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		0FCF53231F81AAAC00577A0F /* GPSLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GPSLogger.entitlements; sourceTree = "<group>"; };
@@ -67,9 +68,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */,
 				0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */,
 				0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */,
-				0FB85ABE1BE0151300F25126 /* CoreBluetooth.framework in Frameworks */,
 				0FFD31781BAB7C7F009B3A03 /* CoreLocation.framework in Frameworks */,
 				0FFD31791BAB7C7F009B3A03 /* CoreMotion.framework in Frameworks */,
 				0FFD317A1BAB7C7F009B3A03 /* libsqlite3.tbd in Frameworks */,
@@ -84,6 +85,7 @@
 		0BE775F16162CE9DF6AE0775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */,
 				0FCF53241F81AB0800577A0F /* UserNotifications.framework */,
 				0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */,
 				0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */,
