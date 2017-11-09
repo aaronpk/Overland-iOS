@@ -142,8 +142,15 @@ AFHTTPSessionManager *_httpClient;
         
     }];
     
-    NSDictionary *postData = @{@"locations": locationUpdates};
+    NSMutableDictionary *postData = [NSMutableDictionary dictionaryWithDictionary:@{@"locations": locationUpdates}];
     
+    // If there are more points in the queue than Nx the batch size, also send the current location as a separate property.
+    // This allows the server to know where the user is immediately even if there are many thousands of points in the backlog.
+    if(locationUpdates.count > self.pointsPerBatch * 2 && self.lastLocation) {
+        NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
+        [postData setObject:currentLocation forKey:@"current"];
+    }
+
     NSLog(@"Endpoint: %@", endpoint);
     NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
     
@@ -815,19 +822,6 @@ AFHTTPSessionManager *_httpClient;
     // Queue the point in the database
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         
-        NSMutableArray *motion = [[NSMutableArray alloc] init];
-        CMMotionActivity *motionActivity = [GLManager sharedManager].lastMotion;
-        if(motionActivity.walking)
-            [motion addObject:@"walking"];
-        if(motionActivity.running)
-            [motion addObject:@"running"];
-        if(motionActivity.cycling)
-            [motion addObject:@"cycling"];
-        if(motionActivity.automotive)
-            [motion addObject:@"driving"];
-        if(motionActivity.stationary)
-            [motion addObject:@"stationary"];
-        
         NSString *activityType = @"";
         switch([GLManager sharedManager].activityType) {
             case CLActivityTypeOther:
@@ -844,65 +838,18 @@ AFHTTPSessionManager *_httpClient;
                 break;
         }
         
-        NSString *currentWifi = [GLManager currentWifiHotSpotName];
-        
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
             NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
-            NSDictionary *update;
+            NSDictionary *update = [self currentDictionaryFromLocation:loc];
             if(self.includeTrackingStats) {
-                update = @{
-                             @"type": @"Feature",
-                             @"geometry": @{
-                                     @"type": @"Point",
-                                     @"coordinates": @[
-                                             [NSNumber numberWithDouble:loc.coordinate.longitude],
-                                             [NSNumber numberWithDouble:loc.coordinate.latitude]
-                                             ]
-                                     },
-                             @"properties": @{
-                                     @"timestamp": timestamp,
-                                     @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
-                                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
-                                     @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
-                                     @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
-                                     @"motion": motion,
-                                     @"pauses": [NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically],
-                                     @"activity": activityType,
-                                     @"desired_accuracy": [NSNumber numberWithDouble:self.locationManager.desiredAccuracy],
-                                     @"deferred": [NSNumber numberWithDouble:self.defersLocationUpdates],
-                                     @"significant_change": [NSNumber numberWithInt:self.significantLocationMode],
-                                     @"locations_in_payload": [NSNumber numberWithLong:locations.count],
-                                     @"battery_state": [self currentBatteryState],
-                                     @"battery_level": [self currentBatteryLevel],
-                                     @"wifi": currentWifi,
-                                     @"device_id": _deviceId
-                                     }
-                             };
-            } else {
-                update = @{
-                             @"type": @"Feature",
-                             @"geometry": @{
-                                     @"type": @"Point",
-                                     @"coordinates": @[
-                                             [NSNumber numberWithDouble:loc.coordinate.longitude],
-                                             [NSNumber numberWithDouble:loc.coordinate.latitude]
-                                             ]
-                                     },
-                             @"properties": @{
-                                     @"timestamp": timestamp,
-                                     @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
-                                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
-                                     @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
-                                     @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
-                                     @"motion": motion,
-                                     @"battery_state": [self currentBatteryState],
-                                     @"battery_level": [self currentBatteryLevel],
-                                     @"wifi": currentWifi,
-                                     @"device_id": _deviceId
-                                     }
-                             };
-
+                NSMutableDictionary *properties = [update objectForKey:@"properties"];
+                [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
+                [properties setValue:activityType forKey:@"activity"];
+                [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
+                [properties setValue:[NSNumber numberWithDouble:self.defersLocationUpdates] forKey:@"deferred"];
+                [properties setValue:[NSNumber numberWithInt:self.significantLocationMode] forKey:@"significant_change"];
+                [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
             }
             [accessor setDictionary:update forKey:timestamp];
 
@@ -917,6 +864,52 @@ AFHTTPSessionManager *_httpClient;
     }];
     
     [self sendQueueIfTimeElapsed];
+}
+
+- (NSDictionary *)currentDictionaryFromLocation:(CLLocation *)loc {
+    NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
+    NSDictionary *update = @{
+             @"type": @"Feature",
+             @"geometry": @{
+                     @"type": @"Point",
+                     @"coordinates": @[
+                             [NSNumber numberWithDouble:loc.coordinate.longitude],
+                             [NSNumber numberWithDouble:loc.coordinate.latitude]
+                             ]
+                     },
+             @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
+                     @"timestamp": timestamp,
+                     @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
+                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                     @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
+                     @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
+                     @"motion": [self motionArrayFromLastMotion],
+                     @"battery_state": [self currentBatteryState],
+                     @"battery_level": [self currentBatteryLevel],
+                     @"wifi": [GLManager currentWifiHotSpotName],
+                     }]
+             };
+    if(_deviceId && _deviceId.length > 0) {
+        NSMutableDictionary *properties = [update objectForKey:@"properties"];
+        [properties setValue:_deviceId forKey:@"device_id"];
+    }
+    return update;
+}
+
+- (NSArray *)motionArrayFromLastMotion {
+    NSMutableArray *motion = [[NSMutableArray alloc] init];
+    CMMotionActivity *motionActivity = [GLManager sharedManager].lastMotion;
+    if(motionActivity.walking)
+        [motion addObject:@"walking"];
+    if(motionActivity.running)
+        [motion addObject:@"running"];
+    if(motionActivity.cycling)
+        [motion addObject:@"cycling"];
+    if(motionActivity.automotive)
+        [motion addObject:@"driving"];
+    if(motionActivity.stationary)
+        [motion addObject:@"stationary"];
+    return [NSArray arrayWithArray:motion];
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
