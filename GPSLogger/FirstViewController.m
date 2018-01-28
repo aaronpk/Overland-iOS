@@ -113,7 +113,7 @@ NSArray *intervalMapStrings;
     //    NSLog(@"New data received!");
     //    NSLog(@"Location: %@", [GLManager sharedManager].lastLocation);
     //    NSLog(@"Activity: %@", [GLManager sharedManager].lastMotion);
-    self.locationAgeLabel.textColor = [UIColor blackColor];
+    self.locationAgeLabel.textColor = [UIColor whiteColor];
     [self refreshView];
 }
 
@@ -136,9 +136,9 @@ NSArray *intervalMapStrings;
 
 - (NSString *)speedUnitText {
     if(self.usesMetricSystem) {
-        return @"km/h";
+        return @"KM/H";
     } else {
-        return @"mph";
+        return @"MPH";
     }
 }
 
@@ -146,7 +146,7 @@ NSArray *intervalMapStrings;
     self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 0 : 1);
     
     CLLocation *location = [GLManager sharedManager].lastLocation;
-    self.locationLabel.text = [NSString stringWithFormat:@"%.5f\n%.5f", location.coordinate.latitude, location.coordinate.longitude];
+    self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
 
     int speed;
@@ -156,7 +156,7 @@ NSArray *intervalMapStrings;
         speed = (int)(round(location.speed*2.23694));
     }
     if(speed < 0) speed = 0;
-    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%d", speed];
+    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%3d", speed];
 
     int age = -(int)round([GLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     if(age == 1) age = 0;
@@ -178,10 +178,12 @@ NSArray *intervalMapStrings;
         motionTypeString = nil;
 
     if(motionTypeString != nil) {
-        self.motionTypeLabel.text = [NSString stringWithFormat:@"%@, %@", [self speedUnitText], motionTypeString];
+        self.motionTypeLabel.text = motionTypeString;
     } else {
-        self.motionTypeLabel.text = [self speedUnitText];
+        self.motionTypeLabel.text = @"";
     }
+    
+    self.locationSpeedUnitLabel.text = [self speedUnitText];
 
     if([GLManager sharedManager].lastSentDate) {
         age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
@@ -246,7 +248,7 @@ NSArray *intervalMapStrings;
 }
 
 - (IBAction)locationAgeWasTapped:(id)sender {
-    self.locationAgeLabel.textColor = [UIColor colorWithRed:(180.f/255.f) green:0 blue:0 alpha:1];
+    self.locationAgeLabel.textColor = [UIColor colorWithRed:(210.f/255.f) green:(30.f/255.f) blue:(30.f/255.f) alpha:1];
     [[GLManager sharedManager] refreshLocation];
 }
 
@@ -336,9 +338,9 @@ NSArray *intervalMapStrings;
     int hours = totalSeconds / 3600;
     
     if(hours == 0) {
-        return [NSString stringWithFormat:@"%2d:%02d", minutes, seconds];
+        return [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
     } else {
-        return [NSString stringWithFormat:@"%2d:%02d", hours, minutes];
+        return [NSString stringWithFormat:@"%d:%02d", hours, minutes];
     }
 }
 

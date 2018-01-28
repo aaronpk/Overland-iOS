@@ -67,5 +67,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>OpenSansCondensed-Bold.ttf</string>
+		<string>OpenSansCondensed-Light.ttf</string>
+		<string>OpenSans-Light.ttf</string>
+	</array>
 </dict>
 </plist>

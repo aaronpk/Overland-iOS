@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F3E5210201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */; };
+		0F3E5211201E543200DCFAA4 /* OpenSansCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */; };
+		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
@@ -29,6 +32,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSansCondensed-Bold.ttf"; path = "Fonts/OpenSansCondensed-Bold.ttf"; sourceTree = SOURCE_ROOT; };
+		0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSansCondensed-Light.ttf"; path = "Fonts/OpenSansCondensed-Light.ttf"; sourceTree = SOURCE_ROOT; };
+		0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "Fonts/OpenSans-Light.ttf"; sourceTree = SOURCE_ROOT; };
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -98,10 +104,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0F3E520D201E515800DCFAA4 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */,
+				0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */,
+				0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */,
+			);
+			name = Fonts;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		0FFD31491BAB7A34009B3A03 = {
 			isa = PBXGroup;
 			children = (
 				0FFD31541BAB7A34009B3A03 /* GPSLogger */,
+				0F3E520D201E515800DCFAA4 /* Fonts */,
 				0FFD31531BAB7A34009B3A03 /* Products */,
 				0BE775F16162CE9DF6AE0775 /* Frameworks */,
 				1CD5358810FD08AFC4E02284 /* Pods */,
@@ -237,7 +255,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */,
+				0F3E5211201E543200DCFAA4 /* OpenSansCondensed-Light.ttf in Resources */,
 				0FFD31681BAB7A34009B3A03 /* LaunchScreen.storyboard in Resources */,
+				0F3E5210201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf in Resources */,
 				0FFD31651BAB7A34009B3A03 /* Assets.xcassets in Resources */,
 				0FFD31631BAB7A34009B3A03 /* Main.storyboard in Resources */,
 			);
