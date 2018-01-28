@@ -158,7 +158,9 @@ The following properties are included only if the "include tracking stats" optio
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
 * `locations_in_payload` - the number of locations that were sent in the batch along with this location
 
-Your receiving endpoint must reply with a JSON response containing:
+### Response
+
+Your server must reply with a JSON response containing:
 
 ```json
 {
