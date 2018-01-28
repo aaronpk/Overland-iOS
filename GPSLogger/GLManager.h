@@ -33,6 +33,7 @@ static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEna
 
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
+static NSString *const GLTripStartLocationDefaultsName = @"GLTripStartLocationDefaults";
 static NSString *const GLTripModeWalk = @"walk";
 static NSString *const GLTripModeRun = @"run";
 static NSString *const GLTripModeBicycle = @"bicycle";
@@ -73,6 +74,7 @@ typedef enum {
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
+@property (strong, nonatomic, readonly) NSDictionary *lastLocationDictionary;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
@@ -106,7 +108,6 @@ typedef enum {
 - (NSDate *)currentTripStart;
 - (CLLocationDistance)currentTripDistance;
 - (NSTimeInterval)currentTripDuration;
-- (double)currentTripSpeed;
 - (void)startTrip;
 - (void)endTrip;
 

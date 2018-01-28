@@ -303,15 +303,6 @@ NSArray *intervalMapStrings;
         self.tripDurationLabel.text = @" ";
     }
 }
-
-/*
-- (void)updateTripDBStats {
-    GLManager *m = [GLManager sharedManager];
-    [m numberOfObjectsInQueue:^(long locations, long trips, long stats) {
-        self.tripStats.text = [NSString stringWithFormat:@"Locations: %ld Trips: %ld Stats: %ld", locations, trips, stats];
-    }];
-}
-*/
  
 - (IBAction)tripModeWasTapped:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan) {

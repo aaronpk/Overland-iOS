@@ -130,11 +130,13 @@ The app will post the location data to the configured endpoint. The POST request
         "wifi": ""
       }
     }
-  ]
+  ],
+  "current": { ... }, (optional)
+  "trip": { ... } (optional)
 }
 ```
 
-The properties on the location object are as follows:
+The properties on the `location` objects are as follows:
 
 * `timestamp` - the ISO8601 timestamp of the `CLLocation` object recorded
 * `altitude` - the altitude of the location in meters
@@ -156,7 +158,7 @@ The following properties are included only if the "include tracking stats" optio
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
 * `locations_in_payload` - the number of locations that were sent in the batch along with this location
 
-Your receiving endpoint should reply with a JSON response containing 
+Your receiving endpoint must reply with a JSON response containing:
 
 ```json
 {
@@ -166,6 +168,20 @@ Your receiving endpoint should reply with a JSON response containing
 
 This indicates to the app that the batch was received, and it will delete those points from the local cache. If the app receives any other response, it will keep the data locally and try to send it again at the next interval.
 
+### Current Location
+
+If the number of locations in the queue are more than twice the batch size, then the request will also contain a property `current` with the most recent location point stored by the device. (This point will not be one of the ones in the batch.) If you need your backend to be aware of the current location, this allows you to ignore the batch being uploaded and instead use just that point.
+
+
+### Current Trip
+
+If a trip is active, an object called `trip` will be included in the request as well, with information about the current trip. This object will contain the following properties:
+
+* `distance` - current trip distance in meters as calculated by the device
+* `mode` - the trip mode as a string
+* `current_location` - a `location` record that represents the most recent location of the device
+* `start_location` - a `location` record that represents the location at the start of the trip
+* `start` - an ISO8601 timestamp representing the time the trip was started. this may be slightly different from the timestamp in the start location.
 
 
 ## License
