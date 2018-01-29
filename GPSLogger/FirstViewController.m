@@ -37,6 +37,11 @@ NSArray *intervalMapStrings;
     [self.tripView.layer setCornerRadius:6.0];
     [self.sendNowButton.layer setCornerRadius:4.0];
     [self.tripStartStopButton.layer setCornerRadius:4.0];
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)didReceiveMemoryWarning {
