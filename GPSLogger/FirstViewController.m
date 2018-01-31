@@ -154,7 +154,7 @@ NSArray *intervalMapStrings;
         speed = (int)(round(location.speed*2.23694));
     }
     if(speed < 0) speed = 0;
-    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%3d", speed];
+    self.locationSpeedLabel.text = [NSString stringWithFormat:@"%d", speed];
 
     int age = -(int)round([GLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     if(age == 1) age = 0;
