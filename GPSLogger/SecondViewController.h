@@ -11,6 +11,7 @@
 @interface SecondViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 @property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resumesWithGeofence;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *significantLocationMode;
@@ -21,6 +22,7 @@
 @property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 
+- (IBAction)toggleLogging:(UISegmentedControl *)sender;
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender;

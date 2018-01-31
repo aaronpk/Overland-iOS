@@ -12,10 +12,6 @@
 
 @property BOOL usesMetricSystem;
 
-@property (strong, nonatomic) IBOutlet UILabel *accountInfo;
-
-@property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
-
 @property (strong, nonatomic) IBOutlet UISlider *sendIntervalSlider;
 @property (strong, nonatomic) IBOutlet UILabel *sendIntervalLabel;
 @property (strong, nonatomic) IBOutlet UIButton *sendNowButton;
@@ -33,7 +29,6 @@
 
 - (IBAction)sendIntervalDragged:(UISlider *)sender;
 - (IBAction)sendIntervalChanged:(UISlider *)sender;
-- (IBAction)toggleLogging:(id)sender;
 - (IBAction)sendQueue:(id)sender;
 - (IBAction)locationAgeWasTapped:(id)sender;
 - (IBAction)locationCoordinatesWasTapped:(UILongPressGestureRecognizer *)sender;

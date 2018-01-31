@@ -22,6 +22,11 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    if([GLManager sharedManager].trackingEnabled)
+        self.trackingEnabledToggle.selectedSegmentIndex = 0;
+    else
+        self.trackingEnabledToggle.selectedSegmentIndex = 1;
+    
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.includeTrackingStats.on = [GLManager sharedManager].includeTrackingStats;
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
@@ -109,6 +114,15 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)toggleLogging:(UISegmentedControl *)sender {
+    NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
+    if(sender.selectedSegmentIndex == 0) {
+        [[GLManager sharedManager] startAllUpdates];
+    } else {
+        [[GLManager sharedManager] stopAllUpdates];
+    }
 }
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender {

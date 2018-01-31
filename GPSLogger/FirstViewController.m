@@ -28,9 +28,9 @@ NSArray *intervalMapStrings;
     intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @-1];
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
     
-    [[GLManager sharedManager] accountInfo:^(NSString *name) {
-        self.accountInfo.text = name;
-    }];
+//    [[GLManager sharedManager] accountInfo:^(NSString *name) {
+//        self.accountInfo.text = name;
+//    }];
     
     UIImage *pattern = [UIImage imageNamed:@"topobkg"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
@@ -52,11 +52,6 @@ NSArray *intervalMapStrings;
 
 - (void)viewWillAppear:(BOOL)animated {
     [self sendingFinished];
-    
-    if([GLManager sharedManager].trackingEnabled)
-        self.trackingEnabledToggle.selectedSegmentIndex = 0;
-    else
-        self.trackingEnabledToggle.selectedSegmentIndex = 1;
     
     if([GLManager sharedManager].sendingInterval) {
         self.sendIntervalSlider.value = [intervalMap indexOfObject:[GLManager sharedManager].sendingInterval];
@@ -148,8 +143,6 @@ NSArray *intervalMapStrings;
 }
 
 - (void)refreshView {
-    self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 0 : 1);
-    
     CLLocation *location = [GLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
@@ -217,15 +210,6 @@ NSArray *intervalMapStrings;
         self.monitoredRegionsLabel.text = [NSString stringWithFormat:@"%.6f,%.6f:%.0f\n%@", region.center.latitude, region.center.longitude, region.radius, self.monitoredRegionsLabel.text];
     }
     */
-}
-
-- (IBAction)toggleLogging:(UISegmentedControl *)sender {
-    NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
-    if(sender.selectedSegmentIndex == 0) {
-        [[GLManager sharedManager] startAllUpdates];
-    } else {
-        [[GLManager sharedManager] stopAllUpdates];
-    }
 }
 
 - (IBAction)sendQueue:(id)sender {
