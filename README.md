@@ -185,6 +185,22 @@ If a trip is active, an object called `trip` will be included in the request as 
 * `start_location` - a `location` record that represents the location at the start of the trip
 * `start` - an ISO8601 timestamp representing the time the trip was started. this may be slightly different from the timestamp in the start location.
 
+## Installation
+
+Assumes you have [Xcode](https://developer.apple.com/xcode/) and [Homebrew](https://brew.sh) installed. Paid Apple Developer account is not needed.
+
+ 1. `git clone https://github.com/aaronpk/Overland-iOS.git && cd Overland-iOS`
+ 2. `brew install cocoapods`
+ 3. `open Overland.xcworkspace`
+ 4. In Project Navigator, select *Overland*, and update Project Settings:
+    - Identity → Bundle Identifier: *com.yourname.overland*
+    - Signing → Team: *Personal Team*
+ 5. Plug in your iOS device
+ 6. Product → Destination -> select your device
+ 7. Product → Run (⌘R)
+ 8. On your iOS device: Settings -> General -> Device Management -> Developer App -> trust
+ 9. You can now launch the Overland app on your iOS device
+
 
 ## License
 
