@@ -106,10 +106,10 @@ The app will post the location data to the configured endpoint. The POST request
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": {
-          "latitude": 37.331800,
-          "longitude": -122.030581
-        }
+        "coordinates": [
+          -122.030581, 
+          37.331800
+        ]
       },
       "properties": {
         "timestamp": "2015-10-01T08:00:00-0700",
