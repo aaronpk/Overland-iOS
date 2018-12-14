@@ -34,6 +34,8 @@
 @property (strong, nonatomic) LOLDatabase *db;
 @property (strong, nonatomic) FMDatabase *tripdb;
 
+@property (strong, nonatomic) NSTimer *flightTrackerTimer;
+
 @end
 
 @implementation GLManager
@@ -49,6 +51,10 @@ long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
 AFHTTPSessionManager *_httpClient;
+
+// Keep track of whether location updates were stopped by the in-flight tracker
+bool _stoppedFromInFlightTracker = NO;
+AFHTTPSessionManager *_flightHTTPClient;
 
 + (GLManager *)sharedManager {
     static GLManager *_instance = nil;
@@ -71,6 +77,7 @@ AFHTTPSessionManager *_httpClient;
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
             [_instance initializeNotifications];
+            [_instance startFlightTrackerTimer];
         }
     }
     
@@ -309,6 +316,9 @@ AFHTTPSessionManager *_httpClient;
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
         _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
     }
+    
+    _flightHTTPClient = [[AFHTTPSessionManager manager] init];
+    _flightHTTPClient.responseSerializer = [AFJSONResponseSerializer serializer];
     
     _deviceId = [self deviceId];
 }
@@ -1066,8 +1076,150 @@ AFHTTPSessionManager *_httpClient;
     completionHandler(UNNotificationPresentationOptionAlert);
 }
 
-#pragma mark -
+#pragma mark - In-Flight Tracker
 
+/*
+
+ The goal of this code is to use the in-flight GPS tracker if available.
+ If the phone is connected to an in-flight wifi system like "gogoinflight", then
+ it should attempt to retrieve the GPS data from the plane.
+ When available, this should take precedence over the phone's own location services.
+ 
+ If the currently connected wifi name is "gogoinflight",
+ then attempt to fetch the GPS data URL.
+ If data is available, then stop local location updates.
+ If the request fails, start local location updates again.
+ If the currently connected wifi name is not "gogoinflight" then start local updates.
+ 
+*/
+ 
+- (void)startFlightTrackerTimer {
+    self.flightTrackerTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                               target:self
+                                                             selector:@selector(retrieveCurrentFlightData)
+                                                             userInfo:nil
+                                                              repeats:NO];
+}
+
+- (void)retrieveCurrentFlightData {
+    // Check if the current wifi name matches a known flight provider
+    if(true || [@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
+
+        // Make a request to the in-flight data URL
+        NSString *endpoint = @"http://airborne.gogoinflight.com/abp/ws/absServices/statusTray";
+        [_flightHTTPClient GET:endpoint parameters:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            // If we got in-flight data, stop local updates
+            _stoppedFromInFlightTracker = YES;
+            [self disableTracking];
+
+            // Record this data point
+            NSDictionary *info = [[responseObject objectForKey:@"Response"] objectForKey:@"flightInfo"];
+            
+            _currentFlightSummary = [NSString stringWithFormat:@"%@ %@ to %@\nTail number %@",
+                 [info valueForKey:@"flightNumberInfo"],
+                 [info valueForKey:@"departureAirportCodeIata"],
+                 [info valueForKey:@"destinationAirportCodeIata"],
+                 [info valueForKey:@"tailNumber"]
+            ];
+            
+            // Create a fake datapoint for the UI to grab
+            CLLocation *loc = [self currentLocationFromGogoDictionary:info];
+            
+            self.lastLocation = loc;
+            self.lastLocationDictionary = [self currentDictionaryFromGogoDictionary:info];
+            _lastMotionString = @"flying";
+            
+            [self writeCurrentLocationToHistory];
+
+            // Start a new timer to check again
+            [self startFlightTrackerTimer];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"Error retrieving in-flight data");
+            [self _resetFlightTrackerAndStartAgain];
+        }];
+        
+    } else {
+        [self _resetFlightTrackerAndStartAgain];
+    }
+}
+
+- (void)writeCurrentLocationToHistory {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:self.lastLocation.timestamp];
+        NSDictionary *update = self.lastLocationDictionary;
+        [accessor setDictionary:update forKey:timestamp];
+    }];
+    
+    if(self.tripInProgress) {
+        [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[self.lastLocation.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude], [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
+        _currentTripHasNewData = YES;
+    }
+}
+
+- (NSDictionary *)currentDictionaryFromGogoDictionary:(NSDictionary *)info {
+    double latitude = [(NSNumber *)[info valueForKey:@"latitude"] doubleValue];
+    double longitude = [(NSNumber *)[info valueForKey:@"longitude"] doubleValue];
+    
+    // Create the dictionary with our standard properties
+    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      @"timestamp": [info valueForKey:@"utcTime"],
+                                                                                      @"altitude": [info valueForKey:@"altitude"],
+                                                                                      @"speed": [NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * 0.45)],
+                                                                                      @"horizontal_accuracy": @11,
+                                                                                      @"motion": @[@"flying"],
+                                                                                      @"battery_state": [self currentBatteryState],
+                                                                                      @"battery_level": [self currentBatteryLevel],
+                                                                                      @"wifi": [GLManager currentWifiHotSpotName],
+                                                                                      @"source": @"gogo",
+                                                                                      @"flight_data": info,
+                                                                                      }];
+    
+    NSDictionary *update = @{
+                             @"type": @"Feature",
+                             @"geometry": @{
+                                     @"type": @"Point",
+                                     @"coordinates": @[
+                                             [NSNumber numberWithDouble:longitude],
+                                             [NSNumber numberWithDouble:latitude]
+                                             ]
+                                     },
+                             @"properties": properties
+                             };
+    
+    return update;
+}
+
+- (CLLocation *)currentLocationFromGogoDictionary:(NSDictionary *)info {
+    double latitude = [(NSNumber *)[info valueForKey:@"latitude"] doubleValue];
+    double longitude = [(NSNumber *)[info valueForKey:@"longitude"] doubleValue];
+    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
+    NSDate *timestamp = NSDate.date; // TODO: parse the ISO8601 timestamp from info
+
+    CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
+                                                    altitude:[(NSNumber *)[info valueForKey:@"altitude"] doubleValue]
+                                          horizontalAccuracy:11
+                                            verticalAccuracy:11
+                                                      course:0
+                                                       speed:[[NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * 0.45)] doubleValue]
+                                                   timestamp:timestamp];
+    return loc;
+}
+
+- (void)_resetFlightTrackerAndStartAgain {
+    // If we had previously stopped updates because we had in-flight data, start them again
+    if(_stoppedFromInFlightTracker) {
+        [self enableTracking];
+        _stoppedFromInFlightTracker = NO;
+    }
+    _lastMotionString = nil;
+    _currentFlightSummary = nil;
+    // Check for in-flight data again soon
+    [self startFlightTrackerTimer];
+}
+
+#pragma mark -
 
 - (BOOL)defaultsKeyExists:(NSString *)key {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

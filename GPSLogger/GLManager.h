@@ -76,9 +76,11 @@ typedef enum {
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
 @property (strong, nonatomic, readonly) NSDictionary *lastLocationDictionary;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
+@property (strong, nonatomic, readonly) NSString *lastMotionString;
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
 @property (strong, nonatomic, readonly) NSString *lastLocationName;
+@property (strong, nonatomic, readonly) NSString *currentFlightSummary;
 
 - (void)startAllUpdates;
 - (void)stopAllUpdates;

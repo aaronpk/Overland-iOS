@@ -172,8 +172,12 @@ NSArray *intervalMapStrings;
         motionTypeString = @"driving";
     else if(activity.stationary)
         motionTypeString = @"stationary";
-    else
-        motionTypeString = nil;
+    else {
+        if([GLManager sharedManager].lastMotionString)
+            motionTypeString = [GLManager sharedManager].lastMotionString;
+        else
+            motionTypeString = nil;
+    }
 
     if(motionTypeString != nil) {
         self.motionTypeLabel.text = motionTypeString;
@@ -195,6 +199,14 @@ NSArray *intervalMapStrings;
     }];
 
     [self updateTripState];
+    
+    if([GLManager sharedManager].currentFlightSummary) {
+        self.flightSummary.text = [GLManager sharedManager].currentFlightSummary;
+        self.flightInfoView.hidden = NO;
+    } else {
+        self.flightSummary.text = @"";
+        self.flightInfoView.hidden = YES;
+    }
 
     //if(![GLManager sharedManager].sendInProgress)
 //        [self sendingStarted];
