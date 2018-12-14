@@ -1133,6 +1133,8 @@ AFHTTPSessionManager *_flightHTTPClient;
             _lastMotionString = @"flying";
             
             [self writeCurrentLocationToHistory];
+            
+            self.currentTripMode = @"plane";
 
             // Start a new timer to check again
             [self startFlightTrackerTimer];

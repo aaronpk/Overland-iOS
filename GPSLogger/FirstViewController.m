@@ -59,8 +59,6 @@ NSArray *intervalMapStrings;
     }
     
     [self updateTripState];
-    self.currentModeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [GLManager sharedManager].currentTripMode]];
-    self.currentModeLabel.text = [GLManager sharedManager].currentTripMode;
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newDataReceived)
@@ -284,6 +282,9 @@ NSArray *intervalMapStrings;
 }
 
 - (void)updateTripState {
+    self.currentModeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [GLManager sharedManager].currentTripMode]];
+    self.currentModeLabel.text = [GLManager sharedManager].currentTripMode;
+
     if([GLManager sharedManager].tripInProgress) {
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
