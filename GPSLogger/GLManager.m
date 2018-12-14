@@ -52,6 +52,9 @@ NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
 AFHTTPSessionManager *_httpClient;
 
+const double FEET_TO_METERS = 0.304;
+const double MPH_to_METERSPERSECOND = 0.447;
+
 // Keep track of whether location updates were stopped by the in-flight tracker
 bool _stoppedFromInFlightTracker = NO;
 AFHTTPSessionManager *_flightHTTPClient;
@@ -1165,8 +1168,8 @@ AFHTTPSessionManager *_flightHTTPClient;
     // Create the dictionary with our standard properties
     NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                       @"timestamp": [info valueForKey:@"utcTime"],
-                                                                                      @"altitude": [info valueForKey:@"altitude"],
-                                                                                      @"speed": [NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * 0.45)],
+                                                                                      @"altitude": [NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"altitude"] doubleValue] * FEET_TO_METERS)],
+                                                                                      @"speed": [NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * MPH_to_METERSPERSECOND)],
                                                                                       @"horizontal_accuracy": @11,
                                                                                       @"motion": @[@"flying"],
                                                                                       @"battery_state": [self currentBatteryState],
@@ -1198,11 +1201,11 @@ AFHTTPSessionManager *_flightHTTPClient;
     NSDate *timestamp = NSDate.date; // TODO: parse the ISO8601 timestamp from info
 
     CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
-                                                    altitude:[(NSNumber *)[info valueForKey:@"altitude"] doubleValue]
+                                                    altitude:[(NSNumber *)[info valueForKey:@"altitude"] doubleValue] * FEET_TO_METERS
                                           horizontalAccuracy:11
                                             verticalAccuracy:11
                                                       course:0
-                                                       speed:[[NSNumber numberWithDouble:([(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * 0.45)] doubleValue]
+                                                       speed:[(NSNumber *)[info valueForKey:@"hspeed"] doubleValue] * MPH_to_METERSPERSECOND
                                                    timestamp:timestamp];
     return loc;
 }
