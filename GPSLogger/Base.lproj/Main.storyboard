@@ -547,7 +547,7 @@ IAogA
                                                         <color key="textColor" red="0.37715041040000002" green="0.37715041040000002" blue="0.37715041040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drive" translatesAutoresizingMaskIntoConstraints="NO" id="Krl-Yx-Qwr">
+                                                    <imageView tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car" translatesAutoresizingMaskIntoConstraints="NO" id="Krl-Yx-Qwr">
                                                         <rect key="frame" x="0.0" y="80" width="64" height="64"/>
                                                         <gestureRecognizers/>
                                                         <connections>
@@ -1222,8 +1222,8 @@ For details on the format of the data this app sends to the server, please visit
         <image name="bicycle" width="64" height="64"/>
         <image name="boat" width="64" height="64"/>
         <image name="bus" width="64" height="64"/>
+        <image name="car" width="64" height="64"/>
         <image name="car2go" width="64" height="64"/>
-        <image name="drive" width="64" height="64"/>
         <image name="map-pin" width="30" height="30"/>
         <image name="metro" width="64" height="64"/>
         <image name="plane" width="64" height="64"/>
