@@ -731,13 +731,63 @@ AFHTTPSessionManager *_flightHTTPClient;
 
 - (CLActivityType)activityType {
     if([self defaultsKeyExists:GLActivityTypeDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
+        // Map back to CLActivityType constants
+        long activityInt = [[NSUserDefaults standardUserDefaults] integerForKey:GLActivityTypeDefaultsName];
+        CLActivityType activityType;
+        switch(activityInt) {
+            case 1:
+                activityType = CLActivityTypeOther;
+                break;
+            case 2:
+                activityType = CLActivityTypeAutomotiveNavigation;
+                break;
+            case 3:
+                activityType = CLActivityTypeFitness;
+                break;
+            case 4:
+                activityType = CLActivityTypeOtherNavigation;
+                break;
+            case 5:
+                if (@available(iOS 12.0, *)) {
+                    activityType = CLActivityTypeAirborne;
+                } else {
+                    activityType = CLActivityTypeOther;
+                }
+                break;
+            default:
+                activityType = CLActivityTypeOther;
+                break;
+        }
+        return activityType;
     } else {
         return CLActivityTypeOther;
     }
 }
 - (void)setActivityType:(CLActivityType)activityType {
-    [[NSUserDefaults standardUserDefaults] setInteger:activityType forKey:GLActivityTypeDefaultsName];
+    // Store these as integers, in the same order as the UI control
+    int activityInt;
+    switch(activityType) {
+        case CLActivityTypeOther:
+            activityInt = 1;
+            break;
+        case CLActivityTypeAutomotiveNavigation:
+            activityInt = 2;
+            break;
+        case CLActivityTypeFitness:
+            activityInt = 3;
+            break;
+        case CLActivityTypeOtherNavigation:
+            activityInt = 4;
+            break;
+        case CLActivityTypeAirborne:
+            if (@available(iOS 12.0, *)) {
+                activityInt = 5;
+            } else {
+                activityInt = 1;
+            }
+            break;
+    }
+    [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLActivityTypeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     self.locationManager.activityType = activityType;
 }
@@ -879,6 +929,8 @@ AFHTTPSessionManager *_flightHTTPClient;
             case CLActivityTypeOtherNavigation:
                 activityType = @"other_navigation";
                 break;
+            case CLActivityTypeAirborne:
+                activityType = @"airborne";
         }
         
         for(int i=0; i<locations.count; i++) {

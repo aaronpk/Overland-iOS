@@ -896,9 +896,10 @@ IAogA
                                                         <rect key="frame" x="0.0" y="20.5" width="335" height="29"/>
                                                         <segments>
                                                             <segment title="Other"/>
-                                                            <segment title="Automotive"/>
+                                                            <segment title="Car"/>
                                                             <segment title="Fitness"/>
-                                                            <segment title="Navigation"/>
+                                                            <segment title="Nav"/>
+                                                            <segment title="Air"/>
                                                         </segments>
                                                         <connections>
                                                             <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="bO9-ra-qib"/>
