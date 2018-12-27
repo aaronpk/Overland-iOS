@@ -330,7 +330,6 @@ AFHTTPSessionManager *_flightHTTPClient;
         _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
         _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
-        NSLog(@"Access Token: %@", self.apiAccessToken);
         if(self.apiAccessToken != nil && ![@"" isEqualToString:self.apiAccessToken]) {
             [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.apiAccessToken]
                                  forHTTPHeaderField:@"Authorization"];
