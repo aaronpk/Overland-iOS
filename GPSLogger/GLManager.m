@@ -1106,7 +1106,7 @@ AFHTTPSessionManager *_flightHTTPClient;
 
 - (void)retrieveCurrentFlightData {
     // Check if the current wifi name matches a known flight provider
-    if(true || [@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
+    if([@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
 
         // Make a request to the in-flight data URL
         NSString *endpoint = @"http://airborne.gogoinflight.com/abp/ws/absServices/statusTray";
