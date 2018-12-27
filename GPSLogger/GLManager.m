@@ -194,6 +194,13 @@ AFHTTPSessionManager *_flightHTTPClient;
     [_httpClient POST:endpoint parameters:postData progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
+        if(![responseObject respondsToSelector:@selector(objectForKey:)]) {
+            self.batchInProgress = NO;
+            [self notify:@"Server did not return a JSON object" withTitle:@"Server Error"];
+            [self sendingFinished];
+            return;
+        }
+        
         if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
             self.lastSentDate = NSDate.date;
             NSDictionary *geocode = [responseObject objectForKey:@"geocode"];
@@ -228,10 +235,10 @@ AFHTTPSessionManager *_flightHTTPClient;
             self.batchInProgress = NO;
             
             if([responseObject objectForKey:@"error"]) {
-                [self notify:[responseObject objectForKey:@"error"] withTitle:@"HTTP Error"];
+                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Server Error"];
                 [self sendingFinished];
             } else {
-                [self notify:@"Server did not acknowledge the data was received, and did not return an error message" withTitle:@"HTTP Error"];
+                [self notify:@"Server did not acknowledge the data was received, and did not return an error message" withTitle:@"Server Error"];
                 [self sendingFinished];
             }
         }
