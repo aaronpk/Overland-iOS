@@ -17,6 +17,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
+    self.accessTokenField.text = [GLManager sharedManager].apiAccessToken;
     self.deviceIdField.text = [GLManager sharedManager].deviceId;
     self.apiEndpointField.backgroundColor = [UIColor clearColor];
 }
@@ -28,15 +29,13 @@
         self.apiEndpointField.backgroundColor = [UIColor clearColor];
         
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
-        [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text];
-
+        [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text andAccessToken:self.accessTokenField.text];
         [self dismissViewControllerAnimated:YES completion:nil];
     } else if(self.apiEndpointField.text.length == 0) {
 
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
-        [[GLManager sharedManager] saveNewAPIEndpoint:nil];
+        [[GLManager sharedManager] saveNewAPIEndpoint:nil andAccessToken:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
-
     } else {
         self.apiEndpointField.backgroundColor = [UIColor colorWithRed:1.0 green:0.82 blue:0.82 alpha:1.0];
     }

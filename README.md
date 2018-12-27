@@ -2,6 +2,7 @@ Overland GPS Tracker for iOS
 ============================
 
 This app is an experiment at gathering data from an iPhone to test the Core Location API and its various settings. The app tracks:
+
 * GPS location
 * Motion State (walking, running, driving, cycling, stationary)
 * Battery level
@@ -46,7 +47,7 @@ The Settings screen allows you to set the parameters of the iOS CoreLocation API
 
 These controls all set various properties of the CoreLocation LocationManager object. It is worth reading the [iOS documentation](https://developer.apple.com/reference/corelocation) for more details, but a summary of them is below.
 
-* `Receiver Endpoint` - Tap this line to set the endpoint that the app will send data to. You can also configure a device ID which will be included in each record.
+* `Receiver Endpoint` - Tap this line to set the endpoint that the app will send data to. You can also configure a device ID which will be included in each record, and an access token which will be sent in the HTTP Authorization header.
 * `Pause Updates Automatically` - Enabling this will use the iOS API for automatically pausing location updates. When disabled, it will prevent the OS from pausing location updates. Pausing location updates automatically is a great way to save battery when you are not moving for extended periods of time, although it does not always pick up tracking again immediately when you start moving. In some initial testing, the automatic pause tends to trigger about 10 minutes after you've stopped moving.
 * `Resume with Geofence` - This is not an core API, but is an attempt at overcoming the automatic pausing limitations. Setting a radius here will register an "exit" geofence whenever location updates are paused at that location. This will attempt to get the app woken up when the user leaves the area again, and when triggered, will resume tracking with the previous settings.
 * `Significant Location`
@@ -58,6 +59,16 @@ These controls all set various properties of the CoreLocation LocationManager ob
 * `Points per Batch` - Controls the number of location updates that will be sent with each HTTP request. Setting this to 50 will mean more requests to the server are required to flush the queue, but each request will be smaller. Setting this to 1000 means you'll be able to flush the queue with fewer requests, but each request will be much larger. Each location point can be around 600 bytes when serialized as JSON, so sending 1000 points in a request will mean the request body may be around 600kb. Lower batch sizes are likely better for flaky network connections, and larger batch sizes are good when on a reliable connection. Note that this does not affect the frequency at which data is sent to the server.
 * `Include tracking stats` - Toggle whether to include visit and app metadata in the log as well. This is useful when trying to understand the app lifecycle and how the various tracking settings affect the app's behavior, but you probably don't want it enabled for production passive tracking usage.
 * `Enable notifications` - Toggle whether the app should send notifications about events such as when tracking has been automatically stopped and started.
+
+#### Configuration by Custom URL
+
+You can send people a custom URL that will configure the app by clicking on it. Create a URL with your endpoint, token and device ID like the following:
+
+```
+overland://setup?url=https%3A%2F%2Fexample.com%2Fapi&token=1234&device_id=1
+```
+
+Tapping that URL on a device with the app installed will launch the app and save the values in the configuration. This is a quick way to configure many devices since it bypasses the need to enter the values in the settings screen.
 
 
 ### Usage Profiles
@@ -100,6 +111,10 @@ This will use much less battery than high resolution, while still gathering enou
 The app will post the location data to the configured endpoint. The POST request will be an array of GeoJSON objects inside a property called "locations". The batch size is 200 but can be set [in the configuration](https://github.com/aaronpk/Overland-iOS/blob/master/GPSLogger/GLManager.h#L40). This request may look like the following:
 
 ```
+POST /api HTTP/1.1
+Authorization: Bearer xxxxxx
+Content-Type: application/json
+
 {
   "locations": [
     {
@@ -135,6 +150,8 @@ The app will post the location data to the configured endpoint. The POST request
   "trip": { ... } (optional)
 }
 ```
+
+If you've configured an access token, it will be sent in the HTTP `Authorization` header preceded by the text `Bearer`.
 
 The properties on the `location` objects are as follows:
 

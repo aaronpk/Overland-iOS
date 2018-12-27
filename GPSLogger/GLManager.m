@@ -89,14 +89,19 @@ AFHTTPSessionManager *_flightHTTPClient;
 
 #pragma mark - GLManager control (public)
 
-- (void)saveNewAPIEndpoint:(NSString *)endpoint {
+- (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken {
     [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:GLAPIAccessTokenDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self setupHTTPClient];
 }
 
 - (NSString *)apiEndpointURL {
     return [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
+}
+
+- (NSString *)apiAccessToken {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIAccessTokenDefaultsName];
 }
 
 - (void)saveNewDeviceId:(NSString *)deviceId {
@@ -185,7 +190,7 @@ AFHTTPSessionManager *_flightHTTPClient;
     }
     
     [self sendingStarted];
-    
+
     [_httpClient POST:endpoint parameters:postData progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
@@ -318,6 +323,13 @@ AFHTTPSessionManager *_flightHTTPClient;
         _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
         _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+        NSLog(@"Access Token: %@", self.apiAccessToken);
+        if(self.apiAccessToken != nil && ![@"" isEqualToString:self.apiAccessToken]) {
+            [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.apiAccessToken]
+                                 forHTTPHeaderField:@"Authorization"];
+        } else {
+            [_httpClient.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
+        }
     }
     
     _flightHTTPClient = [[AFHTTPSessionManager manager] init];

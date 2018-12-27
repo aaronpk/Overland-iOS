@@ -63,13 +63,24 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     if([[url host] isEqualToString:@"setup"]) {
-        NSString *endpoint = [[url query] stringByRemovingPercentEncoding];
-        NSLog(@"Saving new API Endpoint: %@", endpoint);
-        [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+        NSArray *queryItems  = urlComponents.queryItems;
+        NSString *endpoint = [self queryValueForKey:@"url" fromQueryItems:queryItems];
+        NSString *token    = [self queryValueForKey:@"token" fromQueryItems:queryItems];
+        NSString *deviceId = [self queryValueForKey:@"device_id" fromQueryItems:queryItems];
+        NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@", endpoint, token, deviceId);
+        [[GLManager sharedManager] saveNewDeviceId:deviceId];
+        [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
     }
     
     return YES;
 }
 
+- (NSString *)queryValueForKey:(NSString *)key fromQueryItems:(NSArray *)queryItems
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name=%@", key];
+    NSURLQueryItem *queryItem = [[queryItems filteredArrayUsingPredicate:predicate] firstObject];
+    return queryItem.value;
+}
+                              
 @end

@@ -11,6 +11,7 @@
 @interface EndpointViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
+@property (strong, nonatomic) IBOutlet UITextField *accessTokenField;
 @property (strong, nonatomic) IBOutlet UITextField *deviceIdField;
 
 - (IBAction)saveButtonWasTapped:(UIButton *)sender;
