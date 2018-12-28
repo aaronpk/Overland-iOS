@@ -41,6 +41,7 @@
 @implementation GLManager
 
 static NSString *const GLLocationQueueName = @"GLLocationQueue";
+static NSString *const GLNotificationCategoryTripName = @"TRIP";
 
 NSNumber *_sendingInterval;
 NSArray *_tripModes;
@@ -899,6 +900,12 @@ AFHTTPSessionManager *_flightHTTPClient;
         }];
 
     }
+    
+    // If a trip is active, ask if they would like to end the trip
+    if(self.tripInProgress) {
+        [self askToEndTrip];
+    }
+    
     [self sendQueueIfTimeElapsed];
 }
 
@@ -1096,6 +1103,13 @@ AFHTTPSessionManager *_flightHTTPClient;
     if([[NSUserDefaults standardUserDefaults] boolForKey:GLNotificationPermissionRequestedDefaultsName]) {
         [self requestNotificationPermission];
     }
+    
+    UNNotificationAction *endTripAction = [UNNotificationAction actionWithIdentifier:@"END_TRIP" title:@"End Trip" options:UNNotificationActionOptionNone];
+    UNNotificationCategory *actionCategory = [UNNotificationCategory categoryWithIdentifier:GLNotificationCategoryTripName
+                                                                                    actions:@[endTripAction]
+                                                                          intentIdentifiers:@[]
+                                                                                    options:UNNotificationCategoryOptionNone];
+    [notificationCenter setNotificationCategories:[NSSet setWithArray:@[actionCategory]]];
 }
 
 - (void)requestNotificationPermission {
@@ -1147,6 +1161,46 @@ AFHTTPSessionManager *_flightHTTPClient;
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
     
     completionHandler(UNNotificationPresentationOptionAlert);
+}
+
+- (void)askToEndTrip
+{
+    if(self.notificationsEnabled) {
+        UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+
+        UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+        content.title = @"End Trip";
+        content.body = @"It looks like you stopped moving, would you like to end the current trip?";
+        content.sound = [UNNotificationSound defaultSound];
+        content.categoryIdentifier = GLNotificationCategoryTripName;
+        
+        NSString *identifier = @"GLLocalNotificationEndTripPrompt";
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
+                                                                              content:content
+                                                                              trigger:nil];
+
+        [notificationCenter addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+            if(error != nil) {
+                NSLog(@"Something went wrong trying to ask to end the trip: %@", error);
+            } else{
+                NSLog(@"Notification sent");
+            }
+        }];
+    }
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(nonnull UNNotificationResponse *)response withCompletionHandler:(nonnull void (^)(void))completionHandler
+{
+    if([@"END_TRIP" isEqualToString:response.actionIdentifier]) {
+        [self endTrip];
+
+        // If location updates were off when the trip was started, disable location now
+        if([[NSUserDefaults standardUserDefaults] boolForKey:GLTripTrackingEnabledDefaultsName] == NO) {
+            [[GLManager sharedManager] stopAllUpdates];
+        }
+    }
+    
+    completionHandler();
 }
 
 #pragma mark - In-Flight Tracker

@@ -9,8 +9,6 @@
 #import "FirstViewController.h"
 #import "GLManager.h"
 
-static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
-
 @interface FirstViewController ()
 
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;

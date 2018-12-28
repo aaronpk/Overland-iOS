@@ -32,6 +32,7 @@ static NSString *const GLPointsPerBatchDefaultsName = @"GLPointsPerBatchDefaults
 static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotificationPermissionRequestedDefaults";
 static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
 
+static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
 static NSString *const GLTripStartLocationDefaultsName = @"GLTripStartLocationDefaults";
@@ -96,6 +97,7 @@ typedef enum {
 - (void)logAction:(NSString *)action;
 - (void)sendQueueNow;
 - (void)notify:(NSString *)message withTitle:(NSString *)title;
+- (void)askToEndTrip;
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback;
