@@ -1277,8 +1277,8 @@ AFHTTPSessionManager *_flightHTTPClient;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"Error retrieving in-flight data");
             // If there was a problem, disable tracking
-            // TODO: remove this when re-enabling auto detection
-            self.gogoTracker = NO;
+            // TODO: maybe do this after some amount of failures?
+            // self.gogoTracker = NO;
             [self _resetFlightTrackerAndStartAgain];
         }];
         
