@@ -698,6 +698,9 @@ AFHTTPSessionManager *_flightHTTPClient;
 - (void)setGogoTracker:(BOOL)enabled {
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLEnableGogoTrackerDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    if(enabled == NO) {
+        _currentFlightSummary = nil;
+    }
 }
 
 - (BOOL)includeTrackingStats {
@@ -1293,6 +1296,7 @@ AFHTTPSessionManager *_flightHTTPClient;
         
     } else {
         [self _resetFlightTrackerAndStartAgain];
+        _currentFlightSummary = nil;
     }
 }
 
@@ -1367,7 +1371,7 @@ AFHTTPSessionManager *_flightHTTPClient;
         _stoppedFromInFlightTracker = NO;
     }
     _lastMotionString = nil;
-    _currentFlightSummary = nil;
+    // _currentFlightSummary = nil;
     // Check for in-flight data again soon
     [self startFlightTrackerTimer];
 }
