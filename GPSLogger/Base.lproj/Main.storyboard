@@ -1041,7 +1041,6 @@ IAogA
                                                         <rect key="frame" x="286" y="0.0" width="51" height="20.5"/>
                                                         <connections>
                                                             <action selector="toggleGogoTracker:" destination="8rJ-Kc-sve" eventType="valueChanged" id="0IQ-Ua-lDa"/>
-                                                            <action selector="toggleTrackingStats:" destination="8rJ-Kc-sve" eventType="valueChanged" id="WeZ-Cm-Em6"/>
                                                         </connections>
                                                     </switch>
                                                 </subviews>
