@@ -1251,26 +1251,35 @@ AFHTTPSessionManager *_flightHTTPClient;
             _stoppedFromInFlightTracker = YES;
             [self disableTracking];
 
-            // Record this data point
-            NSDictionary *info = [[responseObject objectForKey:@"Response"] objectForKey:@"flightInfo"];
-            
-            _currentFlightSummary = [NSString stringWithFormat:@"%@ %@ to %@\nTail number %@",
-                 [info valueForKey:@"flightNumberInfo"],
-                 [info valueForKey:@"departureAirportCodeIata"],
-                 [info valueForKey:@"destinationAirportCodeIata"],
-                 [info valueForKey:@"tailNumber"]
-            ];
-            
-            // Create a fake datapoint for the UI to grab
-            CLLocation *loc = [self currentLocationFromGogoDictionary:info];
-            
-            self.lastLocation = loc;
-            self.lastLocationDictionary = [self currentDictionaryFromGogoDictionary:info];
-            _lastMotionString = @"flying";
-            
-            [self writeCurrentLocationToHistory];
-            
-            self.currentTripMode = @"plane";
+            if([responseObject objectForKey:@"Response"] != nil) {
+                
+                // Record this data point
+                NSDictionary *info = [[responseObject objectForKey:@"Response"] objectForKey:@"flightInfo"];
+                
+                if(info != nil) {
+                    _currentFlightSummary = [NSString stringWithFormat:@"%@ %@ to %@\nTail number %@",
+                         [info valueForKey:@"flightNumberInfo"],
+                         [info valueForKey:@"departureAirportCodeIata"],
+                         [info valueForKey:@"destinationAirportCodeIata"],
+                         [info valueForKey:@"tailNumber"]
+                    ];
+                    
+                    // Create a fake datapoint for the UI to grab
+                    CLLocation *loc = [self currentLocationFromGogoDictionary:info];
+                    
+                    self.lastLocation = loc;
+                    self.lastLocationDictionary = [self currentDictionaryFromGogoDictionary:info];
+                    _lastMotionString = @"flying";
+                    
+                    [self writeCurrentLocationToHistory];
+                    
+                    self.currentTripMode = @"plane";
+                } else {
+                    // No flight info returned, plane may have landed
+                }
+            } else {
+                // Gogo returned non flight info, maybe an error
+            }
 
             // Start a new timer to check again
             [self startFlightTrackerTimer];
