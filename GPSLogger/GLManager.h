@@ -67,7 +67,7 @@ typedef enum {
 
 @property (strong, nonatomic) NSNumber *sendingInterval;
 @property BOOL pausesAutomatically;
-@property BOOL gogoTracker;
+@property BOOL gogoTrackerEnabled;
 @property BOOL includeTrackingStats;
 @property BOOL notificationsEnabled;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;

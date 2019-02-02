@@ -86,11 +86,21 @@ NSArray *intervalMapStrings;
     } else {
         self.tripDistanceUnitLabel.text = @"miles";
     }
+    
+    if([GLManager sharedManager].gogoTrackerEnabled == YES) {
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
+    } else {
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [self.viewRefreshTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
 - (void)viewWillUnload {

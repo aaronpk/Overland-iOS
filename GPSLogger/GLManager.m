@@ -688,14 +688,14 @@ AFHTTPSessionManager *_flightHTTPClient;
     self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
 }
 
-- (BOOL)gogoTracker {
+- (BOOL)gogoTrackerEnabled {
     if([self defaultsKeyExists:GLEnableGogoTrackerDefaultsName]) {
         return [[NSUserDefaults standardUserDefaults] boolForKey:GLEnableGogoTrackerDefaultsName];
     } else {
         return NO;
     }
 }
-- (void)setGogoTracker:(BOOL)enabled {
+- (void)setGogoTrackerEnabled:(BOOL)enabled {
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLEnableGogoTrackerDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     if(enabled == NO) {
@@ -1246,7 +1246,7 @@ AFHTTPSessionManager *_flightHTTPClient;
 - (void)retrieveCurrentFlightData {
     // Check if the current wifi name matches a known flight provider
     // if([@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
-    if(self.gogoTracker) {
+    if(self.gogoTrackerEnabled) {
         // Make a request to the in-flight data URL
         NSString *endpoint = @"http://airborne.gogoinflight.com/abp/ws/absServices/statusTray";
         [_flightHTTPClient GET:endpoint parameters:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
@@ -1290,7 +1290,7 @@ AFHTTPSessionManager *_flightHTTPClient;
             NSLog(@"Error retrieving in-flight data");
             // If there was a problem, disable tracking
             // TODO: maybe do this after some amount of failures?
-            // self.gogoTracker = NO;
+            // self.gogoTrackerEnabled = NO;
             [self _resetFlightTrackerAndStartAgain];
         }];
         
