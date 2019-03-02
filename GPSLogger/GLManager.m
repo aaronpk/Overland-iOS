@@ -58,6 +58,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 // Keep track of whether location updates were stopped by the in-flight tracker
 bool _stoppedFromInFlightTracker = NO;
+int _numErrorsFromInFlightTracker = 0;
 AFHTTPSessionManager *_flightHTTPClient;
 
 + (GLManager *)sharedManager {
@@ -699,7 +700,12 @@ AFHTTPSessionManager *_flightHTTPClient;
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLEnableGogoTrackerDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     if(enabled == NO) {
+        _numErrorsFromInFlightTracker = 0;
         _currentFlightSummary = nil;
+        if(_stoppedFromInFlightTracker == YES) {
+           [self enableTracking];
+            _stoppedFromInFlightTracker = NO;
+        }
     }
 }
 
@@ -1244,13 +1250,21 @@ AFHTTPSessionManager *_flightHTTPClient;
 }
 
 - (void)retrieveCurrentFlightData {
-    // Check if the current wifi name matches a known flight provider
-    // if([@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
+    // Check if the current wifi name matches a known flight provider and enable the tracker if so
+    if([@"gogoinflight" isEqualToString:[GLManager currentWifiHotSpotName]]) {
+        self.gogoTrackerEnabled = YES;
+    } else {
+        // 2019-03-02 not disabling automatically yet until more testing is done
+        // self.gogoTrackerEnabled = NO;
+    }
+
     if(self.gogoTrackerEnabled) {
+
         // Make a request to the in-flight data URL
         NSString *endpoint = @"http://airborne.gogoinflight.com/abp/ws/absServices/statusTray";
         [_flightHTTPClient GET:endpoint parameters:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             // If we got in-flight data, stop local updates
+            _numErrorsFromInFlightTracker = 0;
             _stoppedFromInFlightTracker = YES;
             [self disableTracking];
 
@@ -1287,16 +1301,20 @@ AFHTTPSessionManager *_flightHTTPClient;
             // Start a new timer to check again
             [self startFlightTrackerTimer];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"Error retrieving in-flight data");
-            // If there was a problem, disable tracking
-            // TODO: maybe do this after some amount of failures?
-            // self.gogoTrackerEnabled = NO;
             [self _resetFlightTrackerAndStartAgain];
+            _numErrorsFromInFlightTracker++;
+            NSLog(@"Error retrieving in-flight data %d", _numErrorsFromInFlightTracker);
+            // Stop trying after 5 minutes of errors
+            if(_numErrorsFromInFlightTracker > (300/5)) {
+                NSLog(@"Too many errors retrieving in-flight data, giving up");
+                self.gogoTrackerEnabled = NO;
+            }
         }];
         
     } else {
         [self _resetFlightTrackerAndStartAgain];
         _currentFlightSummary = nil;
+        _numErrorsFromInFlightTracker = 0;
     }
 }
 

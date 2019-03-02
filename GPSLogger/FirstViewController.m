@@ -213,21 +213,6 @@ NSArray *intervalMapStrings;
         self.flightSummary.text = @"";
         self.flightInfoView.hidden = YES;
     }
-
-    //if(![GLManager sharedManager].sendInProgress)
-//        [self sendingStarted];
-//    else
-    //    [self sendingFinished];
-
-    // [self updateTripDBStats];
-    
-    /*
-    NSSet *regions = [GLManager sharedManager].monitoredRegions;
-    self.monitoredRegionsLabel.text = @"";
-    for(CLCircularRegion *region in regions) {
-        self.monitoredRegionsLabel.text = [NSString stringWithFormat:@"%.6f,%.6f:%.0f\n%@", region.center.latitude, region.center.longitude, region.radius, self.monitoredRegionsLabel.text];
-    }
-    */
 }
 
 - (IBAction)sendQueue:(id)sender {
