@@ -28,6 +28,7 @@
 		0FFD317A1BAB7C7F009B3A03 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31761BAB7C7F009B3A03 /* libsqlite3.tbd */; };
 		0FFD317B1BAB7C7F009B3A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31771BAB7C7F009B3A03 /* UIKit.framework */; };
 		0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD317E1BAB7CC7009B3A03 /* LOLDatabase.m */; };
+		6D2858D1222B133400F525E1 /* WifiZoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2858D0222B133400F525E1 /* WifiZoneViewController.m */; };
 		F87824B3678FD75F13286822 /* libPods-Overland.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0A408349E469AC6E6DA46BA /* libPods-Overland.a */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,8 @@
 		378F9BC146097DEF5A9CCBF9 /* Pods-GPSLogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPSLogger.release.xcconfig"; path = "Pods/Target Support Files/Pods-GPSLogger/Pods-GPSLogger.release.xcconfig"; sourceTree = "<group>"; };
 		3CCE0D26F93B3FCD5A4A1D16 /* libPods-GPSLogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GPSLogger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4321137E3D59A45E6CD72293 /* Pods-GPSLogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPSLogger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GPSLogger/Pods-GPSLogger.debug.xcconfig"; sourceTree = "<group>"; };
+		6D2858CF222B133400F525E1 /* WifiZoneViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WifiZoneViewController.h; sourceTree = "<group>"; };
+		6D2858D0222B133400F525E1 /* WifiZoneViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WifiZoneViewController.m; sourceTree = "<group>"; };
 		6DEC9B3621F3F88500D9E8C4 /* Overland.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Overland.entitlements; sourceTree = "<group>"; };
 		E0A408349E469AC6E6DA46BA /* libPods-Overland.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Overland.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4DFFAB32440A8511E1D869A /* Pods-Overland.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Overland.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Overland/Pods-Overland.debug.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 				0FFD315F1BAB7A34009B3A03 /* SecondViewController.m */,
 				0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */,
 				0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */,
+				6D2858CF222B133400F525E1 /* WifiZoneViewController.h */,
+				6D2858D0222B133400F525E1 /* WifiZoneViewController.m */,
 				0FFD31711BAB7BEA009B3A03 /* GLManager.h */,
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
@@ -303,6 +308,7 @@
 			files = (
 				0FFD31601BAB7A34009B3A03 /* SecondViewController.m in Sources */,
 				0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */,
+				6D2858D1222B133400F525E1 /* WifiZoneViewController.m in Sources */,
 				0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */,
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,

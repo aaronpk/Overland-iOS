@@ -110,6 +110,11 @@ typedef enum {
 
 - (void)requestNotificationPermission;
 
+@property (strong, nonatomic, readonly) NSString *wifiZoneName;
+@property (strong, nonatomic, readonly) NSString *wifiZoneLatitude;
+@property (strong, nonatomic, readonly) NSString *wifiZoneLongitude;
+- (void)saveNewWifiZone:(NSString *)name withLatitude:(NSString *)latitude andLongitude:(NSString *)longitude;
+
 #pragma mark - Trips
 
 + (NSArray *)GLTripModes;

@@ -932,7 +932,19 @@ AFHTTPSessionManager *_flightHTTPClient;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+    
     self.lastLocation = (CLLocation *)locations[locations.count-1];
+
+    // If a wifi override is configured, create a fake CLLocation object based on the location in the wifi mapping
+    if([GLManager currentWifiHotSpotName]) {
+        CLLocation *tmp = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
+        if(tmp) {
+            self.lastLocation = tmp;
+            NSLog(@"Overriding location from wifi name");
+            locations = @[self.lastLocation];
+        }
+    }
+    
     self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
     
     // NSLog(@"Received %d locations", (int)locations.count);
@@ -1222,6 +1234,60 @@ AFHTTPSessionManager *_flightHTTPClient;
     }
     
     completionHandler();
+}
+
+
+#pragma mark - Wifi Positioning
+
+/*
+ Allow the user to configure wifi names mapping to locations. If the phone is connected to
+ one of the known wifi names, use the configured location instead of the phone's reported location.
+ This should help avoid GPS drift around common locations like "home" and "work", and can
+ also be used to pause location updates when the user gets home.
+*/
+
+- (CLLocation *)currentLocationFromWifiName:(NSString *)wifi {
+    if(wifi == nil) {
+        return nil;
+    }
+    
+    if(self.wifiZoneName) {
+    
+        if([self.wifiZoneName isEqualToString:wifi]) {
+            double latitude = [self.wifiZoneLatitude floatValue];
+            double longitude = [self.wifiZoneLongitude floatValue];
+            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
+            NSDate *timestamp = NSDate.date;
+            
+            CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
+                                                            altitude:-1
+                                                  horizontalAccuracy:1
+                                                    verticalAccuracy:0
+                                                              course:0
+                                                               speed:0
+                                                           timestamp:timestamp];
+            return loc;
+        }
+    }
+    
+    return nil;
+}
+
+- (void)saveNewWifiZone:(NSString *)name withLatitude:(NSString *)latitude andLongitude:(NSString *)longitude {
+    
+    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"WifiZoneName"];
+    [[NSUserDefaults standardUserDefaults] setObject:latitude forKey:@"WifiZoneLatitude"];
+    [[NSUserDefaults standardUserDefaults] setObject:longitude forKey:@"WifiZoneLongitude"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+- (NSString *)wifiZoneName {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneName"];
+}
+- (NSString *)wifiZoneLatitude {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneLatitude"];
+}
+- (NSString *)wifiZoneLongitude {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneLongitude"];
 }
 
 #pragma mark - In-Flight Tracker
