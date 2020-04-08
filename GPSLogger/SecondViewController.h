@@ -20,7 +20,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
-@property (strong, nonatomic) IBOutlet UISwitch *enableGogoTracker;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
@@ -31,7 +30,6 @@
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
-- (IBAction)toggleGogoTracker:(UISwitch *)sender;
 - (IBAction)toggleTrackingStats:(UISwitch *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
 

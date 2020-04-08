@@ -30,7 +30,6 @@
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.includeTrackingStats.on = [GLManager sharedManager].includeTrackingStats;
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
-    self.enableGogoTracker.on = [GLManager sharedManager].gogoTrackerEnabled;
 
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
@@ -238,10 +237,6 @@
             pointsPerBatch = 1000; break;        
     }
     [GLManager sharedManager].pointsPerBatch = pointsPerBatch;
-}
-
-- (IBAction)toggleGogoTracker:(UISwitch *)sender {
-    [GLManager sharedManager].gogoTrackerEnabled = sender.on;
 }
 
 - (IBAction)toggleTrackingStats:(UISwitch *)sender {
