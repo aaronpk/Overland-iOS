@@ -15,6 +15,9 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 
 * [Compass](https://github.com/aaronpk/Compass) - a self-hosted PHP app built to save and review data from this app
 * [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
+* [Open Humans](https://overland.openhumans.org/) - a service for tracking your data and sharing it for research purposes
+
+Looking for the Android version? → https://github.com/OpenHumans/overland_android
 
 ## Documentation
 
