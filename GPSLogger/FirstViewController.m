@@ -20,6 +20,20 @@
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
 
+- (void)registerUserActivity {
+    NSString *bundleIDStarter = [NSString stringWithFormat:@"%@.startTracking", [[NSBundle mainBundle] bundleIdentifier]];
+    
+    NSUserActivity *activityStart = [[NSUserActivity alloc] initWithActivityType:bundleIDStarter];
+    activityStart.title = @"Start Overland Tracking";
+    activityStart.userInfo = @{@"tracking" : @"on"};
+    [activityStart setEligibleForSearch:true];
+    if (@available(iOS 12.0, *)) {
+        [activityStart setEligibleForPrediction:true];
+    }
+    self.view.userActivity = activityStart;
+    [activityStart becomeCurrent];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -36,6 +50,10 @@ NSArray *intervalMapStrings;
     [self.sendNowButton.layer setCornerRadius:4.0];
     [self.tripStartStopButton.layer setCornerRadius:4.0];
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    // adding Shortcut Code
+    // get Bundle ID and add ...
+    [self registerUserActivity];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
