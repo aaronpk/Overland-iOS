@@ -10,6 +10,8 @@
 #import "SecondViewController.h"
 #import "GLManager.h"
 
+#import  <Intents/Intents.h>
+
 @interface SecondViewController ()
 
 @end
@@ -22,6 +24,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    NSLog(@"SecondVC - viewWillAppear");
     if([GLManager sharedManager].trackingEnabled)
         self.trackingEnabledToggle.selectedSegmentIndex = 0;
     else
@@ -118,6 +121,7 @@
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
     NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
+    
     if(sender.selectedSegmentIndex == 0) {
         [[GLManager sharedManager] startAllUpdates];
     } else {
