@@ -104,7 +104,6 @@ To use very little battery, you can still get enough location info to know what 
 * Significant Location: Enabled
 * Activity Type: Other
 * Desired Accuracy: 100m
-* Defers Location Updates: 5km
 
 This will use much less battery than high resolution, while still gathering enough data you can use to roughly geotag posts or know what neighborhood you're in. For even more battery savings, you can set Significant Location Only, which will drastically reduce the amount of data you log but will use almost no battery.
 
