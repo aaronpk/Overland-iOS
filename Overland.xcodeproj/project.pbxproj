@@ -15,6 +15,7 @@
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
 		0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FCF53241F81AB0800577A0F /* UserNotifications.framework */; };
 		0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */; };
+		0FE280B12B0180620062936E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0FE280B02B0180620062936E /* Settings.bundle */; };
 		0FFD31571BAB7A34009B3A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31561BAB7A34009B3A03 /* main.m */; };
 		0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31591BAB7A34009B3A03 /* AppDelegate.m */; };
 		0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */; };
@@ -45,6 +46,7 @@
 		0FCF53241F81AB0800577A0F /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
 		0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
+		0FE280B02B0180620062936E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0FFD31521BAB7A34009B3A03 /* Overland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Overland.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FFD31561BAB7A34009B3A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0FFD31581BAB7A34009B3A03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				0FFD31691BAB7A34009B3A03 /* Info.plist */,
 				0FFD317C1BAB7CB3009B3A03 /* LOLDB */,
 				0FFD31551BAB7A34009B3A03 /* Supporting Files */,
+				0FE280B02B0180620062936E /* Settings.bundle */,
 			);
 			path = GPSLogger;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				0F3E5210201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf in Resources */,
 				0FFD31651BAB7A34009B3A03 /* Assets.xcassets in Resources */,
 				0FFD31631BAB7A34009B3A03 /* Main.storyboard in Resources */,
+				0FE280B12B0180620062936E /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

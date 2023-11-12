@@ -130,6 +130,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
 }
 
+- (BOOL)shouldConsiderHTTP200Success {
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    return [standardUserDefaults boolForKey:@"http_200_success"];
+}
+
 - (void)sendQueueNow {
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
@@ -188,14 +193,25 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [_httpClient POST:endpoint parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
-        if(![responseObject respondsToSelector:@selector(objectForKey:)]) {
-            self.batchInProgress = NO;
-            [self notify:@"Server did not return a JSON object" withTitle:@"Server Error"];
-            [self sendingFinished];
-            return;
+        bool requestWasSuccessfullySent = NO;
+        if(self.shouldConsiderHTTP200Success) {
+            // Any non-200 response would have been caught by the error callback instead
+            requestWasSuccessfullySent = YES;
+        } else {
+            // Response must be JSON
+            if(![responseObject respondsToSelector:@selector(objectForKey:)]) {
+                self.batchInProgress = NO;
+                [self notify:@"Server did not return a JSON object" withTitle:@"Server Error"];
+                [self sendingFinished];
+                return;
+            }
+
+            // Response JSON must include {"result":"ok"}
+            requestWasSuccessfullySent = [responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"];
         }
         
-        if([responseObject objectForKey:@"result"] && [[responseObject objectForKey:@"result"] isEqualToString:@"ok"]) {
+        
+        if(requestWasSuccessfullySent) {
             self.lastSentDate = NSDate.date;
             NSDictionary *geocode = [responseObject objectForKey:@"geocode"];
             if(geocode && ![geocode isEqual:[NSNull null]]) {
