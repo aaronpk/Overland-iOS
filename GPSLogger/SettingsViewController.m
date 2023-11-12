@@ -7,16 +7,16 @@
 //  Copyright © 2017 Aaron Parecki. All rights reserved.
 //
 
-#import "SecondViewController.h"
+#import "SettingsViewController.h"
 #import "GLManager.h"
 
 #import  <Intents/Intents.h>
 
-@interface SecondViewController ()
+@interface SettingsViewController ()
 
 @end
 
-@implementation SecondViewController
+@implementation SettingsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

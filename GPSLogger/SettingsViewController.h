@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SecondViewController : UIViewController
+@interface SettingsViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;

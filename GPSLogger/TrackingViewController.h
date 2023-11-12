@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+@interface TrackingViewController : UIViewController
 
 @property BOOL usesMetricSystem;
 

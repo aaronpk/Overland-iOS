@@ -17,8 +17,8 @@
 		0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */; };
 		0FFD31571BAB7A34009B3A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31561BAB7A34009B3A03 /* main.m */; };
 		0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31591BAB7A34009B3A03 /* AppDelegate.m */; };
-		0FFD315D1BAB7A34009B3A03 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315C1BAB7A34009B3A03 /* FirstViewController.m */; };
-		0FFD31601BAB7A34009B3A03 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315F1BAB7A34009B3A03 /* SecondViewController.m */; };
+		0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */; };
+		0FFD31601BAB7A34009B3A03 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */; };
 		0FFD31631BAB7A34009B3A03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31611BAB7A34009B3A03 /* Main.storyboard */; };
 		0FFD31651BAB7A34009B3A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31641BAB7A34009B3A03 /* Assets.xcassets */; };
 		0FFD31681BAB7A34009B3A03 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */; };
@@ -49,10 +49,10 @@
 		0FFD31561BAB7A34009B3A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0FFD31581BAB7A34009B3A03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0FFD31591BAB7A34009B3A03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0FFD315B1BAB7A34009B3A03 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		0FFD315C1BAB7A34009B3A03 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		0FFD315E1BAB7A34009B3A03 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		0FFD315F1BAB7A34009B3A03 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		0FFD315B1BAB7A34009B3A03 /* TrackingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrackingViewController.h; sourceTree = "<group>"; };
+		0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackingViewController.m; sourceTree = "<group>"; };
+		0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		0FFD31621BAB7A34009B3A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0FFD31641BAB7A34009B3A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0FFD31671BAB7A34009B3A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -149,12 +149,12 @@
 				0FCF53231F81AAAC00577A0F /* GPSLogger.entitlements */,
 				0FFD31581BAB7A34009B3A03 /* AppDelegate.h */,
 				0FFD31591BAB7A34009B3A03 /* AppDelegate.m */,
-				0FFD315B1BAB7A34009B3A03 /* FirstViewController.h */,
-				0FFD315C1BAB7A34009B3A03 /* FirstViewController.m */,
+				0FFD315B1BAB7A34009B3A03 /* TrackingViewController.h */,
+				0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */,
 				0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */,
 				0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */,
-				0FFD315E1BAB7A34009B3A03 /* SecondViewController.h */,
-				0FFD315F1BAB7A34009B3A03 /* SecondViewController.m */,
+				0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */,
+				0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */,
 				0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */,
 				0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */,
 				6D2858CF222B133400F525E1 /* WifiZoneViewController.h */,
@@ -306,13 +306,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FFD31601BAB7A34009B3A03 /* SecondViewController.m in Sources */,
+				0FFD31601BAB7A34009B3A03 /* SettingsViewController.m in Sources */,
 				0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */,
 				6D2858D1222B133400F525E1 /* WifiZoneViewController.m in Sources */,
 				0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */,
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,
-				0FFD315D1BAB7A34009B3A03 /* FirstViewController.m in Sources */,
+				0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */,
 				0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */,
 				0FFD31571BAB7A34009B3A03 /* main.m in Sources */,
 			);

@@ -4,18 +4,19 @@
 //
 //  Created by Aaron Parecki on 9/17/15.
 //  Copyright © 2015 Esri. All rights reserved.
+//  Copyright © 2017 Aaron Parecki. All rights reserved.
 //
 
-#import "FirstViewController.h"
+#import "TrackingViewController.h"
 #import "GLManager.h"
 
-@interface FirstViewController ()
+@interface TrackingViewController ()
 
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;
 
 @end
 
-@implementation FirstViewController
+@implementation TrackingViewController
 
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
@@ -182,7 +183,7 @@ NSArray *intervalMapStrings;
 
     int age = -(int)round([GLManager sharedManager].lastLocation.timestamp.timeIntervalSinceNow);
     if(age == 1) age = 0;
-    self.locationAgeLabel.text = [FirstViewController timeFormatted:age];
+    self.locationAgeLabel.text = [TrackingViewController timeFormatted:age];
     
     NSString *motionTypeString;
     CMMotionActivity *activity = [GLManager sharedManager].lastMotion;
@@ -213,7 +214,7 @@ NSArray *intervalMapStrings;
 
     if([GLManager sharedManager].lastSentDate) {
         age = -(int)round([GLManager sharedManager].lastSentDate.timeIntervalSinceNow);
-        self.queueAgeLabel.text = [NSString stringWithFormat:@"%@", [FirstViewController timeFormatted:age]];
+        self.queueAgeLabel.text = [NSString stringWithFormat:@"%@", [TrackingViewController timeFormatted:age]];
     } else {
         self.queueAgeLabel.text = @"n/a";
     }
@@ -299,8 +300,8 @@ NSArray *intervalMapStrings;
     if([GLManager sharedManager].tripInProgress) {
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
-        self.tripDurationLabel.text = [FirstViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
-        self.tripDurationUnitLabel.text = [FirstViewController timeUnits:[GLManager sharedManager].currentTripDuration];
+        self.tripDurationLabel.text = [TrackingViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
+        self.tripDurationUnitLabel.text = [TrackingViewController timeUnits:[GLManager sharedManager].currentTripDuration];
         double distance = [self metersToDisplayUnits:[GLManager sharedManager].currentTripDistance];
         NSString *format;
         if(distance >= 1000) {
