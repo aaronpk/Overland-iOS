@@ -50,6 +50,10 @@
 	<string>Please enable location services to allow the app to track</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Please enable motion to allow step counting</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).startTracking</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>OpenSansCondensed-Bold.ttf</string>
@@ -79,10 +83,6 @@
 			<false/>
 		</dict>
 	</dict>
-	<key>NSUserActivityTypes</key>
-	<array>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).startTracking</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

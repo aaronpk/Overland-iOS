@@ -185,7 +185,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     [self sendingStarted];
 
-    [_httpClient POST:endpoint parameters:postData progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_httpClient POST:endpoint parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
         if(![responseObject respondsToSelector:@selector(objectForKey:)]) {
@@ -277,7 +277,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)accountInfo:(void(^)(NSString *name))block {
     NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-    [_httpClient GET:endpoint parameters:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_httpClient GET:endpoint parameters:nil headers:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dict = (NSDictionary *)responseObject;
         block((NSString *)[dict objectForKey:@"name"]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
