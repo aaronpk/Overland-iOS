@@ -693,7 +693,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (NSNumber *)currentBatteryLevel {
-    return [NSNumber numberWithInteger:[UIDevice currentDevice].batteryLevel * 100];
+    return [NSNumber numberWithDouble:((int)([UIDevice currentDevice].batteryLevel * 100)) / 100.0];
 }
 
 - (NSString *)authorizationStatusAsString {
@@ -1052,8 +1052,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
              @"geometry": @{
                      @"type": @"Point",
                      @"coordinates": @[
-                             [NSNumber numberWithDouble:loc.coordinate.longitude],
-                             [NSNumber numberWithDouble:loc.coordinate.latitude]
+                             [NSNumber numberWithDouble:((int)(loc.coordinate.longitude * 1000000)) / 1000000.0],
+                             [NSNumber numberWithDouble:((int)(loc.coordinate.latitude * 1000000)) / 1000000.0]
                              ]
                      },
              @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
