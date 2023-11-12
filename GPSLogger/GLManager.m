@@ -130,11 +130,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self.locationManager performSelector:@selector(startUpdatingLocation) withObject:nil afterDelay:1.0];
 }
 
-- (BOOL)shouldConsiderHTTP200Success {
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    return [standardUserDefaults boolForKey:@"http_200_success"];
-}
-
 - (void)sendQueueNow {
     NSMutableSet *syncedUpdates = [NSMutableSet set];
     NSMutableArray *locationUpdates = [NSMutableArray array];
@@ -272,12 +267,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                                                                       @"properties": @{
                                                                                               @"timestamp": timestamp,
                                                                                               @"action": action,
-                                                                                              @"battery_state": [self currentBatteryState],
-                                                                                              @"battery_level": [self currentBatteryLevel],
-                                                                                              @"wifi": [GLManager currentWifiHotSpotName],
-                                                                                              @"device_id": _deviceId
                                                                                               }
                                                                                       }];
+        [self addMetadataToUpdate:update];
+        
         if(self.lastLocation) {
             [update setObject:@{
                                 @"type": @"Point",
@@ -330,6 +323,24 @@ const double MPH_to_METERSPERSECOND = 0.447;
         callback(locations, trips, stats);
     }];
 }
+
+
+- (void)requestAuthorizationPermission {
+    bool isFirstRequest = false;
+    if (@available(iOS 14.0, *)) {
+        if(self.locationManager.authorizationStatus == kCLAuthorizationStatusNotDetermined) {
+            isFirstRequest = true;
+        }
+    }
+    if(isFirstRequest) {
+        NSLog(@"Requesting WhenInUse Permission");
+        [self.locationManager requestWhenInUseAuthorization];
+    } else {
+        NSLog(@"Requesting Always Permission");
+        [self.locationManager requestAlwaysAuthorization];
+    }
+}
+
 
 #pragma mark - GLManager control (private)
 
@@ -682,7 +693,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (NSNumber *)currentBatteryLevel {
-    return [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
+    return [NSNumber numberWithInteger:[UIDevice currentDevice].batteryLevel * 100];
 }
 
 - (NSString *)authorizationStatusAsString {
@@ -704,20 +715,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 
-- (void)requestAuthorizationPermission {
-    bool isFirstRequest = false;
-    if (@available(iOS 14.0, *)) {
-        if(self.locationManager.authorizationStatus == kCLAuthorizationStatusNotDetermined) {
-            isFirstRequest = true;
-        }
-    }
-    if(isFirstRequest) {
-        NSLog(@"Requesting WhenInUse Permission");
-        [self.locationManager requestWhenInUseAuthorization];
-    } else {
-        NSLog(@"Requesting Always Permission");
-        [self.locationManager requestAlwaysAuthorization];
-    }
+- (BOOL)shouldConsiderHTTP200Success {
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    return [standardUserDefaults boolForKey:@"http_200_success"];
 }
 
 
@@ -937,12 +937,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                               @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
                                               @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
                                               @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
-                                              @"battery_state": [self currentBatteryState],
-                                              @"battery_level": [self currentBatteryLevel],
-                                              @"wifi": [GLManager currentWifiHotSpotName],
-                                              @"device_id": _deviceId
                                               }
                                     };
+            [self addMetadataToUpdate:update];
             [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
         }];
 
@@ -1038,6 +1035,16 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self sendQueueIfTimeElapsed];
 }
 
+- (void)addMetadataToUpdate:(NSDictionary *) update {
+    NSMutableDictionary *properties = [update objectForKey:@"properties"];
+    if(_deviceId && _deviceId.length > 0) {
+        [properties setValue:_deviceId forKey:@"device_id"];
+    }
+    [properties setValue:[GLManager currentWifiHotSpotName] forKey:@"wifi"];
+    [properties setValue:[self currentBatteryState] forKey:@"battery_state"];
+    [properties setValue:[self currentBatteryLevel] forKey:@"battery_level"];
+}
+
 - (NSDictionary *)currentDictionaryFromLocation:(CLLocation *)loc {
     NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
     NSDictionary *update = @{
@@ -1056,15 +1063,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
                      @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
                      @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
                      @"motion": [self motionArrayFromLastMotion],
-                     @"battery_state": [self currentBatteryState],
-                     @"battery_level": [self currentBatteryLevel],
-                     @"wifi": [GLManager currentWifiHotSpotName],
                      }]
              };
-    if(_deviceId && _deviceId.length > 0) {
-        NSMutableDictionary *properties = [update objectForKey:@"properties"];
-        [properties setValue:_deviceId forKey:@"device_id"];
-    }
+    [self addMetadataToUpdate:update];
     return update;
 }
 
