@@ -21,6 +21,9 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *includeTrackingStats;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
+@property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;
+@property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatusWarning;
+@property (strong, nonatomic) IBOutlet UIButton *requestLocationPermissionsButton;
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender;
@@ -32,6 +35,7 @@
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleTrackingStats:(UISwitch *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
+- (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;
 
 @end
 

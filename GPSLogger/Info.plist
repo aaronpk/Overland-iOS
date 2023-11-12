@@ -42,12 +42,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please enable location services to allow the app to track in the background</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Please enable location services to allow the app to track in the background</string>
+	<string>Allow always to let the app track in the background</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please enable location services to allow the app to track</string>
+	<string>Please enable location services to allow the app to track in the background</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Please allow &quot;Always&quot; to enable the app to track in the background</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Please enable motion to allow step counting</string>
 	<key>NSUserActivityTypes</key>
@@ -72,6 +72,9 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+		<string>location-services</string>
+		<string>gps</string>
+		<string>magnetometer</string>
 	</array>
 	<key>UIStatusBarTintParameters</key>
 	<dict>

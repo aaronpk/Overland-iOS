@@ -347,17 +347,25 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLAuthorizationStatusChangedNotification object:self];
+    NSLog(@"Location Authorization Changed: %@", self.authorizationStatusAsString);
+}
+
 - (void)enableTracking {
     self.trackingEnabled = YES;
-    [self.locationManager requestAlwaysAuthorization];
-    [self.locationManager startUpdatingLocation];
-    [self.locationManager startUpdatingHeading];
-    [self.locationManager startMonitoringVisits];
-    if(self.significantLocationMode != kGLSignificantLocationDisabled) {
+
+    if(self.significantLocationMode == kGLSignificantLocationEnabled) {
         [self.locationManager startMonitoringSignificantLocationChanges];
         NSLog(@"Monitoring significant location changes");
+    } else {
+        [self.locationManager startUpdatingLocation];
+        [self.locationManager startUpdatingHeading];
+        NSLog(@"Monitoring standard location changes");
     }
     
+    [self.locationManager startMonitoringVisits];
+
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     
     if(CMMotionActivityManager.isActivityAvailable) {
@@ -366,6 +374,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
             [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
         }];
     }
+
+    NSLog(@"Location Authorization Status %@", self.authorizationStatusAsString);
     
     _pointsPerBatch = self.pointsPerBatch;
     
@@ -659,6 +669,42 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
 }
 
+- (NSString *)authorizationStatusAsString {
+    if (@available(iOS 14.0, *)) {
+        switch(self.locationManager.authorizationStatus) {
+            case kCLAuthorizationStatusNotDetermined:
+                return @"Not Determined";
+            case kCLAuthorizationStatusRestricted:
+                return @"Restricted";
+            case kCLAuthorizationStatusDenied:
+                return @"Denied";
+            case kCLAuthorizationStatusAuthorizedWhenInUse:
+                return @"When in Use";
+            case kCLAuthorizationStatusAuthorizedAlways:
+                return @"Always";
+        }
+    } else {
+        return @"Unknown";
+    }
+}
+
+- (void)requestAuthorizationPermission {
+    bool isFirstRequest = false;
+    if (@available(iOS 14.0, *)) {
+        if(self.locationManager.authorizationStatus == kCLAuthorizationStatusNotDetermined) {
+            isFirstRequest = true;
+        }
+    }
+    if(isFirstRequest) {
+        NSLog(@"Requesting WhenInUse Permission");
+        [self.locationManager requestWhenInUseAuthorization];
+    } else {
+        NSLog(@"Requesting Always Permission");
+        [self.locationManager requestAlwaysAuthorization];
+    }
+}
+
+
 #pragma mark CLLocationManager
 
 - (NSSet *)monitoredRegions {
@@ -712,11 +758,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setSignificantLocationMode:(GLSignificantLocationMode)significantLocationMode {
     [[NSUserDefaults standardUserDefaults] setInteger:significantLocationMode forKey:GLSignificantLocationModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    if(significantLocationMode != kGLSignificantLocationDisabled) {
-        [self.locationManager startMonitoringSignificantLocationChanges];
-    } else {
-        [self.locationManager stopMonitoringSignificantLocationChanges];
-    }
 }
 
 - (CLActivityType)activityType {

@@ -39,6 +39,9 @@
     } else {
         self.apiEndpointField.text = @"tap to set endpoint";
     }
+
+    [self authorizationStatusChanged];
+    
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
 
     GLSignificantLocationMode slMode = [GLManager sharedManager].significantLocationMode;
@@ -48,9 +51,6 @@
             break;
         case kGLSignificantLocationEnabled:
             self.significantLocationMode.selectedSegmentIndex = 1;
-            break;
-        case kGLSignificantLocationExclusive:
-            self.significantLocationMode.selectedSegmentIndex = 2;
             break;
     }
     
@@ -112,11 +112,30 @@
     } else if(pointsPerBatch == 1000) {
         self.pointsPerBatchControl.selectedSegmentIndex = 4;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(authorizationStatusChanged)
+                                                 name:GLAuthorizationStatusChangedNotification
+                                               object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)authorizationStatusChanged {
+    self.locationAuthorizationStatus.text = [GLManager sharedManager].authorizationStatusAsString;
+    if (@available(iOS 14.0, *)) {
+        if([GLManager sharedManager].locationManager.authorizationStatus != kCLAuthorizationStatusAuthorizedAlways) {
+            self.locationAuthorizationStatusWarning.hidden = false;
+            self.requestLocationPermissionsButton.hidden = false;
+        } else {
+            self.locationAuthorizationStatusWarning.hidden = true;
+            self.requestLocationPermissionsButton.hidden = true;
+        }
+    }
 }
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
@@ -127,6 +146,10 @@
     } else {
         [[GLManager sharedManager] stopAllUpdates];
     }
+}
+
+- (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender {
+    [[GLManager sharedManager] requestAuthorizationPermission];
 }
 
 - (IBAction)togglePausesAutomatically:(UISwitch *)sender {
@@ -167,8 +190,6 @@
             m = kGLSignificantLocationDisabled; break;
         case 1:
             m = kGLSignificantLocationEnabled; break;
-        case 2:
-            m = kGLSignificantLocationExclusive; break;
     }
     [GLManager sharedManager].significantLocationMode = m;
 }

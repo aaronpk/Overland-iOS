@@ -12,6 +12,7 @@
 @import UserNotifications;
 
 static NSString *const GLNewDataNotification = @"GLNewDataNotification";
+static NSString *const GLAuthorizationStatusChangedNotification = @"GLAuthorizationStatusChangedNotification";
 static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotification";
 static NSString *const GLSendingFinishedNotification = @"GLSendingFinishedNotification";
 
@@ -52,8 +53,7 @@ static NSString *const GLTripModeBoat = @"boat";
 
 typedef enum {
     kGLSignificantLocationDisabled,
-    kGLSignificantLocationEnabled,
-    kGLSignificantLocationExclusive
+    kGLSignificantLocationEnabled
 } GLSignificantLocationMode;
 
 @interface GLManager : NSObject <CLLocationManagerDelegate, UNUserNotificationCenterDelegate>
@@ -91,6 +91,9 @@ typedef enum {
 - (void)startAllUpdates;
 - (void)stopAllUpdates;
 - (void)refreshLocation;
+
+- (NSString *)authorizationStatusAsString;
+- (void)requestAuthorizationPermission;
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken;
 - (NSString *)apiEndpointURL;
