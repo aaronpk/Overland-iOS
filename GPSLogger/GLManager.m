@@ -879,23 +879,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     self.locationManager.desiredAccuracy = desiredAccuracy;
 }
 
-- (CLLocationDistance)defersLocationUpdates {
-    if([self defaultsKeyExists:GLDefersLocationUpdatesDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDefersLocationUpdatesDefaultsName];
-    } else {
-        return 0;
-    }
-}
-- (void)setDefersLocationUpdates:(CLLocationDistance)distance {
-    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDefersLocationUpdatesDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    if(distance > 0) {
-        [self.locationManager allowDeferredLocationUpdatesUntilTraveled:distance timeout:[self.sendingInterval doubleValue]];
-    } else {
-        [self.locationManager disallowDeferredLocationUpdates];
-    }
-}
-
 - (int)pointsPerBatch {
     if([self defaultsKeyExists:GLPointsPerBatchDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLPointsPerBatchDefaultsName];
@@ -1044,7 +1027,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
                 [properties setValue:activityType forKey:@"activity"];
                 [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
-                [properties setValue:[NSNumber numberWithDouble:self.defersLocationUpdates] forKey:@"deferred"];
                 [properties setValue:[NSNumber numberWithInt:self.significantLocationMode] forKey:@"significant_change"];
                 [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
             }
