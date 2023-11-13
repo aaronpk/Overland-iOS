@@ -73,6 +73,24 @@
     }
     self.resumesWithGeofence.selectedSegmentIndex = gIdx;
     
+    CLLocationDistance discardDistance = [GLManager sharedManager].discardPointsWithinDistance;
+    int dIdx = 0;
+    switch((int)discardDistance) {
+        case -1:
+            dIdx = 0; break;
+        case 1:
+            dIdx = 1; break;
+        case 10:
+            dIdx = 2; break;
+        case 50:
+            dIdx = 3; break;
+        case 100:
+            dIdx = 4; break;
+        case 500:
+            dIdx = 5; break;
+    }
+    self.discardPointsWithinDistance.selectedSegmentIndex = dIdx;
+    
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracy;
     if(d == kCLLocationAccuracyBestForNavigation) {
         self.desiredAccuracy.selectedSegmentIndex = 0;
@@ -193,6 +211,25 @@
             m = kGLSignificantLocationEnabled; break;
     }
     [GLManager sharedManager].significantLocationMode = m;
+}
+
+- (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender {
+    CLLocationDistance distance = -1;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            distance = -1; break;
+        case 1:
+            distance = 1; break;
+        case 2:
+            distance = 10; break;
+        case 3:
+            distance = 50; break;
+        case 4:
+            distance = 100; break;
+        case 5:
+            distance = 500; break;
+    }
+    [GLManager sharedManager].discardPointsWithinDistance = distance;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

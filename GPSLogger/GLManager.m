@@ -721,6 +721,31 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return [standardUserDefaults boolForKey:GLConsiderHTTP200SuccessDefaultsName];
 }
 
+- (CLLocationDistance)resumesAfterDistance {
+    if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLResumesAutomaticallyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setResumesAfterDistance:(CLLocationDistance)resumesAfterDistance {
+    [[NSUserDefaults standardUserDefaults] setDouble:resumesAfterDistance forKey:GLResumesAutomaticallyDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (CLLocationDistance)discardPointsWithinDistance {
+    if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDiscardPointsWithinDistanceDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setDiscardPointsWithinDistance:(CLLocationDistance)distance {
+    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDiscardPointsWithinDistanceDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
 
 #pragma mark CLLocationManager
 
@@ -750,18 +775,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setIncludeTrackingStats:(BOOL)enabled {
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLIncludeTrackingStatsDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (CLLocationDistance)resumesAfterDistance {
-    if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
-        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLResumesAutomaticallyDefaultsName];
-    } else {
-        return -1;
-    }
-}
-- (void)setResumesAfterDistance:(CLLocationDistance)resumesAfterDistance {
-    [[NSUserDefaults standardUserDefaults] setDouble:resumesAfterDistance forKey:GLResumesAutomaticallyDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -957,21 +970,16 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     
-    self.lastLocation = (CLLocation *)locations[locations.count-1];
-
-    // If a wifi override is configured, create a fake CLLocation object based on the location in the wifi mapping
+    // If a wifi override is configured, replace the input location list with the location in the wifi mapping
     if([GLManager currentWifiHotSpotName]) {
-        CLLocation *tmp = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
-        if(tmp) {
-            self.lastLocation = tmp;
+        CLLocation *wifiLocation = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
+        if(wifiLocation) {
             NSLog(@"Overriding location from wifi name");
-            locations = @[self.lastLocation];
+            locations = @[wifiLocation];
         }
     }
     
-    self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
-    
-     NSLog(@"Received %d locations", (int)locations.count);
+    NSLog(@"Received %d locations", (int)locations.count);
     
     // NSLog(@"%@", locations);
     
@@ -996,8 +1004,20 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 activityType = @"airborne";
         }
         
+        CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
+        
         for(int i=0; i<locations.count; i++) {
             CLLocation *loc = locations[i];
+            
+            // If Discard is enabled, check if this point is too close to the previous
+            if(self.discardPointsWithinDistance > 0) {
+                CLLocationDistance distanceBetweenPoints = [lastLocationSeen distanceFromLocation:loc];
+                if(distanceBetweenPoints < self.discardPointsWithinDistance) {
+                    // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
+                    continue;
+                }
+            }
+            
             NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
             NSDictionary *update = [self currentDictionaryFromLocation:loc];
             NSMutableDictionary *properties = [update objectForKey:@"properties"];
@@ -1032,11 +1052,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 }
             }
 
+            self.lastLocation = loc;
+            self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
 
         }
         
     }];
-    
+
     [self sendQueueIfTimeElapsed];
 }
 
