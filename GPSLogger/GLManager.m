@@ -580,7 +580,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     _currentTripDistanceCached = 0;
     _currentTripHasNewData = NO;
     
-    NSLog(@"Started a trip");
+    NSLog(@"Started a trip at %@", startDate);
 }
 
 - (void)endTrip {
@@ -606,14 +606,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     } else {
         [self writeTripToDB:autopause steps:0];
     }
-    
-    self.tripStartLocationDictionary = nil;
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartTimeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartLocationDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps {
+
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         NSDictionary *currentTrip = @{
@@ -645,7 +641,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
         [accessor setDictionary:currentTrip forKey:[NSString stringWithFormat:@"%@-trip",timestamp]];
     }];
-    
+
+    self.tripStartLocationDictionary = nil;
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartTimeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartLocationDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     _currentTripDistanceCached = 0;
     [self clearTripDB];
     [self.tripdb close];
@@ -999,14 +1000,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
             CLLocation *loc = locations[i];
             NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
             NSDictionary *update = [self currentDictionaryFromLocation:loc];
+            NSMutableDictionary *properties = [update objectForKey:@"properties"];
             if(self.includeTrackingStats) {
-                NSMutableDictionary *properties = [update objectForKey:@"properties"];
                 [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
                 [properties setValue:activityType forKey:@"activity"];
                 [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
                 [properties setValue:[NSNumber numberWithDouble:self.defersLocationUpdates] forKey:@"deferred"];
                 [properties setValue:[NSNumber numberWithInt:self.significantLocationMode] forKey:@"significant_change"];
                 [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
+            }
+            // Add the trip start time as trip_id in the location update
+            if(self.tripInProgress) {
+                [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
             }
             [accessor setDictionary:update forKey:timestamp];
             
