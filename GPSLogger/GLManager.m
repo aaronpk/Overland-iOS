@@ -970,7 +970,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
     
-    // NSLog(@"Received %d locations", (int)locations.count);
+     NSLog(@"Received %d locations", (int)locations.count);
     
     // NSLog(@"%@", locations);
     
@@ -1321,20 +1321,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneLongitude"];
 }
 
-- (void)writeCurrentLocationToHistory {
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
-
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        NSString *timestamp = [GLManager iso8601DateStringFromDate:self.lastLocation.timestamp];
-        NSDictionary *update = self.lastLocationDictionary;
-        [accessor setDictionary:update forKey:timestamp];
-    }];
-    
-    if(self.tripInProgress) {
-        [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[self.lastLocation.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude], [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
-        _currentTripHasNewData = YES;
-    }
-}
 
 #pragma mark -
 
