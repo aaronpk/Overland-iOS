@@ -264,10 +264,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
         NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
         NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                       @"type": @"Feature",
-                                                                                      @"properties": @{
+                                                                                      @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                               @"timestamp": timestamp,
                                                                                               @"action": action,
-                                                                                              }
+                                                                                              }]
                                                                                       }];
         [self addMetadataToUpdate:update];
         
@@ -624,7 +624,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                                       [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
                                                       ]
                                               },
-                                      @"properties": @{
+                                      @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
                                               @"timestamp": timestamp,
                                               @"type": @"trip",
                                               @"mode": self.currentTripMode,
@@ -636,10 +636,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                               @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
                                               @"stopped_automatically": @(autopause),
                                               @"steps": [NSNumber numberWithInteger:numberOfSteps],
-                                              @"wifi": [GLManager currentWifiHotSpotName],
-                                              @"device_id": _deviceId
-                                              }
+                                              }]
                                       };
+        [self addMetadataToUpdate:currentTrip];
         if(autopause) {
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
         }
@@ -931,13 +930,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                                       [NSNumber numberWithDouble:visit.coordinate.latitude]
                                                       ]
                                               },
-                                      @"properties": @{
+                                      @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
                                               @"timestamp": timestamp,
                                               @"action": @"visit",
                                               @"arrival_date": ([visit.arrivalDate isEqualToDate:[NSDate distantPast]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.arrivalDate]),
                                               @"departure_date": ([visit.departureDate isEqualToDate:[NSDate distantFuture]] ? [NSNull null] : [GLManager iso8601DateStringFromDate:visit.departureDate]),
                                               @"horizontal_accuracy": [NSNumber numberWithInt:visit.horizontalAccuracy],
-                                              }
+                                              }]
                                     };
             [self addMetadataToUpdate:update];
             [accessor setDictionary:update forKey:[NSString stringWithFormat:@"%@-visit", timestamp]];
