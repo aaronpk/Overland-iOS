@@ -123,11 +123,6 @@ NSArray *intervalMapStrings;
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
-- (void)viewWillUnload {
-    [self.viewRefreshTimer invalidate];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)dealloc {
     NSLog(@"view is deallocd");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
