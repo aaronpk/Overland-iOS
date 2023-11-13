@@ -991,7 +991,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
     }
     
-    NSLog(@"Received %d locations", (int)locations.count);
+    // NSLog(@"Received %d locations", (int)locations.count);
     
     // NSLog(@"%@", locations);
     
