@@ -44,8 +44,4 @@
 @property (strong, nonatomic) IBOutlet UIButton *tripStartStopButton;
 - (IBAction)tripStartStopWasTapped:(id)sender;
 
-@property (strong, nonatomic) IBOutlet UIView *flightInfoView;
-@property (strong, nonatomic) IBOutlet UILabel *flightSummary;
-
 @end
-

@@ -87,7 +87,6 @@ typedef enum {
 @property (strong, nonatomic, readonly) NSNumber *lastStepCount;
 @property (strong, nonatomic, readonly) NSDate *lastSentDate;
 @property (strong, nonatomic, readonly) NSString *lastLocationName;
-@property (strong, nonatomic, readonly) NSString *currentFlightSummary;
 
 - (void)startAllUpdates;
 - (void)stopAllUpdates;

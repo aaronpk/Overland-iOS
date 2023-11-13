@@ -47,6 +47,7 @@ NSArray *intervalMapStrings;
     
     UIImage *pattern = [UIImage imageNamed:@"topobkg"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
+    
     [self.tripView.layer setCornerRadius:6.0];
     [self.sendNowButton.layer setCornerRadius:4.0];
     [self.tripStartStopButton.layer setCornerRadius:4.0];
@@ -225,13 +226,6 @@ NSArray *intervalMapStrings;
 
     [self updateTripState];
     
-    if([GLManager sharedManager].currentFlightSummary) {
-        self.flightSummary.text = [GLManager sharedManager].currentFlightSummary;
-        self.flightInfoView.hidden = NO;
-    } else {
-        self.flightSummary.text = @"";
-        self.flightInfoView.hidden = YES;
-    }
 }
 
 - (IBAction)sendQueue:(id)sender {
