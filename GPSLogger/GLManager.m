@@ -717,7 +717,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (BOOL)shouldConsiderHTTP200Success {
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    return [standardUserDefaults boolForKey:@"http_200_success"];
+    return [standardUserDefaults boolForKey:GLConsiderHTTP200SuccessDefaultsName];
 }
 
 

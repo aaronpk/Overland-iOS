@@ -22,7 +22,7 @@
 			<key>Title</key>
 			<string>Consider HTTP 200 Successful</string>
 			<key>Key</key>
-			<string>http_200_success</string>
+			<string>GLConsiderHTTP200SuccessDefaults</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

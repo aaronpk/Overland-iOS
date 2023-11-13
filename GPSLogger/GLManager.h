@@ -24,7 +24,6 @@ static NSString *const GLTrackingStateDefaultsName = @"GLTrackingStateDefaults";
 static NSString *const GLSendIntervalDefaultsName = @"GLSendIntervalDefaults";
 static NSString *const GLPausesAutomaticallyDefaultsName = @"GLPausesAutomaticallyDefaults";
 static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomaticallyDefaults";
-static NSString *const GLEnableGogoTrackerDefaultsName = @"GLEnableGogoTrackerDefaultsName";
 static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
@@ -33,6 +32,7 @@ static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLo
 static NSString *const GLPointsPerBatchDefaultsName = @"GLPointsPerBatchDefaults";
 static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotificationPermissionRequestedDefaults";
 static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
+static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
