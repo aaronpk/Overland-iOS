@@ -21,24 +21,19 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.wifiNameField.backgroundColor = [UIColor clearColor];
-    self.latitudeField.backgroundColor = [UIColor clearColor];
-    self.longitudeField.backgroundColor = [UIColor clearColor];
-
     if([GLManager sharedManager].wifiZoneName == nil) {
         self.wifiNameField.text = [GLManager currentWifiHotSpotName];
-        self.wifiNameField.backgroundColor = [UIColor colorWithRed:0.82 green:1.0 blue:0.82 alpha:1.0];
         if([GLManager sharedManager].lastLocation) {
             CLLocation *loc = [GLManager sharedManager].lastLocation;
             self.latitudeField.text = [NSString stringWithFormat:@"%.5f", loc.coordinate.latitude];
             self.longitudeField.text = [NSString stringWithFormat:@"%.5f", loc.coordinate.longitude];
-            self.latitudeField.backgroundColor = [UIColor colorWithRed:0.82 green:1.0 blue:0.82 alpha:1.0];
-            self.longitudeField.backgroundColor = [UIColor colorWithRed:0.82 green:1.0 blue:0.82 alpha:1.0];
         }
+        [self.resetButton setTitle:@"Cancel" forState:UIControlStateNormal];
     } else {
         self.wifiNameField.text = [GLManager sharedManager].wifiZoneName;
         self.latitudeField.text = [GLManager sharedManager].wifiZoneLatitude;
         self.longitudeField.text = [GLManager sharedManager].wifiZoneLongitude;
+        [self.resetButton setTitle:@"Clear" forState:UIControlStateNormal];
     }
 }
 

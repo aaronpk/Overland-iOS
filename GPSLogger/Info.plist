@@ -54,6 +54,8 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).startTracking</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Automatic</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>OpenSansCondensed-Bold.ttf</string>

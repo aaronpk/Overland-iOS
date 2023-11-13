@@ -43,7 +43,6 @@ static NSString *const GLTripModeWalk = @"walk";
 static NSString *const GLTripModeRun = @"run";
 static NSString *const GLTripModeBicycle = @"bicycle";
 static NSString *const GLTripModeCar = @"car";
-static NSString *const GLTripModeCar2go = @"car2go";
 static NSString *const GLTripModeTaxi = @"taxi";
 static NSString *const GLTripModeBus = @"bus";
 static NSString *const GLTripModeTrain = @"train";
@@ -51,6 +50,7 @@ static NSString *const GLTripModePlane = @"plane";
 static NSString *const GLTripModeTram = @"tram";
 static NSString *const GLTripModeMetro = @"metro";
 static NSString *const GLTripModeBoat = @"boat";
+static NSString *const GLTripModeScooter = @"scooter";
 
 typedef enum {
     kGLSignificantLocationDisabled,

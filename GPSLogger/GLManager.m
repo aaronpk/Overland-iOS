@@ -475,9 +475,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 + (NSArray *)GLTripModes {
     if(!_tripModes) {
         _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
-                       GLTripModeCar, GLTripModeCar2go, GLTripModeTaxi,
-                       GLTripModeBus, GLTripModeTrain, GLTripModePlane,
-                       GLTripModeTram, GLTripModeMetro, GLTripModeBoat];
+                       GLTripModeCar, GLTripModeTaxi, GLTripModeBus,
+                       GLTripModeTram, GLTripModeTrain, GLTripModeMetro,
+                       GLTripModePlane, GLTripModeBoat, GLTripModeScooter];
         }
     return _tripModes;
 }

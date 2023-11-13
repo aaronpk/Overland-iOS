@@ -144,17 +144,17 @@ NSArray *intervalMapStrings;
 
 - (void)sendingStarted {
     self.sendNowButton.titleLabel.text = @"Sending...";
-    self.sendNowButton.backgroundColor = [UIColor colorWithRed:74.0/255.0 green:150.0/255.0 blue:107.0/255.0 alpha:1.0];
+    self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreenSecondary"];
     self.sendNowButton.enabled = NO;
 }
 
 - (void)sendingFinished {
     self.sendNowButton.titleLabel.text = @"Send Now";
     if([[GLManager sharedManager] apiEndpointURL] == nil) {
-        self.sendNowButton.backgroundColor = [UIColor colorWithRed:150.0/255.0 green:150.0/255.0 blue:150.0/255.0 alpha:1.0];
+        self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreenSecondary"];
         self.sendNowButton.enabled = NO;
     } else {
-        self.sendNowButton.backgroundColor = [UIColor colorWithRed:106.0/255.0 green:212.0/255.0 blue:150.0/255.0 alpha:1.0];
+        self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreen"];
         self.sendNowButton.enabled = YES;
     }
 }
@@ -314,7 +314,7 @@ NSArray *intervalMapStrings;
         self.tripDistanceLabel.text = [NSString stringWithFormat:format, distance];
     } else {
         [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
-        self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:106.f/255.f green:212.f/255.f blue:150.f/255.f alpha:1];
+        self.tripStartStopButton.backgroundColor = [UIColor colorNamed:@"OverlandGreen"];
         self.tripDistanceLabel.text = @" ";
         self.tripDurationLabel.text = @" ";
     }

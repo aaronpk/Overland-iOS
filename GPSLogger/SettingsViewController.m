@@ -24,7 +24,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    NSLog(@"SecondVC - viewWillAppear");
+    
     if([GLManager sharedManager].trackingEnabled)
         self.trackingEnabledToggle.selectedSegmentIndex = 0;
     else

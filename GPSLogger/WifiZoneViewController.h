@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UITextField *wifiNameField;
 @property (strong, nonatomic) IBOutlet UITextField *latitudeField;
 @property (strong, nonatomic) IBOutlet UITextField *longitudeField;
+@property (strong, nonatomic) IBOutlet UIButton *resetButton;
 
 - (IBAction)saveButtonWasTapped:(UIButton *)sender;
 - (IBAction)resetButtonWasTapped:(UIButton *)sender;
