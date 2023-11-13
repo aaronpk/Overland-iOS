@@ -75,6 +75,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
             [_instance setupHTTPClient];
             [_instance restoreTrackingState];
             [_instance initializeNotifications];
+            
+            _instance.pedometer = [[CMPedometer alloc] init];
         }
     }
     
@@ -592,9 +594,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         return;
     }
 
-    /*
-    if((false) && [CMPedometer isStepCountingAvailable]) {
+    if([CMPedometer isStepCountingAvailable]) {
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
+            NSLog(@"%@", pedometerData);
             if(pedometerData) {
                 [self writeTripToDB:autopause steps:[pedometerData.numberOfSteps integerValue]];
             } else {
@@ -602,9 +604,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
             }
         }];
     } else {
-     */
         [self writeTripToDB:autopause steps:0];
-    // }
+    }
     
     self.tripStartLocationDictionary = nil;
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartTimeDefaultsName];
