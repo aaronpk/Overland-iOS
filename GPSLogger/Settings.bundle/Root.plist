@@ -20,7 +20,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Consider HTTP 200 Successful</string>
+			<string>Consider HTTP 2XX Successful</string>
 			<key>Key</key>
 			<string>GLConsiderHTTP200SuccessDefaults</string>
 			<key>DefaultValue</key>
