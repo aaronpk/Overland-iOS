@@ -68,9 +68,12 @@
         NSString *endpoint = [self queryValueForKey:@"url" fromQueryItems:queryItems];
         NSString *token    = [self queryValueForKey:@"token" fromQueryItems:queryItems];
         NSString *deviceId = [self queryValueForKey:@"device_id" fromQueryItems:queryItems];
-        NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@", endpoint, token, deviceId);
+        NSString *uniqueId = [self queryValueForKey:@"unique_id" fromQueryItems:queryItems];
+        NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@ unique_id=%@", endpoint, token, deviceId, uniqueId);
         [[GLManager sharedManager] saveNewDeviceId:deviceId];
         [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
+        [[NSUserDefaults standardUserDefaults] setBool:[uniqueId isEqualToString:@"yes"] forKey:GLIncludeUniqueIdDefaultsName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
     return YES;

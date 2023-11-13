@@ -1043,6 +1043,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [properties setValue:[GLManager currentWifiHotSpotName] forKey:@"wifi"];
     [properties setValue:[self currentBatteryState] forKey:@"battery_state"];
     [properties setValue:[self currentBatteryLevel] forKey:@"battery_level"];
+    if([[NSUserDefaults standardUserDefaults] boolForKey:GLIncludeUniqueIdDefaultsName]) {
+        NSString *uniqueId = [UIDevice currentDevice].identifierForVendor.UUIDString;
+        [properties setValue:uniqueId forKey:@"unique_id"];
+    }
 }
 
 - (NSDictionary *)currentDictionaryFromLocation:(CLLocation *)loc {
