@@ -19,6 +19,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinDistance;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
@@ -35,6 +36,7 @@
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender;
+- (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
 - (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;

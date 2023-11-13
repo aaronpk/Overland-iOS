@@ -734,7 +734,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (CLLocationDistance)discardPointsWithinDistance {
-    if([self defaultsKeyExists:GLResumesAutomaticallyDefaultsName]) {
+    if([self defaultsKeyExists:GLDiscardPointsWithinDistanceDefaultsName]) {
         return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDiscardPointsWithinDistanceDefaultsName];
     } else {
         return -1;
@@ -742,6 +742,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDiscardPointsWithinDistance:(CLLocationDistance)distance {
     [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDiscardPointsWithinDistanceDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (int)discardPointsWithinSeconds {
+    if([self defaultsKeyExists:GLDiscardPointsWithinSecondsDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLDiscardPointsWithinSecondsDefaultsName];
+    } else {
+        return 1;
+    }
+}
+- (void)setDiscardPointsWithinSeconds:(int)seconds {
+    [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLDiscardPointsWithinSecondsDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -1014,6 +1026,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 CLLocationDistance distanceBetweenPoints = [lastLocationSeen distanceFromLocation:loc];
                 if(distanceBetweenPoints < self.discardPointsWithinDistance) {
                     // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
+                    continue;
+                }
+            }
+
+            if(self.discardPointsWithinSeconds > 1) {
+                int timeInterval = (int)[loc.timestamp timeIntervalSinceDate:lastLocationSeen.timestamp];
+                if(timeInterval < self.discardPointsWithinSeconds) {
                     continue;
                 }
             }

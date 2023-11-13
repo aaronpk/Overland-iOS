@@ -91,6 +91,22 @@
     }
     self.discardPointsWithinDistance.selectedSegmentIndex = dIdx;
     
+    int discardSeconds = [GLManager sharedManager].discardPointsWithinSeconds;
+    switch(discardSeconds) {
+        case 1:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 0; break;
+        case 5:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 1; break;
+        case 10:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 2; break;
+        case 30:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 3; break;
+        case 60:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 4; break;
+        case 120:
+            self.discardPointsWithinSeconds.selectedSegmentIndex = 5; break;
+    }
+    
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracy;
     if(d == kCLLocationAccuracyBestForNavigation) {
         self.desiredAccuracy.selectedSegmentIndex = 0;
@@ -230,6 +246,25 @@
             distance = 500; break;
     }
     [GLManager sharedManager].discardPointsWithinDistance = distance;
+}
+
+- (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender {
+    int seconds = 1;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            seconds = 1; break;
+        case 1:
+            seconds = 5; break;
+        case 2:
+            seconds = 10; break;
+        case 3:
+            seconds = 30; break;
+        case 4:
+            seconds = 60; break;
+        case 5:
+            seconds = 120; break;
+    }
+    [GLManager sharedManager].discardPointsWithinSeconds = seconds;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

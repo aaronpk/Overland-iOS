@@ -793,7 +793,7 @@ IAogA
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="1029"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1111.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SETTINGS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q1H-WE-wUB">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="17"/>
@@ -1062,7 +1062,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ZHW-Da-VCn">
-                                                <rect key="frame" x="0.0" y="723.5" width="335" height="112.5"/>
+                                                <rect key="frame" x="0.0" y="723.5" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard Points Closer Than" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8e8-qP-aSn">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1084,8 +1084,39 @@ IAogA
                                                             <action selector="discardPointsWithinDistanceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="Gbt-5S-Mg7"/>
                                                         </connections>
                                                     </segmentedControl>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This will discard a point if it is within the selected distance of the previous point. This does not affect battery life." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z63-hp-PnT">
-                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="61"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This will discard a point if it is within the selected distance of the previous point." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z63-hp-PnT">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AbM-St-EgN">
+                                                <rect key="frame" x="0.0" y="826" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-pE-bDa">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PK5-vL-Tv4">
+                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
+                                                        <segments>
+                                                            <segment title="1s"/>
+                                                            <segment title="5s"/>
+                                                            <segment title="10s"/>
+                                                            <segment title="30s"/>
+                                                            <segment title="1m"/>
+                                                            <segment title="2m"/>
+                                                        </segments>
+                                                        <connections>
+                                                            <action selector="discardPointsWithinSecondsWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="q6c-4r-3Bw"/>
+                                                        </connections>
+                                                    </segmentedControl>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This will discard a point if it is received within selected time of the previous point." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dM7-X2-q6w">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1093,7 +1124,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f4R-mr-A3Z">
-                                                <rect key="frame" x="0.0" y="846" width="335" height="31"/>
+                                                <rect key="frame" x="0.0" y="928.5" width="335" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptm-do-5px">
                                                         <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
@@ -1110,13 +1141,13 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable local notifications of app events such as when tracking has been automatically stopped" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gug-ZR-c38">
-                                                <rect key="frame" x="0.0" y="887" width="335" height="61"/>
+                                                <rect key="frame" x="0.0" y="969.5" width="335" height="61"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QEQ-8d-teP">
-                                                <rect key="frame" x="0.0" y="958" width="335" height="31"/>
+                                                <rect key="frame" x="0.0" y="1040.5" width="335" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prevent screen lock during trip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hW-r8-jnZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
@@ -1133,7 +1164,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QHg-qM-HsU">
-                                                <rect key="frame" x="0.0" y="999" width="335" height="30"/>
+                                                <rect key="frame" x="0.0" y="1081.5" width="335" height="30"/>
                                                 <state key="normal" title="Configure Wifi Zone"/>
                                                 <connections>
                                                     <segue destination="oUs-hC-YpK" kind="show" id="sxM-Q3-YNd"/>
@@ -1166,6 +1197,7 @@ IAogA
                         <outlet property="defersLocationUpdates" destination="EhT-nM-dDF" id="L1d-Pw-vrq"/>
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="discardPointsWithinDistance" destination="1Yp-6o-vL0" id="QZn-Xp-P3M"/>
+                        <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
                         <outlet property="enableNotifications" destination="WZr-zE-f5a" id="hnD-O9-Z8y"/>
                         <outlet property="locationAuthorizationStatus" destination="MKE-WH-3hb" id="zee-wX-dhx"/>
                         <outlet property="locationAuthorizationStatusWarning" destination="AqX-Kg-rPA" id="yTb-hH-sVP"/>
