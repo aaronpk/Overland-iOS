@@ -306,11 +306,19 @@ NSArray *intervalMapStrings;
             format = @"%0.2f";
         }
         self.tripDistanceLabel.text = [NSString stringWithFormat:format, distance];
+        [self updateScreenLockSetting:YES];
     } else {
         [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorNamed:@"OverlandGreen"];
         self.tripDistanceLabel.text = @" ";
         self.tripDurationLabel.text = @" ";
+        [self updateScreenLockSetting:NO];
+    }
+}
+
+- (void)updateScreenLockSetting:(bool)val {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName]) {
+        [UIApplication sharedApplication].idleTimerDisabled = val;
     }
 }
  

@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *defersLocationUpdates;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
+@property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatusWarning;
 @property (strong, nonatomic) IBOutlet UIButton *requestLocationPermissionsButton;
@@ -33,6 +34,7 @@
 - (IBAction)defersLocationUpdatesWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
+- (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;
 
 @end

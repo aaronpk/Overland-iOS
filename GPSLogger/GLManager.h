@@ -34,6 +34,7 @@ static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotif
 static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
 static NSString *const GLIncludeUniqueIdDefaultsName = @"GLIncludeUniqueIdDefaults";
 static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
+static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";

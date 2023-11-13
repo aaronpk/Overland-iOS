@@ -32,6 +32,8 @@
     
     self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
+    
+    self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
 
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
@@ -269,6 +271,15 @@
     } else {
         [GLManager sharedManager].notificationsEnabled = NO;
     }
+}
+
+- (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender {
+    if(sender.on) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLScreenLockEnabledDefaultsName];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLScreenLockEnabledDefaultsName];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
