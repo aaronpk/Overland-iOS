@@ -460,7 +460,7 @@
 				INFOPLIST_FILE = GPSLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Overland GPS Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -484,7 +484,7 @@
 				INFOPLIST_FILE = GPSLogger/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Overland GPS Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>2023111220</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -73,8 +73,6 @@
 	<array>
 		<string>armv7</string>
 		<string>location-services</string>
-		<string>gps</string>
-		<string>magnetometer</string>
 	</array>
 	<key>UIStatusBarTintParameters</key>
 	<dict>
