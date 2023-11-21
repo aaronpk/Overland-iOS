@@ -45,13 +45,16 @@
     
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
 
-    GLSignificantLocationMode slMode = [GLManager sharedManager].significantLocationMode;
-    switch(slMode) {
-        case kGLSignificantLocationDisabled:
+    GLTrackingMode trackingMode = [GLManager sharedManager].trackingMode;
+    switch(trackingMode) {
+        case kGLTrackingModeStandard:
             self.significantLocationMode.selectedSegmentIndex = 0;
             break;
-        case kGLSignificantLocationEnabled:
+        case kGLTrackingModeSignificant:
             self.significantLocationMode.selectedSegmentIndex = 1;
+            break;
+        case kGLTrackingModeStandardAndSignificant:
+            self.significantLocationMode.selectedSegmentIndex = 2;
             break;
     }
     
@@ -206,14 +209,16 @@
 }
 
 - (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender {
-    GLSignificantLocationMode m = kGLSignificantLocationDisabled;
+    GLTrackingMode m = kGLTrackingModeStandard;
     switch(sender.selectedSegmentIndex) {
         case 0:
-            m = kGLSignificantLocationDisabled; break;
+            m = kGLTrackingModeStandard; break;
         case 1:
-            m = kGLSignificantLocationEnabled; break;
+            m = kGLTrackingModeSignificant; break;
+        case 2:
+            m = kGLTrackingModeStandardAndSignificant; break;
     }
-    [GLManager sharedManager].significantLocationMode = m;
+    [GLManager sharedManager].trackingMode= m;
 }
 
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender {

@@ -867,7 +867,8 @@ IAogA
                                                         <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
                                                         <segments>
                                                             <segment title="Standard"/>
-                                                            <segment title="Significant Location"/>
+                                                            <segment title="Significant"/>
+                                                            <segment title="Both"/>
                                                         </segments>
                                                         <connections>
                                                             <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="8Ds-5Q-CI2"/>
@@ -1437,7 +1438,7 @@ For details on the format of the data this app sends to the server, please visit
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

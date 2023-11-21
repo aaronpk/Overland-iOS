@@ -383,14 +383,26 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)enableTracking {
     self.trackingEnabled = YES;
-
-    if(self.significantLocationMode == kGLSignificantLocationEnabled) {
-        [self.locationManager startMonitoringSignificantLocationChanges];
-        NSLog(@"Monitoring significant location changes");
-    } else {
-        [self.locationManager startUpdatingLocation];
-        [self.locationManager startUpdatingHeading];
-        NSLog(@"Monitoring standard location changes");
+    
+    switch(self.trackingMode) {
+        case kGLTrackingModeStandard:
+            NSLog(@"Monitoring standard location changes");
+            [self.locationManager startUpdatingLocation];
+            [self.locationManager startUpdatingHeading];
+            [self.locationManager stopMonitoringSignificantLocationChanges];
+            break;
+        case kGLTrackingModeSignificant:
+            NSLog(@"Monitoring significant location changes");
+            [self.locationManager startMonitoringSignificantLocationChanges];
+            [self.locationManager stopUpdatingLocation];
+            [self.locationManager stopUpdatingHeading];
+            break;
+        case kGLTrackingModeStandardAndSignificant:
+            NSLog(@"Monitoring both standard and significant location changes");
+            [self.locationManager startUpdatingLocation];
+            [self.locationManager startUpdatingHeading];
+            [self.locationManager startMonitoringSignificantLocationChanges];
+            break;
     }
     
     [self.locationManager startMonitoringVisits];
@@ -790,16 +802,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (GLSignificantLocationMode)significantLocationMode {
+- (GLTrackingMode)trackingMode {
     if([self defaultsKeyExists:GLSignificantLocationModeDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLSignificantLocationModeDefaultsName];
     } else {
-        return kGLSignificantLocationDisabled;
+        return kGLTrackingModeStandard;
     }
 }
-- (void)setSignificantLocationMode:(GLSignificantLocationMode)significantLocationMode {
-    [[NSUserDefaults standardUserDefaults] setInteger:significantLocationMode forKey:GLSignificantLocationModeDefaultsName];
+- (void)setTrackingMode:(GLTrackingMode)trackingMode {
+    [[NSUserDefaults standardUserDefaults] setInteger:trackingMode forKey:GLSignificantLocationModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [self enableTracking];
 }
 
 - (CLActivityType)activityType {
@@ -1027,7 +1040,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
                 [properties setValue:activityType forKey:@"activity"];
                 [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
-                [properties setValue:[NSNumber numberWithInt:self.significantLocationMode] forKey:@"significant_change"];
+                [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
                 [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
             }
             // Add the trip start time as trip_id in the location update

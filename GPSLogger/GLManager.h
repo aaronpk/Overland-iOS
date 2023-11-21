@@ -56,9 +56,10 @@ static NSString *const GLTripModeBoat = @"boat";
 static NSString *const GLTripModeScooter = @"scooter";
 
 typedef enum {
-    kGLSignificantLocationDisabled,
-    kGLSignificantLocationEnabled
-} GLSignificantLocationMode;
+    kGLTrackingModeStandard,
+    kGLTrackingModeSignificant,
+    kGLTrackingModeStandardAndSignificant
+} GLTrackingMode;
 
 @interface GLManager : NSObject <CLLocationManagerDelegate, UNUserNotificationCenterDelegate>
 
@@ -77,7 +78,7 @@ typedef enum {
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
 @property (nonatomic) int discardPointsWithinSeconds;
-@property (nonatomic) GLSignificantLocationMode significantLocationMode;
+@property (nonatomic) GLTrackingMode trackingMode;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance defersLocationUpdates;
