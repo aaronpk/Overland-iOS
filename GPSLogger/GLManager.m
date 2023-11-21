@@ -1084,8 +1084,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
              @"geometry": @{
                      @"type": @"Point",
                      @"coordinates": @[
-                             [NSNumber numberWithDouble:((int)(loc.coordinate.longitude * 1000000)) / 1000000.0],
-                             [NSNumber numberWithDouble:((int)(loc.coordinate.latitude * 1000000)) / 1000000.0]
+                             [NSNumber numberWithDouble:((int)(loc.coordinate.longitude * 10000000)) / 10000000.0],
+                             [NSNumber numberWithDouble:((int)(loc.coordinate.latitude * 10000000)) / 10000000.0]
                              ]
                      },
              @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
