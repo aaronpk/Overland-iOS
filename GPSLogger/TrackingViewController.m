@@ -107,11 +107,6 @@ NSArray *intervalMapStrings;
         self.tripDistanceUnitLabel.text = @"miles";
     }
     
-    if([GLManager sharedManager].gogoTrackerEnabled == YES) {
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
-    } else {
-        [UIApplication sharedApplication].idleTimerDisabled = NO;
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
