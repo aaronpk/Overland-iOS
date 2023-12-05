@@ -167,8 +167,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     // If there are still more in the queue, then send the current location as a separate property.
     // This allows the server to know where the user is immediately even if there are many thousands of points in the backlog.
+    NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
     if(_numInQueue > self.pointsPerBatch && self.lastLocation) {
-        NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
         [postData setObject:currentLocation forKey:@"current"];
     }
     
@@ -177,7 +177,33 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [postData setObject:currentTripInfo forKey:@"trip"];
     }
 
-    NSLog(@"Endpoint: %@", endpoint);
+    // If there are any template strings in the URL, replace the values with the data from the most recent location
+    // TS, LAT, LON, ACC, SPD, ALT, BAT
+    NSMutableString *endpointURL = [endpoint mutableCopy];
+    [endpointURL replaceOccurrencesOfString:@"%TS"
+                                 withString:[self stringForProperty:kGLLocationPropertyTimestamp ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%LAT"
+                                 withString:[self stringForProperty:kGLLocationPropertyLatitude ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%LON"
+                                 withString:[self stringForProperty:kGLLocationPropertyLongitude ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%ACC"
+                                 withString:[self stringForProperty:kGLLocationPropertyAccuracy ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%SPD"
+                                 withString:[self stringForProperty:kGLLocationPropertySpeed ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%ALT"
+                                 withString:[self stringForProperty:kGLLocationPropertyAltitude ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+    [endpointURL replaceOccurrencesOfString:@"%BAT"
+                                 withString:[self stringForProperty:kGLLocationPropertyBattery ofLocation:self.lastLocation] options:NSLiteralSearch
+                                      range:NSMakeRange(0, endpointURL.length)];
+
+    
+    NSLog(@"Endpoint: %@", endpointURL);
     NSLog(@"Updates in post: %lu", (unsigned long)locationUpdates.count);
     
     if(locationUpdates.count == 0) {
@@ -187,7 +213,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     [self sendingStarted];
 
-    [_httpClient POST:endpoint parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_httpClient POST:endpointURL parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
         bool requestWasSuccessfullySent = NO;
@@ -255,6 +281,35 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self sendingFinished];
     }];
     
+}
+
+- (NSString *)stringForProperty:(GLLocationProperty)prop ofLocation:(CLLocation *)location {
+    NSString *string;
+    switch(prop) {
+        case kGLLocationPropertyTimestamp:
+            string = [GLManager iso8601DateStringFromDate:location.timestamp];
+            break;
+        case kGLLocationPropertyLatitude:
+            string = [[NSNumber numberWithDouble:((int)(location.coordinate.latitude * 10000000)) / 10000000.0] stringValue];
+            break;
+        case kGLLocationPropertyLongitude:
+            string = [[NSNumber numberWithDouble:((int)(location.coordinate.longitude * 10000000)) / 10000000.0] stringValue];
+            break;
+            
+        case kGLLocationPropertyAccuracy:
+            string = [[NSNumber numberWithInt:(int)round(location.horizontalAccuracy)] stringValue];
+            break;
+        case kGLLocationPropertySpeed:
+            string = [[NSNumber numberWithInt:(int)round(location.speed)] stringValue];
+            break;
+        case kGLLocationPropertyAltitude:
+            string = [[NSNumber numberWithInt:(int)round(location.altitude)] stringValue];
+            break;
+        case kGLLocationPropertyBattery:
+            string = [[self currentBatteryLevel] stringValue];
+            break;
+    }
+    return string;
 }
 
 - (void)logAction:(NSString *)action {

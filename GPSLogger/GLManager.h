@@ -74,6 +74,16 @@ typedef enum {
     kGLBackgroundLocationIndicatorAlways
 } GLBackgroundLocationIndicatorMode;
 
+typedef enum {
+    kGLLocationPropertyTimestamp,
+    kGLLocationPropertyLatitude,
+    kGLLocationPropertyLongitude,
+    kGLLocationPropertyAccuracy,
+    kGLLocationPropertySpeed,
+    kGLLocationPropertyAltitude,
+    kGLLocationPropertyBattery
+} GLLocationProperty;
+
 @interface GLManager : NSObject <CLLocationManagerDelegate, UNUserNotificationCenterDelegate>
 
 + (GLManager *)sharedManager;
