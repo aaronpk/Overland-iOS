@@ -793,7 +793,7 @@ IAogA
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="1152"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1254.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SETTINGS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q1H-WE-wUB">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="17"/>
@@ -1019,8 +1019,36 @@ IAogA
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Vh0-db-9o1">
+                                                <rect key="frame" x="0.0" y="641.5" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Background Location Indicator" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Za9-hL-d9p">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nu2-e9-r6a">
+                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
+                                                        <segments>
+                                                            <segment title="Never"/>
+                                                            <segment title="During Trips"/>
+                                                            <segment title="Always"/>
+                                                        </segments>
+                                                        <connections>
+                                                            <action selector="showBackgroundLocationIndicatorWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="cww-qw-43l"/>
+                                                        </connections>
+                                                    </segmentedControl>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Setting to &quot;Always&quot; can help the app run continuously in the background." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ruc-h2-qdL">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uzB-j5-cmR">
-                                                <rect key="frame" x="0.0" y="641.5" width="335" height="112.5"/>
+                                                <rect key="frame" x="0.0" y="744" width="335" height="112.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resume with Geofence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DzI-vO-swH">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1051,7 +1079,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ZHW-Da-VCn">
-                                                <rect key="frame" x="0.0" y="764" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="866.5" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard Points Closer Than" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8e8-qP-aSn">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1082,7 +1110,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AbM-St-EgN">
-                                                <rect key="frame" x="0.0" y="866.5" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="969" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-pE-bDa">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1113,7 +1141,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f4R-mr-A3Z">
-                                                <rect key="frame" x="0.0" y="969" width="335" height="31"/>
+                                                <rect key="frame" x="0.0" y="1071.5" width="335" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptm-do-5px">
                                                         <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
@@ -1130,13 +1158,13 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable local notifications of app events such as when tracking has been automatically stopped" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gug-ZR-c38">
-                                                <rect key="frame" x="0.0" y="1010" width="335" height="61"/>
+                                                <rect key="frame" x="0.0" y="1112.5" width="335" height="61"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QEQ-8d-teP">
-                                                <rect key="frame" x="0.0" y="1081" width="335" height="31"/>
+                                                <rect key="frame" x="0.0" y="1183.5" width="335" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prevent screen lock during trip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hW-r8-jnZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
@@ -1153,7 +1181,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QHg-qM-HsU">
-                                                <rect key="frame" x="0.0" y="1122" width="335" height="30"/>
+                                                <rect key="frame" x="0.0" y="1224.5" width="335" height="30"/>
                                                 <state key="normal" title="Configure Wifi Zone"/>
                                                 <connections>
                                                     <segue destination="oUs-hC-YpK" kind="show" id="sxM-Q3-YNd"/>
@@ -1194,6 +1222,7 @@ IAogA
                         <outlet property="preventScreenLockDuringTrip" destination="1Tw-JG-0zc" id="PWn-qZ-CGR"/>
                         <outlet property="requestLocationPermissionsButton" destination="IXl-Gq-qXJ" id="hbU-ME-amE"/>
                         <outlet property="resumesWithGeofence" destination="Fur-qf-dnD" id="scS-ec-2Kf"/>
+                        <outlet property="showBackgroundLocationIndicator" destination="nu2-e9-r6a" id="bTL-Tg-wOq"/>
                         <outlet property="significantLocationMode" destination="Akh-qL-9sA" id="fzx-Or-Dnd"/>
                         <outlet property="trackingEnabledToggle" destination="3HR-UH-lc1" id="RyA-Ed-4Vw"/>
                     </connections>

@@ -58,6 +58,19 @@
             break;
     }
     
+    GLBackgroundLocationIndicatorMode backgroundIndicatorMode = [GLManager sharedManager].showBackgroundLocationIndicator;
+    switch(backgroundIndicatorMode) {
+        case kGLBackgroundLocationIndicatorNever:
+            self.showBackgroundLocationIndicator.selectedSegmentIndex = 0;
+            break;
+        case kGLBackgroundLocationIndicatorDuringTrips:
+            self.showBackgroundLocationIndicator.selectedSegmentIndex = 1;
+            break;
+        case kGLBackgroundLocationIndicatorAlways:
+            self.showBackgroundLocationIndicator.selectedSegmentIndex = 2;
+            break;
+    }
+    
     CLLocationDistance gDist = [GLManager sharedManager].resumesAfterDistance;
     int gIdx = 0;
     switch((int)gDist) {
@@ -218,7 +231,20 @@
         case 2:
             m = kGLTrackingModeStandardAndSignificant; break;
     }
-    [GLManager sharedManager].trackingMode= m;
+    [GLManager sharedManager].trackingMode = m;
+}
+
+- (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender {
+    GLBackgroundLocationIndicatorMode m = kGLBackgroundLocationIndicatorNever;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            m = kGLBackgroundLocationIndicatorNever; break;
+        case 1:
+            m = kGLBackgroundLocationIndicatorDuringTrips; break;
+        case 2:
+            m = kGLBackgroundLocationIndicatorAlways; break;
+    }
+    [GLManager sharedManager].showBackgroundLocationIndicator = m;
 }
 
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender {

@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinDistance;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;
@@ -35,6 +36,7 @@
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
+- (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
 - (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;

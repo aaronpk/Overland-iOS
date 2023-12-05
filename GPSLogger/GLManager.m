@@ -406,6 +406,16 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
     
     [self.locationManager startMonitoringVisits];
+    
+    switch(self.showBackgroundLocationIndicator) {
+        case kGLBackgroundLocationIndicatorNever:
+        case kGLBackgroundLocationIndicatorDuringTrips:
+            self.locationManager.showsBackgroundLocationIndicator = NO;
+            break;
+        case kGLBackgroundLocationIndicatorAlways:
+            self.locationManager.showsBackgroundLocationIndicator = YES;
+            break;
+    }
 
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     
@@ -592,6 +602,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     _currentTripDistanceCached = 0;
     _currentTripHasNewData = NO;
     
+    if(self.showBackgroundLocationIndicator == kGLBackgroundLocationIndicatorDuringTrips) {
+        self.locationManager.showsBackgroundLocationIndicator = YES;
+    }
+    
     NSLog(@"Started a trip at %@", startDate);
 }
 
@@ -601,6 +615,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)endTripFromAutopause:(BOOL)autopause {
     _storeNextLocationAsTripStart = NO;
+
+    if(self.showBackgroundLocationIndicator == kGLBackgroundLocationIndicatorDuringTrips) {
+        self.locationManager.showsBackgroundLocationIndicator = NO;
+    }
 
     if(!self.tripInProgress) {
         return;
@@ -813,6 +831,35 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] setInteger:trackingMode forKey:GLSignificantLocationModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self enableTracking];
+}
+
+- (GLBackgroundLocationIndicatorMode)showBackgroundLocationIndicator {
+    if([self defaultsKeyExists:GLBackgroundIndicatorDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLBackgroundIndicatorDefaultsName];
+    } else {
+        return kGLBackgroundLocationIndicatorAlways;
+    }
+}
+- (void)setShowBackgroundLocationIndicator:(GLBackgroundLocationIndicatorMode)mode {
+    [[NSUserDefaults standardUserDefaults] setInteger:mode forKey:GLBackgroundIndicatorDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(self.trackingEnabled) {
+        switch(mode) {
+            case kGLBackgroundLocationIndicatorNever:
+                self.locationManager.showsBackgroundLocationIndicator = NO;
+                break;
+            case kGLBackgroundLocationIndicatorDuringTrips:
+                if(self.tripInProgress) {
+                    self.locationManager.showsBackgroundLocationIndicator = YES;
+                } else {
+                    self.locationManager.showsBackgroundLocationIndicator = NO;
+                }
+                break;
+            case kGLBackgroundLocationIndicatorAlways:
+                self.locationManager.showsBackgroundLocationIndicator = YES;
+                break;
+        }
+    }
 }
 
 - (CLActivityType)activityType {
