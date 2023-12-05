@@ -38,6 +38,7 @@ static NSString *const GLIncludeUniqueIdDefaultsName = @"GLIncludeUniqueIdDefaul
 static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
 static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
+static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
@@ -63,6 +64,11 @@ typedef enum {
 } GLTrackingMode;
 
 typedef enum {
+    kGLLoggingModeAllData,
+    kGLLoggingModeOnlyLatest
+} GLLoggingMode;
+
+typedef enum {
     kGLBackgroundLocationIndicatorNever,
     kGLBackgroundLocationIndicatorDuringTrips,
     kGLBackgroundLocationIndicatorAlways
@@ -85,6 +91,7 @@ typedef enum {
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) GLTrackingMode trackingMode;
+@property (nonatomic) GLLoggingMode loggingMode;
 @property (nonatomic) GLBackgroundLocationIndicatorMode showBackgroundLocationIndicator;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;

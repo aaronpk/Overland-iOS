@@ -833,6 +833,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self enableTracking];
 }
 
+- (GLLoggingMode)loggingMode {
+    if([self defaultsKeyExists:GLLoggingModeDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLLoggingModeDefaultsName];
+    } else {
+        return kGLLoggingModeAllData;
+    }
+}
+- (void)setLoggingMode:(GLLoggingMode)loggingMode {
+    [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLLoggingModeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (GLBackgroundLocationIndicatorMode)showBackgroundLocationIndicator {
     if([self defaultsKeyExists:GLBackgroundIndicatorDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLBackgroundIndicatorDefaultsName];
@@ -1061,7 +1073,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
         
-        for(int i=0; i<locations.count; i++) {
+        int startIndex = 0;
+        if(self.loggingMode == kGLLoggingModeOnlyLatest) {
+            // Only grab the latest point in this batch
+            startIndex = ((int)locations.count) - 1;
+        }
+        
+        for(int i=startIndex; i<locations.count; i++) {
             CLLocation *loc = locations[i];
             
             // If Discard is enabled, check if this point is too close to the previous
@@ -1093,6 +1111,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
             // Add the trip start time as trip_id in the location update
             if(self.tripInProgress) {
                 [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
+            }
+            
+            if(self.loggingMode == kGLLoggingModeOnlyLatest) {
+                // Delete everything in the DB so that this new point is the only one in the queue after it's added below
+                [accessor deleteAllData];
             }
             [accessor setDictionary:update forKey:timestamp];
             

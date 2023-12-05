@@ -58,6 +58,16 @@
             break;
     }
     
+    GLLoggingMode loggingMode = [GLManager sharedManager].loggingMode;
+    switch(loggingMode) {
+        case kGLLoggingModeAllData:
+            self.loggingMode.selectedSegmentIndex = 0;
+            break;
+        case kGLLoggingModeOnlyLatest:
+            self.loggingMode.selectedSegmentIndex = 1;
+            break;
+    }
+    
     GLBackgroundLocationIndicatorMode backgroundIndicatorMode = [GLManager sharedManager].showBackgroundLocationIndicator;
     switch(backgroundIndicatorMode) {
         case kGLBackgroundLocationIndicatorNever:
@@ -183,6 +193,14 @@
         [[GLManager sharedManager] startAllUpdates];
     } else {
         [[GLManager sharedManager] stopAllUpdates];
+    }
+}
+
+-(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {
+    if(sender.selectedSegmentIndex == 0) {
+        [GLManager sharedManager].loggingMode = kGLLoggingModeAllData;
+    } else {
+        [GLManager sharedManager].loggingMode = kGLLoggingModeOnlyLatest;
     }
 }
 

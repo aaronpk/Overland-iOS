@@ -21,7 +21,7 @@
 - (NSDictionary *)dictionaryForKey:(NSString *)key;
 - (void)setDictionary:(NSDictionary *)dict forKey:(NSString *)key;
 - (void)removeDictionaryForKey:(NSString *)key;
-
+- (void)deleteAllData;
 - (void)enumerateKeysAndObjectsUsingBlock:(BOOL(^)(NSString *key, NSDictionary *object))block;
 - (void)countObjectsUsingBlock:(void (^)(long num))block;
 
