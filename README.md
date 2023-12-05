@@ -62,7 +62,7 @@ The settings in this section set properties on the CoreLocation API. They are me
   * Setting to "Significant Location" will register for [significant location changes](https://developer.apple.com/reference/corelocation/cllocationmanager/1423531-startmonitoringsignificantlocati). Significant change events are triggered for example when you move to a new cell tower or when your nearby visible wifi access points change. It's not an exact science, and may be triggered more or less often than you expect. This will result in _much less_ data collected, but will also use barely any noticeable battery.
 * `Desired Accuracy` - Sets the [desiredAccuracy](https://developer.apple.com/reference/corelocation/cllocationmanager/1423836-desiredaccuracy) property of the location manager. This is only a request for the general level of accuracy, not a guarantee. Setting to "Best" will use the most battery but will get highest accuracy location updates. Setting to "3km" will save the most battery but will result in infrequent location updates.
 * `Activity Type` - According to Apple, "The location manager uses the information in this property as a cue to determine when location updates may be automatically paused.". See [activityType](https://developer.apple.com/reference/corelocation/cllocationmanager/1620567-activitytype) for more details.
-* `Defers Location Updates` - This allows the app to be paused while the OS continues to collect location updates in the background, delivering them to the app in a batch at some interval. It is worth reading Apple's documentation of [deferred location updates](https://developer.apple.com/reference/corelocation/cllocationmanager/1620547-allowdeferredlocationupdates) for more information. This can have an effect on improving battery life.
+* `Show Background Location Indicator` - Setting this to "Always" will cause the location indicator in your iOS menu bar to be activated whenever the app is tracking your location. With the visible indicator, your app is more likely to continue to receive data in the background according to [this post on the Apple forums](https://developer.apple.com/forums/thread/726945). Setting this to "During Trips" will only set the corresponding iOS setting when you start a trip. Setting this to "Never" will not set the iOS setting, although you may still see the indicator based on Apple's own logic.
 * `Pause Updates Automatically` - Enabling this will use the iOS API for automatically pausing location updates. When disabled, it will prevent the OS from pausing location updates. Pausing location updates automatically is a great way to save battery when you are not moving for extended periods of time, although it does not always pick up tracking again immediately when you start moving. In some initial testing, the automatic pause tends to trigger about 10 minutes after you've stopped moving.
 * `Location Authorization Status` - When you first launch the app, you'll need to request location permissions from the button here. Once you've requested permission twice, you should see it say "Always", which means the app will be able to collect data in the background. If you change the value in the iOS Settings app, this will show you the current status to help you troubleshoot why the app isn't getting updates in the background anymore.
 
@@ -70,11 +70,13 @@ The settings in this section set properties on the CoreLocation API. They are me
 
 The settings in this section control features specific to the Overland app.
 
+* `Logging Mode` - Whether you want Overland to log all data or only log the most recent point. If you configure the endpoint URL to send data in the query string then you should set this to "Only Latest". Experiment with the other settings to control how frequently you get data sent from the app.
 * `Points per Batch` - Controls the number of location updates that will be sent with each HTTP request. Setting this to 50 will mean more requests to the server are required to flush the queue, but each request will be smaller. Setting this to 1000 means you'll be able to flush the queue with fewer requests, but each request will be much larger. Each location point can be around 600 bytes when serialized as JSON, so sending 1000 points in a request will mean the request body may be around 600kb. Lower batch sizes are likely better for flaky network connections, and larger batch sizes are good when on a reliable connection. Note that this does not affect the frequency at which data is sent to the server.
 * `Resume with Geofence` - This is an attempt at overcoming the limitations of the "Pause Updates Automatically" feature. Setting a radius here will register an "exit" geofence whenever location updates are paused at that location. This will attempt to get the app woken up when the user leaves the area again, and when triggered, will resume tracking with the previous settings.
 * `Discard Points Closer Than` - When set, the app will discard any location updates within the distance selected. For example you can set the value to 50 meters to only record an update if the phone moves 50 meters from the last location. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point.
 * `Min Time Between Points` - When set, the app will discard any location updates received within the selected amount of time. For example you can set the value to 10 seconds to record an update at most every 10 seconds. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point. The default is 1 second.
 * `Enable notifications` - Toggle whether the app should send push notifications about events such as when tracking has been automatically stopped and started.
+* `Prevent screen lock during trip` - When enabled, your phone screen should not go to sleep when there is a trip active.
 * `Configure Wifi Zone` - You can configure a wifi zone to force the app to report an exact location whenever you're connected to a specific wifi SSID. This is useful if you don't want to collect a bunch of noisy data when you're at home.
 
 **System Settings**
@@ -140,7 +142,25 @@ This will use much less battery than high resolution, while still gathering enou
 
 ## API
 
-The app will post the location data to the configured endpoint. The POST request will be an array of GeoJSON objects inside a property called "locations". The default batch size is 200 but can be set in the settings. This request will look something like the following:
+The app will post the location data to the configured endpoint.
+
+If the endpoint URL has any template parameters, they will be replaced with the value of the most recent location update. The template parameters you can use are below:
+
+* `%TS` - Timestamp (ISO 8601, e.g. `2023-12-05T16:50:25Z`)
+* `%LAT` - Latitude
+* `%LON` - Longitude
+* `%SPD` - Speed in meters per second (negative means invalid)
+* `%ACC` - Accuracy (horizontal) of location in meters
+* `%ALT` - Altitude in meters
+* `%BAT` - Battery percent (e.g. `0.8` for 80%)
+
+For example, you can use the URL below to receive all the data in the query string:
+
+```
+https://example.com/input?ts=%TS&lat=%LAT&lon=%LON&acc=%ACC&spd=%SPD&bat=%BAT&alt=%ALT
+```
+
+The POST request body will be a JSON object containing a property `locations` which is an array of GeoJSON objects. The default batch size is 200 but can be set in the settings. This request will look something like the following:
 
 ```
 POST /api HTTP/1.1
