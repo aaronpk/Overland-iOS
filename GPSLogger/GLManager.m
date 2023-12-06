@@ -1289,10 +1289,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self notify:@"Location updates resumed" withTitle:@"Resumed"];
 }
 
-- (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(nullable NSError *)error {
-    [self logAction:@"did_finish_deferred_updates"];
-}
-
 #pragma mark - AppDelegate Methods
 
 - (void)applicationDidEnterBackground {

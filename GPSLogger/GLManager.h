@@ -29,7 +29,6 @@ static NSString *const GLDiscardPointsWithinSecondsDefaultsName = @"GLDiscardPoi
 static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
-static NSString *const GLDefersLocationUpdatesDefaultsName = @"GLDefersLocationUpdatesDefaults";
 static NSString *const GLSignificantLocationModeDefaultsName = @"GLSignificantLocationModeDefaults";
 static NSString *const GLPointsPerBatchDefaultsName = @"GLPointsPerBatchDefaults";
 static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotificationPermissionRequestedDefaults";
@@ -105,7 +104,6 @@ typedef enum {
 @property (nonatomic) GLBackgroundLocationIndicatorMode showBackgroundLocationIndicator;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
-@property (nonatomic) CLLocationDistance defersLocationUpdates;
 @property (nonatomic) int pointsPerBatch;
 
 @property (readonly) BOOL trackingEnabled;
