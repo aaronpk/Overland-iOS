@@ -196,7 +196,31 @@
     if(sender.selectedSegmentIndex == 0) {
         [GLManager sharedManager].loggingMode = kGLLoggingModeAllData;
     } else {
-        [GLManager sharedManager].loggingMode = kGLLoggingModeOnlyLatest;
+        
+        [[GLManager sharedManager] numberOfLocationsInQueue:^(long num) {
+            if(num == 0) {
+                [GLManager sharedManager].loggingMode = kGLLoggingModeOnlyLatest;
+            } else {
+                
+                NSString *string = [NSString stringWithFormat:@"This will delete the %d locations in the queue that are not yet sent", (int)num];
+                UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Are you sure?"
+                                                                               message:string
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * action) {
+                    sender.selectedSegmentIndex = 0;
+                                                                     }];
+                UIAlertAction* confirmAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * action) {
+                    [GLManager sharedManager].loggingMode = kGLLoggingModeOnlyLatest;
+                                                                     }];
+                [alert addAction:confirmAction];
+                [alert addAction:cancelAction];
+                [self presentViewController:alert animated:YES completion:nil];
+
+            }
+        }];
+        
     }
 }
 
