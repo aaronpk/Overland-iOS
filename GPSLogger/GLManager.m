@@ -438,40 +438,47 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)enableTracking {
     self.trackingEnabled = YES;
-    
-    switch(self.trackingMode) {
-        case kGLTrackingModeStandard:
-            NSLog(@"Monitoring standard location changes");
-            [self.locationManager startUpdatingLocation];
-            [self.locationManager startUpdatingHeading];
-            [self.locationManager stopMonitoringSignificantLocationChanges];
-            break;
-        case kGLTrackingModeSignificant:
-            NSLog(@"Monitoring significant location changes");
-            [self.locationManager startMonitoringSignificantLocationChanges];
-            [self.locationManager stopUpdatingLocation];
-            [self.locationManager stopUpdatingHeading];
-            break;
-        case kGLTrackingModeStandardAndSignificant:
-            NSLog(@"Monitoring both standard and significant location changes");
-            [self.locationManager startUpdatingLocation];
-            [self.locationManager startUpdatingHeading];
-            [self.locationManager startMonitoringSignificantLocationChanges];
-            break;
+
+    if(self.tripInProgress) {
+        self.locationManager.activityType = self.activityTypeDuringTrip;
+        self.locationManager.desiredAccuracy = self.desiredAccuracyDuringTrip;
+        self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicatorDuringTrip;
+    } else {
+        self.locationManager.activityType = self.activityType;
+        self.locationManager.desiredAccuracy = self.desiredAccuracy;
+        self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicator;
+    }
+
+    if(self.tripInProgress) {
+        NSLog(@"Monitoring standard location changes during trip");
+        [self.locationManager startUpdatingLocation];
+        [self.locationManager startUpdatingHeading];
+        [self.locationManager stopMonitoringSignificantLocationChanges];
+    } else {
+        switch(self.trackingMode) {
+            case kGLTrackingModeStandard:
+                NSLog(@"Monitoring standard location changes");
+                [self.locationManager startUpdatingLocation];
+                [self.locationManager startUpdatingHeading];
+                [self.locationManager stopMonitoringSignificantLocationChanges];
+                break;
+            case kGLTrackingModeSignificant:
+                NSLog(@"Monitoring significant location changes");
+                [self.locationManager startMonitoringSignificantLocationChanges];
+                [self.locationManager stopUpdatingLocation];
+                [self.locationManager stopUpdatingHeading];
+                break;
+            case kGLTrackingModeStandardAndSignificant:
+                NSLog(@"Monitoring both standard and significant location changes");
+                [self.locationManager startUpdatingLocation];
+                [self.locationManager startUpdatingHeading];
+                [self.locationManager startMonitoringSignificantLocationChanges];
+                break;
+        }
     }
     
     [self.locationManager startMonitoringVisits];
     
-    switch(self.showBackgroundLocationIndicator) {
-        case kGLBackgroundLocationIndicatorNever:
-        case kGLBackgroundLocationIndicatorDuringTrips:
-            self.locationManager.showsBackgroundLocationIndicator = NO;
-            break;
-        case kGLBackgroundLocationIndicatorAlways:
-            self.locationManager.showsBackgroundLocationIndicator = YES;
-            break;
-    }
-
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     
     if(CMMotionActivityManager.isActivityAvailable) {
@@ -652,12 +659,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     _storeNextLocationAsTripStart = YES;
     NSLog(@"Store next location as trip start. Current trip start: %@", self.tripStartLocationDictionary);
-
+    
     [self.tripdb open];
     _currentTripDistanceCached = 0;
     _currentTripHasNewData = NO;
     
-    if(self.showBackgroundLocationIndicator == kGLBackgroundLocationIndicatorDuringTrips) {
+    if(self.showBackgroundLocationIndicatorDuringTrip) {
         self.locationManager.showsBackgroundLocationIndicator = YES;
     }
     
@@ -671,7 +678,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)endTripFromAutopause:(BOOL)autopause {
     _storeNextLocationAsTripStart = NO;
 
-    if(self.showBackgroundLocationIndicator == kGLBackgroundLocationIndicatorDuringTrips) {
+    if(self.showBackgroundLocationIndicatorDuringTrip) {
         self.locationManager.showsBackgroundLocationIndicator = NO;
     }
 
@@ -747,11 +754,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = self.desiredAccuracy;
         _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.allowsBackgroundLocationUpdates = YES;
-        _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
-        _locationManager.activityType = self.activityType;
+        if(self.tripInProgress) {
+            _locationManager.pausesLocationUpdatesAutomatically = NO;
+            _locationManager.desiredAccuracy = self.desiredAccuracyDuringTrip;
+            _locationManager.activityType = self.activityTypeDuringTrip;
+        } else {
+            _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
+            _locationManager.desiredAccuracy = self.desiredAccuracy;
+            _locationManager.activityType = self.activityType;
+        }
     }
     
     return _locationManager;
@@ -830,6 +843,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (CLLocationDistance)discardPointsWithinDistanceDuringTrip {
+    if([self defaultsKeyExists:GLTripDiscardPointsWithinDistanceDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLTripDiscardPointsWithinDistanceDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setDiscardPointsWithinDistanceDuringTrip:(CLLocationDistance)distance {
+    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLTripDiscardPointsWithinDistanceDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (int)discardPointsWithinSeconds {
     if([self defaultsKeyExists:GLDiscardPointsWithinSecondsDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLDiscardPointsWithinSecondsDefaultsName];
@@ -842,6 +867,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (int)discardPointsWithinSecondsDuringTrip {
+    if([self defaultsKeyExists:GLTripDiscardPointsWithinSecondsDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLTripDiscardPointsWithinSecondsDefaultsName];
+    } else {
+        return 1;
+    }
+}
+- (void)setDiscardPointsWithinSecondsDuringTrip:(int)seconds {
+    [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLTripDiscardPointsWithinSecondsDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 
 #pragma mark CLLocationManager
@@ -900,32 +936,45 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (GLBackgroundLocationIndicatorMode)showBackgroundLocationIndicator {
-    if([self defaultsKeyExists:GLBackgroundIndicatorDefaultsName]) {
-        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLBackgroundIndicatorDefaultsName];
+- (GLLoggingMode)loggingModeDuringTrip {
+    if([self defaultsKeyExists:GLTripLoggingModeDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLTripLoggingModeDefaultsName];
     } else {
-        return kGLBackgroundLocationIndicatorAlways;
+        return kGLLoggingModeAllData;
     }
 }
-- (void)setShowBackgroundLocationIndicator:(GLBackgroundLocationIndicatorMode)mode {
-    [[NSUserDefaults standardUserDefaults] setInteger:mode forKey:GLBackgroundIndicatorDefaultsName];
+- (void)setLoggingModeDuringTrip:(GLLoggingMode)loggingMode {
+    [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLTripLoggingModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    if(self.trackingEnabled) {
-        switch(mode) {
-            case kGLBackgroundLocationIndicatorNever:
-                self.locationManager.showsBackgroundLocationIndicator = NO;
-                break;
-            case kGLBackgroundLocationIndicatorDuringTrips:
-                if(self.tripInProgress) {
-                    self.locationManager.showsBackgroundLocationIndicator = YES;
-                } else {
-                    self.locationManager.showsBackgroundLocationIndicator = NO;
-                }
-                break;
-            case kGLBackgroundLocationIndicatorAlways:
-                self.locationManager.showsBackgroundLocationIndicator = YES;
-                break;
-        }
+}
+
+- (BOOL)showBackgroundLocationIndicator {
+    if([self defaultsKeyExists:GLBackgroundIndicatorDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLBackgroundIndicatorDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setShowBackgroundLocationIndicator:(BOOL)mode {
+    [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLBackgroundIndicatorDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(self.trackingEnabled && !self.tripInProgress) {
+        self.locationManager.showsBackgroundLocationIndicator = mode;
+    }
+}
+
+- (BOOL)showBackgroundLocationIndicatorDuringTrip {
+    if([self defaultsKeyExists:GLTripBackgroundIndicatorDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLTripBackgroundIndicatorDefaultsName];
+    } else {
+        return YES;
+    }
+}
+- (void)setShowBackgroundLocationIndicatorDuringTrip:(BOOL)mode {
+    [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLTripBackgroundIndicatorDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(self.tripInProgress) {
+        self.locationManager.showsBackgroundLocationIndicator = mode;
     }
 }
 
@@ -992,6 +1041,68 @@ const double MPH_to_METERSPERSECOND = 0.447;
     self.locationManager.activityType = activityType;
 }
 
+- (CLActivityType)activityTypeDuringTrip {
+    if([self defaultsKeyExists:GLTripActivityTypeDefaultsName]) {
+        // Map back to CLActivityType constants
+        long activityInt = [[NSUserDefaults standardUserDefaults] integerForKey:GLTripActivityTypeDefaultsName];
+        CLActivityType activityType;
+        switch(activityInt) {
+            case 1:
+                activityType = CLActivityTypeOther;
+                break;
+            case 2:
+                activityType = CLActivityTypeAutomotiveNavigation;
+                break;
+            case 3:
+                activityType = CLActivityTypeFitness;
+                break;
+            case 4:
+                activityType = CLActivityTypeOtherNavigation;
+                break;
+            case 5:
+                if (@available(iOS 12.0, *)) {
+                    activityType = CLActivityTypeAirborne;
+                } else {
+                    activityType = CLActivityTypeOther;
+                }
+                break;
+            default:
+                activityType = CLActivityTypeOther;
+                break;
+        }
+        return activityType;
+    } else {
+        return CLActivityTypeOther;
+    }
+}
+- (void)setActivityTypeDuringTrip:(CLActivityType)activityType {
+    // Store these as integers, in the same order as the UI control
+    int activityInt;
+    switch(activityType) {
+        case CLActivityTypeOther:
+            activityInt = 1;
+            break;
+        case CLActivityTypeAutomotiveNavigation:
+            activityInt = 2;
+            break;
+        case CLActivityTypeFitness:
+            activityInt = 3;
+            break;
+        case CLActivityTypeOtherNavigation:
+            activityInt = 4;
+            break;
+        case CLActivityTypeAirborne:
+            if (@available(iOS 12.0, *)) {
+                activityInt = 5;
+            } else {
+                activityInt = 1;
+            }
+            break;
+    }
+    [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLTripActivityTypeDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (CLLocationAccuracy)desiredAccuracy {
     if([self defaultsKeyExists:GLDesiredAccuracyDefaultsName]) {
         return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDesiredAccuracyDefaultsName];
@@ -1003,7 +1114,24 @@ const double MPH_to_METERSPERSECOND = 0.447;
     NSLog(@"Setting desiredAccuracy: %f", desiredAccuracy);
     [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLDesiredAccuracyDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    self.locationManager.desiredAccuracy = desiredAccuracy;
+    if(!self.tripInProgress) {
+        self.locationManager.desiredAccuracy = desiredAccuracy;
+    }
+}
+
+- (CLLocationAccuracy)desiredAccuracyDuringTrip {
+    if([self defaultsKeyExists:GLTripDesiredAccuracyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLTripDesiredAccuracyDefaultsName];
+    } else {
+        return kCLLocationAccuracyHundredMeters;
+    }
+}
+- (void)setDesiredAccuracyDuringTrip:(CLLocationAccuracy)desiredAccuracy {
+    [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLTripDesiredAccuracyDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(self.tripInProgress) {
+        self.locationManager.desiredAccuracy = desiredAccuracy;
+    }
 }
 
 - (int)pointsPerBatch {
@@ -1019,6 +1147,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
     _pointsPerBatch = points;
 }
 
+- (int)pointsPerBatchDuringTrip {
+    if([self defaultsKeyExists:GLTripPointsPerBatchDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLTripPointsPerBatchDefaultsName];
+    } else {
+        return 200;
+    }
+}
+- (void)setPointsPerBatchDuringTrip:(int)points {
+    [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLTripPointsPerBatchDefaultsName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    _pointsPerBatch = points;
+}
 
 #pragma mark GLManager
 

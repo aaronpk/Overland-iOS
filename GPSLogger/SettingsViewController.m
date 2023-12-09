@@ -30,11 +30,9 @@
     else
         self.trackingEnabledToggle.selectedSegmentIndex = 1;
     
-    self.pausesAutomatically.on = [GLManager sharedManager].pausesAutomatically;
+    self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
     
-    self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
-
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
@@ -68,16 +66,12 @@
             break;
     }
     
-    GLBackgroundLocationIndicatorMode backgroundIndicatorMode = [GLManager sharedManager].showBackgroundLocationIndicator;
-    switch(backgroundIndicatorMode) {
-        case kGLBackgroundLocationIndicatorNever:
+    switch([GLManager sharedManager].showBackgroundLocationIndicator) {
+        case NO:
             self.showBackgroundLocationIndicator.selectedSegmentIndex = 0;
             break;
-        case kGLBackgroundLocationIndicatorDuringTrips:
+        case YES:
             self.showBackgroundLocationIndicator.selectedSegmentIndex = 1;
-            break;
-        case kGLBackgroundLocationIndicatorAlways:
-            self.showBackgroundLocationIndicator.selectedSegmentIndex = 2;
             break;
     }
     
@@ -208,9 +202,9 @@
     [[GLManager sharedManager] requestAuthorizationPermission];
 }
 
-- (IBAction)togglePausesAutomatically:(UISwitch *)sender {
-    [GLManager sharedManager].pausesAutomatically = sender.on;
-    if(sender.on == NO) {
+- (IBAction)pausesAutomaticallyWasChanged:(UISegmentedControl *)sender {
+    [GLManager sharedManager].pausesAutomatically = sender.selectedSegmentIndex == 1;
+    if(sender.selectedSegmentIndex == 0) {
         self.resumesWithGeofence.selectedSegmentIndex = 0;
         [GLManager sharedManager].resumesAfterDistance = -1;
     }
@@ -233,7 +227,7 @@
             distance = 2000; break;
     }
     if(distance > 0) {
-        self.pausesAutomatically.on = YES;
+        self.pausesAutomatically.selectedSegmentIndex = 1;
         [GLManager sharedManager].pausesAutomatically = YES;
     }
     [GLManager sharedManager].resumesAfterDistance = distance;
@@ -253,14 +247,12 @@
 }
 
 - (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender {
-    GLBackgroundLocationIndicatorMode m = kGLBackgroundLocationIndicatorNever;
+    BOOL m = NO;
     switch(sender.selectedSegmentIndex) {
         case 0:
-            m = kGLBackgroundLocationIndicatorNever; break;
+            m = NO; break;
         case 1:
-            m = kGLBackgroundLocationIndicatorDuringTrips; break;
-        case 2:
-            m = kGLBackgroundLocationIndicatorAlways; break;
+            m = YES; break;
     }
     [GLManager sharedManager].showBackgroundLocationIndicator = m;
 }
@@ -350,15 +342,6 @@
     } else {
         [GLManager sharedManager].notificationsEnabled = NO;
     }
-}
-
-- (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender {
-    if(sender.on) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLScreenLockEnabledDefaultsName];
-    } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLScreenLockEnabledDefaultsName];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

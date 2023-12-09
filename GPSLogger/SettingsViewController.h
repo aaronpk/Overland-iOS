@@ -12,7 +12,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
-@property (strong, nonatomic) IBOutlet UISwitch *pausesAutomatically;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resumesWithGeofence;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *significantLocationMode;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
@@ -23,13 +23,12 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *loggingMode;
-@property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatusWarning;
 @property (strong, nonatomic) IBOutlet UIButton *requestLocationPermissionsButton;
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
-- (IBAction)togglePausesAutomatically:(UISwitch *)sender;
+- (IBAction)pausesAutomaticallyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
@@ -40,7 +39,6 @@
 - (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender;
 - (IBAction)loggingModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
-- (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;
 
 @end

@@ -16,6 +16,7 @@
 		0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FCF53241F81AB0800577A0F /* UserNotifications.framework */; };
 		0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */; };
 		0FE280B12B0180620062936E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0FE280B02B0180620062936E /* Settings.bundle */; };
+		0FF590302B1FA1D500E3AAA3 /* TripSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FF5902F2B1FA1D500E3AAA3 /* TripSettingsViewController.m */; };
 		0FFD31571BAB7A34009B3A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31561BAB7A34009B3A03 /* main.m */; };
 		0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31591BAB7A34009B3A03 /* AppDelegate.m */; };
 		0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */; };
@@ -47,6 +48,8 @@
 		0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
 		0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
 		0FE280B02B0180620062936E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		0FF5902F2B1FA1D500E3AAA3 /* TripSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripSettingsViewController.m; sourceTree = "<group>"; };
+		0FF590312B1FA22E00E3AAA3 /* TripSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TripSettingsViewController.h; sourceTree = "<group>"; };
 		0FFD31521BAB7A34009B3A03 /* Overland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Overland.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FFD31561BAB7A34009B3A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0FFD31581BAB7A34009B3A03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -157,6 +160,8 @@
 				0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */,
 				0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */,
 				0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */,
+				0FF590312B1FA22E00E3AAA3 /* TripSettingsViewController.h */,
+				0FF5902F2B1FA1D500E3AAA3 /* TripSettingsViewController.m */,
 				0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */,
 				0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */,
 				6D2858CF222B133400F525E1 /* WifiZoneViewController.h */,
@@ -319,6 +324,7 @@
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,
 				0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */,
 				0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */,
+				0FF590302B1FA1D500E3AAA3 /* TripSettingsViewController.m in Sources */,
 				0FFD31571BAB7A34009B3A03 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

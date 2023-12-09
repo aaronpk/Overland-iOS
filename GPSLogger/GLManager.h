@@ -35,9 +35,19 @@ static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotif
 static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
 static NSString *const GLIncludeUniqueIdDefaultsName = @"GLIncludeUniqueIdDefaults";
 static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
-static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
+
+/* During-Trip Defaults */
+static NSString *const GLTripDesiredAccuracyDefaultsName = @"GLTripDesiredAccuracyDefaults";
+static NSString *const GLTripActivityTypeDefaultsName = @"GLTripActivityTypeDefaults";
+static NSString *const GLTripBackgroundIndicatorDefaultsName = @"GLTripBackgroundIndicatorDefaults";
+static NSString *const GLTripLoggingModeDefaultsName = @"GLTripLoggingModeDefaults";
+static NSString *const GLTripPointsPerBatchDefaultsName = @"GLTripPointsPerBatchDefaults";
+static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripDiscardPointsWithinDistanceDefaults";
+static NSString *const GLTripDiscardPointsWithinSecondsDefaultsName = @"GLTripDiscardPointsWithinSecondsDefaults";
+static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
+/* End */
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
@@ -68,12 +78,6 @@ typedef enum {
 } GLLoggingMode;
 
 typedef enum {
-    kGLBackgroundLocationIndicatorNever,
-    kGLBackgroundLocationIndicatorDuringTrips,
-    kGLBackgroundLocationIndicatorAlways
-} GLBackgroundLocationIndicatorMode;
-
-typedef enum {
     kGLLocationPropertyTimestamp,
     kGLLocationPropertyLatitude,
     kGLLocationPropertyLongitude,
@@ -101,10 +105,20 @@ typedef enum {
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) GLTrackingMode trackingMode;
 @property (nonatomic) GLLoggingMode loggingMode;
-@property (nonatomic) GLBackgroundLocationIndicatorMode showBackgroundLocationIndicator;
+@property (nonatomic) BOOL showBackgroundLocationIndicator;
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) int pointsPerBatch;
+
+/* During-Trip Settings */
+@property (nonatomic) CLLocationAccuracy desiredAccuracyDuringTrip;
+@property (nonatomic) CLActivityType activityTypeDuringTrip;
+@property (nonatomic) BOOL showBackgroundLocationIndicatorDuringTrip;
+@property (nonatomic) GLLoggingMode loggingModeDuringTrip;
+@property (nonatomic) int pointsPerBatchDuringTrip;
+@property (nonatomic) CLLocationDistance discardPointsWithinDistanceDuringTrip;
+@property (nonatomic) int discardPointsWithinSecondsDuringTrip;
+/* End */
 
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;
