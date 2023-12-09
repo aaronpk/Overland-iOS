@@ -38,6 +38,8 @@ static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP20
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 
+static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
+
 /* During-Trip Defaults */
 static NSString *const GLTripDesiredAccuracyDefaultsName = @"GLTripDesiredAccuracyDefaults";
 static NSString *const GLTripActivityTypeDefaultsName = @"GLTripActivityTypeDefaults";
@@ -133,6 +135,7 @@ typedef enum {
 - (void)startAllUpdates;
 - (void)stopAllUpdates;
 - (void)refreshLocation;
+- (void)deleteAllData;
 
 - (NSString *)authorizationStatusAsString;
 - (void)requestAuthorizationPermission;

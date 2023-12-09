@@ -419,6 +419,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)restoreTrackingState {
+    
     if([[NSUserDefaults standardUserDefaults] boolForKey:GLTrackingStateDefaultsName]) {
         [self enableTracking];
         if(self.tripInProgress) {
@@ -1257,6 +1258,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
     
     [self sendQueueIfTimeElapsed];
+}
+
+- (void)deleteAllData {
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor deleteAllData];
+    }];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {

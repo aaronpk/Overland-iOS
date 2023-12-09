@@ -36,6 +36,16 @@
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Purge queue on next app launch</string>
+			<key>Key</key>
+			<string>GLPurgeQueueOnNextLaunch</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
 	</array>
 </dict>
 </plist>

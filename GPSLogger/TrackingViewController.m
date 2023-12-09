@@ -70,7 +70,7 @@ NSArray *intervalMapStrings;
 
 - (void)viewWillAppear:(BOOL)animated {
     [self sendingFinished];
-    
+
     if([GLManager sharedManager].sendingInterval) {
         self.sendIntervalSlider.value = [intervalMap indexOfObject:[GLManager sharedManager].sendingInterval];
         [self updateSendIntervalLabel];
