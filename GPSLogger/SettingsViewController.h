@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *loggingMode;
+@property (strong, nonatomic) IBOutlet UIStackView *locationAuthorizationStatusSection;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatusWarning;
 @property (strong, nonatomic) IBOutlet UIButton *requestLocationPermissionsButton;

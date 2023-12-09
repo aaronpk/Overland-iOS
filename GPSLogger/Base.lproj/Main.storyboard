@@ -1235,6 +1235,7 @@ IAogA
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
                         <outlet property="enableNotifications" destination="WZr-zE-f5a" id="hnD-O9-Z8y"/>
                         <outlet property="locationAuthorizationStatus" destination="MKE-WH-3hb" id="zee-wX-dhx"/>
+                        <outlet property="locationAuthorizationStatusSection" destination="kGG-ne-BJt" id="A3Z-Zz-1Ue"/>
                         <outlet property="locationAuthorizationStatusWarning" destination="AqX-Kg-rPA" id="yTb-hH-sVP"/>
                         <outlet property="loggingMode" destination="STr-Kl-8rj" id="h2s-RF-eLc"/>
                         <outlet property="pausesAutomatically" destination="aAw-VS-zwe" id="rDd-NQ-1PW"/>
