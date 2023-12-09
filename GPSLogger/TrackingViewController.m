@@ -326,8 +326,6 @@ NSArray *intervalMapStrings;
         if([[NSUserDefaults standardUserDefaults] boolForKey:GLTripTrackingEnabledDefaultsName] == NO) {
             [[GLManager sharedManager] stopAllUpdates];
         }
-        
-        [[GLManager sharedManager] sendQueueNow];
     } else {
         // Keep track of whether tracking was on or off when this trip started
         [[NSUserDefaults standardUserDefaults] setBool:[GLManager sharedManager].trackingEnabled forKey:GLTripTrackingEnabledDefaultsName];

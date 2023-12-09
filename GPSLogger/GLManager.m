@@ -649,6 +649,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if(self.tripInProgress) {
         return;
     }
+    
+    [self sendQueueNow];
 
     [self.tripdb open];
     _currentTripDistanceCached = 0;
@@ -694,6 +696,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     } else {
         [self writeTripToDB:autopause steps:0];
     }
+    
+    [self sendQueueNow];
 }
 
 - (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps {
