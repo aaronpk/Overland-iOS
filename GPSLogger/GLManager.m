@@ -45,7 +45,6 @@ NSNumber *_sendingInterval;
 NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
-int _pointsPerBatch;
 long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
@@ -155,7 +154,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 // Remove nil objects
                 [accessor removeDictionaryForKey:key];
             }
-            return (BOOL)(locationUpdates.count >= _pointsPerBatch);
+            return (BOOL)(locationUpdates.count >= self.pointsPerBatchCurrentValue);
         }];
         
         [accessor countObjectsUsingBlock:^(long num) {
@@ -168,7 +167,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     // If there are still more in the queue, then send the current location as a separate property.
     // This allows the server to know where the user is immediately even if there are many thousands of points in the backlog.
     NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
-    if(_numInQueue > self.pointsPerBatch && self.lastLocation) {
+    if(_numInQueue > self.pointsPerBatchCurrentValue && self.lastLocation) {
         [postData setObject:currentLocation forKey:@"current"];
     }
     
@@ -253,7 +252,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [accessor countObjectsUsingBlock:^(long num) {
                     _currentPointsInQueue = num;
                     NSLog(@"Number remaining: %ld", num);
-                    if(num >= _pointsPerBatch) {
+                    if(num >= self.pointsPerBatchCurrentValue) {
                         self.batchInProgress = YES;
                     } else {
                         self.batchInProgress = NO;
@@ -490,8 +489,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     NSLog(@"Location Authorization Status %@", self.authorizationStatusAsString);
     
-    _pointsPerBatch = self.pointsPerBatch;
-    
     // Set the last location if location manager has a last location.
     // This will be set for example when the app launches due to a signification location change,
     // the locationmanager has a location already before a location event is delivered to the delegate.
@@ -652,6 +649,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if(self.tripInProgress) {
         return;
     }
+
+    [self.tripdb open];
+    _currentTripDistanceCached = 0;
+    _currentTripHasNewData = NO;
     
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
@@ -659,15 +660,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     _storeNextLocationAsTripStart = YES;
     NSLog(@"Store next location as trip start. Current trip start: %@", self.tripStartLocationDictionary);
-    
-    [self.tripdb open];
-    _currentTripDistanceCached = 0;
-    _currentTripHasNewData = NO;
-    
-    if(self.showBackgroundLocationIndicatorDuringTrip) {
-        self.locationManager.showsBackgroundLocationIndicator = YES;
-    }
-    
+
+    [self startAllUpdates];
+
     NSLog(@"Started a trip at %@", startDate);
 }
 
@@ -678,9 +673,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)endTripFromAutopause:(BOOL)autopause {
     _storeNextLocationAsTripStart = NO;
 
-    if(self.showBackgroundLocationIndicatorDuringTrip) {
-        self.locationManager.showsBackgroundLocationIndicator = NO;
-    }
+    // Restore locationManager settings to values not during a trip
+    self.locationManager.activityType = self.activityType;
+    self.locationManager.desiredAccuracy = self.desiredAccuracy;
+    self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicator;
 
     if(!self.tripInProgress) {
         return;
@@ -855,6 +851,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (CLLocationDistance)discardPointsWithinDistanceCurrentValue {
+    if(self.tripInProgress) {
+        return self.discardPointsWithinDistanceDuringTrip;
+    } else {
+        return self.discardPointsWithinDistance;
+    }
+}
+
 - (int)discardPointsWithinSeconds {
     if([self defaultsKeyExists:GLDiscardPointsWithinSecondsDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLDiscardPointsWithinSecondsDefaultsName];
@@ -877,6 +881,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setDiscardPointsWithinSecondsDuringTrip:(int)seconds {
     [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLTripDiscardPointsWithinSecondsDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (int)discardPointsWithinSecondsCurrentValue {
+    if(self.tripInProgress) {
+        return self.discardPointsWithinSecondsDuringTrip;
+    } else {
+        return self.discardPointsWithinSeconds;
+    }
 }
 
 
@@ -946,6 +958,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setLoggingModeDuringTrip:(GLLoggingMode)loggingMode {
     [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLTripLoggingModeDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (GLLoggingMode)loggingModeCurrentValue {
+    if(self.tripInProgress) {
+        return self.loggingModeDuringTrip;
+    } else {
+        return self.loggingMode;
+    }
 }
 
 - (BOOL)showBackgroundLocationIndicator {
@@ -1144,7 +1164,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setPointsPerBatch:(int)points {
     [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLPointsPerBatchDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    _pointsPerBatch = points;
 }
 
 - (int)pointsPerBatchDuringTrip {
@@ -1157,7 +1176,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setPointsPerBatchDuringTrip:(int)points {
     [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLTripPointsPerBatchDefaultsName];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    _pointsPerBatch = points;
+}
+
+- (int)pointsPerBatchCurrentValue {
+    if(self.tripInProgress) {
+        return self.pointsPerBatchDuringTrip;
+    } else {
+        return self.pointsPerBatch;
+    }
 }
 
 #pragma mark GLManager
@@ -1269,7 +1295,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
         
         int startIndex = 0;
-        if(self.loggingMode == kGLLoggingModeOnlyLatest) {
+        if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
             // Only grab the latest point in this batch
             startIndex = ((int)locations.count) - 1;
         }
@@ -1278,17 +1304,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
             CLLocation *loc = locations[i];
             
             // If Discard is enabled, check if this point is too close to the previous
-            if(self.discardPointsWithinDistance > 0) {
+            if(self.discardPointsWithinDistanceCurrentValue > 0) {
                 CLLocationDistance distanceBetweenPoints = [lastLocationSeen distanceFromLocation:loc];
-                if(distanceBetweenPoints < self.discardPointsWithinDistance) {
+                if(distanceBetweenPoints < self.discardPointsWithinDistanceCurrentValue) {
                     // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
                     continue;
                 }
             }
 
-            if(self.discardPointsWithinSeconds > 1) {
+            if(self.discardPointsWithinSecondsCurrentValue > 1) {
                 int timeInterval = (int)[loc.timestamp timeIntervalSinceDate:lastLocationSeen.timestamp];
-                if(timeInterval < self.discardPointsWithinSeconds) {
+                if(timeInterval < self.discardPointsWithinSecondsCurrentValue) {
                     continue;
                 }
             }
@@ -1308,7 +1334,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
             }
             
-            if(self.loggingMode == kGLLoggingModeOnlyLatest) {
+            if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
                 // Delete everything in the DB so that this new point is the only one in the queue after it's added below
                 [accessor deleteAllData];
             }
