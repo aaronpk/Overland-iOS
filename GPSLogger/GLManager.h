@@ -37,6 +37,7 @@ static NSString *const GLIncludeUniqueIdDefaultsName = @"GLIncludeUniqueIdDefaul
 static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
+static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 
@@ -55,6 +56,7 @@ static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabl
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
 static NSString *const GLTripStartLocationDefaultsName = @"GLTripStartLocationDefaults";
+
 static NSString *const GLTripModeWalk = @"walk";
 static NSString *const GLTripModeRun = @"run";
 static NSString *const GLTripModeBicycle = @"bicycle";

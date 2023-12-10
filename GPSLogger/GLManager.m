@@ -662,6 +662,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self startAllUpdates];
 
     NSLog(@"Started a trip at %@", startDate);
+    
+    [self incrementTripMode:self.currentTripMode];
 }
 
 - (void)endTrip {
@@ -694,6 +696,32 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
     
     [self sendQueueNow];
+}
+
+- (void)incrementTripMode:(NSString *)tripMode {
+    NSMutableDictionary *currentStats = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:GLTripModeStatsDefaultsName] mutableCopy];
+    if(currentStats == nil) {
+        currentStats = [[NSMutableDictionary alloc] init];
+    }
+    NSNumber *count = [currentStats valueForKey:tripMode];
+    NSNumber *newCount;
+    if(count != nil) {
+        newCount = [NSNumber numberWithInt:[count intValue] + 1];
+    } else {
+        newCount = @1;
+    }
+    [currentStats setValue:newCount forKey:tripMode];
+    [self tripModesByFrequency];
+    [[NSUserDefaults standardUserDefaults] setValue:currentStats forKey:GLTripModeStatsDefaultsName];
+}
+
+- (NSArray *)tripModesByFrequency {
+    NSDictionary *currentStats = [[NSUserDefaults standardUserDefaults] dictionaryForKey:GLTripModeStatsDefaultsName];
+    NSArray *tripModes = [currentStats keysSortedByValueUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [(NSNumber*)obj2 compare:(NSNumber*)obj1];
+    }];
+    NSLog(@"Trip Modes %@", tripModes);
+    return tripModes;
 }
 
 - (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps {
