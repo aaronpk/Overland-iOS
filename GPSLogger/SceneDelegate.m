@@ -14,13 +14,6 @@
 
 @implementation SceneDelegate
 
-- (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-    // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-    // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-    // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-}
-
-
 - (void)sceneDidDisconnect:(UIScene *)scene {
     // Called as the scene is being released by the system.
     // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -32,27 +25,6 @@
 - (void)sceneDidBecomeActive:(UIScene *)scene {
     // Called when the scene has moved from an inactive state to an active state.
     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-}
-
-
-- (void)sceneWillResignActive:(UIScene *)scene {
-    // Called when the scene will move from an active state to an inactive state.
-    // This may occur due to temporary interruptions (ex. an incoming phone call).
-    
-    [[GLManager sharedManager] applicationWillResignActive];
-    
-    // Register home screen actions
-    NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
-    UIApplication *app = UIApplication.sharedApplication;
-    app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-        UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:@"star.fill"];
-        return [[UIApplicationShortcutItem alloc] initWithType:obj
-                                                localizedTitle:obj
-                                             localizedSubtitle:nil
-                                                          icon:icon
-                                                      userInfo:nil];
-    }];
-
 }
 
 
@@ -102,6 +74,68 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name=%@", key];
     NSURLQueryItem *queryItem = [[queryItems filteredArrayUsingPredicate:predicate] firstObject];
     return queryItem.value;
+}
+
+#pragma mark - Quick Actions
+
+// https://developer.apple.com/documentation/uikit/menus_and_shortcuts/add_home_screen_quick_actions?language=objc
+
+- (void)sceneWillResignActive:(UIScene *)scene {
+    // Called when the scene will move from an active state to an inactive state.
+    // This may occur due to temporary interruptions (ex. an incoming phone call).
+    
+    [[GLManager sharedManager] applicationWillResignActive];
+
+    UIApplication *app = UIApplication.sharedApplication;
+
+    // Register home screen actions
+    if(![GLManager sharedManager].tripInProgress) {
+        NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
+        app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithTemplateImageName:obj];
+            return [[UIApplicationShortcutItem alloc] initWithType:obj
+                                                    localizedTitle:obj
+                                                 localizedSubtitle:nil
+                                                              icon:icon
+                                                          userInfo:nil];
+        }];
+    } else {
+        
+        UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:@"stop.circle.fill"];
+        UIApplicationShortcutItem *item = [[UIApplicationShortcutItem alloc] initWithType:@"stop"
+                                                                           localizedTitle:@"Stop Trip"
+                                                                        localizedSubtitle:nil
+                                                                                     icon:icon
+                                                                                 userInfo:nil];
+        app.shortcutItems = @[item];
+    }
+}
+
+
+- (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
+    // If the app isn’t already loaded, it’s launched and passes details of the shortcut item in through the connectionOptions parameter of the scene:willConnectToSession:options: function.
+
+    if(connectionOptions.shortcutItem != nil) {
+        NSLog(@"App launched. connectionOptions = %@", connectionOptions);
+        [self handleLaunchFromShortcutItem:connectionOptions.shortcutItem];
+    }
+}
+
+- (void)windowScene:(UIWindowScene *)windowScene performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+    // If your app is already loaded, the system calls the windowScene:performActionForShortcutItem:completionHandler: function of your scene delegate.
+    NSLog(@"Quick Action requested when app already loaded");
+    NSLog(@"shortcutItem = %@", shortcutItem);
+    
+    [self handleLaunchFromShortcutItem:shortcutItem];
+}
+
+- (void)handleLaunchFromShortcutItem:(UIApplicationShortcutItem *)shortcutItem {
+    if([shortcutItem.type isEqualToString:@"stop"]) {
+        [[GLManager sharedManager] endTrip];
+    } else {
+        [GLManager sharedManager].currentTripMode = shortcutItem.type;
+        [[GLManager sharedManager] startTrip];
+    }
 }
 
 
