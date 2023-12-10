@@ -12,6 +12,7 @@
 		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
+		0FAC1FEB2B255CA60007F3B1 /* NSArray+map.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */; };
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
 		0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FCF53241F81AB0800577A0F /* UserNotifications.framework */; };
 		0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */; };
@@ -41,6 +42,8 @@
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+map.m"; sourceTree = "<group>"; };
+		0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+map.h"; sourceTree = "<group>"; };
 		0FB85ABD1BE0151300F25126 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		0FCF53231F81AAAC00577A0F /* GPSLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GPSLogger.entitlements; sourceTree = "<group>"; };
@@ -168,6 +171,8 @@
 				6D2858D0222B133400F525E1 /* WifiZoneViewController.m */,
 				0FFD31711BAB7BEA009B3A03 /* GLManager.h */,
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
+				0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */,
+				0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */,
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
 				0FFD31641BAB7A34009B3A03 /* Assets.xcassets */,
 				0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */,
@@ -319,6 +324,7 @@
 				0FFD31601BAB7A34009B3A03 /* SettingsViewController.m in Sources */,
 				0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */,
 				6D2858D1222B133400F525E1 /* WifiZoneViewController.m in Sources */,
+				0FAC1FEB2B255CA60007F3B1 /* NSArray+map.m in Sources */,
 				0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */,
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,

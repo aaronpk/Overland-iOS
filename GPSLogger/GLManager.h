@@ -175,6 +175,7 @@ typedef enum {
 - (NSTimeInterval)currentTripDuration;
 - (void)startTrip;
 - (void)endTrip;
+- (NSArray *)tripModesByFrequency;
 
 #pragma mark -
 

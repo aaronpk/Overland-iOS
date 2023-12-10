@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "GLManager.h"
+#import "NSArray+map.h"
 
 @interface AppDelegate ()
 
@@ -36,6 +37,19 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     [[GLManager sharedManager] applicationWillResignActive];
+    
+    // Register home screen actions
+    NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
+    UIApplication *app = UIApplication.sharedApplication;
+    app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+        UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:@"star.fill"];
+        return [[UIApplicationShortcutItem alloc] initWithType:obj
+                                                localizedTitle:obj
+                                             localizedSubtitle:nil
+                                                          icon:icon
+                                                      userInfo:nil];
+    }];
+    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
