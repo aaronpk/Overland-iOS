@@ -220,7 +220,6 @@
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLScreenLockEnabledDefaultsName];
     }
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

@@ -87,7 +87,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken {
     [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
     [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:GLAPIAccessTokenDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self setupHTTPClient];
 }
 
@@ -116,13 +115,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)startAllUpdates {
     [self enableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)stopAllUpdates {
     [self disableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLTrackingStateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)refreshLocation {
@@ -578,7 +575,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)setCurrentTripMode:(NSString *)mode {
     [[NSUserDefaults standardUserDefaults] setObject:mode forKey:GLTripModeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSDate *)currentTripStart {
@@ -659,7 +655,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     NSDate *startDate = [NSDate date];
     [[NSUserDefaults standardUserDefaults] setObject:startDate forKey:GLTripStartTimeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     
     _storeNextLocationAsTripStart = YES;
     NSLog(@"Store next location as trip start. Current trip start: %@", self.tripStartLocationDictionary);
@@ -738,14 +733,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     self.tripStartLocationDictionary = nil;
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartTimeDefaultsName];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartLocationDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 
     _currentTripDistanceCached = 0;
     [self clearTripDB];
     [self.tripdb close];
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLTripStartTimeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     NSLog(@"Ended a %@ trip", self.currentTripMode);
 }
 
@@ -829,7 +822,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setResumesAfterDistance:(CLLocationDistance)resumesAfterDistance {
     [[NSUserDefaults standardUserDefaults] setDouble:resumesAfterDistance forKey:GLResumesAutomaticallyDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (CLLocationDistance)discardPointsWithinDistance {
@@ -841,7 +833,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDiscardPointsWithinDistance:(CLLocationDistance)distance {
     [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDiscardPointsWithinDistanceDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (CLLocationDistance)discardPointsWithinDistanceDuringTrip {
@@ -853,7 +844,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDiscardPointsWithinDistanceDuringTrip:(CLLocationDistance)distance {
     [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLTripDiscardPointsWithinDistanceDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (CLLocationDistance)discardPointsWithinDistanceCurrentValue {
@@ -873,7 +863,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDiscardPointsWithinSeconds:(int)seconds {
     [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLDiscardPointsWithinSecondsDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (int)discardPointsWithinSecondsDuringTrip {
@@ -885,7 +874,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDiscardPointsWithinSecondsDuringTrip:(int)seconds {
     [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLTripDiscardPointsWithinSecondsDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (int)discardPointsWithinSecondsCurrentValue {
@@ -912,7 +900,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setPausesAutomatically:(BOOL)pausesAutomatically {
     [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
 }
 
@@ -925,7 +912,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setIncludeTrackingStats:(BOOL)enabled {
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLIncludeTrackingStatsDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (GLTrackingMode)trackingMode {
@@ -937,7 +923,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setTrackingMode:(GLTrackingMode)trackingMode {
     [[NSUserDefaults standardUserDefaults] setInteger:trackingMode forKey:GLSignificantLocationModeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self enableTracking];
 }
 
@@ -950,7 +935,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setLoggingMode:(GLLoggingMode)loggingMode {
     [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLLoggingModeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (GLLoggingMode)loggingModeDuringTrip {
@@ -962,7 +946,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setLoggingModeDuringTrip:(GLLoggingMode)loggingMode {
     [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLTripLoggingModeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (GLLoggingMode)loggingModeCurrentValue {
@@ -982,7 +965,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setShowBackgroundLocationIndicator:(BOOL)mode {
     [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLBackgroundIndicatorDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     if(self.trackingEnabled && !self.tripInProgress) {
         self.locationManager.showsBackgroundLocationIndicator = mode;
     }
@@ -997,7 +979,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setShowBackgroundLocationIndicatorDuringTrip:(BOOL)mode {
     [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLTripBackgroundIndicatorDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     if(self.tripInProgress) {
         self.locationManager.showsBackgroundLocationIndicator = mode;
     }
@@ -1062,7 +1043,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
             break;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLActivityTypeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     self.locationManager.activityType = activityType;
 }
 
@@ -1125,7 +1105,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
             break;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLTripActivityTypeDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -1138,7 +1117,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
     NSLog(@"Setting desiredAccuracy: %f", desiredAccuracy);
     [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLDesiredAccuracyDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     if(!self.tripInProgress) {
         self.locationManager.desiredAccuracy = desiredAccuracy;
     }
@@ -1153,7 +1131,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setDesiredAccuracyDuringTrip:(CLLocationAccuracy)desiredAccuracy {
     [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLTripDesiredAccuracyDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     if(self.tripInProgress) {
         self.locationManager.desiredAccuracy = desiredAccuracy;
     }
@@ -1168,7 +1145,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setPointsPerBatch:(int)points {
     [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLPointsPerBatchDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (int)pointsPerBatchDuringTrip {
@@ -1180,7 +1156,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setPointsPerBatchDuringTrip:(int)points {
     [[NSUserDefaults standardUserDefaults] setInteger:points forKey:GLTripPointsPerBatchDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (int)pointsPerBatchCurrentValue {
@@ -1206,7 +1181,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)setSendingInterval:(NSNumber *)newValue {
     [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:GLSendIntervalDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     _sendingInterval = newValue;
 }
 
@@ -1216,7 +1190,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)setLastSentDate:(NSDate *)lastSentDate {
     [[NSUserDefaults standardUserDefaults] setObject:lastSentDate forKey:GLLastSentDateDefaultsName];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - CLLocationManager Delegate Methods
@@ -1524,7 +1497,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                           // If the user denies permission, set requested=NO so that if they ever enable it in settings again the permission will be requested again
                                           [[NSUserDefaults standardUserDefaults] setBool:granted forKey:GLNotificationPermissionRequestedDefaultsName];
                                           [[NSUserDefaults standardUserDefaults] setBool:granted forKey:GLNotificationsEnabledDefaultsName];
-                                          [[NSUserDefaults standardUserDefaults] synchronize];
                                           if(!granted) {
                                               NSLog(@"User did not allow notifications");
                                           }
@@ -1648,7 +1620,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"WifiZoneName"];
     [[NSUserDefaults standardUserDefaults] setObject:latitude forKey:@"WifiZoneLatitude"];
     [[NSUserDefaults standardUserDefaults] setObject:longitude forKey:@"WifiZoneLongitude"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 - (NSString *)wifiZoneName {
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneName"];
