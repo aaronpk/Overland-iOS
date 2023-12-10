@@ -16,6 +16,22 @@
 
 @implementation AppDelegate
 
+#pragma mark - UISceneSession lifecycle
+
+- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
+    // Called when a new scene session is being created.
+    // Use this method to select a configuration to create the new scene with.
+    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+}
+
+- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
+    // Called when the user discards a scene session.
+    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+}
+
+#pragma mark -
+
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     return YES;
 }
@@ -36,35 +52,15 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    [[GLManager sharedManager] applicationWillResignActive];
-    
-    // Register home screen actions
-    NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
-    UIApplication *app = UIApplication.sharedApplication;
-    app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-        UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:@"star.fill"];
-        return [[UIApplicationShortcutItem alloc] initWithType:obj
-                                                localizedTitle:obj
-                                             localizedSubtitle:nil
-                                                          icon:icon
-                                                      userInfo:nil];
-    }];
     
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    NSLog(@"Application is entering the background");
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [[GLManager sharedManager] applicationDidEnterBackground];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    if([[NSUserDefaults standardUserDefaults] boolForKey:GLPurgeQueueOnNextLaunchDefaultsName]) {
-        [[GLManager sharedManager] deleteAllData];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLPurgeQueueOnNextLaunchDefaultsName];
-    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -76,32 +72,6 @@
     NSLog(@"Application is terminating");
     [[NSUserDefaults standardUserDefaults] synchronize];
     [[GLManager sharedManager] applicationWillTerminate];
-}
-
-// App launched by clicking a URL
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    if([[url host] isEqualToString:@"setup"]) {
-        NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-        NSArray *queryItems  = urlComponents.queryItems;
-        NSString *endpoint = [self queryValueForKey:@"url" fromQueryItems:queryItems];
-        NSString *token    = [self queryValueForKey:@"token" fromQueryItems:queryItems];
-        NSString *deviceId = [self queryValueForKey:@"device_id" fromQueryItems:queryItems];
-        NSString *uniqueId = [self queryValueForKey:@"unique_id" fromQueryItems:queryItems];
-        NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@ unique_id=%@", endpoint, token, deviceId, uniqueId);
-        [[GLManager sharedManager] saveNewDeviceId:deviceId];
-        [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
-        [[NSUserDefaults standardUserDefaults] setBool:[uniqueId isEqualToString:@"yes"] forKey:GLIncludeUniqueIdDefaultsName];
-    }
-    
-    return YES;
-}
-
-- (NSString *)queryValueForKey:(NSString *)key fromQueryItems:(NSArray *)queryItems
-{
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name=%@", key];
-    NSURLQueryItem *queryItem = [[queryItems filteredArrayUsingPredicate:predicate] firstObject];
-    return queryItem.value;
 }
            
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
