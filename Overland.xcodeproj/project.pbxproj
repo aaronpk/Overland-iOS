@@ -42,6 +42,7 @@
 		0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "Fonts/OpenSans-Light.ttf"; sourceTree = SOURCE_ROOT; };
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
+		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+map.m"; sourceTree = "<group>"; };
 		0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+map.h"; sourceTree = "<group>"; };
@@ -185,6 +186,7 @@
 				0FFD317C1BAB7CB3009B3A03 /* LOLDB */,
 				0FFD31551BAB7A34009B3A03 /* Supporting Files */,
 				0FE280B02B0180620062936E /* Settings.bundle */,
+				0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */,
 			);
 			path = GPSLogger;
 			sourceTree = "<group>";
@@ -251,6 +253,7 @@
 					0FFD31511BAB7A34009B3A03 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 7MC6UZR2UV;
+						LastSwiftMigration = 1500;
 						SystemCapabilities = {
 							com.apple.AccessWiFi = {
 								enabled = 1;
@@ -472,6 +475,7 @@
 			baseConfigurationReference = F4DFFAB32440A8511E1D869A /* Pods-Overland.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Overland.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
@@ -487,6 +491,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "GPSLogger/Overland-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -496,6 +503,7 @@
 			baseConfigurationReference = 251EBCB0197B8F3891607241 /* Pods-Overland.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Overland.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
@@ -511,6 +519,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "GPSLogger/Overland-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

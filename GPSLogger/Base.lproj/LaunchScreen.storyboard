@@ -46,6 +46,6 @@
         <image name="figure.walk.circle.fill" catalog="system" width="128" height="123"/>
         <image name="map-pin" width="30" height="30"/>
         <image name="settings" width="28" height="29"/>
-        <image name="walk" width="64" height="64"/>
+        <image name="walk" width="128" height="128"/>
     </resources>
 </document>

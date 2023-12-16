@@ -20,6 +20,7 @@
 
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
+MKPointAnnotation *currentLocationAnnotation;
 
 - (void)registerUserActivity {
     NSString *bundleIDStarter = [NSString stringWithFormat:@"%@.startTracking", [[NSBundle mainBundle] bundleIdentifier]];
@@ -113,6 +114,9 @@ NSArray *intervalMapStrings;
     self.mapView.camera.centerCoordinateDistance = 4000;
     self.mapView.zoomEnabled = YES;
     
+    currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
+    MKAnnotationView *dot = [[MKAnnotationView alloc] initWithAnnotation:currentLocationAnnotation reuseIdentifier:@"current"];
+    [self.mapView addAnnotation:currentLocationAnnotation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -127,6 +131,20 @@ NSArray *intervalMapStrings;
 - (void)dealloc {
     NSLog(@"view is deallocd");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - MKMapViewDelegate
+
+- (MKAnnotationView * _Nullable)mapView:(MKMapView *)mapView viewForAnnotation:(nonnull id<MKAnnotation>)annotation {
+    NSLog(@"mapView:viewForAnnotation:");
+    MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current"];
+    if(annotationView == nil) {
+        annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
+    } else {
+        annotationView.annotation = annotation;
+    }
+    annotationView.image = [UIImage imageNamed:@"map-dot"];
+    return annotationView;
 }
 
 #pragma mark - Tracking Interface
@@ -169,7 +187,11 @@ NSArray *intervalMapStrings;
     self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
 
-    self.mapView.camera.centerCoordinate = location.coordinate;
+    MKMapCamera *camera = [[MKMapCamera alloc] init];
+    camera.centerCoordinate = location.coordinate;
+    camera.altitude = 4000;
+    [self.mapView setCamera:camera animated:YES];
+    currentLocationAnnotation.coordinate = location.coordinate;
 
     int speed;
     if(self.usesMetricSystem) {
