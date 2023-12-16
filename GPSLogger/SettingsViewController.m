@@ -45,14 +45,17 @@
 
     GLTrackingMode trackingMode = [GLManager sharedManager].trackingMode;
     switch(trackingMode) {
+        case kGLTrackingModeOff:
+            self.continuousTrackingMode.selectedSegmentIndex = 0;
+            break;
         case kGLTrackingModeStandard:
-            self.significantLocationMode.selectedSegmentIndex = 0;
+            self.continuousTrackingMode.selectedSegmentIndex = 1;
             break;
         case kGLTrackingModeSignificant:
-            self.significantLocationMode.selectedSegmentIndex = 1;
+            self.continuousTrackingMode.selectedSegmentIndex = 2;
             break;
         case kGLTrackingModeStandardAndSignificant:
-            self.significantLocationMode.selectedSegmentIndex = 2;
+            self.continuousTrackingMode.selectedSegmentIndex = 3;
             break;
     }
     
@@ -259,14 +262,16 @@
     [GLManager sharedManager].resumesAfterDistance = distance;
 }
 
-- (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender {
+- (IBAction)continuousTrackingModeWasChanged:(UISegmentedControl *)sender {
     GLTrackingMode m = kGLTrackingModeStandard;
     switch(sender.selectedSegmentIndex) {
         case 0:
-            m = kGLTrackingModeStandard; break;
+            m = kGLTrackingModeOff; break;
         case 1:
-            m = kGLTrackingModeSignificant; break;
+            m = kGLTrackingModeStandard; break;
         case 2:
+            m = kGLTrackingModeSignificant; break;
+        case 3:
             m = kGLTrackingModeStandardAndSignificant; break;
     }
     [GLManager sharedManager].trackingMode = m;

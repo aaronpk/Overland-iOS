@@ -71,6 +71,7 @@ static NSString *const GLTripModeBoat = @"boat";
 static NSString *const GLTripModeScooter = @"scooter";
 
 typedef enum {
+    kGLTrackingModeOff,
     kGLTrackingModeStandard,
     kGLTrackingModeSignificant,
     kGLTrackingModeStandardAndSignificant

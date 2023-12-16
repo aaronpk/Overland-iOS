@@ -453,6 +453,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self.locationManager stopMonitoringSignificantLocationChanges];
     } else {
         switch(self.trackingMode) {
+            case kGLTrackingModeOff:
+                NSLog(@"Not monitoring continuous location");
+                [self.locationManager stopUpdatingLocation];
+                [self.locationManager stopUpdatingHeading];
+                [self.locationManager stopMonitoringSignificantLocationChanges];
+                break;
             case kGLTrackingModeStandard:
                 NSLog(@"Monitoring standard location changes");
                 [self.locationManager startUpdatingLocation];

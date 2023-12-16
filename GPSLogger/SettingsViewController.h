@@ -14,7 +14,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pausesAutomatically;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *resumesWithGeofence;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *significantLocationMode;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *continuousTrackingMode;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinDistance;
@@ -31,7 +31,7 @@
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
 - (IBAction)pausesAutomaticallyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)resumeWithGeofenceWasChanged:(UISegmentedControl *)sender;
-- (IBAction)significantLocationModeWasChanged:(UISegmentedControl *)sender;
+- (IBAction)continuousTrackingModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;

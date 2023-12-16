@@ -857,7 +857,7 @@ IAogA
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4T0-JJ-3R5">
                                                 <rect key="frame" x="0.0" y="154.5" width="335" height="51.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking Mode" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Continuous Tracking Mode" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-TW-rUL">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
@@ -866,13 +866,14 @@ IAogA
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Akh-qL-9sA">
                                                         <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
                                                         <segments>
+                                                            <segment title="Off"/>
                                                             <segment title="Standard"/>
                                                             <segment title="Significant"/>
                                                             <segment title="Both"/>
                                                         </segments>
                                                         <connections>
                                                             <action selector="activityTypeControlWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="8Ds-5Q-CI2"/>
-                                                            <action selector="significantLocationModeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="7HG-bu-QSw"/>
+                                                            <action selector="continuousTrackingModeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="7HG-bu-QSw"/>
                                                         </connections>
                                                     </segmentedControl>
                                                 </subviews>
@@ -1230,6 +1231,7 @@ IAogA
                     <connections>
                         <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
                         <outlet property="apiEndpointField" destination="seG-TQ-mcO" id="oC9-tY-7iT"/>
+                        <outlet property="continuousTrackingMode" destination="Akh-qL-9sA" id="fzx-Or-Dnd"/>
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="discardPointsWithinDistance" destination="1Yp-6o-vL0" id="QZn-Xp-P3M"/>
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
@@ -1243,7 +1245,6 @@ IAogA
                         <outlet property="requestLocationPermissionsButton" destination="IXl-Gq-qXJ" id="hbU-ME-amE"/>
                         <outlet property="resumesWithGeofence" destination="Fur-qf-dnD" id="scS-ec-2Kf"/>
                         <outlet property="showBackgroundLocationIndicator" destination="nu2-e9-r6a" id="bTL-Tg-wOq"/>
-                        <outlet property="significantLocationMode" destination="Akh-qL-9sA" id="fzx-Or-Dnd"/>
                         <outlet property="trackingEnabledToggle" destination="3HR-UH-lc1" id="RyA-Ed-4Vw"/>
                     </connections>
                 </viewController>
