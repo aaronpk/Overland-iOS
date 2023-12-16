@@ -1589,7 +1589,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
     
-    completionHandler(UNNotificationPresentationOptionAlert);
+    completionHandler(UNNotificationPresentationOptionList | UNNotificationPresentationOptionBanner);
 }
 
 - (void)askToEndTrip
