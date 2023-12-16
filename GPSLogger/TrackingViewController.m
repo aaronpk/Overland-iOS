@@ -215,7 +215,7 @@ BOOL mapWasDragged = NO;
     MKMapRect smallerRect = [self.mapView mapRectThatFits:self.mapView.visibleMapRect edgePadding:insets];
     BOOL outOfBounds = !MKMapRectContainsPoint(smallerRect, point);
 
-    // Pan the map if the map is not currently being dragged and the point is not visible
+    // Pan the map if the map is not currently being dragged and the point is near the edge
     MKMapCamera *camera;
     if(outOfBounds && !dragInProgress) {
         if(outOfBounds) {
