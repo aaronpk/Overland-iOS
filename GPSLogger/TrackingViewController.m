@@ -209,12 +209,13 @@ BOOL mapWasDragged = NO;
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
 
     
-    // Determine if the current location is outside the visible map
+    // Determine if the current location too close to the edge of the map
     MKMapPoint point = MKMapPointForCoordinate(location.coordinate);
-    BOOL outOfBounds = !MKMapRectContainsPoint(self.mapView.visibleMapRect, point);
+    UIEdgeInsets insets = UIEdgeInsetsMake(-50, -50, -50, -50);
+    MKMapRect smallerRect = [self.mapView mapRectThatFits:self.mapView.visibleMapRect edgePadding:insets];
+    BOOL outOfBounds = !MKMapRectContainsPoint(smallerRect, point);
 
-    // Pan the map if either the map was dragged,
-    // or if the map is not currently being dragged and the point is not visible
+    // Pan the map if the map is not currently being dragged and the point is not visible
     MKMapCamera *camera;
     if(outOfBounds && !dragInProgress) {
         if(outOfBounds) {
