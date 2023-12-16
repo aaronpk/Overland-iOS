@@ -13,6 +13,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *continuousTrackingMode;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *visitTrackingControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
@@ -30,6 +31,7 @@
 
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
 - (IBAction)continuousTrackingModeWasChanged:(UISegmentedControl *)sender;
+- (IBAction)visitTrackingWasChanged:(UISegmentedControl *)sender;
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
 - (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender;

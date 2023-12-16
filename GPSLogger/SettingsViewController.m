@@ -25,20 +25,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    if([GLManager sharedManager].trackingEnabled)
-        self.trackingEnabledToggle.selectedSegmentIndex = 0;
-    else
-        self.trackingEnabledToggle.selectedSegmentIndex = 1;
-    
-    self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
-    self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
-    
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
         self.apiEndpointField.text = @"tap to set endpoint";
     }
 
+    self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 1 : 0);
+    self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
+    self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
+    
     [self authorizationStatusChanged];
     
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityType - 1;
@@ -58,6 +54,8 @@
             self.continuousTrackingMode.selectedSegmentIndex = 3;
             break;
     }
+    
+    self.visitTrackingControl.selectedSegmentIndex = ([GLManager sharedManager].visitTrackingEnabled ? 1 : 0);
     
     GLLoggingMode loggingMode = [GLManager sharedManager].loggingMode;
     switch(loggingMode) {
@@ -188,7 +186,7 @@
 - (IBAction)toggleLogging:(UISegmentedControl *)sender {
     NSLog(@"Logging: %@", [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]);
     
-    if(sender.selectedSegmentIndex == 0) {
+    if(sender.selectedSegmentIndex == 1) {
         [[GLManager sharedManager] startAllUpdates];
     } else {
         [[GLManager sharedManager] stopAllUpdates];
@@ -275,6 +273,17 @@
             m = kGLTrackingModeStandardAndSignificant; break;
     }
     [GLManager sharedManager].trackingMode = m;
+}
+
+- (IBAction)visitTrackingWasChanged:(UISegmentedControl *)sender {
+    BOOL enabled = NO;
+    switch(sender.selectedSegmentIndex) {
+        case 0:
+            enabled = NO; break;
+        case 1:
+            enabled = YES; break;
+    }
+    [GLManager sharedManager].visitTrackingEnabled = enabled;
 }
 
 - (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender {

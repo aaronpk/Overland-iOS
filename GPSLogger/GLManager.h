@@ -38,6 +38,7 @@ static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP20
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
+static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 
@@ -109,6 +110,7 @@ typedef enum {
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) GLTrackingMode trackingMode;
+@property BOOL visitTrackingEnabled;
 @property (nonatomic) GLLoggingMode loggingMode;
 @property (nonatomic) BOOL showBackgroundLocationIndicator;
 @property (nonatomic) CLActivityType activityType;

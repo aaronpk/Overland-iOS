@@ -480,7 +480,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
     }
     
-    [self.locationManager startMonitoringVisits];
+    if(self.visitTrackingEnabled) {
+        [self.locationManager startMonitoringVisits];
+    } else {
+        [self.locationManager stopMonitoringVisits];
+    }
     
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     
@@ -960,6 +964,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self enableTracking];
 }
 
+- (BOOL)visitTrackingEnabled {
+    if([self defaultsKeyExists:GLVisitTrackingEnabledDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLVisitTrackingEnabledDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setVisitTrackingEnabled:(BOOL)enabled {
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLVisitTrackingEnabledDefaultsName];
+    [self enableTracking];
+}
+
 - (GLLoggingMode)loggingMode {
     if([self defaultsKeyExists:GLLoggingModeDefaultsName]) {
         return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLLoggingModeDefaultsName];
@@ -1231,9 +1247,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
 
-    if(self.includeTrackingStats) {
-        NSLog(@"Got a visit event: %@", visit);
-        
+    if(self.visitTrackingEnabled) {
         [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
             NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
             NSDictionary *update = @{
@@ -1274,6 +1288,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+    if(self.trackingMode == kGLTrackingModeOff) {
+        // This probably shouldn't happen, but just in case, don't log anything if they have tracking mode set to off
+        return;
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
     
     // If a wifi override is configured, replace the input location list with the location in the wifi mapping
