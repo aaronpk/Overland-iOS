@@ -44,9 +44,9 @@ BOOL mapWasDragged = NO;
     intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @-1];
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
     
-//    [[GLManager sharedManager] accountInfo:^(NSString *name) {
-//        self.accountInfo.text = name;
-//    }];
+    //    [[GLManager sharedManager] accountInfo:^(NSString *name) {
+    //        self.accountInfo.text = name;
+    //    }];
     
     UIImage *pattern = [UIImage imageNamed:@"topobkg"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
@@ -63,6 +63,15 @@ BOOL mapWasDragged = NO;
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRecognizer setDelegate:self];
     [self.mapView addGestureRecognizer:panRecognizer];
+    
+    CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
+    self.mapView.showsUserLocation = NO;
+    self.mapView.camera.centerCoordinate = lastLocation.coordinate;
+    self.mapView.camera.centerCoordinateDistance = 4000;
+    self.mapView.zoomEnabled = YES;
+    
+    currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
+    [self.mapView addAnnotation:currentLocationAnnotation];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -113,15 +122,6 @@ BOOL mapWasDragged = NO;
     } else {
         self.tripDistanceUnitLabel.text = @"miles";
     }
-    
-    CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
-    self.mapView.showsUserLocation = NO;
-    self.mapView.camera.centerCoordinate = lastLocation.coordinate;
-    self.mapView.camera.centerCoordinateDistance = 4000;
-    self.mapView.zoomEnabled = YES;
-    
-    currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
-    [self.mapView addAnnotation:currentLocationAnnotation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
