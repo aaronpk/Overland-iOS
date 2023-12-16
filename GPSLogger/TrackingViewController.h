@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-@interface TrackingViewController : UIViewController <MKMapViewDelegate>
+@interface TrackingViewController : UIViewController <MKMapViewDelegate, UIGestureRecognizerDelegate>
 
 @property BOOL usesMetricSystem;
 

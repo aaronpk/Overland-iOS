@@ -21,6 +21,8 @@
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
 MKPointAnnotation *currentLocationAnnotation;
+BOOL dragInProgress = NO;
+BOOL mapWasDragged = NO;
 
 - (void)registerUserActivity {
     NSString *bundleIDStarter = [NSString stringWithFormat:@"%@.startTracking", [[NSBundle mainBundle] bundleIdentifier]];
@@ -57,6 +59,10 @@ MKPointAnnotation *currentLocationAnnotation;
     // adding Shortcut Code
     // get Bundle ID and add ...
     [self registerUserActivity];
+    
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    [panRecognizer setDelegate:self];
+    [self.mapView addGestureRecognizer:panRecognizer];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -115,7 +121,6 @@ MKPointAnnotation *currentLocationAnnotation;
     self.mapView.zoomEnabled = YES;
     
     currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
-    MKAnnotationView *dot = [[MKAnnotationView alloc] initWithAnnotation:currentLocationAnnotation reuseIdentifier:@"current"];
     [self.mapView addAnnotation:currentLocationAnnotation];
 }
 
@@ -136,7 +141,6 @@ MKPointAnnotation *currentLocationAnnotation;
 #pragma mark - MKMapViewDelegate
 
 - (MKAnnotationView * _Nullable)mapView:(MKMapView *)mapView viewForAnnotation:(nonnull id<MKAnnotation>)annotation {
-    NSLog(@"mapView:viewForAnnotation:");
     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current"];
     if(annotationView == nil) {
         annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
@@ -145,6 +149,22 @@ MKPointAnnotation *currentLocationAnnotation;
     }
     annotationView.image = [UIImage imageNamed:@"map-dot"];
     return annotationView;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)didDragMap:(UIGestureRecognizer *)gestureRecognizer {
+    if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        dragInProgress = YES;
+        mapWasDragged = YES;
+    }
+    if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        dragInProgress = NO;
+    }
 }
 
 #pragma mark - Tracking Interface
@@ -187,10 +207,23 @@ MKPointAnnotation *currentLocationAnnotation;
     self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
 
-    MKMapCamera *camera = [[MKMapCamera alloc] init];
-    camera.centerCoordinate = location.coordinate;
-    camera.altitude = 4000;
-    [self.mapView setCamera:camera animated:YES];
+    
+    // Determine if the current location is outside the visible map
+    MKMapPoint point = MKMapPointForCoordinate(location.coordinate);
+    BOOL outOfBounds = !MKMapRectContainsPoint(self.mapView.visibleMapRect, point);
+
+    // Pan the map if either the map was dragged,
+    // or if the map is not currently being dragged and the point is not visible
+    if(!mapWasDragged || (outOfBounds && !dragInProgress)) {
+        if(outOfBounds) {
+            // Reset
+            mapWasDragged = NO;
+        }
+        MKMapCamera *camera = [[MKMapCamera alloc] init];
+        camera.centerCoordinate = location.coordinate;
+        camera.altitude = 4000;
+        [self.mapView setCamera:camera animated:YES];
+    }
     currentLocationAnnotation.coordinate = location.coordinate;
 
     int speed;
