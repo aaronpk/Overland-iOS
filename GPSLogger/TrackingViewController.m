@@ -107,6 +107,12 @@ NSArray *intervalMapStrings;
         self.tripDistanceUnitLabel.text = @"miles";
     }
     
+    CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
+    self.mapView.showsUserLocation = NO;
+    self.mapView.camera.centerCoordinate = lastLocation.coordinate;
+    self.mapView.camera.centerCoordinateDistance = 400;
+    self.mapView.zoomEnabled = YES;
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -162,6 +168,8 @@ NSArray *intervalMapStrings;
     CLLocation *location = [GLManager sharedManager].lastLocation;
     self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
     self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
+
+    self.mapView.camera.centerCoordinate = location.coordinate;
 
     int speed;
     if(self.usesMetricSystem) {

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 @interface TrackingViewController : UIViewController
 
@@ -43,5 +44,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *tripDistanceUnitLabel;
 @property (strong, nonatomic) IBOutlet UIButton *tripStartStopButton;
 - (IBAction)tripStartStopWasTapped:(id)sender;
+
+@property (strong, nonatomic) IBOutlet MKMapView *mapView;
 
 @end
