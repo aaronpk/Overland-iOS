@@ -158,6 +158,7 @@ BOOL mapWasDragged = NO;
 }
 
 - (void)didDragMap:(UIGestureRecognizer *)gestureRecognizer {
+//    [UIView setAnimationsEnabled:NO];
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         dragInProgress = YES;
         mapWasDragged = YES;
@@ -214,18 +215,29 @@ BOOL mapWasDragged = NO;
 
     // Pan the map if either the map was dragged,
     // or if the map is not currently being dragged and the point is not visible
-    if(!mapWasDragged || (outOfBounds && !dragInProgress)) {
+    MKMapCamera *camera;
+    if(outOfBounds && !dragInProgress) {
         if(outOfBounds) {
             // Reset
             mapWasDragged = NO;
         }
-        MKMapCamera *camera = [[MKMapCamera alloc] init];
+        camera = [[MKMapCamera alloc] init];
         camera.centerCoordinate = location.coordinate;
         camera.altitude = 4000;
+    }
+
+    if(camera != nil) {
         [self.mapView setCamera:camera animated:YES];
     }
-    currentLocationAnnotation.coordinate = location.coordinate;
 
+    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+        currentLocationAnnotation.coordinate = location.coordinate;
+    } completion:^(BOOL finished) {
+        if(!finished) {
+            currentLocationAnnotation.coordinate = location.coordinate;
+        }
+    }];
+    
     int speed;
     if(self.usesMetricSystem) {
         speed = (int)(round(location.speed*3.6));

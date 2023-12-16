@@ -419,9 +419,9 @@ IAogA
                                                     <constraint firstItem="tIR-7Y-EzQ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="bVL-KY-bY2"/>
                                                 </constraints>
                                             </stackView>
-                                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mke-R6-q16">
+                                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pitchEnabled="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mke-R6-q16">
                                                 <rect key="frame" x="0.0" y="515" width="375" height="81"/>
-                                                <standardMapConfiguration key="preferredConfiguration"/>
+                                                <standardMapConfiguration key="preferredConfiguration" elevationStyle="realistic" emphasisStyle="muted"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="9pv-A4-QxB" id="iu5-td-bgY"/>
                                                 </connections>
