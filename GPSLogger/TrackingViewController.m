@@ -110,7 +110,7 @@ NSArray *intervalMapStrings;
     CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
     self.mapView.showsUserLocation = NO;
     self.mapView.camera.centerCoordinate = lastLocation.coordinate;
-    self.mapView.camera.centerCoordinateDistance = 400;
+    self.mapView.camera.centerCoordinateDistance = 4000;
     self.mapView.zoomEnabled = YES;
     
 }
