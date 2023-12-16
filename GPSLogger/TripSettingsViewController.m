@@ -24,6 +24,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [self lockAllControls];
+
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
 
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityTypeDuringTrip - 1;
@@ -114,6 +116,36 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)settingsLockSliderWasChanged:(UISlider *)sender {
+    if(sender.value > 95) {
+        [self unlockAllControls];
+    } else {
+        [self lockAllControls];
+    }
+}
+
+- (void)lockAllControls {
+    self.desiredAccuracy.enabled = NO;
+    self.activityType.enabled = NO;
+    self.showBackgroundLocationIndicator.enabled = NO;
+    self.preventScreenLockDuringTrip.enabled = NO;
+    self.loggingMode.enabled = NO;
+    self.pointsPerBatchControl.enabled = NO;
+    self.discardPointsWithinDistance.enabled = NO;
+    self.discardPointsWithinSeconds.enabled = NO;
+}
+
+- (void)unlockAllControls {
+    self.desiredAccuracy.enabled = YES;
+    self.activityType.enabled = YES;
+    self.showBackgroundLocationIndicator.enabled = YES;
+    self.preventScreenLockDuringTrip.enabled = YES;
+    self.loggingMode.enabled = YES;
+    self.pointsPerBatchControl.enabled = YES;
+    self.discardPointsWithinDistance.enabled = YES;
+    self.discardPointsWithinSeconds.enabled = YES;
 }
 
 -(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {

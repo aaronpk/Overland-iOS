@@ -25,6 +25,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [self lockAllControls];
+    
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
@@ -166,6 +168,56 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)settingsLockSliderWasChanged:(UISlider *)sender {
+    if(sender.value > 95) {
+        [self unlockAllControls];
+    } else {
+        [self lockAllControls];
+    }
+}
+
+- (void)lockAllControls {
+    self.apiEndpointField.enabled = NO;
+    self.trackingEnabledToggle.enabled = NO;
+    self.trackingEnabledToggle.enabled = NO;
+    self.continuousTrackingMode.enabled = NO;
+    self.visitTrackingControl.enabled = NO;
+    self.desiredAccuracy.enabled = NO;
+    self.activityType.enabled = NO;
+    self.showBackgroundLocationIndicator.enabled = NO;
+    self.pausesAutomatically.enabled = NO;
+    self.loggingMode.enabled = NO;
+    self.pointsPerBatchControl.enabled = NO;
+    self.resumesWithGeofence.enabled = NO;
+    self.discardPointsWithinDistance.enabled = NO;
+    self.discardPointsWithinSeconds.enabled = NO;
+    self.enableNotifications.enabled = NO;
+    self.locationAuthorizationStatus.enabled = NO;
+    self.locationAuthorizationStatusWarning.enabled = NO;
+    self.requestLocationPermissionsButton.enabled = NO;
+}
+
+- (void)unlockAllControls {
+    self.apiEndpointField.enabled = YES;
+    self.trackingEnabledToggle.enabled = YES;
+    self.trackingEnabledToggle.enabled = YES;
+    self.continuousTrackingMode.enabled = YES;
+    self.visitTrackingControl.enabled = YES;
+    self.desiredAccuracy.enabled = YES;
+    self.activityType.enabled = YES;
+    self.showBackgroundLocationIndicator.enabled = YES;
+    self.pausesAutomatically.enabled = YES;
+    self.loggingMode.enabled = YES;
+    self.pointsPerBatchControl.enabled = YES;
+    self.resumesWithGeofence.enabled = YES;
+    self.discardPointsWithinDistance.enabled = YES;
+    self.discardPointsWithinSeconds.enabled = YES;
+    self.enableNotifications.enabled = YES;
+    self.locationAuthorizationStatus.enabled = YES;
+    self.locationAuthorizationStatusWarning.enabled = YES;
+    self.requestLocationPermissionsButton.enabled = YES;
 }
 
 - (void)authorizationStatusChanged {

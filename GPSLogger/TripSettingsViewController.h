@@ -13,6 +13,7 @@
 
 @interface TripSettingsViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UISlider *settingsLockSlider;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 
+- (IBAction)settingsLockSliderWasChanged:(UISlider *)sender;
 
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;

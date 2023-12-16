@@ -10,6 +10,7 @@
 
 @interface SettingsViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UISlider *settingsLockSlider;
 @property (strong, nonatomic) IBOutlet UILabel *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *trackingEnabledToggle;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *continuousTrackingMode;
@@ -29,6 +30,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatusWarning;
 @property (strong, nonatomic) IBOutlet UIButton *requestLocationPermissionsButton;
 
+- (IBAction)settingsLockSliderWasChanged:(UISlider *)sender;
 - (IBAction)toggleLogging:(UISegmentedControl *)sender;
 - (IBAction)continuousTrackingModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)visitTrackingWasChanged:(UISegmentedControl *)sender;
