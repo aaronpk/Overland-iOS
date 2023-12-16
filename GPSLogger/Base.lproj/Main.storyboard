@@ -36,7 +36,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kI1-mz-g9B" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="590"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05S-Qj-3zI">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05S-Qj-3zI" userLabel="AgeLocationSpeedView">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AGE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vgb-fz-S0R">
@@ -153,7 +153,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9iG-7h-Ohb">
-                                                <rect key="frame" x="20" y="240" width="335" height="350"/>
+                                                <rect key="frame" x="20" y="240" width="335" height="257"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="AEs-fE-5WC" userLabel="Sent Data View">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="78.5"/>
@@ -234,7 +234,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="tIR-7Y-EzQ" userLabel="Send Interval View">
-                                                        <rect key="frame" x="0.0" y="103" width="335" height="47"/>
+                                                        <rect key="frame" x="0.0" y="98.5" width="335" height="47"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEND INTERVAL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KnT-mR-4jf">
                                                                 <rect key="frame" x="114.5" y="0.0" width="106.5" height="17"/>
@@ -277,7 +277,7 @@
                                                         </constraints>
                                                     </stackView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FAz-8W-iDJ">
-                                                        <rect key="frame" x="0.0" y="174.5" width="335" height="91.5"/>
+                                                        <rect key="frame" x="0.0" y="165.5" width="335" height="91.5"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zvD-hO-75N">
                                                                 <rect key="frame" x="6" y="6" width="323" height="79.5"/>
@@ -410,32 +410,30 @@ IAogA
                                                             </mask>
                                                         </variation>
                                                     </view>
-                                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mke-R6-q16">
-                                                        <rect key="frame" x="0.0" y="290.5" width="335" height="59.5"/>
-                                                        <standardMapConfiguration key="preferredConfiguration"/>
-                                                    </mapView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="Mke-R6-q16" firstAttribute="centerX" secondItem="9iG-7h-Ohb" secondAttribute="centerX" id="1Ce-vw-QW6"/>
                                                     <constraint firstItem="FAz-8W-iDJ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="39d-Id-jax"/>
                                                     <constraint firstAttribute="trailing" secondItem="FAz-8W-iDJ" secondAttribute="trailing" id="8gu-GY-o3l"/>
                                                     <constraint firstAttribute="trailing" secondItem="tIR-7Y-EzQ" secondAttribute="trailing" id="9zl-mW-13Z"/>
                                                     <constraint firstItem="AEs-fE-5WC" firstAttribute="leading" secondItem="tIR-7Y-EzQ" secondAttribute="leading" id="OSz-wJ-i1H"/>
-                                                    <constraint firstItem="Mke-R6-q16" firstAttribute="top" secondItem="FAz-8W-iDJ" secondAttribute="bottom" constant="24.5" id="YNs-mq-VWB"/>
                                                     <constraint firstItem="tIR-7Y-EzQ" firstAttribute="leading" secondItem="9iG-7h-Ohb" secondAttribute="leading" id="bVL-KY-bY2"/>
                                                 </constraints>
                                             </stackView>
+                                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mke-R6-q16">
+                                                <rect key="frame" x="0.0" y="515" width="375" height="81"/>
+                                                <standardMapConfiguration key="preferredConfiguration"/>
+                                            </mapView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="9iG-7h-Ohb" firstAttribute="leading" secondItem="kI1-mz-g9B" secondAttribute="leading" constant="20" id="19h-Or-M6C"/>
                                             <constraint firstItem="05S-Qj-3zI" firstAttribute="leading" secondItem="kI1-mz-g9B" secondAttribute="leading" id="59R-uI-g8j"/>
-                                            <constraint firstAttribute="trailing" secondItem="Mke-R6-q16" secondAttribute="trailing" id="5aT-qd-b8L"/>
                                             <constraint firstItem="9iG-7h-Ohb" firstAttribute="top" secondItem="05S-Qj-3zI" secondAttribute="bottom" constant="20" id="7MZ-7C-3kv"/>
                                             <constraint firstItem="05S-Qj-3zI" firstAttribute="top" secondItem="kI1-mz-g9B" secondAttribute="top" id="BZJ-Ua-OZY"/>
                                             <constraint firstAttribute="trailing" secondItem="05S-Qj-3zI" secondAttribute="trailing" id="KFg-BW-EvL"/>
                                             <constraint firstAttribute="trailing" secondItem="9iG-7h-Ohb" secondAttribute="trailing" constant="20" id="bfb-j9-HkD"/>
-                                            <constraint firstItem="Mke-R6-q16" firstAttribute="leading" secondItem="kI1-mz-g9B" secondAttribute="leading" id="eKr-3F-vMj"/>
-                                            <constraint firstAttribute="bottom" secondItem="Mke-R6-q16" secondAttribute="bottom" id="i1j-pT-Hag"/>
+                                            <constraint firstItem="Mke-R6-q16" firstAttribute="top" secondItem="9iG-7h-Ohb" secondAttribute="bottom" constant="18" id="ijR-CK-Vh6"/>
+                                            <constraint firstItem="Mke-R6-q16" firstAttribute="centerX" secondItem="kI1-mz-g9B" secondAttribute="centerX" id="inb-1o-OEk"/>
+                                            <constraint firstItem="Mke-R6-q16" firstAttribute="width" secondItem="kI1-mz-g9B" secondAttribute="width" id="vhv-fb-YRH"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -449,6 +447,7 @@ IAogA
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="Mke-R6-q16" secondAttribute="bottom" constant="2" id="0JS-E3-RCM"/>
                             <constraint firstItem="kI1-mz-g9B" firstAttribute="width" secondItem="tsR-hK-woN" secondAttribute="width" id="8YP-9F-KGB"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="iWR-sf-Vob" secondAttribute="bottom" constant="8" symbolic="YES" id="ILF-ys-MOV"/>
                             <constraint firstItem="Det-C7-N3h" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="20" id="Mta-o6-qZv"/>
