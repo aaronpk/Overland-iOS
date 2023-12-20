@@ -566,6 +566,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
                        GLTripModeCar, GLTripModeTaxi, GLTripModeBus,
                        GLTripModeTram, GLTripModeTrain, GLTripModeMetro,
+                       GLTripModeGondola, GLTripModeMonorail, GLTripModeSleigh,
                        GLTripModePlane, GLTripModeBoat, GLTripModeScooter];
         }
     return _tripModes;

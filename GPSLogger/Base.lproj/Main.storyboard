@@ -519,7 +519,7 @@ IAogA
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="SJg-fe-ZlP">
-                                <rect key="frame" x="20" y="0.0" width="335" height="357.5"/>
+                                <rect key="frame" x="20" y="0.0" width="335" height="437.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mhh-Td-umZ">
                                         <rect key="frame" x="161" y="0.0" width="13.5" height="20.5"/>
@@ -534,10 +534,10 @@ IAogA
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="MXr-Y7-cet">
-                                        <rect key="frame" x="0.0" y="37.5" width="335" height="320"/>
+                                        <rect key="frame" x="0.0" y="37.5" width="335" height="400"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wua-lz-cny">
-                                                <rect key="frame" x="0.0" y="0.0" width="64" height="320"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="400"/>
                                                 <subviews>
                                                     <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walk" translatesAutoresizingMaskIntoConstraints="NO" id="UhZ-Ml-AUK">
                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -581,7 +581,7 @@ IAogA
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView tag="9" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plane" translatesAutoresizingMaskIntoConstraints="NO" id="iVE-ft-zHN">
+                                                    <imageView tag="9" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gondola" translatesAutoresizingMaskIntoConstraints="NO" id="iVE-ft-zHN">
                                                         <rect key="frame" x="0.0" y="240" width="64" height="64"/>
                                                         <color key="tintColor" systemColor="labelColor"/>
                                                         <gestureRecognizers/>
@@ -589,8 +589,22 @@ IAogA
                                                             <outletCollection property="gestureRecognizers" destination="FJe-qP-qcd" appends="YES" id="se2-9D-V6R"/>
                                                         </connections>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="plane" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="je6-UB-E10">
-                                                        <rect key="frame" x="15.5" y="304" width="33.5" height="16"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="gondola" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="je6-UB-E10">
+                                                        <rect key="frame" x="7.5" y="304" width="49" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView tag="12" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plane" translatesAutoresizingMaskIntoConstraints="NO" id="hGE-BS-jCZ">
+                                                        <rect key="frame" x="0.0" y="320" width="64" height="64"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
+                                                        <gestureRecognizers/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="Vpu-Mg-Rgg" appends="YES" id="vJG-Qv-tig"/>
+                                                        </connections>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="plane" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x26-o9-uMX">
+                                                        <rect key="frame" x="15.5" y="384" width="33.5" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -598,7 +612,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="WbM-S5-rnl">
-                                                <rect key="frame" x="135.5" y="0.0" width="64" height="320"/>
+                                                <rect key="frame" x="135.5" y="0.0" width="64" height="400"/>
                                                 <subviews>
                                                     <imageView tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="run" translatesAutoresizingMaskIntoConstraints="NO" id="7tG-2e-09y">
                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -642,13 +656,30 @@ IAogA
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boat" translatesAutoresizingMaskIntoConstraints="NO" id="Iem-1U-gbm">
+                                                    <imageView tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="monorail" translatesAutoresizingMaskIntoConstraints="NO" id="Iem-1U-gbm">
                                                         <rect key="frame" x="0.0" y="240" width="64" height="64"/>
                                                         <color key="tintColor" systemColor="labelColor"/>
                                                         <gestureRecognizers/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="exk-qA-djw" appends="YES" id="chZ-Rx-FLW"/>
+                                                        </connections>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="boat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rsd-FV-tLC">
-                                                        <rect key="frame" x="18.5" y="304" width="27.5" height="16"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="monorail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rsd-FV-tLC">
+                                                        <rect key="frame" x="6" y="304" width="52.5" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView tag="13" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boat" translatesAutoresizingMaskIntoConstraints="NO" id="GIz-dW-TY2">
+                                                        <rect key="frame" x="0.0" y="320" width="64" height="64"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
+                                                        <gestureRecognizers/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="ssZ-oW-bAm" appends="YES" id="1FF-mD-jLN"/>
+                                                        </connections>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="boat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlo-ce-MYJ">
+                                                        <rect key="frame" x="18.5" y="384" width="27.5" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -656,7 +687,7 @@ IAogA
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wU8-3R-1Q6">
-                                                <rect key="frame" x="271" y="0.0" width="64" height="320"/>
+                                                <rect key="frame" x="271" y="0.0" width="64" height="400"/>
                                                 <subviews>
                                                     <imageView tag="2" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bicycle" translatesAutoresizingMaskIntoConstraints="NO" id="Rce-mJ-me9">
                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -700,7 +731,7 @@ IAogA
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scooter" translatesAutoresizingMaskIntoConstraints="NO" id="av1-TB-p16">
+                                                    <imageView tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sleigh" translatesAutoresizingMaskIntoConstraints="NO" id="av1-TB-p16">
                                                         <rect key="frame" x="0.0" y="240" width="64" height="64"/>
                                                         <color key="tintColor" systemColor="labelColor"/>
                                                         <gestureRecognizers/>
@@ -708,8 +739,22 @@ IAogA
                                                             <outletCollection property="gestureRecognizers" destination="Uxh-Fq-MPz" appends="YES" id="HQu-H7-zAV"/>
                                                         </connections>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="scooter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cp5-Ww-S1W">
-                                                        <rect key="frame" x="9" y="304" width="46" height="16"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sleigh" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cp5-Ww-S1W">
+                                                        <rect key="frame" x="14" y="304" width="36" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView tag="14" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scooter" translatesAutoresizingMaskIntoConstraints="NO" id="J5E-IJ-J4I">
+                                                        <rect key="frame" x="0.0" y="320" width="64" height="64"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
+                                                        <gestureRecognizers/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="4Rd-cA-rRb" appends="YES" id="sGL-xW-Gd7"/>
+                                                        </connections>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="scooter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYi-iq-NF8">
+                                                        <rect key="frame" x="9" y="384" width="46" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -794,6 +839,21 @@ IAogA
                         <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="dgC-Ly-FAU"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer id="Vpu-Mg-Rgg">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="MuM-OG-eQv"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="ssZ-oW-bAm">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="v83-GL-dY7"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="4Rd-cA-rRb">
+                    <connections>
+                        <action selector="tripModeButtonWasTapped:" destination="zgY-Zn-asN" id="ctK-zl-7Qg"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1517" y="-320"/>
         </scene>
@@ -813,7 +873,7 @@ IAogA
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="1467"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1507"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLIDE TO UNLOCK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gpz-aq-p9u">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="17"/>
@@ -1253,6 +1313,13 @@ IAogA
                                                     <segue destination="oUs-hC-YpK" kind="show" id="sxM-Q3-YNd"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqx-hr-DrE">
+                                                <rect key="frame" x="0.0" y="1477" width="335" height="30"/>
+                                                <state key="normal" title="Support this App!"/>
+                                                <connections>
+                                                    <segue destination="MT6-GK-gB7" kind="show" id="y0d-f7-50t"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -1418,6 +1485,25 @@ For details on the format of the data this app sends to the server, please visit
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+        <!--Tip View Controller-->
+        <scene sceneID="PtT-wV-OXz">
+            <objects>
+                <viewController id="MT6-GK-gB7" customClass="TipViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xra-sf-v3F"/>
+                        <viewControllerLayoutGuide type="bottom" id="ZY2-42-sso"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="s1m-Og-6UM">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="r4h-Ng-v0q"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbT-ig-OrJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="719" y="1168"/>
         </scene>
         <!--Wifi Zone View Controller-->
         <scene sceneID="I5M-08-O5C">
@@ -1840,12 +1926,15 @@ For details on the format of the data this app sends to the server, please visit
         <image name="bus" width="64" height="64"/>
         <image name="car" width="64" height="64"/>
         <image name="figure.walk.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="gondola" width="64" height="64"/>
         <image name="map-pin" width="30" height="30"/>
         <image name="metro" width="64" height="64"/>
+        <image name="monorail" width="64" height="64"/>
         <image name="plane" width="64" height="64"/>
         <image name="run" width="64" height="64"/>
         <image name="scooter" width="64" height="64"/>
         <image name="settings" width="28" height="29"/>
+        <image name="sleigh" width="64" height="64"/>
         <image name="taxi" width="64" height="64"/>
         <image name="train" width="64" height="64"/>
         <image name="tram" width="64" height="64"/>
@@ -1857,7 +1946,7 @@ For details on the format of the data this app sends to the server, please visit
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
