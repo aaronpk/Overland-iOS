@@ -25,6 +25,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [self lockAllControls];
+    self.settingsLockSlider.value = 0;
 
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
 

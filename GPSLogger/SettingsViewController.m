@@ -26,7 +26,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [self lockAllControls];
-    
+    self.settingsLockSlider.value = 0;
+
     if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
