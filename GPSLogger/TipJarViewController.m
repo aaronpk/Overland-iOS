@@ -81,7 +81,7 @@
         [self.activityIndicator startAnimating];
         self.activityIndicator.hidden = NO;
         
-        NSLog(@"Fetching product details for %@", products);
+        // NSLog(@"Fetching product details");
         SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:products];
         productsRequest.delegate = self;
         [productsRequest start];
@@ -100,7 +100,7 @@
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     int count = (int)[response.products count];
     if(count > 0){
-        NSLog(@"Products %@", response.products);
+//        NSLog(@"Products %@", response.products);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             for(SKProduct *product in response.products) {
@@ -261,7 +261,6 @@
     NSMutableDictionary *item = [self itemForIndexPath:indexPath];
     SKProduct *product = [self productForIndexPath:indexPath];
 
-    NSLog(@"Item %@", item);
     tipNameLabel.text = [item objectForKey:@"name"];
 
     if(product) {
