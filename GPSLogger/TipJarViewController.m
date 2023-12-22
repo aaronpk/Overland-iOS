@@ -17,6 +17,48 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.yearlyTipsKeys = @[
+        @"app.p3k.overland.Yearly.Commuter",
+        @"app.p3k.overland.Yearly.Mariner",
+        @"app.p3k.overland.Yearly.Aviator",
+        @"app.p3k.overland.Yearly.Globetrotter"
+    ];
+
+    self.yearlyTips = [[NSMutableDictionary alloc] initWithCapacity:self.yearlyTipsKeys.count];
+    [self.yearlyTips setObject:[@{@"name": @"Commuter"} mutableCopy] forKey:@"app.p3k.overland.Yearly.Commuter"];
+    [self.yearlyTips setObject:[@{@"name": @"Mariner"} mutableCopy] forKey:@"app.p3k.overland.Yearly.Mariner"];
+    [self.yearlyTips setObject:[@{@"name": @"Aviator"} mutableCopy] forKey:@"app.p3k.overland.Yearly.Aviator"];
+    [self.yearlyTips setObject:[@{@"name": @"Globetrotter"} mutableCopy] forKey:@"app.p3k.overland.Yearly.Globetrotter"];
+    
+    self.monthlyTipsKeys = @[
+        @"app.p3k.overland.Monthly.Commuter",
+        @"app.p3k.overland.Monthly.Mariner",
+        @"app.p3k.overland.Monthly.Aviator",
+        @"app.p3k.overland.Monthly.Globetrotter"
+    ];
+
+    self.monthlyTips = [[NSMutableDictionary alloc] initWithCapacity:self.monthlyTipsKeys.count];
+    [self.monthlyTips setObject:[@{@"name": @"Commuter"} mutableCopy] forKey:@"app.p3k.overland.Monthly.Commuter"];
+    [self.monthlyTips setObject:[@{@"name": @"Mariner"} mutableCopy] forKey:@"app.p3k.overland.Monthly.Mariner"];
+    [self.monthlyTips setObject:[@{@"name": @"Aviator"} mutableCopy] forKey:@"app.p3k.overland.Monthly.Aviator"];
+    [self.monthlyTips setObject:[@{@"name": @"Globetrotter"} mutableCopy] forKey:@"app.p3k.overland.Monthly.Globetrotter"];
+
+    self.onetimeTipsKeys = @[
+        @"app.p3k.overland.Wanderer",
+        @"app.p3k.overland.Trailblazer",
+        @"app.p3k.overland.Explorer",
+        @"app.p3k.overland.Adventurer",
+        @"app.p3k.overland.Cosmonaut"
+    ];
+
+    self.onetimeTips = [[NSMutableDictionary alloc] initWithCapacity:self.onetimeTipsKeys.count];
+    [self.onetimeTips setObject:[@{@"name": @"Wanderer"} mutableCopy] forKey:@"app.p3k.overland.Wanderer"];
+    [self.onetimeTips setObject:[@{@"name": @"Trailblazer"} mutableCopy] forKey:@"app.p3k.overland.Trailblazer"];
+    [self.onetimeTips setObject:[@{@"name": @"Explorer"} mutableCopy] forKey:@"app.p3k.overland.Explorer"];
+    [self.onetimeTips setObject:[@{@"name": @"Adventurer"} mutableCopy] forKey:@"app.p3k.overland.Adventurer"];
+    [self.onetimeTips setObject:[@{@"name": @"Cosmonaut"} mutableCopy] forKey:@"app.p3k.overland.Cosmonaut"];
+    
 }
 
 /*
@@ -31,30 +73,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if([SKPaymentQueue canMakePayments]){
-        NSLog(@"User can make payments");
-        
-        //If you have more than one in-app purchase, and would like
-        //to have the user purchase a different product, simply define
-        //another function and replace kRemoveAdsProductIdentifier with
-        //the identifier for the other product
-        
+
+        NSMutableSet *products = [NSMutableSet setWithArray:[self.yearlyTips allKeys]];
+        [products addObjectsFromArray:[self.monthlyTips allKeys]];
+        [products addObjectsFromArray:[self.onetimeTips allKeys]];
+
         [self.activityIndicator startAnimating];
         self.activityIndicator.hidden = NO;
-        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithArray:@[
-            @"app.p3k.overland.Wanderer",
-            @"app.p3k.overland.Trailblazer",
-            @"app.p3k.overland.Explorer",
-            @"app.p3k.overland.Adventurer",
-            @"app.p3k.overland.Cosmonaut",
-            @"app.p3k.overland.Monthly.Commuter",
-            @"app.p3k.overland.Monthly.Mariner",
-            @"app.p3k.overland.Monthly.Aviator",
-            @"app.p3k.overland.Monthly.Globetrotter",
-            @"app.p3k.overland.Yearly.Commuter",
-            @"app.p3k.overland.Yearly.Mariner",
-            @"app.p3k.overland.Yearly.Aviator",
-            @"app.p3k.overland.Yearly.Globetrotter"
-        ]]];
+        
+        NSLog(@"Fetching product details for %@", products);
+        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:products];
         productsRequest.delegate = self;
         [productsRequest start];
     }
@@ -70,44 +98,35 @@
 #pragma mark - StoreKit
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
-    NSLog(@"Products %@", response.products);
     int count = (int)[response.products count];
     if(count > 0){
+        NSLog(@"Products %@", response.products);
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            self.onetimeTips = [[NSMutableArray alloc] initWithCapacity:count];
-            self.monthlyTips = [[NSMutableArray alloc] initWithCapacity:count];
-            self.yearlyTips = [[NSMutableArray alloc] initWithCapacity:count];
-
             for(SKProduct *product in response.products) {
+                NSMutableDictionary *item;
                 if(product.subscriptionGroupIdentifier == nil) {
-                    [self.onetimeTips addObject:product];
+                    item = [self.onetimeTips objectForKey:product.productIdentifier];
                 } else {
                     if(product.subscriptionPeriod.unit == SKProductPeriodUnitYear) {
-                        [self.yearlyTips addObject:product];
+                        item = [self.yearlyTips objectForKey:product.productIdentifier];
                     } else {
-                        [self.monthlyTips addObject:product];
+                        item = [self.monthlyTips objectForKey:product.productIdentifier];
                     }
                 }
+                [item setObject:product forKey:@"product"];
             }
             
-            [self.onetimeTips sortUsingComparator:^NSComparisonResult(SKProduct *obj1, SKProduct *obj2) {
-                return [obj1.price doubleValue] > [obj2.price doubleValue];
-            }];
-            [self.monthlyTips sortUsingComparator:^NSComparisonResult(SKProduct *obj1, SKProduct *obj2) {
-                return [obj1.price doubleValue] > [obj2.price doubleValue];
-            }];
-            [self.yearlyTips sortUsingComparator:^NSComparisonResult(SKProduct *obj1, SKProduct *obj2) {
-                return [obj1.price doubleValue] > [obj2.price doubleValue];
-            }];
-
             [self.tableView reloadData];
             [self.activityIndicator stopAnimating];
             self.activityIndicator.hidden = YES;
         });
     } else {
         NSLog(@"No products available");
-        //this is called if your product id is not valid, this shouldn't be called unless that happens.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.activityIndicator stopAnimating];
+            self.activityIndicator.hidden = YES;
+        });
     }
 }
 
@@ -206,63 +225,81 @@
 }
 
 -(SKProduct *)productForIndexPath:(NSIndexPath *)indexPath {
+    NSMutableDictionary *item = [self itemForIndexPath:indexPath];
+    return [item objectForKey:@"product"];
+}
+
+-(NSMutableDictionary *)itemForIndexPath:(NSIndexPath *)indexPath {
     GLTipTypes type = (int)indexPath.section;
-    NSMutableArray *products;
+    NSArray *keys;
+    NSMutableDictionary *products;
     switch(type) {
-        case kGLTipTypeYearly: 
+        case kGLTipTypeYearly:
+            keys = self.yearlyTipsKeys;
             products = self.yearlyTips;
             break;
-        case kGLTipTypeMonthly: 
+        case kGLTipTypeMonthly:
+            keys = self.monthlyTipsKeys;
             products = self.monthlyTips;
             break;
         case kGLTipTypeOneTime:
+            keys = self.onetimeTipsKeys;
             products = self.onetimeTips;
             break;
     }
-    return [products objectAtIndex:indexPath.row];
+    NSString *key = [keys objectAtIndex:indexPath.row];
+    return [products objectForKey:key];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     UITableViewCell *c = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
 
     UILabel *tipNameLabel = [c viewWithTag:500];
-//    UILabel *tipDescriptionLabel = [c viewWithTag:600];
     UILabel *priceLabel = [c viewWithTag:700];
     UILabel *frequencyLabel = [c viewWithTag:701];
     
+    NSMutableDictionary *item = [self itemForIndexPath:indexPath];
     SKProduct *product = [self productForIndexPath:indexPath];
-    
-    tipNameLabel.text = product.localizedTitle;
-//    tipDescriptionLabel.text = product.localizedDescription;
 
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
-    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    [numberFormatter setLocale:product.priceLocale];
-    priceLabel.text = [numberFormatter stringFromNumber:product.price];
+    NSLog(@"Item %@", item);
+    tipNameLabel.text = [item objectForKey:@"name"];
 
-    if(product.subscriptionGroupIdentifier == nil) {
-        frequencyLabel.text = @"one time";
-    } else {
-        switch(product.subscriptionPeriod.unit) {
-            case SKProductPeriodUnitDay:
-                frequencyLabel.text = @"daily"; break;
-            case SKProductPeriodUnitWeek:
-                frequencyLabel.text = @"weekly"; break;
-            case SKProductPeriodUnitMonth:
-                frequencyLabel.text = @"monthly"; break;
-            case SKProductPeriodUnitYear:
-                frequencyLabel.text = @"yearly"; break;
+    if(product) {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+        [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        [numberFormatter setLocale:product.priceLocale];
+        priceLabel.text = [numberFormatter stringFromNumber:product.price];
+        
+        if(product.subscriptionGroupIdentifier == nil) {
+            frequencyLabel.text = @"one time";
+        } else {
+            switch(product.subscriptionPeriod.unit) {
+                case SKProductPeriodUnitDay:
+                    frequencyLabel.text = @"daily"; break;
+                case SKProductPeriodUnitWeek:
+                    frequencyLabel.text = @"weekly"; break;
+                case SKProductPeriodUnitMonth:
+                    frequencyLabel.text = @"monthly"; break;
+                case SKProductPeriodUnitYear:
+                    frequencyLabel.text = @"yearly"; break;
+            }
         }
+    } else {
+        priceLabel.text = @" ";
+        frequencyLabel.text = @" ";
     }
+        
     
     return c;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     SKProduct *product = [self productForIndexPath:indexPath];
-    NSLog(@"Purchasing %@", product.localizedTitle);
-    [self purchase:product];
+    if(product) {
+        NSLog(@"Purchasing %@", product.localizedTitle);
+        [self purchase:product];
+    }
 }
 
 @end

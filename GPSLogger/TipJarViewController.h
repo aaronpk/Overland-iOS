@@ -23,9 +23,12 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-@property (nonatomic, strong) NSMutableArray <SKProduct *> *onetimeTips;
-@property (nonatomic, strong) NSMutableArray <SKProduct *> *monthlyTips;
-@property (nonatomic, strong) NSMutableArray <SKProduct *> *yearlyTips;
+@property (nonatomic, strong) NSMutableDictionary *onetimeTips;
+@property (nonatomic, strong) NSArray *onetimeTipsKeys;
+@property (nonatomic, strong) NSMutableDictionary *monthlyTips;
+@property (nonatomic, strong) NSArray *monthlyTipsKeys;
+@property (nonatomic, strong) NSMutableDictionary *yearlyTips;
+@property (nonatomic, strong) NSArray *yearlyTipsKeys;
 
 @end
 
