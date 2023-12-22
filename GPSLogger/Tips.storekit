@@ -1,0 +1,356 @@
+{
+  "identifier" : "86BE0E84",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "6474819561",
+      "localizations" : [
+        {
+          "description" : "app.p3k.overland.Adventurer",
+          "displayName" : "Adventurer",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "app.p3k.overland.Adventurer",
+      "referenceName" : "Adventurer",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "99.99",
+      "familyShareable" : false,
+      "internalID" : "6474819426",
+      "localizations" : [
+        {
+          "description" : "One-time \"Cosmonaut\" tip",
+          "displayName" : "Cosmonaut",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "app.p3k.overland.Cosmonaut",
+      "referenceName" : "Cosmonaut",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6474819093",
+      "localizations" : [
+        {
+          "description" : "One-time \"Explorer\" tip",
+          "displayName" : "Explorer",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "app.p3k.overland.Explorer",
+      "referenceName" : "Explorer",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "6474654837",
+      "localizations" : [
+        {
+          "description" : "One-time \"Trailblazer\" tip",
+          "displayName" : "Trailblazer",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "app.p3k.overland.Trailblazer",
+      "referenceName" : "Trailblazer",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6474654423",
+      "localizations" : [
+        {
+          "description" : "Wanderer",
+          "displayName" : "Wanderer",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "app.p3k.overland.Wanderer",
+      "referenceName" : "Wanderer",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1292426766",
+    "_developerTeamID" : "7MC6UZR2UV",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 724903681.61676705,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : {
+          "index" : 2,
+          "type" : "generic"
+        },
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21425857",
+      "localizations" : [
+
+      ],
+      "name" : "Monthly",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6474818873",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly \"Aviator\" tip",
+              "displayName" : "Aviator",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Monthly.Aviator",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Aviator",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "99.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6474819229",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly \"Aviator\" tip",
+              "displayName" : "Aviator",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Yearly.Aviator",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Aviator (Annual)",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6474764139",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly \"Commuter\" tip",
+              "displayName" : "Commuter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Monthly.Commuter",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Commuter",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6474819123",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly \"Commuter\" tip",
+              "displayName" : "Commuter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Yearly.Commuter",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Commuter (Annual)",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6474818874",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly \"Globetrotter\" tip",
+              "displayName" : "Globetrotter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Monthly.Globetrotter",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Globetrotter",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "199.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6474819221",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly \"Globetrotter\" tip",
+              "displayName" : "Globetrotter",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Yearly.Globetrotter",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Globetrotter (Annual)",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6474818310",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly \"Mariner\" tip",
+              "displayName" : "Mariner",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Monthly.Mariner",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Mariner",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "49.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6474819327",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly \"Mariner\" tip",
+              "displayName" : "Mariner",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "app.p3k.overland.Yearly.Mariner",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Mariner (Annual)",
+          "subscriptionGroupID" : "21425857",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

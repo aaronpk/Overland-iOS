@@ -12,6 +12,8 @@
 		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
+		0FABDE372B329422003ACD20 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FABDE362B329422003ACD20 /* StoreKit.framework */; };
+		0FABDE3A2B329448003ACD20 /* TipJarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FABDE392B329448003ACD20 /* TipJarViewController.m */; };
 		0FAC1FEB2B255CA60007F3B1 /* NSArray+map.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */; };
 		0FAC1FEE2B25FBB50007F3B1 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC1FED2B25FBB50007F3B1 /* SceneDelegate.m */; };
 		0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */; };
@@ -44,6 +46,10 @@
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
 		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0FABDE362B329422003ACD20 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		0FABDE382B329448003ACD20 /* TipJarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TipJarViewController.h; sourceTree = "<group>"; };
+		0FABDE392B329448003ACD20 /* TipJarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TipJarViewController.m; sourceTree = "<group>"; };
+		0FABDE3B2B34F642003ACD20 /* Tips.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tips.storekit; sourceTree = "<group>"; };
 		0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+map.m"; sourceTree = "<group>"; };
 		0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+map.h"; sourceTree = "<group>"; };
 		0FAC1FED2B25FBB50007F3B1 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
@@ -93,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FABDE372B329422003ACD20 /* StoreKit.framework in Frameworks */,
 				0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */,
 				0FCF53251F81AB0800577A0F /* UserNotifications.framework in Frameworks */,
 				0FB85AC01BE0151800F25126 /* ExternalAccessory.framework in Frameworks */,
@@ -110,6 +117,7 @@
 		0BE775F16162CE9DF6AE0775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0FABDE362B329422003ACD20 /* StoreKit.framework */,
 				0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */,
 				0FCF53241F81AB0800577A0F /* UserNotifications.framework */,
 				0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */,
@@ -175,6 +183,8 @@
 				0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */,
 				6D2858CF222B133400F525E1 /* WifiZoneViewController.h */,
 				6D2858D0222B133400F525E1 /* WifiZoneViewController.m */,
+				0FABDE382B329448003ACD20 /* TipJarViewController.h */,
+				0FABDE392B329448003ACD20 /* TipJarViewController.m */,
 				0FFD31711BAB7BEA009B3A03 /* GLManager.h */,
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
 				0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */,
@@ -182,6 +192,7 @@
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
 				0FFD31641BAB7A34009B3A03 /* Assets.xcassets */,
 				0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */,
+				0FABDE3B2B34F642003ACD20 /* Tips.storekit */,
 				0FFD31691BAB7A34009B3A03 /* Info.plist */,
 				0FFD317C1BAB7CB3009B3A03 /* LOLDB */,
 				0FFD31551BAB7A34009B3A03 /* Supporting Files */,
@@ -332,6 +343,7 @@
 				0FFD31601BAB7A34009B3A03 /* SettingsViewController.m in Sources */,
 				0FFD315A1BAB7A34009B3A03 /* AppDelegate.m in Sources */,
 				6D2858D1222B133400F525E1 /* WifiZoneViewController.m in Sources */,
+				0FABDE3A2B329448003ACD20 /* TipJarViewController.m in Sources */,
 				0FAC1FEB2B255CA60007F3B1 /* NSArray+map.m in Sources */,
 				0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */,
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,

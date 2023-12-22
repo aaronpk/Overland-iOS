@@ -731,7 +731,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     NSArray *tripModes = [currentStats keysSortedByValueUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         return [(NSNumber*)obj2 compare:(NSNumber*)obj1];
     }];
-    NSLog(@"Trip Modes %@", tripModes);
     return tripModes;
 }
 
