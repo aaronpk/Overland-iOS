@@ -21,6 +21,7 @@ typedef enum {
 
 @property (nonatomic, strong) IBOutlet UILabel *headerLabel;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @property (nonatomic, strong) NSMutableArray <SKProduct *> *onetimeTips;
 @property (nonatomic, strong) NSMutableArray <SKProduct *> *monthlyTips;

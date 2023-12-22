@@ -38,6 +38,8 @@
         //another function and replace kRemoveAdsProductIdentifier with
         //the identifier for the other product
         
+        [self.activityIndicator startAnimating];
+        self.activityIndicator.hidden = NO;
         SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithArray:@[
             @"app.p3k.overland.Wanderer",
             @"app.p3k.overland.Trailblazer",
@@ -100,6 +102,8 @@
             }];
 
             [self.tableView reloadData];
+            [self.activityIndicator stopAnimating];
+            self.activityIndicator.hidden = YES;
         });
     } else {
         NSLog(@"No products available");
