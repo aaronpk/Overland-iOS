@@ -873,7 +873,7 @@ IAogA
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="1565"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1525"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vAd-hi-fL2">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="30"/>
@@ -1324,8 +1324,8 @@ IAogA
                                                     <segue destination="oUs-hC-YpK" kind="show" id="sxM-Q3-YNd"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqx-hr-DrE">
-                                                <rect key="frame" x="0.0" y="1535" width="335" height="30"/>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqx-hr-DrE">
+                                                <rect key="frame" x="0.0" y="1525" width="335" height="0.0"/>
                                                 <state key="normal" title="💛 Support this App! 💛"/>
                                                 <connections>
                                                     <segue destination="MT6-GK-gB7" kind="show" id="y0d-f7-50t"/>
