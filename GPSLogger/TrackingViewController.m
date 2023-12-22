@@ -98,7 +98,12 @@ BOOL mapWasDragged = NO;
                                              selector:@selector(newDataReceived)
                                                  name:GLNewDataNotification
                                                object:nil];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(newActivityReceived)
+                                                 name:GLNewActivityNotification
+                                               object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(sendingStarted)
                                                  name:GLSendingStartedNotification
@@ -171,10 +176,12 @@ BOOL mapWasDragged = NO;
 #pragma mark - Tracking Interface
 
 - (void)newDataReceived {
-    //    NSLog(@"New data received!");
-    //    NSLog(@"Location: %@", [GLManager sharedManager].lastLocation);
-    //    NSLog(@"Activity: %@", [GLManager sharedManager].lastMotion);
     self.locationAgeLabel.textColor = [UIColor whiteColor];
+    [self refreshView];
+    [self updateMap];
+}
+
+- (void)newActivityReceived {
     [self refreshView];
 }
 
@@ -203,12 +210,9 @@ BOOL mapWasDragged = NO;
     }
 }
 
-- (void)refreshView {
+- (void)updateMap {
     CLLocation *location = [GLManager sharedManager].lastLocation;
-    self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
-    self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
 
-    
     // Determine if the current location too close to the edge of the map
     MKMapPoint point = MKMapPointForCoordinate(location.coordinate);
     UIEdgeInsets insets = UIEdgeInsetsMake(-50, -50, -50, -50);
@@ -238,7 +242,13 @@ BOOL mapWasDragged = NO;
             currentLocationAnnotation.coordinate = location.coordinate;
         }
     }];
-    
+}
+
+- (void)refreshView {
+    CLLocation *location = [GLManager sharedManager].lastLocation;
+    self.locationLabel.text = [NSString stringWithFormat:@"%-4.4f\n%-4.4f", location.coordinate.latitude, location.coordinate.longitude];
+    self.locationAltitudeLabel.text = [NSString stringWithFormat:@"+/-%dm %dm", (int)round(location.horizontalAccuracy), (int)round(location.altitude)];
+
     int speed;
     if(self.usesMetricSystem) {
         speed = (int)(round(location.speed*3.6));

@@ -416,7 +416,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)restoreTrackingState {
-    
     if([[NSUserDefaults standardUserDefaults] boolForKey:GLTrackingStateDefaultsName]) {
         [self enableTracking];
         if(self.tripInProgress) {
@@ -491,7 +490,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if(CMMotionActivityManager.isActivityAvailable) {
         [self.motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
             self.lastMotion = activity;
-            [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GLNewActivityNotification object:self];
         }];
     }
 
@@ -695,7 +694,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     if([CMPedometer isStepCountingAvailable]) {
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
-            NSLog(@"%@", pedometerData);
             if(pedometerData) {
                 [self writeTripToDB:autopause steps:[pedometerData.numberOfSteps integerValue]];
             } else {
@@ -1165,7 +1163,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
-    NSLog(@"Setting desiredAccuracy: %f", desiredAccuracy);
     [[NSUserDefaults standardUserDefaults] setDouble:desiredAccuracy forKey:GLDesiredAccuracyDefaultsName];
     if(!self.tripInProgress) {
         self.locationManager.desiredAccuracy = desiredAccuracy;
@@ -1245,9 +1242,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 #pragma mark - CLLocationManager Delegate Methods
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
 
     if(self.visitTrackingEnabled) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
         [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
             NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
             NSDictionary *update = @{
@@ -1293,14 +1290,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
         // This probably shouldn't happen, but just in case, don't log anything if they have tracking mode set to off
         return;
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
-    
+        
     // If a wifi override is configured, replace the input location list with the location in the wifi mapping
     if([GLManager currentWifiHotSpotName]) {
         CLLocation *wifiLocation = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
         if(wifiLocation) {
-            NSLog(@"Overriding location from wifi name");
             locations = @[wifiLocation];
         }
     }
@@ -1309,98 +1303,103 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     // NSLog(@"%@", locations);
     
-    // Queue the point in the database
-    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+    NSString *activityType = @"";
+    switch([GLManager sharedManager].activityType) {
+        case CLActivityTypeOther:
+            activityType = @"other";
+            break;
+        case CLActivityTypeAutomotiveNavigation:
+            activityType = @"automotive_navigation";
+            break;
+        case CLActivityTypeFitness:
+            activityType = @"fitness";
+            break;
+        case CLActivityTypeOtherNavigation:
+            activityType = @"other_navigation";
+            break;
+        case CLActivityTypeAirborne:
+            activityType = @"airborne";
+    }
+    
+    CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
+    
+    int startIndex = 0;
+    if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
+        // Only grab the latest point in this batch
+        startIndex = ((int)locations.count) - 1;
+    }
+    
+    BOOL didAddData = NO;
+    
+    for(int i=startIndex; i<locations.count; i++) {
+        CLLocation *loc = locations[i];
         
-        NSString *activityType = @"";
-        switch([GLManager sharedManager].activityType) {
-            case CLActivityTypeOther:
-                activityType = @"other";
-                break;
-            case CLActivityTypeAutomotiveNavigation:
-                activityType = @"automotive_navigation";
-                break;
-            case CLActivityTypeFitness:
-                activityType = @"fitness";
-                break;
-            case CLActivityTypeOtherNavigation:
-                activityType = @"other_navigation";
-                break;
-            case CLActivityTypeAirborne:
-                activityType = @"airborne";
-        }
-        
-        CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
-        
-        int startIndex = 0;
-        if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
-            // Only grab the latest point in this batch
-            startIndex = ((int)locations.count) - 1;
-        }
-        
-        for(int i=startIndex; i<locations.count; i++) {
-            CLLocation *loc = locations[i];
-            
-            // If Discard is enabled, check if this point is too close to the previous
-            if(self.discardPointsWithinDistanceCurrentValue > 0) {
-                CLLocationDistance distanceBetweenPoints = [lastLocationSeen distanceFromLocation:loc];
-                if(distanceBetweenPoints < self.discardPointsWithinDistanceCurrentValue) {
-                    // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
-                    continue;
-                }
+        // If Discard is enabled, check if this point is too close to the previous
+        if(self.discardPointsWithinDistanceCurrentValue > 0) {
+            CLLocationDistance distanceBetweenPoints = [lastLocationSeen distanceFromLocation:loc];
+            if(distanceBetweenPoints < self.discardPointsWithinDistanceCurrentValue) {
+                // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
+                continue;
             }
+        }
 
-            if(self.discardPointsWithinSecondsCurrentValue > 1) {
-                int timeInterval = (int)[loc.timestamp timeIntervalSinceDate:lastLocationSeen.timestamp];
-                if(timeInterval < self.discardPointsWithinSecondsCurrentValue) {
-                    continue;
-                }
+        if(self.discardPointsWithinSecondsCurrentValue > 1) {
+            int timeInterval = (int)[loc.timestamp timeIntervalSinceDate:lastLocationSeen.timestamp];
+            if(timeInterval < self.discardPointsWithinSecondsCurrentValue) {
+                continue;
             }
-            
-            NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
-            NSDictionary *update = [self currentDictionaryFromLocation:loc];
-            NSMutableDictionary *properties = [update objectForKey:@"properties"];
-            if(self.includeTrackingStats) {
-                [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
-                [properties setValue:activityType forKey:@"activity"];
-                [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
-                [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
-                [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
-            }
-            // Add the trip start time as trip_id in the location update
-            if(self.tripInProgress) {
-                [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
-            }
-            
+        }
+        
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
+        NSDictionary *update = [self currentDictionaryFromLocation:loc];
+        NSMutableDictionary *properties = [update objectForKey:@"properties"];
+        if(self.includeTrackingStats) {
+            [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
+            [properties setValue:activityType forKey:@"activity"];
+            [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
+            [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
+            [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
+        }
+        // Add the trip start time as trip_id in the location update
+        if(self.tripInProgress) {
+            [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
+        }
+
+        // Queue the point in the database
+        [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
             if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
                 // Delete everything in the DB so that this new point is the only one in the queue after it's added below
                 [accessor deleteAllData];
             }
             [accessor setDictionary:update forKey:timestamp];
-            
-            if([loc.timestamp timeIntervalSinceDate:self.currentTripStart] >= 0  // only if the location is newer than the trip start
-               && loc.horizontalAccuracy <= 200 // only if the location is accurate enough
-               ) {
-
-                if(_storeNextLocationAsTripStart) {
-                    [[NSUserDefaults standardUserDefaults] setObject:update forKey:GLTripStartLocationDefaultsName];
-                    self.tripStartLocationDictionary = update;
-                    _storeNextLocationAsTripStart = NO;
-                }
-                
-                // If a trip is in progress, add to the trip's list too (for calculating trip distance)
-                if(self.tripInProgress) {
-                    [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
-                    _currentTripHasNewData = YES;
-                }
-            }
-
-            self.lastLocation = loc;
-            self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
-
-        }
+        }];
+        didAddData = YES;
         
-    }];
+        if([loc.timestamp timeIntervalSinceDate:self.currentTripStart] >= 0  // only if the location is newer than the trip start
+           && loc.horizontalAccuracy <= 200 // only if the location is accurate enough
+           ) {
+
+            if(_storeNextLocationAsTripStart) {
+                [[NSUserDefaults standardUserDefaults] setObject:update forKey:GLTripStartLocationDefaultsName];
+                self.tripStartLocationDictionary = update;
+                _storeNextLocationAsTripStart = NO;
+            }
+            
+            // If a trip is in progress, add to the trip's list too (for calculating trip distance)
+            if(self.tripInProgress) {
+                [self.tripdb executeUpdate:@"INSERT INTO trips (timestamp, latitude, longitude) VALUES (?, ?, ?)", [NSNumber numberWithInt:[loc.timestamp timeIntervalSince1970]], [NSNumber numberWithDouble:loc.coordinate.latitude], [NSNumber numberWithDouble:loc.coordinate.longitude]];
+                _currentTripHasNewData = YES;
+            }
+        }
+
+        self.lastLocation = loc;
+        self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
+
+    }
+
+    if(didAddData) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+    }
 
     [self sendQueueIfTimeElapsed];
 }
@@ -1482,6 +1481,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    NSLog(@"Did exit region");
     [self logAction:@"exited_pause_region"];
     [self notify:@"Starting updates from exiting the geofence" withTitle:@"Resumed"];
     [self.locationManager stopMonitoringForRegion:region];
