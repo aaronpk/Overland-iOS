@@ -70,7 +70,7 @@ The settings in this section set properties on the CoreLocation API. They are me
 
 The settings in this section control features specific to the Overland app.
 
-* `Logging Mode` - Whether you want Overland to log all data or only log the most recent point. If you configure the endpoint URL to send data in the query string then you should set this to "Only Latest". Experiment with the other settings to control how frequently you get data sent from the app.
+* `Logging Mode` - Whether you want Overland to log all data or only log the most recent point. If you configure the endpoint URL to send data in the query string then you should set this to "Only Latest". Experiment with the other settings to control how frequently you get data sent from the app. Setting this to "Owntracks" will change the format of the data logged, and can be used with Home Assistant. See the Home Assistant section below for details.
 * `Points per Batch` - Controls the number of location updates that will be sent with each HTTP request. Setting this to 50 will mean more requests to the server are required to flush the queue, but each request will be smaller. Setting this to 1000 means you'll be able to flush the queue with fewer requests, but each request will be much larger. Each location point can be around 600 bytes when serialized as JSON, so sending 1000 points in a request will mean the request body may be around 600kb. Lower batch sizes are likely better for flaky network connections, and larger batch sizes are good when on a reliable connection. Note that this does not affect the frequency at which data is sent to the server.
 * `Resume with Geofence` - This is an attempt at overcoming the limitations of the "Pause Updates Automatically" feature. Setting a radius here will register an "exit" geofence whenever location updates are paused at that location. This will attempt to get the app woken up when the user leaves the area again, and when triggered, will resume tracking with the previous settings.
 * `Discard Points Closer Than` - When set, the app will discard any location updates within the distance selected. For example you can set the value to 50 meters to only record an update if the phone moves 50 meters from the last location. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point.
@@ -210,8 +210,11 @@ The properties on the `location` objects are as follows:
 * `timestamp` - the ISO8601 timestamp of the `CLLocation` object recorded
 * `altitude` - the altitude of the location in meters
 * `speed` - meters per second
+* `course` - direction of travel in degrees
 * `horizontal_accuracy` - accuracy of the position in meters
 * `vertical_accuracy` - accuracy of the altitude in meters
+* `speed_accuracy` - accuracy of the speed in meters per second, or -1 if speed is unknown
+* `course_accuracy` - accuracy of the course in degrees, or -1 if speed is unknown
 * `motion` - an array of motion states detected by the motion coprocessor. Possible values are: `driving`, `walking`, `running`, `cycling`, `stationary`. A common combination is `driving` and `stationary` when the phone is resting on the dashboard of a moving car.
 * `battery_state` - `unknown`, `charging`, `full`, `unplugged`
 * `battery_level` - a value from 0 to 1 indicating the percent battery remaining
@@ -256,6 +259,18 @@ If a trip is active, an object called `trip` will be included in the request as 
 * `current_location` - a `location` record that represents the most recent location of the device
 * `start_location` - a `location` record that represents the location at the start of the trip
 * `start` - an ISO8601 timestamp representing the time the trip was started. this may be slightly different from the timestamp in the start location.
+
+
+## Home Assistant Integration
+
+Setting the Logging Mode to "Owntracks" will record the data in a format that can be used with Home Assistant.
+
+https://www.home-assistant.io/integrations/owntracks/
+
+Only the latest point will be sent every interval, so you can experiment with the various settings to get this to record as much or as little data as you want.
+
+In the Overland Server URL setup, set the "Device ID" to the Owntracks topic you want, for example "username/device". This will be appended to the string "owntracks/" for the topic URL. Use the "Access Token" field for your Home Assistant username.
+
 
 
 ## Development Setup
