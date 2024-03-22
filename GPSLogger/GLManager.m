@@ -1433,8 +1433,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
                      @"timestamp": timestamp,
                      @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
                      @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                     @"course": [NSNumber numberWithInt:(int)round(loc.course)],
                      @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
                      @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
+                     @"speed_accuracy": [NSNumber numberWithDouble:((int)(loc.speedAccuracy * 100)) / 100.0],
+                     @"course_accuracy": [NSNumber numberWithDouble:((int)(loc.courseAccuracy * 100)) / 100.0],
                      @"motion": [self motionArrayFromLastMotion],
                      }]
              };
