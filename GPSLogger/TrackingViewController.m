@@ -228,7 +228,8 @@ BOOL mapWasDragged = NO;
         }
         camera = [[MKMapCamera alloc] init];
         camera.centerCoordinate = location.coordinate;
-        camera.altitude = [self mapAltitude];
+        // camera.altitude = [self mapAltitude];
+        camera.altitude = self.mapView.camera.altitude;
     }
 
     if(camera != nil) {
