@@ -214,7 +214,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
     
     [self sendingStarted];
-
+    
     [_httpClient POST:endpointURL parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
         
@@ -411,8 +411,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
         _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
         _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
         if(self.apiAccessToken != nil && ![@"" isEqualToString:self.apiAccessToken]) {
-            [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.apiAccessToken]
-                                 forHTTPHeaderField:@"Authorization"];
+            if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+                [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Basic %@:", self.apiAccessToken]
+                                     forHTTPHeaderField:@"Authorization"];
+            } else {
+                [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.apiAccessToken]
+                                     forHTTPHeaderField:@"Authorization"];
+            }
         } else {
             [_httpClient.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
         }
@@ -989,6 +994,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 - (void)setLoggingMode:(GLLoggingMode)loggingMode {
     [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLLoggingModeDefaultsName];
+    [self setupHTTPClient];
 }
 
 - (GLLoggingMode)loggingModeDuringTrip {
