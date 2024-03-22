@@ -248,7 +248,6 @@ BOOL mapWasDragged = NO;
 - (int)mapAltitude {
     int altitude;
     NSString *m = [GLManager sharedManager].currentTripMode;
-    NSLog(@"Setting map altitude for %@", m);
     if([m isEqualToString:@"walk"] || [m isEqualToString:@"run"] || [m isEqualToString:@"bicycle"] || [m isEqualToString:@"scooter"]) {
         altitude = 1000;
     } else {
