@@ -159,20 +159,26 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }];
     }];
     
-    NSMutableDictionary *postData = [NSMutableDictionary dictionaryWithDictionary:@{@"locations": locationUpdates}];
-
-    // If there are still more in the queue, then send the current location as a separate property.
-    // This allows the server to know where the user is immediately even if there are many thousands of points in the backlog.
-    NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
-    if(_numInQueue > self.pointsPerBatchCurrentValue && self.lastLocation) {
-        [postData setObject:currentLocation forKey:@"current"];
+    NSMutableDictionary *postData;
+    
+    if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+        postData = locationUpdates[0];
+    } else {
+        postData = [NSMutableDictionary dictionaryWithDictionary:@{@"locations": locationUpdates}];
+        
+        // If there are still more in the queue, then send the current location as a separate property.
+        // This allows the server to know where the user is immediately even if there are many thousands of points in the backlog.
+        NSDictionary *currentLocation = [self currentDictionaryFromLocation:self.lastLocation];
+        if(_numInQueue > self.pointsPerBatchCurrentValue && self.lastLocation) {
+            [postData setObject:currentLocation forKey:@"current"];
+        }
+        
+        if(self.tripInProgress) {
+            NSDictionary *currentTripInfo = [self currentTripDictionary];
+            [postData setObject:currentTripInfo forKey:@"trip"];
+        }
     }
     
-    if(self.tripInProgress) {
-        NSDictionary *currentTripInfo = [self currentTripDictionary];
-        [postData setObject:currentTripInfo forKey:@"trip"];
-    }
-
     // If there are any template strings in the URL, replace the values with the data from the most recent location
     // TS, LAT, LON, ACC, SPD, ALT, BAT
     NSMutableString *endpointURL = [endpoint mutableCopy];
@@ -1324,7 +1330,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
     
     int startIndex = 0;
-    if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
+    if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest || self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
         // Only grab the latest point in this batch
         startIndex = ((int)locations.count) - 1;
     }
@@ -1351,23 +1357,28 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
         
         NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
-        NSDictionary *update = [self currentDictionaryFromLocation:loc];
-        NSMutableDictionary *properties = [update objectForKey:@"properties"];
-        if(self.includeTrackingStats) {
-            [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
-            [properties setValue:activityType forKey:@"activity"];
-            [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
-            [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
-            [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
-        }
-        // Add the trip start time as trip_id in the location update
-        if(self.tripInProgress) {
-            [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
+        NSDictionary *update;
+        if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+            update = [self owntracksDictionaryFromLocation:loc];
+        } else {
+            update = [self currentDictionaryFromLocation:loc];
+            NSMutableDictionary *properties = [update objectForKey:@"properties"];
+            if(self.includeTrackingStats) {
+                [properties setValue:[NSNumber numberWithBool:self.locationManager.pausesLocationUpdatesAutomatically] forKey:@"pauses"];
+                [properties setValue:activityType forKey:@"activity"];
+                [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
+                [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
+                [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
+            }
+            // Add the trip start time as trip_id in the location update
+            if(self.tripInProgress) {
+                [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
+            }
         }
 
         // Queue the point in the database
         [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-            if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest) {
+            if(self.loggingModeCurrentValue == kGLLoggingModeOnlyLatest || self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
                 // Delete everything in the DB so that this new point is the only one in the queue after it's added below
                 [accessor deleteAllData];
             }
@@ -1442,6 +1453,22 @@ const double MPH_to_METERSPERSECOND = 0.447;
                      }]
              };
     [self addMetadataToUpdate:update];
+    return update;
+}
+
+- (NSDictionary *)owntracksDictionaryFromLocation:(CLLocation *)loc {
+    NSMutableDictionary *update = [NSMutableDictionary dictionaryWithDictionary:@{
+        @"_type": @"location",
+        @"lat": [NSNumber numberWithDouble:((int)(loc.coordinate.latitude * 10000000)) / 10000000.0],
+        @"lon": [NSNumber numberWithDouble:((int)(loc.coordinate.longitude * 10000000)) / 10000000.0],
+        @"tst": [NSNumber numberWithInt:(int)loc.timestamp.timeIntervalSinceReferenceDate],
+        @"acc": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
+        @"batt": [NSNumber numberWithInt:[[self currentBatteryLevel] doubleValue] * 100],
+    }];
+    if(_deviceId && _deviceId.length > 0) {
+        NSString *topic = [NSString stringWithFormat:@"owntracks/%@", _deviceId];
+        [update setValue:topic forKey:@"topic"];
+    }
     return update;
 }
 

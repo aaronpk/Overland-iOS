@@ -84,7 +84,8 @@ typedef enum {
 
 typedef enum {
     kGLLoggingModeAllData,
-    kGLLoggingModeOnlyLatest
+    kGLLoggingModeOnlyLatest,
+    kGLLoggingModeOwntracks
 } GLLoggingMode;
 
 typedef enum {
