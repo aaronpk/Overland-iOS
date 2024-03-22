@@ -67,7 +67,7 @@ BOOL mapWasDragged = NO;
     CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
     self.mapView.showsUserLocation = NO;
     self.mapView.camera.centerCoordinate = lastLocation.coordinate;
-    self.mapView.camera.centerCoordinateDistance = 4000;
+    self.mapView.camera.altitude = [self mapAltitude];
     self.mapView.zoomEnabled = YES;
     
     currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
@@ -228,7 +228,7 @@ BOOL mapWasDragged = NO;
         }
         camera = [[MKMapCamera alloc] init];
         camera.centerCoordinate = location.coordinate;
-        camera.altitude = 4000;
+        camera.altitude = [self mapAltitude];
     }
 
     if(camera != nil) {
@@ -242,6 +242,18 @@ BOOL mapWasDragged = NO;
             currentLocationAnnotation.coordinate = location.coordinate;
         }
     }];
+}
+
+- (int)mapAltitude {
+    int altitude;
+    NSString *m = [GLManager sharedManager].currentTripMode;
+    NSLog(@"Setting map altitude for %@", m);
+    if([m isEqualToString:@"walk"] || [m isEqualToString:@"run"] || [m isEqualToString:@"bicycle"] || [m isEqualToString:@"scooter"]) {
+        altitude = 1000;
+    } else {
+        altitude = 3000;
+    }
+    return altitude;
 }
 
 - (void)refreshView {
