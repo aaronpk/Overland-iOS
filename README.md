@@ -279,6 +279,7 @@ This assumes you have [Xcode](https://developer.apple.com/xcode/) and [Homebrew]
 
 * `git clone https://github.com/aaronpk/Overland-iOS.git && cd Overland-iOS`
 * `brew install cocoapods`
+* `pod install`
 * `open Overland.xcworkspace`
 * In Project Navigator, select *Overland*, and update Project Settings:
     * Identity → Bundle Identifier: *com.yourname.overland*
