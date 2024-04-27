@@ -264,18 +264,19 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
                 [self sendingFinished];
             }];
-            
+
+            [self updateSettingsFromResponse:responseObject];
         } else {
             
             self.batchInProgress = NO;
             
             if([responseObject objectForKey:@"error"]) {
                 [self notify:[responseObject objectForKey:@"error"] withTitle:@"Server Error"];
-                [self sendingFinished];
             } else {
                 [self notify:@"Server did not acknowledge the data was received, and did not return an error message" withTitle:@"Server Error"];
-                [self sendingFinished];
             }
+
+            [self sendingFinished];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         self.batchInProgress = NO;
@@ -283,6 +284,55 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self sendingFinished];
     }];
     
+}
+
+- (void)updateSettingsFromResponse:(id _Nullable)responseObject {
+    NSDictionary *settings = [responseObject objectForKey:@"set"];
+    if(settings == nil) {
+        return;
+    }
+    
+    if(![settings respondsToSelector:@selector(objectForKey:)]) {
+        return;
+    }
+    
+    NSLog(@"Settings %@", settings);
+    
+    NSString *sendInterval = [settings objectForKey:@"send_interval"];
+    if([sendInterval respondsToSelector:@selector(isEqualToString:)]) {
+        if([sendInterval isEqualToString:@"1s"]) {
+            self.sendingInterval = @1;
+        } else if([sendInterval isEqualToString:@"5s"]) {
+            self.sendingInterval = @5;
+        } else if([sendInterval isEqualToString:@"10s"]) {
+            self.sendingInterval = @10;
+        } else if([sendInterval isEqualToString:@"15s"]) {
+            self.sendingInterval = @15;
+        } else if([sendInterval isEqualToString:@"30s"]) {
+            self.sendingInterval = @30;
+        } else if([sendInterval isEqualToString:@"1m"]) {
+            self.sendingInterval = @60;
+        } else if([sendInterval isEqualToString:@"2m"]) {
+            self.sendingInterval = @120;
+        } else if([sendInterval isEqualToString:@"5m"]) {
+            self.sendingInterval = @300;
+        } else if([sendInterval isEqualToString:@"10m"]) {
+            self.sendingInterval = @600;
+        } else if([sendInterval isEqualToString:@"off"]) {
+            self.sendingInterval = @0;
+        }
+    }
+
+    NSString *tripMode = [settings objectForKey:@"trip_mode"];
+    if([tripMode respondsToSelector:@selector(isEqualToString:)]) {
+        for(int i=0; i<[GLManager GLTripModes].count; i++) {
+            if([tripMode isEqualToString:[GLManager GLTripModes][i]]) {
+                self.currentTripMode = [GLManager GLTripModes][i];
+            }
+        }
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
 }
 
 - (NSString *)stringForProperty:(GLLocationProperty)prop ofLocation:(CLLocation *)location {

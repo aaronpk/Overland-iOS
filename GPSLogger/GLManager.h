@@ -16,6 +16,7 @@ static NSString *const GLNewActivityNotification = @"GLNewActivityNotification";
 static NSString *const GLAuthorizationStatusChangedNotification = @"GLAuthorizationStatusChangedNotification";
 static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotification";
 static NSString *const GLSendingFinishedNotification = @"GLSendingFinishedNotification";
+static NSString *const GLSettingsChangedNotification = @"GLSettingsChangedNotification";
 
 static NSString *const GLAPIEndpointDefaultsName = @"GLAPIEndpointDefaults";
 static NSString *const GLAPIAccessTokenDefaultsName = @"GLAPIAccessTokenDefaults";

@@ -87,12 +87,7 @@ BOOL mapWasDragged = NO;
 - (void)viewWillAppear:(BOOL)animated {
     [self sendingFinished];
 
-    if([GLManager sharedManager].sendingInterval) {
-        self.sendIntervalSlider.value = [intervalMap indexOfObject:[GLManager sharedManager].sendingInterval];
-        [self updateSendIntervalLabel];
-    }
-    
-    [self updateTripState];
+    [self updateVisibleSettings];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newDataReceived)
@@ -102,6 +97,11 @@ BOOL mapWasDragged = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newActivityReceived)
                                                  name:GLNewActivityNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateVisibleSettings)
+                                                 name:GLSettingsChangedNotification
                                                object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -127,6 +127,15 @@ BOOL mapWasDragged = NO;
     } else {
         self.tripDistanceUnitLabel.text = @"miles";
     }
+}
+
+- (void)updateVisibleSettings {
+    if([GLManager sharedManager].sendingInterval) {
+        self.sendIntervalSlider.value = [intervalMap indexOfObject:[GLManager sharedManager].sendingInterval];
+        [self updateSendIntervalLabel];
+    }
+    
+    [self updateTripMode];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -375,10 +384,14 @@ BOOL mapWasDragged = NO;
     }
 }
 
-- (void)updateTripState {
+- (void)updateTripMode {
     self.currentModeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [GLManager sharedManager].currentTripMode]];
     self.currentModeLabel.text = [GLManager sharedManager].currentTripMode;
+}
 
+- (void)updateTripState {
+    [self updateTripMode];
+    
     if([GLManager sharedManager].tripInProgress) {
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
