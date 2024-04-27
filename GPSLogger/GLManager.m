@@ -300,6 +300,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     NSDictionary *sendIntervalBlocks = @{
         @"1s": ^{ self.sendingInterval = @1; },
+        @"5s": ^{ self.sendingInterval = @5; },
         @"10s": ^{ self.sendingInterval = @10; },
         @"15s": ^{ self.sendingInterval = @15; },
         @"30s": ^{ self.sendingInterval = @30; },
@@ -307,6 +308,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         @"2m": ^{ self.sendingInterval = @120; },
         @"5m": ^{ self.sendingInterval = @300; },
         @"10m": ^{ self.sendingInterval = @600; },
+        @"30m": ^{ self.sendingInterval = @1800; },
         @"off": ^{ self.sendingInterval = @0; },
     };
     [self runBlock:sendIntervalBlocks fromDictionary:settings forKey:@"send_interval"];
@@ -331,10 +333,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
         };
         [self runBlock:trackingModeBlocks fromDictionary:main forKey:@"tracking_mode"];
 
-        BOOL visitTrackingEnabled = [[main objectForKey:@"visit_tracking"] boolValue];
-        if(visitTrackingEnabled != self.visitTrackingEnabled) {
-            NSLog(@"setting visit tracking: %@", [main objectForKey:@"visit_tracking"]);
-            self.visitTrackingEnabled = visitTrackingEnabled;
+        if([main objectForKey:@"visit_tracking"] != nil) {
+            self.visitTrackingEnabled = [[main objectForKey:@"visit_tracking"] boolValue];
         }
         
         NSDictionary *desiredAccuracyBlocks = @{
@@ -347,16 +347,148 @@ const double MPH_to_METERSPERSECOND = 0.447;
         };
         [self runBlock:desiredAccuracyBlocks fromDictionary:main forKey:@"desired_accuracy"];
 
+        NSDictionary *activityTypeBlocks = @{
+            @"other": ^{ self.activityType = CLActivityTypeOther; },
+            @"car": ^{ self.activityType = CLActivityTypeAutomotiveNavigation; },
+            @"fitness": ^{ self.activityType = CLActivityTypeFitness; },
+            @"nav": ^{ self.activityType = CLActivityTypeOtherNavigation; },
+            @"air": ^{ self.activityType = CLActivityTypeAirborne; },
+        };
+        [self runBlock:activityTypeBlocks fromDictionary:main forKey:@"activity_type"];
+
+        if([main objectForKey:@"background_indicator"] != nil) {
+            self.showBackgroundLocationIndicator = [[main objectForKey:@"background_indicator"] boolValue];
+        }
+
+        if([main objectForKey:@"pause_automatically"] != nil) {
+            self.pausesAutomatically = [[main objectForKey:@"pause_automatically"] boolValue];
+        }
+
+        NSDictionary *loggingModeBlocks = @{
+            @"all": ^{ self.loggingMode = kGLLoggingModeAllData; },
+            @"latest": ^{ self.loggingMode = kGLLoggingModeOnlyLatest; },
+            @"owntracks": ^{ self.loggingMode = kGLLoggingModeOwntracks; },
+        };
+        [self runBlock:loggingModeBlocks fromDictionary:main forKey:@"logging_mode"];
         
+        NSDictionary *batchSizeBlocks = @{
+            @50: ^{ self.pointsPerBatch = 50; },
+            @100: ^{ self.pointsPerBatch = 100; },
+            @200: ^{ self.pointsPerBatch = 200; },
+            @500: ^{ self.pointsPerBatch = 500; },
+            @1000: ^{ self.pointsPerBatch = 1000; },
+        };
+        [self runBlock:batchSizeBlocks fromDictionary:main forKey:@"batch_size"];
+
+        NSDictionary *resumeWithGeofenceBlocks = @{
+            @"off": ^{ self.resumesAfterDistance = -1; },
+            @"100m": ^{ self.resumesAfterDistance = 100; },
+            @"200m": ^{ self.resumesAfterDistance = 200; },
+            @"500m": ^{ self.resumesAfterDistance = 500; },
+            @"1km": ^{ self.resumesAfterDistance = 1000; },
+            @"2km": ^{ self.resumesAfterDistance = 2000; },
+        };
+        [self runBlock:resumeWithGeofenceBlocks fromDictionary:main forKey:@"resume_with_geofence"];
+
+        NSDictionary *minDistanceBlocks = @{
+            @"off": ^{ self.discardPointsWithinDistance = -1; },
+            @"1m": ^{ self.discardPointsWithinDistance = 1; },
+            @"10m": ^{ self.discardPointsWithinDistance = 10; },
+            @"50m": ^{ self.discardPointsWithinDistance = 50; },
+            @"100m": ^{ self.discardPointsWithinDistance = 100; },
+            @"500m": ^{ self.discardPointsWithinDistance = 500; },
+        };
+        [self runBlock:minDistanceBlocks fromDictionary:main forKey:@"min_distance"];
+
+        NSDictionary *minTimeBlocks = @{
+            @"1s": ^{ self.discardPointsWithinSeconds = 1; },
+            @"5s": ^{ self.discardPointsWithinSeconds = 5; },
+            @"10s": ^{ self.discardPointsWithinSeconds = 10; },
+            @"30s": ^{ self.discardPointsWithinSeconds = 30; },
+            @"1m": ^{ self.discardPointsWithinSeconds = 60; },
+            @"5m": ^{ self.discardPointsWithinSeconds = 300; },
+        };
+        [self runBlock:minTimeBlocks fromDictionary:main forKey:@"min_time"];
+
     }
 
+    NSDictionary *trip = [settings objectForKey:@"trip"];
+    if(trip != nil && [trip respondsToSelector:@selector(objectForKey:)]) {
+        
+        NSDictionary *desiredAccuracyDuringTripBlocks = @{
+            @"nav": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyBestForNavigation; },
+            @"best": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyBest; },
+            @"10m": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyNearestTenMeters; },
+            @"100m": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyHundredMeters; },
+            @"1km": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyKilometer; },
+            @"3km": ^{ self.desiredAccuracyDuringTrip = kCLLocationAccuracyThreeKilometers; },
+        };
+        [self runBlock:desiredAccuracyDuringTripBlocks fromDictionary:trip forKey:@"desired_accuracy"];
+
+        NSDictionary *activityTypeDuringTripBlocks = @{
+            @"other": ^{ self.activityTypeDuringTrip = CLActivityTypeOther; },
+            @"car": ^{ self.activityTypeDuringTrip = CLActivityTypeAutomotiveNavigation; },
+            @"fitness": ^{ self.activityTypeDuringTrip = CLActivityTypeFitness; },
+            @"nav": ^{ self.activityTypeDuringTrip = CLActivityTypeOtherNavigation; },
+            @"air": ^{ self.activityTypeDuringTrip = CLActivityTypeAirborne; },
+        };
+        [self runBlock:activityTypeDuringTripBlocks fromDictionary:trip forKey:@"activity_type"];
+
+        if([trip objectForKey:@"background_indicator"] != nil) {
+            self.showBackgroundLocationIndicatorDuringTrip = [[trip objectForKey:@"background_indicator"] boolValue];
+        }
+
+        if([trip objectForKey:@"prevent_screen_lock"] != nil) {
+            [[NSUserDefaults standardUserDefaults] setBool:[[trip objectForKey:@"prevent_screen_lock"] boolValue] forKey:GLScreenLockEnabledDefaultsName];
+        }
+
+        NSDictionary *loggingModeDuringTripBlocks = @{
+            @"all": ^{ self.loggingModeDuringTrip = kGLLoggingModeAllData; },
+            @"latest": ^{ self.loggingModeDuringTrip = kGLLoggingModeOnlyLatest; },
+            @"owntracks": ^{ self.loggingModeDuringTrip = kGLLoggingModeOwntracks; },
+        };
+        [self runBlock:loggingModeDuringTripBlocks fromDictionary:trip forKey:@"logging_mode"];
+        
+        NSDictionary *batchSizeDuringTripBlocks = @{
+            @50: ^{ self.pointsPerBatchDuringTrip = 50; },
+            @100: ^{ self.pointsPerBatchDuringTrip = 100; },
+            @200: ^{ self.pointsPerBatchDuringTrip = 200; },
+            @500: ^{ self.pointsPerBatchDuringTrip = 500; },
+            @1000: ^{ self.pointsPerBatchDuringTrip = 1000; },
+        };
+        [self runBlock:batchSizeDuringTripBlocks fromDictionary:trip forKey:@"batch_size"];
+
+        NSDictionary *minDistanceDuringTripBlocks = @{
+            @"off": ^{ self.discardPointsWithinDistanceDuringTrip = -1; },
+            @"1m": ^{ self.discardPointsWithinDistanceDuringTrip = 1; },
+            @"10m": ^{ self.discardPointsWithinDistanceDuringTrip = 10; },
+            @"50m": ^{ self.discardPointsWithinDistanceDuringTrip = 50; },
+            @"100m": ^{ self.discardPointsWithinDistanceDuringTrip = 100; },
+            @"500m": ^{ self.discardPointsWithinDistanceDuringTrip = 500; },
+        };
+        [self runBlock:minDistanceDuringTripBlocks fromDictionary:trip forKey:@"min_distance"];
+
+        NSDictionary *minTimeDuringTripBlocks = @{
+            @"1s": ^{ self.discardPointsWithinSecondsDuringTrip = 1; },
+            @"5s": ^{ self.discardPointsWithinSecondsDuringTrip = 5; },
+            @"10s": ^{ self.discardPointsWithinSecondsDuringTrip = 10; },
+            @"30s": ^{ self.discardPointsWithinSecondsDuringTrip = 30; },
+            @"1m": ^{ self.discardPointsWithinSecondsDuringTrip = 60; },
+            @"5m": ^{ self.discardPointsWithinSecondsDuringTrip = 300; },
+        };
+        [self runBlock:minTimeDuringTripBlocks fromDictionary:trip forKey:@"min_time"];
+
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
 }
 
 - (void)runBlock:(NSDictionary *)blocks fromDictionary:(NSDictionary *)dictionary forKey:(NSString *)key {
     NSString *property = [dictionary objectForKey:key];
     if([property respondsToSelector:@selector(isEqualToString:)]) {
-        ((CaseBlock)blocks[property])();
+        if([blocks objectForKey:property] != nil) {
+            ((CaseBlock)blocks[property])();
+        }
     }
 }
 
@@ -1021,8 +1153,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setPausesAutomatically:(BOOL)pausesAutomatically {
-    [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
-    self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+    BOOL prevValue = self.pausesAutomatically;
+    if(prevValue != pausesAutomatically) {
+        [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
+        self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+    }
 }
 
 - (BOOL)includeTrackingStats {
@@ -1044,8 +1179,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setTrackingMode:(GLTrackingMode)trackingMode {
-    [[NSUserDefaults standardUserDefaults] setInteger:trackingMode forKey:GLSignificantLocationModeDefaultsName];
-    [self enableTracking];
+    GLTrackingMode previousTrackingMode = self.trackingMode;
+    if(previousTrackingMode != trackingMode) {
+        [[NSUserDefaults standardUserDefaults] setInteger:trackingMode forKey:GLSignificantLocationModeDefaultsName];
+        [self enableTracking];
+    }
 }
 
 - (BOOL)visitTrackingEnabled {
@@ -1056,8 +1194,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setVisitTrackingEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLVisitTrackingEnabledDefaultsName];
-    [self enableTracking];
+    BOOL previousEnabled = self.visitTrackingEnabled;
+    if(previousEnabled != enabled) {
+        [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLVisitTrackingEnabledDefaultsName];
+        [self enableTracking];
+    }
 }
 
 - (GLLoggingMode)loggingMode {
@@ -1068,8 +1209,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setLoggingMode:(GLLoggingMode)loggingMode {
-    [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLLoggingModeDefaultsName];
-    [self setupHTTPClient];
+    GLLoggingMode previousLoggingMode = self.loggingMode;
+    if(previousLoggingMode != loggingMode) {
+        [[NSUserDefaults standardUserDefaults] setInteger:loggingMode forKey:GLLoggingModeDefaultsName];
+        [self setupHTTPClient];
+    }
 }
 
 - (GLLoggingMode)loggingModeDuringTrip {
@@ -1099,9 +1243,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setShowBackgroundLocationIndicator:(BOOL)mode {
-    [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLBackgroundIndicatorDefaultsName];
-    if(self.trackingEnabled && !self.tripInProgress) {
-        self.locationManager.showsBackgroundLocationIndicator = mode;
+    BOOL previousMode = self.showBackgroundLocationIndicator;
+    if(previousMode != mode) {
+        [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLBackgroundIndicatorDefaultsName];
+        if(self.trackingEnabled && !self.tripInProgress) {
+            self.locationManager.showsBackgroundLocationIndicator = mode;
+        }
     }
 }
 
@@ -1113,9 +1260,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 - (void)setShowBackgroundLocationIndicatorDuringTrip:(BOOL)mode {
-    [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLTripBackgroundIndicatorDefaultsName];
-    if(self.tripInProgress) {
-        self.locationManager.showsBackgroundLocationIndicator = mode;
+    BOOL previousMode = self.showBackgroundLocationIndicatorDuringTrip;
+    if(previousMode != mode) {
+        [[NSUserDefaults standardUserDefaults] setBool:mode forKey:GLTripBackgroundIndicatorDefaultsName];
+        if(self.tripInProgress) {
+            self.locationManager.showsBackgroundLocationIndicator = mode;
+        }
     }
 }
 

@@ -262,6 +262,8 @@ If you are unable to return this JSON, you can set the "Consider HTTP 2XX Succes
 
 #### Configuration by Server Response
 
+You can configure all of the settings in the app by having your server return new settings in the JSON response when it uploads data. The documentation of the JSON structure and all possible config values is below.
+
 ```json
 
 {
@@ -277,7 +279,7 @@ If you are unable to return this JSON, you can set the "Consider HTTP 2XX Succes
       "background_indicator": true|false,
       "pause_automatically": true|false,
       "logging_mode": "all|latest|owntracks",
-      "batch_size": "50|100|200|500|1000",
+      "batch_size": 50|100|200|500|1000,
       "resume_with_geofence": "off|100m|200m|500m|1km|2km",
       "min_distance": "off|1m|10m|50m|100m|500m",
       "min_time": "1s|5s|10s|30s|1m|5m",
@@ -288,7 +290,7 @@ If you are unable to return this JSON, you can set the "Consider HTTP 2XX Succes
       "background_indicator": true|false,
       "prevent_screen_lock": true|false,
       "logging_mode": "all|latest|owntracks",
-      "batch_size": "50|100|200|500|1000",
+      "batch_size": 50|100|200|500|1000,
       "min_distance": "off|1m|10m|50m|100m|500m",
       "min_time": "1s|5s|10s|30s|1m|5m",
     }
@@ -296,6 +298,13 @@ If you are unable to return this JSON, you can set the "Consider HTTP 2XX Succes
 }
 ```
 
+Note that most values are strings, with the exception of some that are numbers or boolean.
+
+The settings under `main` correspond to the settings in the main settings screen in the UI, and the settings under `trip` correspond to the settings when a trip is in progress.
+
+IMPORTANT: It is very possible to send a setting to the phone that will disable logging completely, which is a dead end, since the phone will then never check back with the server for updated settings! The main setting that can cause this to happen is `send_interval=off`. Setting `tracking_mode=off` means only "visits" will be tracked, which will be received extremely infrequently, so you won't have a chance to change the setting to something else until after the phone checks in after that.
+
+It is best to only send properties in the response that you want to change at that moment, rather than always sending the values on every response. Treat it like pressing the button in the UI, only send the response when you want to press the button.
 
 
 ### Current Location
