@@ -39,6 +39,9 @@
         case kGLLoggingModeOnlyLatest:
             self.loggingMode.selectedSegmentIndex = 1;
             break;
+        case kGLLoggingModeOwntracks:
+            self.loggingMode.selectedSegmentIndex = 2;
+            break;
     }
     
     switch([GLManager sharedManager].showBackgroundLocationIndicatorDuringTrip) {
