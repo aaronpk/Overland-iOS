@@ -34,6 +34,95 @@
         self.apiEndpointField.text = @"tap to set endpoint";
     }
 
+    [self updateVisibleSettings];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(authorizationStatusChanged)
+                                                 name:GLAuthorizationStatusChangedNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateVisibleSettings)
+                                                 name:GLSettingsChangedNotification
+                                               object:nil];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)settingsLockSliderWasChanged:(UISlider *)sender {
+    if(sender.value > 95) {
+        [self unlockAllControls];
+    } else {
+        [self lockAllControls];
+    }
+}
+
+- (void)lockAllControls {
+    self.apiEndpointField.enabled = NO;
+    self.trackingEnabledToggle.enabled = NO;
+    self.trackingEnabledToggle.enabled = NO;
+    self.continuousTrackingMode.enabled = NO;
+    self.visitTrackingControl.enabled = NO;
+    self.desiredAccuracy.enabled = NO;
+    self.activityType.enabled = NO;
+    self.showBackgroundLocationIndicator.enabled = NO;
+    self.pausesAutomatically.enabled = NO;
+    self.loggingMode.enabled = NO;
+    self.pointsPerBatchControl.enabled = NO;
+    self.resumesWithGeofence.enabled = NO;
+    self.discardPointsWithinDistance.enabled = NO;
+    self.discardPointsWithinSeconds.enabled = NO;
+    self.enableNotifications.enabled = NO;
+    self.locationAuthorizationStatus.enabled = NO;
+    self.locationAuthorizationStatusWarning.enabled = NO;
+    self.requestLocationPermissionsButton.enabled = NO;
+}
+
+- (void)unlockAllControls {
+    self.apiEndpointField.enabled = YES;
+    self.trackingEnabledToggle.enabled = YES;
+    self.trackingEnabledToggle.enabled = YES;
+    self.continuousTrackingMode.enabled = YES;
+    self.visitTrackingControl.enabled = YES;
+    self.desiredAccuracy.enabled = YES;
+    self.activityType.enabled = YES;
+    self.showBackgroundLocationIndicator.enabled = YES;
+    self.pausesAutomatically.enabled = YES;
+    self.loggingMode.enabled = YES;
+    self.pointsPerBatchControl.enabled = YES;
+    self.resumesWithGeofence.enabled = YES;
+    self.discardPointsWithinDistance.enabled = YES;
+    self.discardPointsWithinSeconds.enabled = YES;
+    self.enableNotifications.enabled = YES;
+    self.locationAuthorizationStatus.enabled = YES;
+    self.locationAuthorizationStatusWarning.enabled = YES;
+    self.requestLocationPermissionsButton.enabled = YES;
+}
+
+- (void)authorizationStatusChanged {
+    self.locationAuthorizationStatus.text = [GLManager sharedManager].authorizationStatusAsString;
+    if (@available(iOS 14.0, *)) {
+        if([GLManager sharedManager].locationManager.authorizationStatus != kCLAuthorizationStatusAuthorizedAlways) {
+            self.locationAuthorizationStatusWarning.hidden = false;
+            self.requestLocationPermissionsButton.hidden = false;
+            self.locationAuthorizationStatusSection.hidden = false;
+        } else {
+            self.locationAuthorizationStatusWarning.hidden = true;
+            self.requestLocationPermissionsButton.hidden = true;
+            self.locationAuthorizationStatusSection.hidden = true;
+        }
+    }
+}
+
+- (void)updateVisibleSettings {
     self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 1 : 0);
     self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
@@ -160,82 +249,6 @@
         self.pointsPerBatchControl.selectedSegmentIndex = 3;
     } else if(pointsPerBatch == 1000) {
         self.pointsPerBatchControl.selectedSegmentIndex = 4;
-    }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(authorizationStatusChanged)
-                                                 name:GLAuthorizationStatusChangedNotification
-                                               object:nil];
-
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)settingsLockSliderWasChanged:(UISlider *)sender {
-    if(sender.value > 95) {
-        [self unlockAllControls];
-    } else {
-        [self lockAllControls];
-    }
-}
-
-- (void)lockAllControls {
-    self.apiEndpointField.enabled = NO;
-    self.trackingEnabledToggle.enabled = NO;
-    self.trackingEnabledToggle.enabled = NO;
-    self.continuousTrackingMode.enabled = NO;
-    self.visitTrackingControl.enabled = NO;
-    self.desiredAccuracy.enabled = NO;
-    self.activityType.enabled = NO;
-    self.showBackgroundLocationIndicator.enabled = NO;
-    self.pausesAutomatically.enabled = NO;
-    self.loggingMode.enabled = NO;
-    self.pointsPerBatchControl.enabled = NO;
-    self.resumesWithGeofence.enabled = NO;
-    self.discardPointsWithinDistance.enabled = NO;
-    self.discardPointsWithinSeconds.enabled = NO;
-    self.enableNotifications.enabled = NO;
-    self.locationAuthorizationStatus.enabled = NO;
-    self.locationAuthorizationStatusWarning.enabled = NO;
-    self.requestLocationPermissionsButton.enabled = NO;
-}
-
-- (void)unlockAllControls {
-    self.apiEndpointField.enabled = YES;
-    self.trackingEnabledToggle.enabled = YES;
-    self.trackingEnabledToggle.enabled = YES;
-    self.continuousTrackingMode.enabled = YES;
-    self.visitTrackingControl.enabled = YES;
-    self.desiredAccuracy.enabled = YES;
-    self.activityType.enabled = YES;
-    self.showBackgroundLocationIndicator.enabled = YES;
-    self.pausesAutomatically.enabled = YES;
-    self.loggingMode.enabled = YES;
-    self.pointsPerBatchControl.enabled = YES;
-    self.resumesWithGeofence.enabled = YES;
-    self.discardPointsWithinDistance.enabled = YES;
-    self.discardPointsWithinSeconds.enabled = YES;
-    self.enableNotifications.enabled = YES;
-    self.locationAuthorizationStatus.enabled = YES;
-    self.locationAuthorizationStatusWarning.enabled = YES;
-    self.requestLocationPermissionsButton.enabled = YES;
-}
-
-- (void)authorizationStatusChanged {
-    self.locationAuthorizationStatus.text = [GLManager sharedManager].authorizationStatusAsString;
-    if (@available(iOS 14.0, *)) {
-        if([GLManager sharedManager].locationManager.authorizationStatus != kCLAuthorizationStatusAuthorizedAlways) {
-            self.locationAuthorizationStatusWarning.hidden = false;
-            self.requestLocationPermissionsButton.hidden = false;
-            self.locationAuthorizationStatusSection.hidden = false;
-        } else {
-            self.locationAuthorizationStatusWarning.hidden = true;
-            self.requestLocationPermissionsButton.hidden = true;
-            self.locationAuthorizationStatusSection.hidden = true;
-        }
     }
 }
 

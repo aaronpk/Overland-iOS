@@ -27,6 +27,20 @@
     [self lockAllControls];
     self.settingsLockSlider.value = 0;
 
+    [self updateVisibleSettings];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateVisibleSettings)
+                                                 name:GLSettingsChangedNotification
+                                               object:nil];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)updateVisibleSettings {
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
 
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityTypeDuringTrip - 1;
@@ -114,7 +128,6 @@
     } else if(pointsPerBatch == 1000) {
         self.pointsPerBatchControl.selectedSegmentIndex = 4;
     }
-
 }
 
 - (void)didReceiveMemoryWarning {
