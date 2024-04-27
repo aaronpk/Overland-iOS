@@ -298,30 +298,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     NSLog(@"Settings %@", settings);
     
-    NSString *sendInterval = [settings objectForKey:@"send_interval"];
-    if([sendInterval respondsToSelector:@selector(isEqualToString:)]) {
-        if([sendInterval isEqualToString:@"1s"]) {
-            self.sendingInterval = @1;
-        } else if([sendInterval isEqualToString:@"5s"]) {
-            self.sendingInterval = @5;
-        } else if([sendInterval isEqualToString:@"10s"]) {
-            self.sendingInterval = @10;
-        } else if([sendInterval isEqualToString:@"15s"]) {
-            self.sendingInterval = @15;
-        } else if([sendInterval isEqualToString:@"30s"]) {
-            self.sendingInterval = @30;
-        } else if([sendInterval isEqualToString:@"1m"]) {
-            self.sendingInterval = @60;
-        } else if([sendInterval isEqualToString:@"2m"]) {
-            self.sendingInterval = @120;
-        } else if([sendInterval isEqualToString:@"5m"]) {
-            self.sendingInterval = @300;
-        } else if([sendInterval isEqualToString:@"10m"]) {
-            self.sendingInterval = @600;
-        } else if([sendInterval isEqualToString:@"off"]) {
-            self.sendingInterval = @0;
-        }
-    }
+    NSDictionary *sendIntervalBlocks = @{
+        @"1s": ^{ self.sendingInterval = @1; },
+        @"10s": ^{ self.sendingInterval = @10; },
+        @"15s": ^{ self.sendingInterval = @15; },
+        @"30s": ^{ self.sendingInterval = @30; },
+        @"1m": ^{ self.sendingInterval = @60; },
+        @"2m": ^{ self.sendingInterval = @120; },
+        @"5m": ^{ self.sendingInterval = @300; },
+        @"10m": ^{ self.sendingInterval = @600; },
+        @"off": ^{ self.sendingInterval = @0; },
+    };
+    [self runBlock:sendIntervalBlocks fromDictionary:settings forKey:@"send_interval"];
 
     NSString *tripMode = [settings objectForKey:@"trip_mode"];
     if([tripMode respondsToSelector:@selector(isEqualToString:)]) {
@@ -332,7 +320,44 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
     }
     
+    NSDictionary *main = [settings objectForKey:@"main"];
+    if(main != nil) {
+        
+        NSDictionary *trackingModeBlocks = @{
+            @"off": ^{ self.trackingMode = kGLTrackingModeOff; },
+            @"standard": ^{ self.trackingMode = kGLTrackingModeStandard; },
+            @"significant": ^{ self.trackingMode = kGLTrackingModeSignificant; },
+            @"both": ^{ self.trackingMode = kGLTrackingModeStandardAndSignificant; },
+        };
+        [self runBlock:trackingModeBlocks fromDictionary:main forKey:@"tracking_mode"];
+
+        BOOL visitTrackingEnabled = [[main objectForKey:@"visit_tracking"] boolValue];
+        if(visitTrackingEnabled != self.visitTrackingEnabled) {
+            NSLog(@"setting visit tracking: %@", [main objectForKey:@"visit_tracking"]);
+            self.visitTrackingEnabled = visitTrackingEnabled;
+        }
+        
+        NSDictionary *desiredAccuracyBlocks = @{
+            @"nav": ^{ self.desiredAccuracy = kCLLocationAccuracyBestForNavigation; },
+            @"best": ^{ self.desiredAccuracy = kCLLocationAccuracyBest; },
+            @"10m": ^{ self.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; },
+            @"100m": ^{ self.desiredAccuracy = kCLLocationAccuracyHundredMeters; },
+            @"1km": ^{ self.desiredAccuracy = kCLLocationAccuracyKilometer; },
+            @"3km": ^{ self.desiredAccuracy = kCLLocationAccuracyThreeKilometers; },
+        };
+        [self runBlock:desiredAccuracyBlocks fromDictionary:main forKey:@"desired_accuracy"];
+
+        
+    }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+}
+
+- (void)runBlock:(NSDictionary *)blocks fromDictionary:(NSDictionary *)dictionary forKey:(NSString *)key {
+    NSString *property = [dictionary objectForKey:key];
+    if([property respondsToSelector:@selector(isEqualToString:)]) {
+        ((CaseBlock)blocks[property])();
+    }
 }
 
 - (NSString *)stringForProperty:(GLLocationProperty)prop ofLocation:(CLLocation *)location {

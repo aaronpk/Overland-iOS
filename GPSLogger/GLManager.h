@@ -99,6 +99,8 @@ typedef enum {
     kGLLocationPropertyBattery
 } GLLocationProperty;
 
+typedef void (^CaseBlock)(void);
+
 @interface GLManager : NSObject <CLLocationManagerDelegate, UNUserNotificationCenterDelegate>
 
 + (GLManager *)sharedManager;
