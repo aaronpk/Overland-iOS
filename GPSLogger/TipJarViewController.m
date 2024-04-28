@@ -99,6 +99,9 @@
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     int count = (int)[response.products count];
+    
+    NSLog(@"Invalid Products: %@", response.invalidProductIdentifiers);
+    
     if(count > 0){
 //        NSLog(@"Products %@", response.products);
         dispatch_async(dispatch_get_main_queue(), ^{
