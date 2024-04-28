@@ -30,7 +30,7 @@
     // int status = sqlite3_open([path UTF8String], &db);
     // Open the database in serialized mode
     // https://www.sqlite.org/threadsafe.html
-    int status = sqlite3_open_v2([path UTF8String], &db, SQLITE_OPEN_READWRITE|SQLITE_OPEN_FULLMUTEX, NULL);
+    int status = sqlite3_open_v2([path UTF8String], &db, SQLITE_OPEN_READWRITE|SQLITE_OPEN_FULLMUTEX|SQLITE_OPEN_CREATE, NULL);
     
     if (status != SQLITE_OK) {
         NSLog(@"Couldn't open database: %@", path);
