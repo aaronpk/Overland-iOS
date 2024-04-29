@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -873,7 +873,7 @@ IAogA
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iRd-Km-HqH">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="1605.5"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1645.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vAd-hi-fL2">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="30"/>
@@ -1326,8 +1326,15 @@ IAogA
                                                     <segue destination="oUs-hC-YpK" kind="show" id="sxM-Q3-YNd"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqx-hr-DrE">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihE-UQ-Vcc">
                                                 <rect key="frame" x="0.0" y="1575.5" width="335" height="30"/>
+                                                <state key="normal" title="Privacy Policy"/>
+                                                <connections>
+                                                    <action selector="privacyPolicyWasPressed:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="pEv-if-JuJ"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqx-hr-DrE">
+                                                <rect key="frame" x="0.0" y="1615.5" width="335" height="30"/>
                                                 <state key="normal" title="💛 Support this App! 💛"/>
                                                 <connections>
                                                     <segue destination="MT6-GK-gB7" kind="show" id="y0d-f7-50t"/>
@@ -1560,6 +1567,38 @@ For details on the format of the data this app sends to the server, please visit
                                                 <constraint firstAttribute="trailing" secondItem="arV-xT-ugs" secondAttribute="trailing" constant="10" id="Ysz-8v-4EQ"/>
                                                 <constraint firstItem="50p-1e-VPY" firstAttribute="trailing" secondItem="arV-xT-ugs" secondAttribute="leading" id="y3E-pt-lcQ"/>
                                                 <constraint firstItem="50p-1e-VPY" firstAttribute="leading" secondItem="djk-CW-7qS" secondAttribute="leading" constant="10" id="zab-YY-nRa"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="terms" id="MmO-ai-GTo">
+                                        <rect key="frame" x="0.0" y="112.5" width="337.5" height="57"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MmO-ai-GTo" id="FOk-hD-urF">
+                                            <rect key="frame" x="0.0" y="0.0" width="337.5" height="57"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nY-JQ-j6f">
+                                                    <rect key="frame" x="0.0" y="11.5" width="125" height="34.5"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Terms of Use"/>
+                                                    <connections>
+                                                        <action selector="termsOfUseWasPressed:" destination="MT6-GK-gB7" eventType="touchUpInside" id="qS3-ki-Gjg"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fkr-dx-wK2">
+                                                    <rect key="frame" x="208" y="11.5" width="129.5" height="34.5"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Privacy Policy"/>
+                                                    <connections>
+                                                        <action selector="privacyPolicyWasPressed:" destination="MT6-GK-gB7" eventType="touchUpInside" id="7oM-yA-gB5"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Fkr-dx-wK2" secondAttribute="trailing" id="A2y-ZB-Obu"/>
+                                                <constraint firstItem="4nY-JQ-j6f" firstAttribute="leading" secondItem="FOk-hD-urF" secondAttribute="leading" id="ZVH-La-HJg"/>
+                                                <constraint firstItem="4nY-JQ-j6f" firstAttribute="centerY" secondItem="FOk-hD-urF" secondAttribute="centerY" id="fH2-dv-mpq"/>
+                                                <constraint firstItem="Fkr-dx-wK2" firstAttribute="centerY" secondItem="FOk-hD-urF" secondAttribute="centerY" id="s7T-2n-HdC"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

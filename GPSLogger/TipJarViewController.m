@@ -8,6 +8,7 @@
 
 #import "TipJarViewController.h"
 #import <StoreKit/StoreKit.h>
+#import <SafariServices/SafariServices.h>
 
 @interface TipJarViewController () <SKProductsRequestDelegate, SKPaymentTransactionObserver, UITableViewDataSource, UITableViewDelegate>
 
@@ -100,7 +101,7 @@
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     int count = (int)[response.products count];
     
-    NSLog(@"Invalid Products: %@", response.invalidProductIdentifiers);
+//    NSLog(@"Invalid Products: %@", response.invalidProductIdentifiers);
     
     if(count > 0){
 //        NSLog(@"Products %@", response.products);
@@ -206,7 +207,7 @@
 #pragma mark - TableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -215,6 +216,7 @@
         case kGLTipTypeYearly: return self.yearlyTips.count;
         case kGLTipTypeMonthly: return self.monthlyTips.count;
         case kGLTipTypeOneTime: return self.onetimeTips.count;
+        case kGLTipTypeFooter: return 1;
     }
 }
 
@@ -224,6 +226,7 @@
         case kGLTipTypeYearly: return @"Yearly Tips";
         case kGLTipTypeMonthly: return @"Monthly Tips";
         case kGLTipTypeOneTime: return @"One-Time Tips";
+        case kGLTipTypeFooter: return @"";
     }
 }
 
@@ -249,19 +252,29 @@
             keys = self.onetimeTipsKeys;
             products = self.onetimeTips;
             break;
+        case kGLTipTypeFooter:
+            return nil;
+            break;
     }
     NSString *key = [keys objectAtIndex:indexPath.row];
     return [products objectForKey:key];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    
+    NSMutableDictionary *item = [self itemForIndexPath:indexPath];
+
+    if(item == nil) {
+        UITableViewCell *t = [tableView dequeueReusableCellWithIdentifier:@"terms" forIndexPath:indexPath];
+        return t;
+    }
+    
     UITableViewCell *c = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
 
     UILabel *tipNameLabel = [c viewWithTag:500];
     UILabel *priceLabel = [c viewWithTag:700];
     UILabel *frequencyLabel = [c viewWithTag:701];
     
-    NSMutableDictionary *item = [self itemForIndexPath:indexPath];
     SKProduct *product = [self productForIndexPath:indexPath];
 
     tipNameLabel.text = [item objectForKey:@"name"];
@@ -291,7 +304,6 @@
         priceLabel.text = @" ";
         frequencyLabel.text = @" ";
     }
-        
     
     return c;
 }
@@ -302,6 +314,19 @@
         NSLog(@"Purchasing %@", product.localizedTitle);
         [self purchase:product];
     }
+}
+
+- (IBAction)termsOfUseWasPressed:(UIButton *)sender {
+    NSURL *url = [NSURL URLWithString:@"https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"];
+    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+    [self presentViewController:safariViewController animated:YES completion:nil];
+}
+
+- (IBAction)privacyPolicyWasPressed:(UIButton *)sender {
+    NSURL *url = [NSURL URLWithString:@"https://overland.p3k.app/privacy"];
+    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+    // safariViewController.delegate = self;
+    [self presentViewController:safariViewController animated:YES completion:nil];
 }
 
 @end

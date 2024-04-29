@@ -45,6 +45,7 @@
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;
+- (IBAction)privacyPolicyWasPressed:(UIButton *)sender;
 
 @end
 

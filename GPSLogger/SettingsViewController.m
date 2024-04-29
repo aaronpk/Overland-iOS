@@ -11,6 +11,7 @@
 #import "GLManager.h"
 
 #import  <Intents/Intents.h>
+#import <SafariServices/SafariServices.h>
 
 @interface SettingsViewController ()
 
@@ -460,6 +461,13 @@
     } else {
         [GLManager sharedManager].notificationsEnabled = NO;
     }
+}
+
+- (IBAction)privacyPolicyWasPressed:(UIButton *)sender {
+    NSURL *url = [NSURL URLWithString:@"https://overland.p3k.app/privacy"];
+    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+    // safariViewController.delegate = self;
+    [self presentViewController:safariViewController animated:YES completion:nil];
 }
 
 @end

@@ -15,6 +15,7 @@ typedef enum {
     kGLTipTypeMonthly,
     kGLTipTypeYearly,
     kGLTipTypeOneTime,
+    kGLTipTypeFooter,
 } GLTipTypes;
 
 @interface TipJarViewController : UIViewController
@@ -29,6 +30,9 @@ typedef enum {
 @property (nonatomic, strong) NSArray *monthlyTipsKeys;
 @property (nonatomic, strong) NSMutableDictionary *yearlyTips;
 @property (nonatomic, strong) NSArray *yearlyTipsKeys;
+
+- (IBAction)termsOfUseWasPressed:(UIButton *)sender;
+- (IBAction)privacyPolicyWasPressed:(UIButton *)sender;
 
 @end
 
