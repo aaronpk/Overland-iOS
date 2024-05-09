@@ -43,6 +43,7 @@ static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
+static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
 
 /* During-Trip Defaults */
 static NSString *const GLTripDesiredAccuracyDefaultsName = @"GLTripDesiredAccuracyDefaults";

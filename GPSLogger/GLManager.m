@@ -34,6 +34,8 @@
 @property (strong, nonatomic) LOLDatabase *db;
 @property (strong, nonatomic) FMDatabase *tripdb;
 
+@property (strong, nonatomic) NSDate *lastScheduledNotificationDate;
+
 @end
 
 @implementation GLManager
@@ -722,6 +724,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if(self.locationManager.location) {
         self.lastLocation = self.locationManager.location;
     }
+    
+    [self scheduleLocalNotification];
 }
 
 - (void)disableTracking {
@@ -735,6 +739,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self.motionActivityManager stopActivityUpdates];
         self.lastMotion = nil;
     }
+    [self cancelLocalNotification];
 }
 
 - (void)sendingStarted {
@@ -777,6 +782,58 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self sendQueueNow];
     self.lastSentDate = NSDate.date;
 }
+
+#pragma mark - Scheduled local notifications
+
+- (void)scheduleLocalNotification {
+    // Schedule a local notification for 10 minutes into the future to remind the user to launch the app.
+    // We'll cancel the notification when we get an update from the system, so this should only
+    // run if the app is shut down for some reason.
+    
+    int scheduleRateLimit = 60;
+    int reminderIntervalSeconds = 600;
+    
+    // Only do this at most once a minute so we don't hammer the system with scheduled notification requests
+    NSDate *lastScheduled = self.lastScheduledNotificationDate;
+    if(lastScheduled != nil && [lastScheduled timeIntervalSinceNow] > -1 * scheduleRateLimit) {
+        return;
+    }
+    
+    [self cancelLocalNotification];
+    
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"Overland" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:@"Location updates were stopped. Launch the app to resume."
+                arguments:nil];
+    content.sound = [UNNotificationSound defaultSound];
+    
+    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                triggerWithTimeInterval:reminderIntervalSeconds repeats:NO];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"reminder"
+                content:content trigger:trigger];
+     
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        self.lastScheduledNotificationDate = NSDate.now;
+    }];
+}
+
+- (void)cancelLocalNotification {
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center removePendingNotificationRequestsWithIdentifiers:@[@"reminder"]];
+}
+
+- (NSDate *)lastScheduledNotificationDate {
+    if([self defaultsKeyExists:GLLastScheduledNotificationDateDefaultsName]) {
+        return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLLastScheduledNotificationDateDefaultsName];
+    } else {
+        return nil;
+    }
+}
+- (void)setLastScheduledNotificationDate:(NSDate *)date {
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:GLLastScheduledNotificationDateDefaultsName];
+}
+
 
 #pragma mark - Trips
 
@@ -1668,6 +1725,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 
     [self sendQueueIfTimeElapsed];
+    
+    [self scheduleLocalNotification];
 }
 
 - (void)addMetadataToUpdate:(NSDictionary *) update {
