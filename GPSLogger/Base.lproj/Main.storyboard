@@ -380,6 +380,7 @@ IAogA
                                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="Sd6-q7-hsa"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                                        <state key="normal">
                                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
                                                                         <connections>
@@ -1577,17 +1578,31 @@ For details on the format of the data this app sends to the server, please visit
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nY-JQ-j6f">
-                                                    <rect key="frame" x="0.0" y="11.5" width="125" height="34.5"/>
+                                                    <rect key="frame" x="0.0" y="14.5" width="99" height="28.5"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="Terms of Use"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Terms of Use">
+                                                        <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
+                                                    </buttonConfiguration>
                                                     <connections>
                                                         <action selector="termsOfUseWasPressed:" destination="MT6-GK-gB7" eventType="touchUpInside" id="qS3-ki-Gjg"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fkr-dx-wK2">
-                                                    <rect key="frame" x="208" y="11.5" width="129.5" height="34.5"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pbA-bH-Sdl">
+                                                    <rect key="frame" x="104" y="14.5" width="130" height="28.5"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="Privacy Policy"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Restore Purchases">
+                                                        <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
+                                                    </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="restorePurchasesWasPressed:" destination="MT6-GK-gB7" eventType="touchUpInside" id="JoC-Ur-3Sz"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fkr-dx-wK2">
+                                                    <rect key="frame" x="235" y="14.5" width="102.5" height="28.5"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Privacy Policy">
+                                                        <fontDescription key="titleFontDescription" type="system" pointSize="0.0"/>
+                                                    </buttonConfiguration>
                                                     <connections>
                                                         <action selector="privacyPolicyWasPressed:" destination="MT6-GK-gB7" eventType="touchUpInside" id="7oM-yA-gB5"/>
                                                     </connections>
@@ -1597,7 +1612,9 @@ For details on the format of the data this app sends to the server, please visit
                                                 <constraint firstAttribute="trailing" secondItem="Fkr-dx-wK2" secondAttribute="trailing" id="A2y-ZB-Obu"/>
                                                 <constraint firstItem="4nY-JQ-j6f" firstAttribute="leading" secondItem="FOk-hD-urF" secondAttribute="leading" id="ZVH-La-HJg"/>
                                                 <constraint firstItem="4nY-JQ-j6f" firstAttribute="centerY" secondItem="FOk-hD-urF" secondAttribute="centerY" id="fH2-dv-mpq"/>
+                                                <constraint firstItem="pbA-bH-Sdl" firstAttribute="centerY" secondItem="FOk-hD-urF" secondAttribute="centerY" id="gdb-Db-tfV"/>
                                                 <constraint firstItem="Fkr-dx-wK2" firstAttribute="centerY" secondItem="FOk-hD-urF" secondAttribute="centerY" id="s7T-2n-HdC"/>
+                                                <constraint firstItem="pbA-bH-Sdl" firstAttribute="centerX" secondItem="FOk-hD-urF" secondAttribute="centerX" id="v5y-Ic-I9b"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -2076,7 +2093,7 @@ For details on the format of the data this app sends to the server, please visit
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

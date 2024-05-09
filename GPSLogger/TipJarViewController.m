@@ -9,6 +9,7 @@
 #import "TipJarViewController.h"
 #import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
+#import "GLManager.h"
 
 @interface TipJarViewController () <SKProductsRequestDelegate, SKPaymentTransactionObserver, UITableViewDataSource, UITableViewDelegate>
 
@@ -180,7 +181,6 @@
                 break;
             case SKPaymentTransactionStatePurchased:
                 // this is called when the user has successfully purchased the item
-
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 NSLog(@"Transaction state -> Purchased");
                 break;
@@ -188,6 +188,7 @@
                 NSLog(@"Transaction state -> Restored");
                 //add the same code as you did from SKPaymentTransactionStatePurchased here
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                [self showRestoredPurchasesNotification];
                 break;
             case SKPaymentTransactionStateFailed:
                 //called when the transaction does not finish
@@ -327,6 +328,34 @@
     SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
     // safariViewController.delegate = self;
     [self presentViewController:safariViewController animated:YES completion:nil];
+}
+
+- (IBAction)restorePurchasesWasPressed:(UIButton *)sender {
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+    NSLog(@"Restoring purchases");
+}
+
+- (BOOL)     paymentQueue:(SKPaymentQueue *)queue 
+    shouldAddStorePayment:(nonnull SKPayment *)payment
+               forProduct:(nonnull SKProduct *)product {
+
+    NSLog(@"Doing whatevr this is");
+    
+    return YES;
+}
+
+- (void)showRestoredPurchasesNotification {
+    
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Purchases Restored"
+                                   message:@"Your purchases have been restored"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+     
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+       handler:^(UIAlertAction * action) {}];
+     
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

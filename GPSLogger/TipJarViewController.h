@@ -33,6 +33,7 @@ typedef enum {
 
 - (IBAction)termsOfUseWasPressed:(UIButton *)sender;
 - (IBAction)privacyPolicyWasPressed:(UIButton *)sender;
+- (IBAction)restorePurchasesWasPressed:(UIButton *)sender;
 
 @end
 
