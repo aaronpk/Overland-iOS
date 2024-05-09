@@ -375,12 +375,11 @@ IAogA
                                                                     </stackView>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ttD-4z-q87">
                                                                         <rect key="frame" x="253" y="0.0" width="70" height="79.5"/>
-                                                                        <color key="backgroundColor" red="0.98930921052631504" green="0.42863384046052633" blue="0.43451891447368424" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <color key="backgroundColor" name="OverlandGreen"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="Sd6-q7-hsa"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                                        <state key="normal" title="Stop">
                                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
                                                                         <connections>

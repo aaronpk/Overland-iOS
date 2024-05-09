@@ -391,7 +391,7 @@ BOOL mapWasDragged = NO;
 
 - (void)updateTripState {
     [self updateTripMode];
-    
+
     if([GLManager sharedManager].tripInProgress) {
         [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
         self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
