@@ -126,6 +126,7 @@
 - (void)updateVisibleSettings {
     self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 1 : 0);
     self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
+    self.showBackgroundLocationIndicator.selectedSegmentIndex = ([GLManager sharedManager].showBackgroundLocationIndicator ? 1 : 0);
     self.enableNotifications.on = [GLManager sharedManager].notificationsEnabled;
     
     [self authorizationStatusChanged];
@@ -160,15 +161,6 @@
             break;
         case kGLLoggingModeOwntracks:
             self.loggingMode.selectedSegmentIndex = 2;
-            break;
-    }
-    
-    switch([GLManager sharedManager].showBackgroundLocationIndicator) {
-        case NO:
-            self.showBackgroundLocationIndicator.selectedSegmentIndex = 0;
-            break;
-        case YES:
-            self.showBackgroundLocationIndicator.selectedSegmentIndex = 1;
             break;
     }
     

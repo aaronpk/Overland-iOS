@@ -58,15 +58,10 @@
             break;
     }
     
-    switch([GLManager sharedManager].showBackgroundLocationIndicatorDuringTrip) {
-        case NO:
-            self.showBackgroundLocationIndicator.selectedSegmentIndex = 0;
-            break;
-        case YES:
-            self.showBackgroundLocationIndicator.selectedSegmentIndex = 1;
-            break;
-    }
-        
+    self.showBackgroundLocationIndicator.selectedSegmentIndex = ([GLManager sharedManager].showBackgroundLocationIndicatorDuringTrip ? 1 : 0);
+    
+    self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomaticallyDuringTrip ? 1 : 0);
+    
     CLLocationDistance discardDistance = [GLManager sharedManager].discardPointsWithinDistanceDuringTrip;
     int dIdx = 0;
     switch((int)discardDistance) {
@@ -147,6 +142,7 @@
     self.desiredAccuracy.enabled = NO;
     self.activityType.enabled = NO;
     self.showBackgroundLocationIndicator.enabled = NO;
+    self.pausesAutomatically.enabled = NO;
     self.preventScreenLockDuringTrip.enabled = NO;
     self.loggingMode.enabled = NO;
     self.pointsPerBatchControl.enabled = NO;
@@ -158,6 +154,7 @@
     self.desiredAccuracy.enabled = YES;
     self.activityType.enabled = YES;
     self.showBackgroundLocationIndicator.enabled = YES;
+    self.pausesAutomatically.enabled = YES;
     self.preventScreenLockDuringTrip.enabled = YES;
     self.loggingMode.enabled = YES;
     self.pointsPerBatchControl.enabled = YES;
@@ -182,6 +179,13 @@
             m = YES; break;
     }
     [GLManager sharedManager].showBackgroundLocationIndicatorDuringTrip = m;
+}
+
+- (IBAction)pausesAutomaticallyWasChanged:(UISegmentedControl *)sender {
+    [GLManager sharedManager].pausesAutomaticallyDuringTrip = sender.selectedSegmentIndex == 1;
+    if(sender.selectedSegmentIndex == 0) {
+        [GLManager sharedManager].resumesAfterDistance = -1;
+    }
 }
 
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender {

@@ -1776,7 +1776,7 @@ For details on the format of the data this app sends to the server, please visit
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0nc-KH-1Lc">
-                                        <rect key="frame" x="20" y="0.0" width="335" height="898.5"/>
+                                        <rect key="frame" x="20" y="0.0" width="335" height="1001"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trip Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVO-AL-QxH">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="30"/>
@@ -1885,8 +1885,35 @@ For details on the format of the data this app sends to the server, please visit
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="fpz-sv-q8D">
+                                                <rect key="frame" x="0.0" y="430.5" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pause Updates Automatically" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhB-nt-e72">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QD1-27-rqd">
+                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
+                                                        <segments>
+                                                            <segment title="No"/>
+                                                            <segment title="Yes"/>
+                                                        </segments>
+                                                        <connections>
+                                                            <action selector="pausesAutomaticallyWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="ZdL-qm-cNI"/>
+                                                        </connections>
+                                                    </segmentedControl>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updates may not be restarted automatically if this is enabled." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B35-mF-REb">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KtV-Xi-JeG">
-                                                <rect key="frame" x="0.0" y="430.5" width="335" height="31"/>
+                                                <rect key="frame" x="0.0" y="533" width="335" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prevent screen lock during trip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k3S-ji-F16">
                                                         <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
@@ -1903,14 +1930,14 @@ For details on the format of the data this app sends to the server, please visit
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVERLAND SETTINGS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9RH-CP-v1s">
-                                                <rect key="frame" x="0.0" y="471.5" width="335" height="17"/>
+                                                <rect key="frame" x="0.0" y="574" width="335" height="17"/>
                                                 <edgeInsets key="layoutMargins" top="16" left="8" bottom="8" right="8"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="UaN-cI-pVU">
-                                                <rect key="frame" x="0.0" y="498.5" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="601" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logging Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zny-rA-efn">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1937,7 +1964,7 @@ For details on the format of the data this app sends to the server, please visit
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="E8a-0I-WLd">
-                                                <rect key="frame" x="0.0" y="601" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="703.5" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Locations per Batch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKW-gd-REa">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1967,7 +1994,7 @@ For details on the format of the data this app sends to the server, please visit
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NQe-IN-SE4">
-                                                <rect key="frame" x="0.0" y="703.5" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Distance Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-7u-igQ">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -1998,7 +2025,7 @@ For details on the format of the data this app sends to the server, please visit
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Xel-Dj-ruH">
-                                                <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
+                                                <rect key="frame" x="0.0" y="908.5" width="335" height="92.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FFj-Ri-N1t">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
@@ -2055,6 +2082,7 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="discardPointsWithinDistance" destination="FY5-oA-2n1" id="e95-6J-Qqj"/>
                         <outlet property="discardPointsWithinSeconds" destination="UJk-6E-2Kl" id="tOF-QI-Xej"/>
                         <outlet property="loggingMode" destination="APM-y7-ilb" id="Jpg-pD-GQz"/>
+                        <outlet property="pausesAutomatically" destination="QD1-27-rqd" id="ou0-Hg-LLM"/>
                         <outlet property="pointsPerBatchControl" destination="4ai-2r-umg" id="fJW-a2-Rv5"/>
                         <outlet property="preventScreenLockDuringTrip" destination="4Uo-QH-0SA" id="Sm0-jM-Yor"/>
                         <outlet property="settingsLockSlider" destination="XZE-e2-wId" id="dgh-2J-apG"/>

@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *desiredAccuracy;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *activityType;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *showBackgroundLocationIndicator;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *pausesAutomatically;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *loggingMode;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
@@ -29,6 +30,7 @@
 - (IBAction)desiredAccuracyWasChanged:(UISegmentedControl *)sender;
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender;
 - (IBAction)showBackgroundLocationIndicatorWasChanged:(UISegmentedControl *)sender;
+- (IBAction)pausesAutomaticallyWasChanged:(UISegmentedControl *)sender;
 
 - (IBAction)loggingModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;

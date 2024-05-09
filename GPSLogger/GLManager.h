@@ -48,6 +48,7 @@ static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNe
 static NSString *const GLTripDesiredAccuracyDefaultsName = @"GLTripDesiredAccuracyDefaults";
 static NSString *const GLTripActivityTypeDefaultsName = @"GLTripActivityTypeDefaults";
 static NSString *const GLTripBackgroundIndicatorDefaultsName = @"GLTripBackgroundIndicatorDefaults";
+static NSString *const GLTripPausesAutomaticallyDefaultsName = @"GLTripPausesAutomaticallyDefaults";
 static NSString *const GLTripLoggingModeDefaultsName = @"GLTripLoggingModeDefaults";
 static NSString *const GLTripPointsPerBatchDefaultsName = @"GLTripPointsPerBatchDefaults";
 static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripDiscardPointsWithinDistanceDefaults";
@@ -129,6 +130,7 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) CLLocationAccuracy desiredAccuracyDuringTrip;
 @property (nonatomic) CLActivityType activityTypeDuringTrip;
 @property (nonatomic) BOOL showBackgroundLocationIndicatorDuringTrip;
+@property BOOL pausesAutomaticallyDuringTrip;
 @property (nonatomic) GLLoggingMode loggingModeDuringTrip;
 @property (nonatomic) int pointsPerBatchDuringTrip;
 @property (nonatomic) CLLocationDistance discardPointsWithinDistanceDuringTrip;

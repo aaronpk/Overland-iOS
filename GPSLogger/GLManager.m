@@ -657,10 +657,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
         self.locationManager.activityType = self.activityTypeDuringTrip;
         self.locationManager.desiredAccuracy = self.desiredAccuracyDuringTrip;
         self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicatorDuringTrip;
+        self.locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomaticallyDuringTrip;
     } else {
         self.locationManager.activityType = self.activityType;
         self.locationManager.desiredAccuracy = self.desiredAccuracy;
         self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicator;
+        self.locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
     }
 
     if(self.tripInProgress) {
@@ -905,6 +907,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     self.locationManager.activityType = self.activityType;
     self.locationManager.desiredAccuracy = self.desiredAccuracy;
     self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicator;
+    self.locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
 
     if(!self.tripInProgress) {
         return;
@@ -1005,7 +1008,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.allowsBackgroundLocationUpdates = YES;
         if(self.tripInProgress) {
-            _locationManager.pausesLocationUpdatesAutomatically = NO;
+            _locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomaticallyDuringTrip;
             _locationManager.desiredAccuracy = self.desiredAccuracyDuringTrip;
             _locationManager.activityType = self.activityTypeDuringTrip;
         } else {
@@ -1156,7 +1159,28 @@ const double MPH_to_METERSPERSECOND = 0.447;
     BOOL prevValue = self.pausesAutomatically;
     if(prevValue != pausesAutomatically) {
         [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLPausesAutomaticallyDefaultsName];
-        self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+        if(!self.tripInProgress) {
+            NSLog(@"Setting pausesLocationUpdatesAutomatically %d", pausesAutomatically);
+            self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+        }
+    }
+}
+
+- (BOOL)pausesAutomaticallyDuringTrip {
+    if([self defaultsKeyExists:GLTripPausesAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLTripPausesAutomaticallyDefaultsName];
+    } else {
+        return NO;
+    }
+}
+- (void)setPausesAutomaticallyDuringTrip:(BOOL)pausesAutomatically {
+    BOOL prevValue = self.pausesAutomaticallyDuringTrip;
+    if(prevValue != pausesAutomatically) {
+        [[NSUserDefaults standardUserDefaults] setBool:pausesAutomatically forKey:GLTripPausesAutomaticallyDefaultsName];
+        if(self.tripInProgress) {
+            NSLog(@"Setting pausesLocationUpdatesAutomatically while trip is in progress %d", pausesAutomatically);
+            self.locationManager.pausesLocationUpdatesAutomatically = pausesAutomatically;
+        }
     }
 }
 
