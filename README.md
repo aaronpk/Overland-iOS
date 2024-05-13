@@ -5,6 +5,7 @@ This app tracks your location in the background and sends the data to a server o
 
 * GPS location
 * Motion State (walking, running, driving, cycling, stationary)
+* Steps
 * Battery level
 
 The app gathers data even when the phone is offline, and the data is sent to the server in a batch at an interval set by the user.
@@ -17,6 +18,7 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 * [PureTrack](https://puretrack.io/add-overland) - a service for tracking lightweight planes and gliders
 * [Open Humans](https://overland.openhumans.org/) - a service for tracking your data and sharing it for research purposes
 * [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
+* [Home Assistant](https://www.home-assistant.io/) - home automation platform, compatible with the [OwnTracks](https://www.home-assistant.io/integrations/owntracks/) format supported by Home Assistant
 
 Looking for the Android version? → https://github.com/OpenHumans/overland_android
 
@@ -302,7 +304,7 @@ Note that most values are strings, with the exception of some that are numbers o
 
 The settings under `main` correspond to the settings in the main settings screen in the UI, and the settings under `trip` correspond to the settings when a trip is in progress.
 
-IMPORTANT: It is very possible to send a setting to the phone that will disable logging completely, which is a dead end, since the phone will then never check back with the server for updated settings! The main setting that can cause this to happen is `send_interval=off`. Setting `tracking_mode=off` means only "visits" will be tracked, which will be received extremely infrequently, so you won't have a chance to change the setting to something else until after the phone checks in after that.
+IMPORTANT: It is very possible to send a setting to the phone that will disable logging completely, which creates a dead end, since the phone will then never check back with the server for updated settings! The main setting that can cause this to happen is `send_interval=off`. Setting `tracking_mode=off` means only "visits" will be tracked, which will be received extremely infrequently, so you won't have a chance to change the setting to something else until after the phone checks in after that.
 
 It is best to only send properties in the response that you want to change at that moment, rather than always sending the values on every response. Treat it like pressing the button in the UI, only send the response when you want to press the button.
 
@@ -355,7 +357,7 @@ This assumes you have [Xcode](https://developer.apple.com/xcode/) and [Homebrew]
 
 ## License
 
-Contributions from 2017 onward are copyright by Aaron Parecki
+Contributions from 2017 onward are copyright by Aaron Parecki and contributors
 
 Contributions from 2013-2016 are copyright by Esri, Inc.
 
