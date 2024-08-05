@@ -29,12 +29,6 @@
     [self lockAllControls];
     self.settingsLockSlider.value = 0;
 
-    if([GLManager sharedManager].apiEndpointURL != nil) {
-        self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
-    } else {
-        self.apiEndpointField.text = @"tap to set endpoint";
-    }
-
     [self updateVisibleSettings];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -124,6 +118,12 @@
 }
 
 - (void)updateVisibleSettings {
+    if([GLManager sharedManager].apiEndpointURL != nil) {
+        self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
+    } else {
+        self.apiEndpointField.text = @"tap to set endpoint";
+    }
+
     self.trackingEnabledToggle.selectedSegmentIndex = ([GLManager sharedManager].trackingEnabled ? 1 : 0);
     self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomatically ? 1 : 0);
     self.showBackgroundLocationIndicator.selectedSegmentIndex = ([GLManager sharedManager].showBackgroundLocationIndicator ? 1 : 0);

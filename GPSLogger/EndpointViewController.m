@@ -30,11 +30,17 @@
         
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text andAccessToken:self.accessTokenField.text];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+        
         [self dismissViewControllerAnimated:YES completion:nil];
     } else if(self.apiEndpointField.text.length == 0) {
 
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:nil andAccessToken:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+        
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         self.apiEndpointField.backgroundColor = [UIColor colorWithRed:1.0 green:0.82 blue:0.82 alpha:1.0];
