@@ -8,6 +8,7 @@
 
 #import "EndpointViewController.h"
 #import "GLManager.h"
+#import "CustomHeadersViewController.h"
 
 @interface EndpointViewController ()
 
@@ -20,6 +21,31 @@
     self.accessTokenField.text = [GLManager sharedManager].apiAccessToken;
     self.deviceIdField.text = [GLManager sharedManager].deviceId;
     self.apiEndpointField.backgroundColor = [UIColor clearColor];
+
+    self.customHeadersButton.backgroundColor = [self.customHeadersButton.tintColor colorWithAlphaComponent:0.12];
+    self.customHeadersButton.layer.cornerRadius = 8;
+    self.customHeadersButton.clipsToBounds = YES;
+
+    [self updateCustomHeadersButtonTitle];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateCustomHeadersButtonTitle)
+                                                 name:GLSettingsChangedNotification
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GLSettingsChangedNotification object:nil];
+}
+
+- (void)updateCustomHeadersButtonTitle {
+    NSArray *headers = [[GLManager sharedManager] customHeaders];
+    if (headers.count > 0) {
+        [self.customHeadersButton setTitle:[NSString stringWithFormat:@"Custom Headers (%lu)", (unsigned long)headers.count] forState:UIControlStateNormal];
+    } else {
+        [self.customHeadersButton setTitle:@"Custom Headers" forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)saveButtonWasTapped:(UIButton *)sender {
@@ -45,6 +71,17 @@
     } else {
         self.apiEndpointField.backgroundColor = [UIColor colorWithRed:1.0 green:0.82 blue:0.82 alpha:1.0];
     }
+}
+
+- (IBAction)customHeadersButtonTapped:(UIButton *)sender {
+    CustomHeadersViewController *vc = [[CustomHeadersViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self updateCustomHeadersButtonTitle];
 }
 
 @end
