@@ -41,6 +41,7 @@ static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicat
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
+static NSString *const GLCustomHeadersDefaultsName = @"GLCustomHeadersDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
@@ -161,6 +162,9 @@ typedef void (^CaseBlock)(void);
 - (NSString *)apiAccessToken;
 - (void)saveNewDeviceId:(NSString *)deviceId;
 - (NSString *)deviceId;
+
+- (NSArray *)customHeaders;
+- (void)saveCustomHeaders:(NSArray *)headers;
 
 - (void)logAction:(NSString *)action;
 - (void)sendQueueNow;

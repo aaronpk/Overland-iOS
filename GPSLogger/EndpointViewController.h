@@ -13,7 +13,9 @@
 @property (strong, nonatomic) IBOutlet UITextField *apiEndpointField;
 @property (strong, nonatomic) IBOutlet UITextField *accessTokenField;
 @property (strong, nonatomic) IBOutlet UITextField *deviceIdField;
+@property (strong, nonatomic) IBOutlet UIButton *customHeadersButton;
 
 - (IBAction)saveButtonWasTapped:(UIButton *)sender;
+- (IBAction)customHeadersButtonTapped:(UIButton *)sender;
 
 @end
