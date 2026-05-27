@@ -22,7 +22,8 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 * [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
 * [Home Assistant](https://www.home-assistant.io/) - home automation platform, compatible with the [OwnTracks](https://www.home-assistant.io/integrations/owntracks/) format supported by Home Assistant
 
-Looking for the Android version? → https://github.com/OpenHumans/overland_android
+Looking for the Android version? → [Colota](https://github.com/dietrichmax/colota) ([Overland integration](https://colota.app/docs/integrations/overland))
+
 
 ## Documentation
 
