@@ -28,6 +28,9 @@ static NSString *const GLPausesAutomaticallyDefaultsName = @"GLPausesAutomatical
 static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomaticallyDefaults";
 static NSString *const GLDiscardPointsWithinDistanceDefaultsName = @"GLDiscardPointsWithinDistanceDefaults";
 static NSString *const GLDiscardPointsWithinSecondsDefaultsName = @"GLDiscardPointsWithinSecondsDefaults";
+static NSString *const GLDiscardPointsOutsideAccuracyDefaultsName = @"GLDiscardPointsOutsideAccuracyDefaults";
+static NSString *const GLStopsAutomaticallyDefaultsName = @"GLStopsAutomaticallyDefaults";
+static NSString *const GLStopsAutomaticallyAfterDefaultsName = @"GLStopsAutomaticallyAfterDefaults";
 static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
@@ -37,10 +40,13 @@ static NSString *const GLNotificationPermissionRequestedDefaultsName = @"GLNotif
 static NSString *const GLNotificationsEnabledDefaultsName = @"GLNotificationsEnabledDefaults";
 static NSString *const GLIncludeUniqueIdDefaultsName = @"GLIncludeUniqueIdDefaults";
 static NSString *const GLConsiderHTTP200SuccessDefaultsName = @"GLConsiderHTTP200SuccessDefaults";
+static NSString *const GLPreciseSettingsDefaults = @"GLPreciseSettingsDefaults";
 static NSString *const GLBackgroundIndicatorDefaultsName = @"GLBackgroundIndicatorDefaults";
 static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
+static NSString *const GLLastTimeMovedBeyondStopThresholdDefaultsName = @"GLLastTimeMovedBeyondStopThresholdDefaults";
+static NSString *const GLDidPauseByRadiusDefaultsName = @"GLDidPauseByRadiusDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
@@ -54,6 +60,7 @@ static NSString *const GLTripLoggingModeDefaultsName = @"GLTripLoggingModeDefaul
 static NSString *const GLTripPointsPerBatchDefaultsName = @"GLTripPointsPerBatchDefaults";
 static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripDiscardPointsWithinDistanceDefaults";
 static NSString *const GLTripDiscardPointsWithinSecondsDefaultsName = @"GLTripDiscardPointsWithinSecondsDefaults";
+static NSString *const GLTripDiscardPointsOutsideAccuracyDefaultsName = @"GLTripDiscardPointsOutsideAccuracyDefaults";
 static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 /* End */
 
@@ -118,6 +125,10 @@ typedef void (^CaseBlock)(void);
 @property BOOL notificationsEnabled;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
+@property (nonatomic) CLLocationDistance stopsAutomaticallyRadius;
+@property (nonatomic, readonly) BOOL stopsAutomaticallyActive;
+@property (nonatomic) CLLocationAccuracy discardPointsOutsideAccuracy;
+@property (nonatomic) int stopsAutomaticallyAfterSeconds;
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) GLTrackingMode trackingMode;
 @property BOOL visitTrackingEnabled;
@@ -126,6 +137,9 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) CLActivityType activityType;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) int pointsPerBatch;
+@property CLLocation* lastLocationMovedBeyondStopThreshold;
+@property NSDate* lastTimeMovedBeyondStopThreshold;
+@property (nonatomic) BOOL didPauseByRadius;
 
 /* During-Trip Settings */
 @property (nonatomic) CLLocationAccuracy desiredAccuracyDuringTrip;

@@ -10,6 +10,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Precise Settings</string>
+			<key>Key</key>
+			<string>GLPreciseSettingsDefaults</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Include Tracking Stats</string>
 			<key>Key</key>
 			<string>GLIncludeTrackingStatsDefaultsName</string>

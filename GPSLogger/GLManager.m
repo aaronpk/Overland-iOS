@@ -411,6 +411,35 @@ const double MPH_to_METERSPERSECOND = 0.447;
             @"5m": ^{ self.discardPointsWithinSeconds = 300; },
         };
         [self runBlock:minTimeBlocks fromDictionary:main forKey:@"min_time"];
+        
+        NSDictionary *maxAccuracyBlocks = @{
+            @"off": ^{ self.discardPointsOutsideAccuracy = -1; },
+            @"10m": ^{ self.discardPointsOutsideAccuracy = 10; },
+            @"50m": ^{ self.discardPointsOutsideAccuracy = 50; },
+            @"100m": ^{ self.discardPointsOutsideAccuracy = 100; },
+            @"500m": ^{ self.discardPointsOutsideAccuracy = 500; },
+            @"1000m": ^{ self.discardPointsOutsideAccuracy = 1000; },
+        };
+        [self runBlock:maxAccuracyBlocks fromDictionary:main forKey:@"max_accuracy"];
+        
+        NSDictionary *stopsRadiusBlocks = @{
+            @"off": ^{ self.stopsAutomaticallyRadius = -1; },
+            @"10m": ^{ self.stopsAutomaticallyRadius = 10; },
+            @"20m": ^{ self.stopsAutomaticallyRadius = 20; },
+            @"50m": ^{ self.stopsAutomaticallyRadius = 50; },
+            @"100m": ^{ self.stopsAutomaticallyRadius = 100; },
+            @"200m": ^{ self.stopsAutomaticallyRadius = 200; },
+        };
+        [self runBlock:stopsRadiusBlocks fromDictionary:main forKey:@"stop_radius"];
+        
+        NSDictionary *stopsTimeBlocks = @{
+            @"1min": ^{ self.stopsAutomaticallyAfterSeconds = 60; },
+            @"2min": ^{ self.stopsAutomaticallyAfterSeconds = 60*2; },
+            @"5min": ^{ self.stopsAutomaticallyAfterSeconds = 60*5; },
+            @"10min": ^{ self.stopsAutomaticallyAfterSeconds = 60*10; },
+            @"20min": ^{ self.stopsAutomaticallyAfterSeconds = 60*20; },
+        };
+        [self runBlock:stopsTimeBlocks fromDictionary:main forKey:@"stop_time"];
 
     }
 
@@ -730,6 +759,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)disableTracking {
     self.trackingEnabled = NO;
+    self.didPauseByRadius = NO;
     [UIDevice currentDevice].batteryMonitoringEnabled = NO;
     [self.locationManager stopMonitoringVisits];
     [self.locationManager stopUpdatingHeading];
@@ -789,6 +819,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     // Schedule a local notification for 10 minutes into the future to remind the user to launch the app.
     // We'll cancel the notification when we get an update from the system, so this should only
     // run if the app is shut down for some reason.
+    
+    // Make sure this only delivers when user has opted in to notifications,
+    // and when the stop radius is active do not deliver, because it will deliver its own "paused updates" notification.
+    if(!self.notificationsEnabled || self.stopsAutomaticallyActive) {
+        return;
+    }
     
     int scheduleRateLimit = 60;
     int reminderIntervalSeconds = 600;
@@ -1149,6 +1185,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDiscardPointsWithinDistanceDefaultsName];
 }
 
+- (CLLocationAccuracy)discardPointsOutsideAccuracy {
+    if([self defaultsKeyExists:GLDiscardPointsOutsideAccuracyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDiscardPointsOutsideAccuracyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setDiscardPointsOutsideAccuracy:(CLLocationAccuracy)distance {
+    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLDiscardPointsOutsideAccuracyDefaultsName];
+}
+
 - (CLLocationDistance)discardPointsWithinDistanceDuringTrip {
     if([self defaultsKeyExists:GLTripDiscardPointsWithinDistanceDefaultsName]) {
         return [[NSUserDefaults standardUserDefaults] doubleForKey:GLTripDiscardPointsWithinDistanceDefaultsName];
@@ -1196,6 +1243,44 @@ const double MPH_to_METERSPERSECOND = 0.447;
     } else {
         return self.discardPointsWithinSeconds;
     }
+}
+
+- (CLLocationDistance)stopsAutomaticallyRadius {
+    if([self defaultsKeyExists:GLStopsAutomaticallyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLStopsAutomaticallyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setStopsAutomaticallyRadius:(CLLocationDistance)distance {
+    [[NSUserDefaults standardUserDefaults] setDouble:distance forKey:GLStopsAutomaticallyDefaultsName];
+}
+
+// The radius setting only has an effect in this one tracking mode, and it is mutually
+// exclusive with the system pauser because the two have incompatible resume paths.
+- (BOOL)stopsAutomaticallyActive {
+    return self.trackingMode == kGLTrackingModeStandardAndSignificant
+        && self.stopsAutomaticallyRadius != -1
+        && !self.pausesAutomatically;
+}
+
+- (int)stopsAutomaticallyAfterSeconds {
+    if([self defaultsKeyExists:GLStopsAutomaticallyAfterDefaultsName]) {
+        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:GLStopsAutomaticallyAfterDefaultsName];
+    } else {
+        return 60;
+    }
+}
+- (void)setStopsAutomaticallyAfterSeconds:(int)seconds {
+    [[NSUserDefaults standardUserDefaults] setInteger:seconds forKey:GLStopsAutomaticallyAfterDefaultsName];
+}
+
+// Persisted so the resume notification still fires when the app is relaunched by a significant location change
+- (BOOL)didPauseByRadius {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:GLDidPauseByRadiusDefaultsName];
+}
+- (void)setDidPauseByRadius:(BOOL)didPause {
+    [[NSUserDefaults standardUserDefaults] setBool:didPause forKey:GLDidPauseByRadiusDefaultsName];
 }
 
 
@@ -1608,6 +1693,25 @@ const double MPH_to_METERSPERSECOND = 0.447;
         // This probably shouldn't happen, but just in case, don't log anything if they have tracking mode set to off
         return;
     }
+    
+    // Send Resume notification if it was paused by Radius constraint
+    if (self.didPauseByRadius) {
+        self.didPauseByRadius = NO;
+
+        // Restart the dwell timer, otherwise the still-expired threshold date re-pauses updates further below
+        self.lastLocationMovedBeyondStopThreshold = nil;
+        self.lastTimeMovedBeyondStopThreshold = nil;
+
+        NSLog(@"Continuing loc updates");
+        [self notify:@"Location updates resumed." withTitle:@"Resumed"];
+    }
+    
+    // Just incase these wont be restarted after stopped and user moved significantly, make sure updates start again.
+    if (self.trackingMode == kGLTrackingModeStandardAndSignificant) {
+        [self.locationManager startUpdatingLocation];
+        [self.locationManager startUpdatingHeading];
+        [self.locationManager startMonitoringSignificantLocationChanges];
+    }
         
     // If a wifi override is configured, replace the input location list with the location in the wifi mapping
     if([GLManager currentWifiHotSpotName]) {
@@ -1668,6 +1772,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
             }
         }
         
+        if(self.discardPointsOutsideAccuracy > 0) {
+            if(loc.horizontalAccuracy > self.discardPointsOutsideAccuracy) {
+                continue;
+            }
+        }
+        
         NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
         NSDictionary *update;
         if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
@@ -1718,6 +1828,33 @@ const double MPH_to_METERSPERSECOND = 0.447;
         self.lastLocation = loc;
         self.lastLocationDictionary = [self currentDictionaryFromLocation:self.lastLocation];
 
+    }
+    
+    // If stopsautomatically is active, update the saved location and time whenever user exits the radius.
+    // Also make sure that the location timestamp isnt older than 20 seconds to handle apple delivering locations late.
+    if (self.stopsAutomaticallyActive && ([self.lastLocation.timestamp timeIntervalSinceNow] > -20 || !self.lastTimeMovedBeyondStopThreshold)) {
+        if ([self.lastLocationMovedBeyondStopThreshold distanceFromLocation:self.lastLocation] > self.stopsAutomaticallyRadius || !self.lastTimeMovedBeyondStopThreshold) {
+            self.lastLocationMovedBeyondStopThreshold = self.lastLocation;
+            self.lastTimeMovedBeyondStopThreshold = NSDate.now;
+        }
+    }
+    
+    
+    // if all necessary settings are activated, and user spent enough time within radius, stop location updates,
+    // and rely only on significant location change to signal movement and subsequent restarting of the updates.
+    // this will happen after around 500 meters, but will DRASTICALLY save battery life.
+    if (self.stopsAutomaticallyActive \
+        && self.lastTimeMovedBeyondStopThreshold \
+        && [self.lastTimeMovedBeyondStopThreshold timeIntervalSinceNow] < -self.stopsAutomaticallyAfterSeconds) {
+        
+        [self.locationManager stopUpdatingLocation];
+        [self.locationManager stopUpdatingHeading];
+        [self.locationManager startMonitoringSignificantLocationChanges];
+        
+        self.didPauseByRadius = YES;
+        
+        NSLog(@"Stopping loc updates");
+        [self notify:@"Location updates paused. Waiting for significant movement." withTitle:@"Paused"];
     }
 
     if(didAddData) {
