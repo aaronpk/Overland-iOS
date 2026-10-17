@@ -1,6 +1,8 @@
 Overland GPS Tracker for iOS
 ============================
 
+https://overland.p3k.app
+
 This app tracks your location in the background and sends the data to a server of your choosing. The app tracks:
 
 * GPS location
@@ -22,7 +24,7 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 * [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
 * [Home Assistant](https://www.home-assistant.io/) - home automation platform, compatible with the [OwnTracks](https://www.home-assistant.io/integrations/owntracks/) format supported by Home Assistant
 
-Looking for the Android version? → https://github.com/OpenHumans/overland_android
+Looking for an Android version? → https://overland.p3k.app
 
 ## Documentation
 
