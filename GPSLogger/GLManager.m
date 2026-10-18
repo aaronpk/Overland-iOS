@@ -189,7 +189,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     NSMutableDictionary *postData;
     
     if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
-        postData = locationUpdates[0];
+        // The queue may be empty, which is handled below before sending
+        postData = locationUpdates.firstObject;
     } else {
         // The batch size isn't known until now, so fill in locations_in_payload on the points that
         // were recorded with tracking stats enabled
@@ -257,7 +258,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     [_httpClient POST:endpointURL parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
-        
+
+        // With "Consider HTTP 2XX Successful" on, the response can be anything (e.g. the OwnTracks
+        // Recorder returns an array), so only read properties from it if it's a JSON object
+        NSDictionary *responseDictionary = [responseObject isKindOfClass:[NSDictionary class]] ? responseObject : nil;
+
         bool requestWasSuccessfullySent = NO;
         if(self.shouldConsiderHTTP200Success) {
             // Any non-200 response would have been caught by the error callback instead
@@ -278,8 +283,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         if(requestWasSuccessfullySent) {
             self.lastSentDate = NSDate.date;
-            NSDictionary *geocode = [responseObject objectForKey:@"geocode"];
-            if(geocode && ![geocode isEqual:[NSNull null]]) {
+            NSDictionary *geocode = [responseDictionary objectForKey:@"geocode"];
+            if([geocode isKindOfClass:[NSDictionary class]]) {
                 self.lastLocationName = [geocode objectForKey:@"full_name"];
             } else {
                 self.lastLocationName = @"";
@@ -305,7 +310,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [self sendingFinished];
             }];
 
-            [self updateSettingsFromResponse:responseObject];
+            [self updateSettingsFromResponse:responseDictionary];
         } else {
             
             self.batchInProgress = NO;
