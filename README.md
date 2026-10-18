@@ -1,6 +1,8 @@
 Overland GPS Tracker for iOS
 ============================
 
+https://overland.p3k.app
+
 This app tracks your location in the background and sends the data to a server of your choosing. The app tracks:
 
 * GPS location
@@ -17,12 +19,13 @@ The app sends data to an HTTP endpoint. You can use an existing backend or build
 * [Compass](https://github.com/aaronpk/Compass) - a self-hosted PHP app built to save and review data from this app
 * [Wayfinder](https://github.com/dontic/wayfinder) - a self-hosted app for Overland
 * [Dawarich](https://dawarich.app/) - a self-hosted alternative to Google Location History
+* [Reitti](https://www.dedicatedcode.com/projects/reitti/) - a self-hosted personal location tracking and analysis application
 * [PureTrack](https://puretrack.io/add-overland) - a service for tracking lightweight planes and gliders
 * [Open Humans](https://overland.openhumans.org/) - a service for tracking your data and sharing it for research purposes
-* [Icecondor](https://icecondor.com/) - a service for tracking your location, sharing with friends, and setting geofence alerts
+* [Geomanic](https://geomanic.com/) - a free hosted service for tracking your trips, with country statistics, travel analytics, and tax residency day counts
 * [Home Assistant](https://www.home-assistant.io/) - home automation platform, compatible with the [OwnTracks](https://www.home-assistant.io/integrations/owntracks/) format supported by Home Assistant
 
-Looking for the Android version? → https://github.com/OpenHumans/overland_android
+Looking for an Android version? → https://overland.p3k.app
 
 ## Documentation
 
