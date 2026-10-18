@@ -1872,7 +1872,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         @"_type": @"location",
         @"lat": [NSNumber numberWithDouble:((int)(loc.coordinate.latitude * 10000000)) / 10000000.0],
         @"lon": [NSNumber numberWithDouble:((int)(loc.coordinate.longitude * 10000000)) / 10000000.0],
-        @"tst": [NSNumber numberWithInt:(int)loc.timestamp.timeIntervalSinceReferenceDate],
+        @"tst": [NSNumber numberWithDouble:loc.timestamp.timeIntervalSince1970],
         @"acc": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
         @"batt": [NSNumber numberWithInt:[[self currentBatteryLevel] doubleValue] * 100],
     }];
