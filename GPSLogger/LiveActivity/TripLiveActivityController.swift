@@ -62,7 +62,9 @@ import Foundation
     @objc(endTripWithMode:distance:speed:)
     func endTrip(mode: String, distance: Double, speed: Double) {
         guard #available(iOS 16.2, *) else { return }
-        endAllActivities(content: content(mode: mode, distance: distance, speed: speed), dismissalPolicy: .default)
+        // Dismiss right away. With the default policy an ended activity stays on the Lock Screen
+        // for up to four hours, and its elapsed time keeps ticking, so the trip looks like it's still going.
+        endAllActivities(content: content(mode: mode, distance: distance, speed: speed), dismissalPolicy: .immediate)
     }
 
     // Called on launch. Reattaches to the activity for the trip in progress, starting one if
