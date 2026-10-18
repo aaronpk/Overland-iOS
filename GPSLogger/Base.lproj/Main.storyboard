@@ -1440,8 +1440,19 @@ IAogA
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" smartDashesType="no" smartQuotesType="no"/>
                                     </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="chb-Hd-R7x">
+                                        <rect key="frame" x="0.0" y="177" width="335" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="34" id="chb-Ht-C0n"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <state key="normal" title="Custom Headers"/>
+                                        <connections>
+                                            <action selector="customHeadersButtonTapped:" destination="oz3-vM-59N" eventType="touchUpInside" id="chb-Ac-T1n"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhm-5d-E1l">
-                                        <rect key="frame" x="0.0" y="177" width="335" height="30"/>
+                                        <rect key="frame" x="0.0" y="211" width="335" height="30"/>
                                         <state key="normal" title="Save"/>
                                         <connections>
                                             <action selector="saveButtonWasTapped:" destination="oz3-vM-59N" eventType="touchUpInside" id="cGG-Ai-1Y3"/>
@@ -1479,6 +1490,7 @@ For details on the format of the data this app sends to the server, please visit
                     <connections>
                         <outlet property="accessTokenField" destination="Tyk-UF-Fri" id="cCI-D5-30Y"/>
                         <outlet property="apiEndpointField" destination="UKr-2t-LGS" id="TQV-39-goh"/>
+                        <outlet property="customHeadersButton" destination="chb-Hd-R7x" id="chb-Ou-T2p"/>
                         <outlet property="deviceIdField" destination="LDo-Kd-T3a" id="uDX-mW-scj"/>
                     </connections>
                 </viewController>

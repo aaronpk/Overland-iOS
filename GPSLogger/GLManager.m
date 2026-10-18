@@ -114,6 +114,29 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return d;
 }
 
+- (NSArray *)customHeaders {
+    NSArray *headers = [[NSUserDefaults standardUserDefaults] arrayForKey:GLCustomHeadersDefaultsName];
+    if (headers == nil) {
+        return @[];
+    }
+    return headers;
+}
+
+- (void)saveCustomHeaders:(NSArray *)headers {
+    [[NSUserDefaults standardUserDefaults] setObject:headers forKey:GLCustomHeadersDefaultsName];
+    [self setupHTTPClient];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+}
+
++ (BOOL)isBlockedCustomHeaderName:(NSString *)name {
+    for(NSString *blocked in @[@"Authorization", @"Content-Type", @"Host"]) {
+        if([name caseInsensitiveCompare:blocked] == NSOrderedSame) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (void)startAllUpdates {
     [self enableTracking];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GLTrackingStateDefaultsName];
@@ -481,7 +504,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self runBlock:minTimeDuringTripBlocks fromDictionary:trip forKey:@"min_time"];
 
     }
-    
+
+    NSDictionary *customHeadersDict = [settings objectForKey:@"custom_headers"];
+    if (customHeadersDict != nil && [customHeadersDict respondsToSelector:@selector(enumerateKeysAndObjectsUsingBlock:)]) {
+        NSMutableArray *headers = [NSMutableArray array];
+        [customHeadersDict enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+            if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+                [headers addObject:@{@"key": key, @"value": value}];
+            }
+        }];
+        [self saveCustomHeaders:headers];
+    }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
 }
 
@@ -630,8 +664,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
         } else {
             [_httpClient.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
         }
+
+        // Apply custom headers
+        NSArray *customHeaders = [self customHeaders];
+        for (NSDictionary *header in customHeaders) {
+            NSString *key = header[@"key"];
+            NSString *value = header[@"value"];
+            if (key.length > 0 && value.length > 0 && ![GLManager isBlockedCustomHeaderName:key]) {
+                [_httpClient.requestSerializer setValue:value forHTTPHeaderField:key];
+            }
+        }
     }
-    
+
     _deviceId = [self deviceId];
 }
 

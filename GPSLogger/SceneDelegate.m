@@ -66,6 +66,17 @@
         [[GLManager sharedManager] saveNewDeviceId:deviceId];
         [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
         [[NSUserDefaults standardUserDefaults] setBool:[uniqueId isEqualToString:@"yes"] forKey:GLIncludeUniqueIdDefaultsName];
+        NSMutableArray *customHeaders = [NSMutableArray array];
+        for (NSURLQueryItem *item in queryItems) {
+            if ([item.name hasPrefix:@"header_"]) {
+                NSString *headerKey = [item.name substringFromIndex:7];
+                if (headerKey.length > 0 && item.value.length > 0) {
+                    [customHeaders addObject:@{@"key": headerKey, @"value": item.value}];
+                }
+            }
+        }
+        // A setup link always replaces the full list of custom headers, even if it has none
+        [[GLManager sharedManager] saveCustomHeaders:customHeaders];
     }
 }
 
