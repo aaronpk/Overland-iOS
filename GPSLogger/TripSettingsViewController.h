@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinDistance;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
+@property (strong, nonatomic) IBOutlet UISwitch *showLiveActivityDuringTrip;
 
 - (IBAction)settingsLockSliderWasChanged:(UISlider *)sender;
 
@@ -37,6 +38,7 @@
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
 - (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
+- (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender;
 
 @end
 

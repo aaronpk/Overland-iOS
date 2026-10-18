@@ -1941,6 +1941,23 @@ For details on the format of the data this app sends to the server, please visit
                                                     </switch>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LvA-St-k01">
+                                                <rect key="frame" x="0.0" y="574" width="335" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show trip as Live Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LvA-Lb-l01">
+                                                        <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LvA-Sw-s01">
+                                                        <rect key="frame" x="286" y="0.0" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="toggleShowLiveActivityDuringTripEnabled:" destination="Y9g-jV-OC3" eventType="valueChanged" id="LvA-Ac-a01"/>
+                                                        </connections>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVERLAND SETTINGS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9RH-CP-v1s">
                                                 <rect key="frame" x="0.0" y="574" width="335" height="17"/>
                                                 <edgeInsets key="layoutMargins" top="16" left="8" bottom="8" right="8"/>
@@ -2097,6 +2114,7 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="pausesAutomatically" destination="QD1-27-rqd" id="ou0-Hg-LLM"/>
                         <outlet property="pointsPerBatchControl" destination="4ai-2r-umg" id="fJW-a2-Rv5"/>
                         <outlet property="preventScreenLockDuringTrip" destination="4Uo-QH-0SA" id="Sm0-jM-Yor"/>
+                        <outlet property="showLiveActivityDuringTrip" destination="LvA-Sw-s01" id="LvA-Ou-o01"/>
                         <outlet property="settingsLockSlider" destination="XZE-e2-wId" id="dgh-2J-apG"/>
                         <outlet property="showBackgroundLocationIndicator" destination="PjU-ec-DLt" id="SeT-qS-RVg"/>
                     </connections>

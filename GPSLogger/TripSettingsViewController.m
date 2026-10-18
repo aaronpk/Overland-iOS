@@ -42,6 +42,7 @@
 
 - (void)updateVisibleSettings {
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
+    self.showLiveActivityDuringTrip.on = [GLManager sharedManager].liveActivityEnabled;
 
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityTypeDuringTrip - 1;
 
@@ -144,6 +145,7 @@
     self.showBackgroundLocationIndicator.enabled = NO;
     self.pausesAutomatically.enabled = NO;
     self.preventScreenLockDuringTrip.enabled = NO;
+    self.showLiveActivityDuringTrip.enabled = NO;
     self.loggingMode.enabled = NO;
     self.pointsPerBatchControl.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
@@ -156,6 +158,7 @@
     self.showBackgroundLocationIndicator.enabled = YES;
     self.pausesAutomatically.enabled = YES;
     self.preventScreenLockDuringTrip.enabled = YES;
+    self.showLiveActivityDuringTrip.enabled = YES;
     self.loggingMode.enabled = YES;
     self.pointsPerBatchControl.enabled = YES;
     self.discardPointsWithinDistance.enabled = YES;
@@ -273,6 +276,10 @@
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLScreenLockEnabledDefaultsName];
     }
+}
+
+- (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender {
+    [GLManager sharedManager].liveActivityEnabled = sender.on;
 }
 
 @end
