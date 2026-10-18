@@ -12,6 +12,7 @@
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
 #import "SystemConfiguration/CaptiveNetwork.h"
+#import "Overland-Swift.h"
 @import UserNotifications;
 
 @interface GLManager()
@@ -686,10 +687,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
         if(self.tripInProgress) {
             // If a trip is in progress, open the trip DB now
             [self.tripdb open];
+            // The cached distance doesn't survive a relaunch, so recalculate it from the DB
+            _currentTripHasNewData = YES;
         }
     } else {
         [self disableTracking];
     }
+
+    [self syncTripLiveActivity];
 }
 
 - (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
@@ -911,6 +916,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)setCurrentTripMode:(NSString *)mode {
     [[NSUserDefaults standardUserDefaults] setObject:mode forKey:GLTripModeDefaultsName];
+    if(self.tripInProgress && self.liveActivityEnabled) {
+        [self updateTripLiveActivityForcingUpdate:YES];
+    }
 }
 
 - (NSDate *)currentTripStart {
@@ -952,7 +960,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         lastLocation = loc;
     }
-    
+
+    _currentTripDistanceCached = distance;
+    _currentTripHasNewData = NO;
     return distance;
 }
 
@@ -997,6 +1007,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     [self startAllUpdates];
 
+    if(self.liveActivityEnabled) {
+        [self startTripLiveActivity];
+    }
+
     NSLog(@"Started a trip at %@", startDate);
     
     [self incrementTripMode:self.currentTripMode];
@@ -1037,6 +1051,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)finishEndingTrip:(BOOL)autopause steps:(NSInteger)numberOfSteps {
+    [self endTripLiveActivity];
     [self writeTripToDB:autopause steps:numberOfSteps];
     _tripEndInProgress = NO;
 
@@ -1781,6 +1796,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     if(didAddData) {
         [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+
+        if(self.tripInProgress && self.liveActivityEnabled) {
+            [self updateTripLiveActivityForcingUpdate:NO];
+        }
     }
 
     [self sendQueueIfTimeElapsed];
@@ -1926,6 +1945,61 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLNotificationsEnabledDefaultsName];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLNotificationPermissionRequestedDefaultsName];
     }
+}
+
+#pragma mark - Live Activity
+
+- (BOOL)liveActivityEnabled {
+    if([self defaultsKeyExists:GLLiveActivityEnabledDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] boolForKey:GLLiveActivityEnabledDefaultsName];
+    } else {
+        return YES;
+    }
+}
+- (void)setLiveActivityEnabled:(BOOL)enabled {
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:GLLiveActivityEnabledDefaultsName];
+    if(!self.tripInProgress) {
+        return;
+    }
+    if(enabled) {
+        [self startTripLiveActivity];
+    } else {
+        [self endTripLiveActivity];
+    }
+}
+
+- (double)currentSpeedForLiveActivity {
+    return self.lastLocation ? MAX(self.lastLocation.speed, 0) : 0;
+}
+
+- (void)startTripLiveActivity {
+    [[TripLiveActivityController shared] startTripAt:self.currentTripStart
+                                                 mode:self.currentTripMode
+                                             distance:self.currentTripDistance
+                                                speed:[self currentSpeedForLiveActivity]];
+}
+
+- (void)updateTripLiveActivityForcingUpdate:(BOOL)force {
+    [[TripLiveActivityController shared] updateWithMode:self.currentTripMode
+                                               distance:self.currentTripDistance
+                                                  speed:[self currentSpeedForLiveActivity]
+                                                  force:force];
+}
+
+// Called before the trip state is cleared, so the final distance is still available
+- (void)endTripLiveActivity {
+    [[TripLiveActivityController shared] endTripWithMode:self.currentTripMode
+                                                distance:self.currentTripDistance
+                                                   speed:0];
+}
+
+// On launch, reattach to the activity for a trip in progress, or clean up a stale one
+- (void)syncTripLiveActivity {
+    BOOL showActivity = self.tripInProgress && self.liveActivityEnabled;
+    [[TripLiveActivityController shared] syncWithTripStart:(showActivity ? self.currentTripStart : nil)
+                                                      mode:self.currentTripMode
+                                                  distance:(showActivity ? self.currentTripDistance : 0)
+                                                     speed:[self currentSpeedForLiveActivity]];
 }
 
 - (void)initializeNotifications {
