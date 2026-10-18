@@ -191,6 +191,19 @@ const double MPH_to_METERSPERSECOND = 0.447;
     if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
         postData = locationUpdates[0];
     } else {
+        // The batch size isn't known until now, so fill in locations_in_payload on the points that
+        // were recorded with tracking stats enabled
+        for(int i=0; i<locationUpdates.count; i++) {
+            NSDictionary *properties = [locationUpdates[i] objectForKey:@"properties"];
+            if([properties objectForKey:@"locations_in_payload"]) {
+                NSMutableDictionary *newProperties = [properties mutableCopy];
+                [newProperties setValue:[NSNumber numberWithLong:locationUpdates.count] forKey:@"locations_in_payload"];
+                NSMutableDictionary *update = [locationUpdates[i] mutableCopy];
+                [update setValue:newProperties forKey:@"properties"];
+                locationUpdates[i] = update;
+            }
+        }
+
         postData = [NSMutableDictionary dictionaryWithDictionary:@{@"locations": locationUpdates}];
         
         // If there are still more in the queue, then send the current location as a separate property.
@@ -1754,7 +1767,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 [properties setValue:activityType forKey:@"activity"];
                 [properties setValue:[NSNumber numberWithDouble:self.locationManager.desiredAccuracy] forKey:@"desired_accuracy"];
                 [properties setValue:[NSNumber numberWithInt:self.trackingMode] forKey:@"tracking_mode"];
-                [properties setValue:[NSNumber numberWithLong:locations.count] forKey:@"locations_in_payload"];
+                // Placeholder, replaced with the size of the batch in sendQueueNow
+                [properties setValue:@1 forKey:@"locations_in_payload"];
             }
             // Add the trip start time as trip_id in the location update
             if(self.tripInProgress) {
