@@ -686,6 +686,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
         if(self.tripInProgress) {
             // If a trip is in progress, open the trip DB now
             [self.tripdb open];
+            // The cached distance doesn't survive a relaunch, so recalculate it from the DB
+            _currentTripHasNewData = YES;
         }
     } else {
         [self disableTracking];
@@ -952,7 +954,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         lastLocation = loc;
     }
-    
+
+    _currentTripDistanceCached = distance;
+    _currentTripHasNewData = NO;
     return distance;
 }
 
