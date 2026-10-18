@@ -819,8 +819,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)cancelLocalNotification {
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center removePendingNotificationRequestsWithIdentifiers:@[@"reminder"]];
+    // This makes a synchronous call to the notification service, so keep it off the main thread.
+    // Otherwise a slow or unresponsive service blocks app launch.
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+        [center removePendingNotificationRequestsWithIdentifiers:@[@"reminder"]];
+    });
 }
 
 - (NSDate *)lastScheduledNotificationDate {
