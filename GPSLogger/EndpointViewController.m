@@ -12,9 +12,18 @@
 
 @interface EndpointViewController ()
 
+// Edits from the custom headers screen are held here until the Save button is tapped
+@property (strong, nonatomic) NSArray *pendingCustomHeaders;
+@property (nonatomic) BOOL customHeadersWereEdited;
+
 @end
 
 @implementation EndpointViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.pendingCustomHeaders = [[GLManager sharedManager] customHeaders];
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
@@ -27,20 +36,10 @@
     self.customHeadersButton.clipsToBounds = YES;
 
     [self updateCustomHeadersButtonTitle];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateCustomHeadersButtonTitle)
-                                                 name:GLSettingsChangedNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:GLSettingsChangedNotification object:nil];
 }
 
 - (void)updateCustomHeadersButtonTitle {
-    NSArray *headers = [[GLManager sharedManager] customHeaders];
+    NSArray *headers = self.pendingCustomHeaders;
     if (headers.count > 0) {
         [self.customHeadersButton setTitle:[NSString stringWithFormat:@"Custom Headers (%lu)", (unsigned long)headers.count] forState:UIControlStateNormal];
     } else {
@@ -53,35 +52,47 @@
 
     if(newURL != nil && ([newURL.scheme isEqualToString:@"https"] || [newURL.scheme isEqualToString:@"http"])) {
         self.apiEndpointField.backgroundColor = [UIColor clearColor];
-        
+
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text andAccessToken:self.accessTokenField.text];
-        
+        [self saveCustomHeadersIfEdited];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
-        
+
         [self dismissViewControllerAnimated:YES completion:nil];
     } else if(self.apiEndpointField.text.length == 0) {
 
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:nil andAccessToken:nil];
-        
+        [self saveCustomHeadersIfEdited];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
-        
+
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         self.apiEndpointField.backgroundColor = [UIColor colorWithRed:1.0 green:0.82 blue:0.82 alpha:1.0];
     }
 }
 
-- (IBAction)customHeadersButtonTapped:(UIButton *)sender {
-    CustomHeadersViewController *vc = [[CustomHeadersViewController alloc] initWithStyle:UITableViewStylePlain];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:nav animated:YES completion:nil];
+// Called after saveNewAPIEndpoint, which clears custom headers if the host changed.
+// Headers the user edited on this screen are kept even if the host changed.
+- (void)saveCustomHeadersIfEdited {
+    if(self.customHeadersWereEdited) {
+        [[GLManager sharedManager] saveCustomHeaders:self.pendingCustomHeaders];
+    }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self updateCustomHeadersButtonTitle];
+- (IBAction)customHeadersButtonTapped:(UIButton *)sender {
+    CustomHeadersViewController *vc = [[CustomHeadersViewController alloc] initWithStyle:UITableViewStylePlain];
+    vc.initialHeaders = self.pendingCustomHeaders;
+    __weak EndpointViewController *weakSelf = self;
+    vc.completionHandler = ^(NSArray *headers) {
+        weakSelf.pendingCustomHeaders = headers;
+        weakSelf.customHeadersWereEdited = YES;
+        [weakSelf updateCustomHeadersButtonTitle];
+    };
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 @end

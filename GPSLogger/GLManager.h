@@ -165,6 +165,7 @@ typedef void (^CaseBlock)(void);
 
 - (NSArray *)customHeaders;
 - (void)saveCustomHeaders:(NSArray *)headers;
++ (BOOL)isBlockedCustomHeaderName:(NSString *)name;
 
 - (void)logAction:(NSString *)action;
 - (void)sendQueueNow;

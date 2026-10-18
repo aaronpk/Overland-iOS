@@ -87,6 +87,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
 #pragma mark - GLManager control (public)
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken {
+    // Custom headers often contain credentials for a specific server, so don't send them to a different host
+    NSString *previousHost = [[NSURL URLWithString:self.apiEndpointURL ?: @""].host lowercaseString];
+    NSString *newHost = [[NSURL URLWithString:endpoint ?: @""].host lowercaseString];
+    if(previousHost != newHost && ![previousHost isEqualToString:newHost]) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLCustomHeadersDefaultsName];
+    }
+
     [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
     [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:GLAPIAccessTokenDefaultsName];
     [self setupHTTPClient];
@@ -126,6 +133,15 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [[NSUserDefaults standardUserDefaults] setObject:headers forKey:GLCustomHeadersDefaultsName];
     [self setupHTTPClient];
     [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+}
+
++ (BOOL)isBlockedCustomHeaderName:(NSString *)name {
+    for(NSString *blocked in @[@"Authorization", @"Content-Type", @"Host"]) {
+        if([name caseInsensitiveCompare:blocked] == NSOrderedSame) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)startAllUpdates {
@@ -661,8 +677,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         for (NSDictionary *header in customHeaders) {
             NSString *key = header[@"key"];
             NSString *value = header[@"value"];
-            if (key.length > 0 && value.length > 0
-                && [key caseInsensitiveCompare:@"Authorization"] != NSOrderedSame) {
+            if (key.length > 0 && value.length > 0 && ![GLManager isBlockedCustomHeaderName:key]) {
                 [_httpClient.requestSerializer setValue:value forHTTPHeaderField:key];
             }
         }

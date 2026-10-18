@@ -185,7 +185,7 @@ typedef NS_ENUM(NSInteger, RowType) {
 
 #pragma mark - CustomHeadersViewController
 
-@interface CustomHeadersViewController () <UITextFieldDelegate>
+@interface CustomHeadersViewController () <UITextFieldDelegate, UIAdaptivePresentationControllerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *headers;
 @property (nonatomic, strong) NSArray<RowItem *> *rows;
@@ -223,7 +223,10 @@ typedef NS_ENUM(NSInteger, RowType) {
     footerLabel.frame = CGRectMake(0, 0, 0, 30);
     self.tableView.tableFooterView = footerLabel;
 
-    self.headers = [[[GLManager sharedManager] customHeaders] mutableCopy];
+    // Swiping the sheet down should keep edits the same as tapping Done
+    self.navigationController.presentationController.delegate = self;
+
+    self.headers = [self.initialHeaders mutableCopy] ?: [NSMutableArray array];
     [self rebuildRows];
 }
 
@@ -306,7 +309,6 @@ typedef NS_ENUM(NSInteger, RowType) {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         RowItem *item = self.rows[indexPath.row];
         [self.headers removeObjectAtIndex:item.headerIndex];
-        [self saveHeaders];
         [self rebuildRows];
         [self.tableView reloadData];
     }
@@ -328,7 +330,6 @@ typedef NS_ENUM(NSInteger, RowType) {
     NSString *value = cell.valueField.text ?: @"";
 
     self.headers[item.headerIndex] = @{@"key": key, @"value": value};
-    [self saveHeaders];
 
     if (!self.transitioningBetweenFields) {
         [self rebuildRows];
@@ -370,6 +371,10 @@ typedef NS_ENUM(NSInteger, RowType) {
         return @"Use the Access Token field for authorization. This header will not be sent.";
     }
 
+    if ([GLManager isBlockedCustomHeaderName:key]) {
+        return @"This header is set by the app and can't be changed. It will not be sent.";
+    }
+
     for (NSInteger i = 0; i < (NSInteger)self.headers.count; i++) {
         if (i == index) continue;
         NSString *otherKey = self.headers[i][@"key"];
@@ -405,20 +410,29 @@ typedef NS_ENUM(NSInteger, RowType) {
     }
 }
 
-- (void)saveHeaders {
+- (void)finishEditing {
+    [self.view endEditing:YES];
+
     NSMutableArray *nonEmpty = [NSMutableArray array];
     for (NSDictionary *header in self.headers) {
         if ([header[@"key"] length] > 0 && [header[@"value"] length] > 0) {
             [nonEmpty addObject:header];
         }
     }
-    [[GLManager sharedManager] saveCustomHeaders:[nonEmpty copy]];
+    if (self.completionHandler) {
+        self.completionHandler([nonEmpty copy]);
+    }
 }
 
 - (void)doneButtonTapped:(id)sender {
-    [self.view endEditing:YES];
-    [self saveHeaders];
+    [self finishEditing];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIAdaptivePresentationControllerDelegate
+
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController {
+    [self finishEditing];
 }
 
 @end

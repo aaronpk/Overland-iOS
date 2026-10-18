@@ -75,9 +75,8 @@
                 }
             }
         }
-        if (customHeaders.count > 0) {
-            [[GLManager sharedManager] saveCustomHeaders:customHeaders];
-        }
+        // A setup link always replaces the full list of custom headers, even if it has none
+        [[GLManager sharedManager] saveCustomHeaders:customHeaders];
     }
 }
 
