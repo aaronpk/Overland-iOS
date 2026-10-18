@@ -56,6 +56,7 @@ static NSString *const GLTripPointsPerBatchDefaultsName = @"GLTripPointsPerBatch
 static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripDiscardPointsWithinDistanceDefaults";
 static NSString *const GLTripDiscardPointsWithinSecondsDefaultsName = @"GLTripDiscardPointsWithinSecondsDefaults";
 static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
+static NSString *const GLLiveActivityEnabledDefaultsName = @"GLLiveActivityEnabledDefaults";
 /* End */
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
@@ -117,6 +118,7 @@ typedef void (^CaseBlock)(void);
 @property BOOL pausesAutomatically;
 @property BOOL includeTrackingStats;
 @property BOOL notificationsEnabled;
+@property (nonatomic) BOOL liveActivityEnabled;
 @property (nonatomic) CLLocationDistance resumesAfterDistance;
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
 @property (nonatomic) int discardPointsWithinSeconds;
