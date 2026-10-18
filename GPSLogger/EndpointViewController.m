@@ -14,7 +14,6 @@
 
 // Edits from the custom headers screen are held here until the Save button is tapped
 @property (strong, nonatomic) NSArray *pendingCustomHeaders;
-@property (nonatomic) BOOL customHeadersWereEdited;
 
 @end
 
@@ -55,7 +54,7 @@
 
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:self.apiEndpointField.text andAccessToken:self.accessTokenField.text];
-        [self saveCustomHeadersIfEdited];
+        [[GLManager sharedManager] saveCustomHeaders:self.pendingCustomHeaders];
 
         [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
 
@@ -64,7 +63,7 @@
 
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
         [[GLManager sharedManager] saveNewAPIEndpoint:nil andAccessToken:nil];
-        [self saveCustomHeadersIfEdited];
+        [[GLManager sharedManager] saveCustomHeaders:self.pendingCustomHeaders];
 
         [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
 
@@ -74,21 +73,12 @@
     }
 }
 
-// Called after saveNewAPIEndpoint, which clears custom headers if the host changed.
-// Headers the user edited on this screen are kept even if the host changed.
-- (void)saveCustomHeadersIfEdited {
-    if(self.customHeadersWereEdited) {
-        [[GLManager sharedManager] saveCustomHeaders:self.pendingCustomHeaders];
-    }
-}
-
 - (IBAction)customHeadersButtonTapped:(UIButton *)sender {
     CustomHeadersViewController *vc = [[CustomHeadersViewController alloc] initWithStyle:UITableViewStylePlain];
     vc.initialHeaders = self.pendingCustomHeaders;
     __weak EndpointViewController *weakSelf = self;
     vc.completionHandler = ^(NSArray *headers) {
         weakSelf.pendingCustomHeaders = headers;
-        weakSelf.customHeadersWereEdited = YES;
         [weakSelf updateCustomHeadersButtonTitle];
     };
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];

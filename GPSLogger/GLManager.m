@@ -87,13 +87,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
 #pragma mark - GLManager control (public)
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken {
-    // Custom headers often contain credentials for a specific server, so don't send them to a different host
-    NSString *previousHost = [[NSURL URLWithString:self.apiEndpointURL ?: @""].host lowercaseString];
-    NSString *newHost = [[NSURL URLWithString:endpoint ?: @""].host lowercaseString];
-    if(previousHost != newHost && ![previousHost isEqualToString:newHost]) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:GLCustomHeadersDefaultsName];
-    }
-
     [[NSUserDefaults standardUserDefaults] setObject:endpoint forKey:GLAPIEndpointDefaultsName];
     [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:GLAPIAccessTokenDefaultsName];
     [self setupHTTPClient];
