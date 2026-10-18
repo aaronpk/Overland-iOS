@@ -47,6 +47,7 @@ NSNumber *_sendingInterval;
 NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
+bool _tripEndInProgress = NO;
 long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
@@ -1014,22 +1015,32 @@ const double MPH_to_METERSPERSECOND = 0.447;
     self.locationManager.showsBackgroundLocationIndicator = self.showBackgroundLocationIndicator;
     self.locationManager.pausesLocationUpdatesAutomatically = self.pausesAutomatically;
 
-    if(!self.tripInProgress) {
+    // The trip stays in progress until the pedometer query below finishes, so ignore
+    // a second request to end it (e.g. a double tap, or autopause and a manual end)
+    if(!self.tripInProgress || _tripEndInProgress) {
         return;
     }
+    _tripEndInProgress = YES;
 
     if([CMPedometer isStepCountingAvailable]) {
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
-            if(pedometerData) {
-                [self writeTripToDB:autopause steps:[pedometerData.numberOfSteps integerValue]];
-            } else {
-                [self writeTripToDB:autopause steps:0];
-            }
+            // This handler runs on a background queue. Finish on the main queue, since location
+            // updates write to the trip database there and FMDatabase isn't thread-safe.
+            NSInteger steps = pedometerData ? [pedometerData.numberOfSteps integerValue] : 0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self finishEndingTrip:autopause steps:steps];
+            });
         }];
     } else {
-        [self writeTripToDB:autopause steps:0];
+        [self finishEndingTrip:autopause steps:0];
     }
-    
+}
+
+- (void)finishEndingTrip:(BOOL)autopause steps:(NSInteger)numberOfSteps {
+    [self writeTripToDB:autopause steps:numberOfSteps];
+    _tripEndInProgress = NO;
+
+    // Send after the trip record is written so it goes out with this batch
     [self sendQueueNow];
 }
 
