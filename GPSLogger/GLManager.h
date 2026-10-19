@@ -43,6 +43,7 @@ static NSString *const GLLoggingModeDefaultsName = @"GLLoggingModeDefaults";
 static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
 static NSString *const GLCustomHeadersDefaultsName = @"GLCustomHeadersDefaults";
+static NSString *const GLWifiZonesDefaultsName = @"GLWifiZonesDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
@@ -186,10 +187,9 @@ typedef void (^CaseBlock)(void);
 
 - (void)requestNotificationPermission;
 
-@property (strong, nonatomic, readonly) NSString *wifiZoneName;
-@property (strong, nonatomic, readonly) NSString *wifiZoneLatitude;
-@property (strong, nonatomic, readonly) NSString *wifiZoneLongitude;
-- (void)saveNewWifiZone:(NSString *)name withLatitude:(NSString *)latitude andLongitude:(NSString *)longitude;
+// Each wifi zone is a dictionary with "name", "latitude" and "longitude" strings
+- (NSArray *)wifiZones;
+- (void)saveWifiZones:(NSArray *)zones;
 
 #pragma mark - Trips
 

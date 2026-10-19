@@ -2188,14 +2188,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
         return nil;
     }
     
-    if(self.wifiZoneName) {
-    
-        if([self.wifiZoneName isEqualToString:wifi]) {
-            double latitude = [self.wifiZoneLatitude floatValue];
-            double longitude = [self.wifiZoneLongitude floatValue];
+    for(NSDictionary *zone in self.wifiZones) {
+        if([zone[@"name"] isEqualToString:wifi]) {
+            double latitude = [zone[@"latitude"] doubleValue];
+            double longitude = [zone[@"longitude"] doubleValue];
             CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
             NSDate *timestamp = NSDate.date;
-            
+
             CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
                                                             altitude:-1
                                                   horizontalAccuracy:1
@@ -2206,24 +2205,36 @@ const double MPH_to_METERSPERSECOND = 0.447;
             return loc;
         }
     }
-    
+
     return nil;
 }
 
-- (void)saveNewWifiZone:(NSString *)name withLatitude:(NSString *)latitude andLongitude:(NSString *)longitude {
-    
-    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"WifiZoneName"];
-    [[NSUserDefaults standardUserDefaults] setObject:latitude forKey:@"WifiZoneLatitude"];
-    [[NSUserDefaults standardUserDefaults] setObject:longitude forKey:@"WifiZoneLongitude"];
+- (NSArray *)wifiZones {
+    NSArray *zones = [[NSUserDefaults standardUserDefaults] arrayForKey:GLWifiZonesDefaultsName];
+    if(zones) {
+        return zones;
+    }
+
+    // Earlier versions stored a single wifi zone in separate keys. Move it into the list.
+    NSString *name = [[NSUserDefaults standardUserDefaults] stringForKey:@"WifiZoneName"];
+    if(name.length > 0) {
+        zones = @[@{
+            @"name": name,
+            @"latitude": [[NSUserDefaults standardUserDefaults] stringForKey:@"WifiZoneLatitude"] ?: @"",
+            @"longitude": [[NSUserDefaults standardUserDefaults] stringForKey:@"WifiZoneLongitude"] ?: @"",
+        }];
+    } else {
+        zones = @[];
+    }
+    [self saveWifiZones:zones];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"WifiZoneName"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"WifiZoneLatitude"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"WifiZoneLongitude"];
+    return zones;
 }
-- (NSString *)wifiZoneName {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneName"];
-}
-- (NSString *)wifiZoneLatitude {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneLatitude"];
-}
-- (NSString *)wifiZoneLongitude {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"WifiZoneLongitude"];
+
+- (void)saveWifiZones:(NSArray *)zones {
+    [[NSUserDefaults standardUserDefaults] setObject:zones forKey:GLWifiZonesDefaultsName];
 }
 
 

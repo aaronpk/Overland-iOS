@@ -10,15 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WifiZoneViewController : UIViewController
-
-@property (strong, nonatomic) IBOutlet UITextField *wifiNameField;
-@property (strong, nonatomic) IBOutlet UITextField *latitudeField;
-@property (strong, nonatomic) IBOutlet UITextField *longitudeField;
-@property (strong, nonatomic) IBOutlet UIButton *resetButton;
-
-- (IBAction)saveButtonWasTapped:(UIButton *)sender;
-- (IBAction)resetButtonWasTapped:(UIButton *)sender;
+// Lists the configured wifi zones. Zones can be added, edited, and swiped to delete,
+// and changes are saved right away.
+@interface WifiZoneViewController : UITableViewController
 
 @end
 

@@ -87,7 +87,7 @@ The settings in this section control features specific to the Overland app.
 * `Min Time Between Points` - When set, the app will discard any location updates received within the selected amount of time. For example you can set the value to 10 seconds to record an update at most every 10 seconds. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point. The default is 1 second.
 * `Discard points without GPS` - When enabled, the app will discard any location update that has neither an altitude nor a speed. iOS doesn't indicate whether a location came from GPS, but these points usually come from wifi or cell tower positioning, and can be far from where the phone actually is. Off by default.
 * `Enable notifications` - Toggle whether the app should send push notifications about events such as when tracking has been automatically stopped and started.
-* `Configure Wifi Zone` - You can configure a wifi zone to force the app to report an exact location whenever you're connected to a specific wifi SSID. This is useful if you don't want to collect a bunch of noisy data when you're at home.
+* `Configure Wifi Zones` - You can configure wifi zones to force the app to report an exact location whenever you're connected to a specific wifi SSID. This is useful if you don't want to collect a bunch of noisy data when you're at home or at work. Tap + to add a zone, which starts with the wifi network you're connected to and your current location. Tap a zone to edit it, or swipe to delete it.
 
 #### Trip Settings
 

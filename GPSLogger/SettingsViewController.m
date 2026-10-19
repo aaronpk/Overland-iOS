@@ -9,6 +9,7 @@
 
 #import "SettingsViewController.h"
 #import "GLManager.h"
+#import "WifiZoneViewController.h"
 
 #import  <Intents/Intents.h>
 #import <SafariServices/SafariServices.h>
@@ -461,6 +462,12 @@
     } else {
         [GLManager sharedManager].notificationsEnabled = NO;
     }
+}
+
+- (IBAction)wifiZonesButtonWasTapped:(UIButton *)sender {
+    WifiZoneViewController *vc = [[WifiZoneViewController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)privacyPolicyWasPressed:(UIButton *)sender {

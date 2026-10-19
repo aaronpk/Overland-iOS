@@ -46,6 +46,7 @@
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender;
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender;
+- (IBAction)wifiZonesButtonWasTapped:(UIButton *)sender;
 - (IBAction)requestLocationPermissionsWasPressed:(UIButton *)sender;
 - (IBAction)privacyPolicyWasPressed:(UIButton *)sender;
 
