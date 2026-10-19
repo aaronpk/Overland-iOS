@@ -1923,9 +1923,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 // Placeholder, replaced with the size of the batch in sendQueueNow
                 [properties setValue:@1 forKey:@"locations_in_payload"];
             }
-            // Add the trip start time as trip_id in the location update
+            // Add the trip start time as trip_id, and the current trip mode, in the location update
             if(self.tripInProgress) {
                 [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
+                [properties setValue:self.currentTripMode forKey:@"trip_mode"];
             }
         }
 

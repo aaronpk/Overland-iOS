@@ -244,6 +244,11 @@ The properties on the `location` objects are as follows:
 * `device_id` - The device ID configured in the settings, or an empty string
 * `unique_id` - If "Unique ID" is enabled, the device's Unique ID as set by Apple
 
+The following properties are included only while a trip is in progress:
+
+* `trip_id` - the ISO8601 timestamp of when the trip started, which is the same for every point in the trip
+* `trip_mode` - the trip mode when this point was recorded, such as `walk` or `car`. If the mode is changed during a trip, later points have the new mode.
+
 The following properties are included only if the "Include Tracking Stats" option is selected:
 
 * `pauses` - boolean, whether the "pause updates automatically" preference is checked
