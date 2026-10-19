@@ -1336,7 +1336,7 @@ IAogA
                                                     </switch>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-m01">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept, then one point an hour. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-m01">
                                                 <rect key="frame" x="0.0" y="1464.5" width="335" height="61"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -2064,7 +2064,7 @@ For details on the format of the data this app sends to the server, please visit
                                                     </switch>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-t01">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept, then one point an hour. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-t01">
                                                 <rect key="frame" x="0.0" y="1052" width="335" height="61"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>

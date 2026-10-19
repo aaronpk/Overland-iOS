@@ -50,7 +50,11 @@ NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
 bool _tripEndInProgress = NO;
-bool _recordedPointWhileStationary = NO;
+// Set while "Discard points while stationary" is dropping points, until the phone moves again
+bool _inStationaryStop = NO;
+NSDate *_lastStationaryPointDate;
+// While stationary, keep a point at least this often, so a gap in the data means data is missing
+static const NSTimeInterval GLStationaryHeartbeatInterval = 60 * 60;
 NSString *_currentWifiHotSpotName = @"";
 NSString *_currentWifiBSSID = @"";
 long _currentPointsInQueue;
@@ -1944,14 +1948,20 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
 
         // Drop points while the phone is sitting still, which avoids collecting GPS drift overnight.
-        // Keep the first point after stopping, so the server knows where the phone stopped.
-        if(self.discardPointsWhileStationaryCurrentValue && [self deviceIsStationary]) {
-            if(_recordedPointWhileStationary) {
+        // Keep the first point after stopping, so the server knows where the phone stopped, and then
+        // one point an hour. Only real movement ends the stop, since motion readings often flicker
+        // between stationary and unknown while the phone is still.
+        if(!self.discardPointsWhileStationaryCurrentValue || [self deviceIsMoving]) {
+            _inStationaryStop = NO;
+        } else if(_inStationaryStop) {
+            // Unknown and low-confidence readings land here too, so they don't end the stop
+            if([loc.timestamp timeIntervalSinceDate:_lastStationaryPointDate] < GLStationaryHeartbeatInterval) {
                 continue;
             }
-            _recordedPointWhileStationary = YES;
-        } else {
-            _recordedPointWhileStationary = NO;
+            _lastStationaryPointDate = loc.timestamp;
+        } else if([self deviceIsStationary]) {
+            _inStationaryStop = YES;
+            _lastStationaryPointDate = loc.timestamp;
         }
         
         NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
@@ -2077,6 +2087,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [update setValue:topic forKey:@"topic"];
     }
     return update;
+}
+
+// Moving when walking, running, cycling or driving is reported with at least medium confidence.
+// Without motion data this is always NO.
+- (BOOL)deviceIsMoving {
+    CMMotionActivity *motion = self.lastMotion;
+    return (motion.walking || motion.running || motion.cycling || motion.automotive)
+        && motion.confidence != CMMotionActivityConfidenceLow;
 }
 
 // Stationary only counts when no movement is reported as well, since a phone resting on a car's
