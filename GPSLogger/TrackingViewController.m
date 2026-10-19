@@ -64,6 +64,7 @@ BOOL mapWasDragged = NO;
         [self.tripStartStopButton.layer setCornerRadius:4.0];
     }
     [self setUpSendErrorBanner];
+    [self extendMapUnderTabBar];
     [self setNeedsStatusBarAppearanceUpdate];
     
     // adding Shortcut Code
@@ -82,6 +83,31 @@ BOOL mapWasDragged = NO;
     
     currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
     [self.mapView addAnnotation:currentLocationAnnotation];
+}
+
+// On iOS 26 the tab bar floats over the content, so let the map run to the bottom of the screen
+// behind it. The storyboard stops the map, its content view and the scroll view at the bottom layout
+// guide, above the tab bar. The map keeps its logo and Legal link above the tab bar by itself.
+- (void)extendMapUnderTabBar {
+    if (@available(iOS 26.0, *)) {
+        UIView *contentView = self.mapView.superview;
+        UIView *scrollView = contentView.superview;
+        NSArray *views = @[self.mapView, contentView, scrollView];
+
+        for(NSLayoutConstraint *constraint in self.view.constraints) {
+            if([constraint.firstItem conformsToProtocol:@protocol(UILayoutSupport)]
+               && constraint.firstAttribute == NSLayoutAttributeTop
+               && [views containsObject:constraint.secondItem]) {
+                constraint.active = NO;
+            }
+        }
+        for(UIView *view in views) {
+            [view.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+        }
+
+        // The storyboard gives the tab bar a solid background, which would hide the map behind it
+        self.tabBarController.tabBar.backgroundColor = nil;
+    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
