@@ -1530,6 +1530,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 activityInt = 1;
             }
             break;
+        default:
+            // Types the settings screen doesn't offer, such as CLActivityTypeMaritime
+            activityInt = 1;
+            break;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLActivityTypeDefaultsName];
     self.locationManager.activityType = activityType;
@@ -1591,6 +1595,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
             } else {
                 activityInt = 1;
             }
+            break;
+        default:
+            // Types the settings screen doesn't offer, such as CLActivityTypeMaritime
+            activityInt = 1;
             break;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:activityInt forKey:GLTripActivityTypeDefaultsName];
@@ -1768,6 +1776,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
             break;
         case CLActivityTypeAirborne:
             activityType = @"airborne";
+            break;
+        default:
+            activityType = @"other";
+            break;
     }
     
     CLLocation *lastLocationSeen = self.lastLocation; // Grab the last known location from the previous batch
