@@ -187,6 +187,10 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) GLCloudFileMode cloudFileMode;
 // YES when there's somewhere to send data: iCloud Drive, or a server URL
 - (BOOL)hasDestination;
+
+// Why the last attempt to send or save data failed, or nil if it succeeded
+@property (strong, nonatomic, readonly) NSString *lastSendErrorTitle;
+@property (strong, nonatomic, readonly) NSString *lastSendErrorMessage;
 - (NSString *)apiAccessToken;
 - (void)saveNewDeviceId:(NSString *)deviceId;
 - (NSString *)deviceId;

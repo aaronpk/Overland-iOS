@@ -13,6 +13,8 @@
 @interface TrackingViewController ()
 
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;
+// Shows why the last send failed, since notifications may be turned off
+@property (strong, nonatomic) UIButton *sendErrorBanner;
 
 @end
 
@@ -54,6 +56,7 @@ BOOL mapWasDragged = NO;
         [self.sendNowButton.layer setCornerRadius:4.0];
         [self.tripStartStopButton.layer setCornerRadius:4.0];
     }
+    [self setUpSendErrorBanner];
     [self setNeedsStatusBarAppearanceUpdate];
     
     // adding Shortcut Code
@@ -231,7 +234,54 @@ BOOL mapWasDragged = NO;
     [self setButton:self.sendNowButton title:@"Sending..." color:[self disabledSendNowColor] fontSize:15 enabled:NO];
 }
 
+// A banner at the top of the map, shown while the last send or save has failed. Tapping it shows
+// the whole message.
+- (void)setUpSendErrorBanner {
+    UIButtonConfiguration *config = [UIButtonConfiguration filledButtonConfiguration];
+    config.baseBackgroundColor = [UIColor systemRedColor];
+    config.baseForegroundColor = [UIColor whiteColor];
+    config.cornerStyle = UIButtonConfigurationCornerStyleMedium;
+    config.titleLineBreakMode = NSLineBreakByTruncatingTail;
+    config.titleTextAttributesTransformer = ^NSDictionary<NSAttributedStringKey, id> *(NSDictionary<NSAttributedStringKey, id> *attributes) {
+        NSMutableDictionary *updated = [attributes mutableCopy];
+        updated[NSFontAttributeName] = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
+        return updated;
+    };
+
+    self.sendErrorBanner = [UIButton buttonWithConfiguration:config primaryAction:nil];
+    self.sendErrorBanner.hidden = YES;
+    self.sendErrorBanner.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.sendErrorBanner addTarget:self action:@selector(sendErrorBannerWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.sendErrorBanner];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [self.sendErrorBanner.topAnchor constraintEqualToAnchor:self.mapView.topAnchor constant:12],
+        [self.sendErrorBanner.leadingAnchor constraintEqualToAnchor:self.mapView.leadingAnchor constant:12],
+        [self.sendErrorBanner.trailingAnchor constraintEqualToAnchor:self.mapView.trailingAnchor constant:-12],
+    ]];
+}
+
+- (void)updateSendErrorBanner {
+    NSString *title = [GLManager sharedManager].lastSendErrorTitle;
+    self.sendErrorBanner.hidden = (title == nil);
+    if (title) {
+        UIButtonConfiguration *config = self.sendErrorBanner.configuration;
+        config.title = [NSString stringWithFormat:@"⚠️ %@. Tap for details.", title];
+        self.sendErrorBanner.configuration = config;
+        [self.view bringSubviewToFront:self.sendErrorBanner];
+    }
+}
+
+- (void)sendErrorBannerWasTapped:(UIButton *)sender {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[GLManager sharedManager].lastSendErrorTitle
+                                                                   message:[GLManager sharedManager].lastSendErrorMessage
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)sendingFinished {
+    [self updateSendErrorBanner];
     if(![[GLManager sharedManager] hasDestination]) {
         [self setButton:self.sendNowButton title:@"Send Now" color:[self disabledSendNowColor] fontSize:15 enabled:NO];
     } else {

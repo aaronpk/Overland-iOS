@@ -27,6 +27,8 @@
 @property BOOL batchInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
 @property (strong, nonatomic) CLLocation *lastDeviceLocation;
+@property (strong, nonatomic) NSString *lastSendErrorTitle;
+@property (strong, nonatomic) NSString *lastSendErrorMessage;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSDate *lastSentDate;
 @property (strong, nonatomic) NSString *lastLocationName;
@@ -239,7 +241,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self sendingStarted];
         [[GLCloudFileWriter sharedWriter] writeFeatures:locationUpdates mode:self.cloudFileMode completion:^(NSString *errorMessage) {
             if(errorMessage) {
-                [self batchFailed:errorMessage title:@"iCloud Drive"];
+                [self batchFailed:errorMessage title:@"Couldn't Save to iCloud Drive"];
             } else {
                 [self batchWasSent:syncedUpdates response:nil];
             }
@@ -321,6 +323,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 // Removes a batch that was sent or saved from the queue. The response is the server's, or nil.
 - (void)batchWasSent:(NSSet *)syncedUpdates response:(NSDictionary *)responseDictionary {
+    self.lastSendErrorTitle = nil;
+    self.lastSendErrorMessage = nil;
     self.lastSentDate = NSDate.date;
     NSDictionary *geocode = [responseDictionary objectForKey:@"geocode"];
     if([geocode isKindOfClass:[NSDictionary class]]) {
@@ -354,6 +358,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 // Keeps the batch in the queue to try again later
 - (void)batchFailed:(NSString *)message title:(NSString *)title {
+    // Shown on the tracker screen too, since notifications may be turned off
+    self.lastSendErrorTitle = title;
+    self.lastSendErrorMessage = message;
     self.batchInProgress = NO;
     [self notify:message withTitle:title];
     [self sendingFinished];

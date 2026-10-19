@@ -21,6 +21,12 @@ typedef NS_ENUM(NSInteger, GLCloudFileMode) {
 
 + (instancetype)sharedWriter;
 
+// How to turn on iCloud Drive for the app, to show wherever it isn't available
++ (NSString *)setupInstructions;
+
+// NO when not signed in to iCloud, or iCloud Drive is turned off for the app
++ (BOOL)isAvailable;
+
 // Appends the features to their files. The completion is called on the main queue with nil on
 // success, or a message to show if nothing could be saved.
 - (void)writeFeatures:(NSArray<NSDictionary *> *)features

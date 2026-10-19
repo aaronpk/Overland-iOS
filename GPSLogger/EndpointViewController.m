@@ -44,6 +44,9 @@
     [self.stackView setCustomSpacing:12 afterView:self.destinationControl];
     [self.stackView setCustomSpacing:12 afterView:self.fileModeControl];
 
+    // Check iCloud Drive again when coming back from the Settings app
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateVisibleFields) name:UISceneDidActivateNotification object:nil];
+
     self.destinationControl.selectedSegmentIndex = [GLManager sharedManager].savesToICloudDrive ? 1 : 0;
     self.fileModeControl.selectedSegmentIndex = ([GLManager sharedManager].cloudFileMode == GLCloudFileModeTrips) ? 1 : 0;
     [self updateVisibleFields];
@@ -83,7 +86,8 @@
         NSString *files = (self.fileModeControl.selectedSegmentIndex == 1)
             ? @"Only points recorded during trips are saved, in one file per trip in the Trips folder, named by when the trip started."
             : @"Points are saved in one file per day, by the UTC date, such as 2026/10/2026-10-19.geojson.";
-        self.infoTextView.text = [NSString stringWithFormat:@"This app can save its location data to GeoJSON files in iCloud Drive instead of sending it to a server. The files appear in the Overland folder in iCloud Drive, in the Files app and on your other devices.\n\n%@\n\nYou can optionally add a Device ID to identify this device. This string will be included in the properties of each point.", files];
+        NSString *availability = [GLCloudFileWriter isAvailable] ? @"" : @"⚠️ iCloud Drive isn't available on this device right now.\n\n";
+        self.infoTextView.text = [NSString stringWithFormat:@"%@This app can save its location data to GeoJSON files in iCloud Drive instead of sending it to a server. The files appear in the Overland folder in iCloud Drive, in the Files app and on your other devices.\n\nTo use iCloud Drive: %@\n\n%@\n\nYou can optionally add a Device ID to identify this device. This string will be included in the properties of each point.", availability, [GLCloudFileWriter setupInstructions], files];
     } else {
         self.infoTextView.text = self.serverInfoText;
     }

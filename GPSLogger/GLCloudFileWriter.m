@@ -44,6 +44,14 @@ static NSString *const GLFeatureCollectionTrailer = @"\n]}\n";
     return self;
 }
 
++ (NSString *)setupInstructions {
+    return @"In the Settings app, tap your name, then iCloud. Make sure iCloud Drive is turned on, and that Overland is turned on in the list of apps using iCloud.";
+}
+
++ (BOOL)isAvailable {
+    return [NSFileManager defaultManager].ubiquityIdentityToken != nil;
+}
+
 - (void)writeFeatures:(NSArray<NSDictionary *> *)features mode:(GLCloudFileMode)mode completion:(void (^)(NSString *))completion {
     dispatch_async(_queue, ^{
         NSString *errorMessage = [self saveFeatures:features mode:mode];
@@ -70,7 +78,7 @@ static NSString *const GLFeatureCollectionTrailer = @"\n]}\n";
 - (NSString *)saveFeatures:(NSArray<NSDictionary *> *)features mode:(GLCloudFileMode)mode {
     NSURL *documents = [self documentsURL];
     if (documents == nil) {
-        return @"iCloud Drive isn't available. Sign in to iCloud and turn on iCloud Drive for Overland.";
+        return [@"iCloud Drive isn't available. " stringByAppendingString:[GLCloudFileWriter setupInstructions]];
     }
 
     // Group the features by file, keeping the order they were recorded in
