@@ -3,7 +3,7 @@
 platform :ios, '15.0'
 
 target 'Overland' do
-	pod 'FMDB', '2.7.5'
+	pod 'FMDB', '2.7.12'
 end
 
 post_install do |installer|
