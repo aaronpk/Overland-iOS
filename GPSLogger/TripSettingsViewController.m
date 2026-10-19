@@ -8,10 +8,14 @@
 
 #import "TripSettingsViewController.h"
 #import "GLManager.h"
+#import "Overland-Swift.h"
 
 #import  <Intents/Intents.h>
 
 @interface TripSettingsViewController ()
+
+@property (strong, nonatomic) UISwitch *saveToHealth;
+@property (strong, nonatomic) UILabel *saveToHealthInfo;
 
 @end
 
@@ -25,6 +29,68 @@
     if (@available(iOS 27.0, *)) {
         [self.activityType insertSegmentWithTitle:@"Boat" atIndex:self.activityType.numberOfSegments animated:NO];
     }
+
+    if(HealthTripRecorder.isAvailable) {
+        [self addHealthSetting];
+    }
+}
+
+// The Apple Health row goes after the Live Activity row, in the storyboard's stack of settings
+- (void)addHealthSetting {
+    UIView *liveActivityRow = self.showLiveActivityDuringTrip.superview;
+    UIStackView *settings = (UIStackView *)liveActivityRow.superview;
+    NSUInteger index = [settings.arrangedSubviews indexOfObject:liveActivityRow];
+    if(![settings isKindOfClass:[UIStackView class]] || index == NSNotFound) {
+        return;
+    }
+
+    UILabel *label = [[UILabel alloc] init];
+    label.text = @"Save to Apple Health";
+    label.font = [UIFont systemFontOfSize:17];
+    self.saveToHealth = [[UISwitch alloc] init];
+    [self.saveToHealth setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+    [self.saveToHealth addTarget:self action:@selector(toggleSaveToHealth:) forControlEvents:UIControlEventValueChanged];
+    UIStackView *row = [[UIStackView alloc] initWithArrangedSubviews:@[label, self.saveToHealth]];
+
+    self.saveToHealthInfo = [[UILabel alloc] init];
+    self.saveToHealthInfo.numberOfLines = 0;
+    self.saveToHealthInfo.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+    self.saveToHealthInfo.textColor = [UIColor secondaryLabelColor];
+
+    [settings insertArrangedSubview:row atIndex:index + 1];
+    [settings insertArrangedSubview:self.saveToHealthInfo atIndex:index + 2];
+}
+
+- (void)updateHealthSetting {
+    if(self.saveToHealth == nil) {
+        return;
+    }
+    self.saveToHealth.on = [HealthTripRecorder shared].isEnabled;
+    NSString *info = @"Walk, run and bike trips are saved as workouts with their route. If you also record workouts on Apple Watch, you may see both.";
+    NSString *error = [HealthTripRecorder shared].lastError;
+    if(error) {
+        info = [NSString stringWithFormat:@"%@\n\n⚠️ %@", info, error];
+    }
+    self.saveToHealthInfo.text = info;
+}
+
+- (void)toggleSaveToHealth:(UISwitch *)sender {
+    if(!sender.on) {
+        [HealthTripRecorder shared].isEnabled = NO;
+        [self updateHealthSetting];
+        return;
+    }
+    [[HealthTripRecorder shared] requestAuthorizationWithCompletion:^(NSString *errorMessage) {
+        if(errorMessage) {
+            sender.on = NO;
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Apple Health" message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+        } else {
+            [HealthTripRecorder shared].isEnabled = YES;
+        }
+        [self updateHealthSetting];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -48,6 +114,7 @@
 - (void)updateVisibleSettings {
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
     self.showLiveActivityDuringTrip.on = [GLManager sharedManager].liveActivityEnabled;
+    [self updateHealthSetting];
 
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityTypeDuringTrip - 1;
 
@@ -160,6 +227,7 @@
     self.discardPointsWithinSeconds.enabled = NO;
     self.discardPointsWithoutGPS.enabled = NO;
     self.discardPointsWhileStationary.enabled = NO;
+    self.saveToHealth.enabled = NO;
 }
 
 - (void)unlockAllControls {
@@ -175,6 +243,7 @@
     self.discardPointsWithinSeconds.enabled = YES;
     self.discardPointsWithoutGPS.enabled = YES;
     self.discardPointsWhileStationary.enabled = YES;
+    self.saveToHealth.enabled = YES;
 }
 
 -(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {
