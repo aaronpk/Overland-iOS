@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FA33D161509DED340841E2B /* OverlandAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3BE36FCCC7B08321D3B28 /* OverlandAppIntents.swift */; };
+		0FA388001240FD65C4469F9F /* TripIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA363257C4BFB8311081ABB /* TripIntents.swift */; };
+		0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA363257C4BFB8311081ABB /* TripIntents.swift */; };
 		0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */; };
 		0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
 		0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
@@ -79,6 +82,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0FA3BE36FCCC7B08321D3B28 /* OverlandAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlandAppIntents.swift; sourceTree = "<group>"; };
+		0FA363257C4BFB8311081ABB /* TripIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripIntents.swift; sourceTree = "<group>"; };
 		0FA368263F0C8CF7E9440051 /* OverlandLiveActivity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OverlandLiveActivity.entitlements; sourceTree = "<group>"; };
 		0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStateObserver.swift; sourceTree = "<group>"; };
 		0FA3B7838C357C30292FEB0B /* SharedTripState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTripState.swift; sourceTree = "<group>"; };
@@ -183,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */,
+				0FA3BE36FCCC7B08321D3B28 /* OverlandAppIntents.swift */,
 			);
 			path = Integrations;
 			sourceTree = "<group>";
@@ -191,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				0FA3B7838C357C30292FEB0B /* SharedTripState.swift */,
+				0FA363257C4BFB8311081ABB /* TripIntents.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -519,6 +526,7 @@
 				0FA1F663468D6341CBC4129D /* TripLiveActivityWidget.swift in Sources */,
 				0FA1409378B424718012BD53 /* TripActivityAttributes.swift in Sources */,
 				0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */,
+				0FA388001240FD65C4469F9F /* TripIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +555,8 @@
 				0FA3A3F72F12736301815740 /* GLTripActions.m in Sources */,
 				0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */,
 				0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */,
+				0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */,
+				0FA33D161509DED340841E2B /* OverlandAppIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +772,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) OVERLAND_APP";
 				SWIFT_OBJC_BRIDGING_HEADER = "GPSLogger/Overland-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -790,6 +801,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) OVERLAND_APP";
 				SWIFT_OBJC_BRIDGING_HEADER = "GPSLogger/Overland-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

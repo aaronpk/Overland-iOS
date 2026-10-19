@@ -25,11 +25,14 @@ struct TripLiveActivityWidget: Widget {
                     TripStat(value: TripFormat.speed(context.state.speed), unit: TripFormat.speedUnit)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    HStack {
-                        ElapsedTime(start: context.attributes.tripStart)
-                            .font(.title2.bold())
-                        Spacer()
-                        TripStat(value: TripFormat.distance(context.state.distance), unit: TripFormat.distanceUnit)
+                    VStack(spacing: 8) {
+                        HStack {
+                            ElapsedTime(start: context.attributes.tripStart)
+                                .font(.title2.bold())
+                            Spacer()
+                            TripStat(value: TripFormat.distance(context.state.distance), unit: TripFormat.distanceUnit)
+                        }
+                        EndTripButton()
                     }
                 }
             } compactLeading: {
@@ -51,22 +54,40 @@ struct TripLockScreenView: View {
     let state: TripActivityAttributes.ContentState
 
     var body: some View {
-        HStack(spacing: 14) {
-            TripModeIcon(mode: state.mode)
-                .frame(width: 40, height: 40)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(TripFormat.modeName(state.mode))
-                    .font(.headline)
-                ElapsedTime(start: attributes.tripStart)
-                    .font(.title2.bold())
+        VStack(spacing: 10) {
+            HStack(spacing: 14) {
+                TripModeIcon(mode: state.mode)
+                    .frame(width: 40, height: 40)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(TripFormat.modeName(state.mode))
+                        .font(.headline)
+                    ElapsedTime(start: attributes.tripStart)
+                        .font(.title2.bold())
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 4) {
+                    TripStat(value: TripFormat.distance(state.distance), unit: TripFormat.distanceUnit)
+                    TripStat(value: TripFormat.speed(state.speed), unit: TripFormat.speedUnit)
+                }
             }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 4) {
-                TripStat(value: TripFormat.distance(state.distance), unit: TripFormat.distanceUnit)
-                TripStat(value: TripFormat.speed(state.speed), unit: TripFormat.speedUnit)
-            }
+            EndTripButton()
         }
         .padding()
+    }
+}
+
+// Ends the trip from the Lock Screen or Dynamic Island. Buttons in Live Activities need iOS 17.
+struct EndTripButton: View {
+    var body: some View {
+        if #available(iOS 17.0, *) {
+            Button(intent: EndTripIntent()) {
+                Label("End Trip", systemImage: "stop.fill")
+                    .font(.subheadline.bold())
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.red)
+        }
     }
 }
 
