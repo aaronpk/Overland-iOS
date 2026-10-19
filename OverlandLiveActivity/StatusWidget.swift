@@ -205,10 +205,19 @@ struct TripButton: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
             } else {
+                // Shows the mode's icon, so it's clear what kind of trip this starts
                 Button(intent: StartTripIntent(mode: TripModeAppEnum(rawValue: state.tripMode))) {
-                    Label("Start Trip", systemImage: "play.fill")
-                        .font(.caption.bold())
-                        .frame(maxWidth: .infinity)
+                    Label {
+                        Text("Start")
+                    } icon: {
+                        Image(state.tripMode)
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 22, height: 22)
+                    }
+                    .font(.caption.bold())
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.green)
