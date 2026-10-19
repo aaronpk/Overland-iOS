@@ -130,6 +130,24 @@
         NSLog(@"App launched. connectionOptions = %@", connectionOptions);
         [self handleLaunchFromShortcutItem:connectionOptions.shortcutItem];
     }
+
+    // A Siri shortcut that launches the app arrives here, rather than in scene:continueUserActivity:
+    for(NSUserActivity *userActivity in connectionOptions.userActivities) {
+        [self handleUserActivity:userActivity];
+    }
+}
+
+- (void)scene:(UIScene *)scene continueUserActivity:(NSUserActivity *)userActivity {
+    [self handleUserActivity:userActivity];
+}
+
+- (void)handleUserActivity:(NSUserActivity *)userActivity {
+    NSString *startTrackingActivityType = [NSString stringWithFormat:@"%@.startTracking", [[NSBundle mainBundle] bundleIdentifier]];
+
+    if([userActivity.activityType isEqualToString:startTrackingActivityType]) {
+        NSLog(@"startTracking - called from shortcut");
+        [[GLManager sharedManager] startAllUpdates];
+    }
 }
 
 - (void)windowScene:(UIWindowScene *)windowScene performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {

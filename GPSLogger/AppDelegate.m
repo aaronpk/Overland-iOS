@@ -74,23 +74,5 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     [[GLManager sharedManager] applicationWillTerminate];
 }
-           
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
-    // get Bundle ID and add ...
-    NSString *bundleIDStarter = [NSString stringWithFormat:@"%@.startTracking", [[NSBundle mainBundle] bundleIdentifier]];
-    
-    // Check to make sure it's the correct activity type
-    if ([userActivity.activityType isEqualToString:bundleIDStarter])
-    {
-        NSLog(@"startTracking - called from shortcut");
-        
-        [[GLManager sharedManager] startAllUpdates];
-        
-        return YES;
-    }
-    
-    return NO;
-}
 
 @end
