@@ -371,7 +371,6 @@
 				TargetAttributes = {
 					0FA11B785280455F5A840E1D = {
 						CreatedOnToolsVersion = 27.0;
-						DevelopmentTeam = 7MC6UZR2UV;
 					};
 					0FFD31511BAB7A34009B3A03 = {
 						CreatedOnToolsVersion = 7.0;
@@ -544,6 +543,7 @@
 		0FA1005369F3760CABFBC7E0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -557,6 +557,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
@@ -567,6 +568,7 @@
 		0FA1840DEDAA1D03ED91261A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7MC6UZR2UV;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -580,6 +582,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
