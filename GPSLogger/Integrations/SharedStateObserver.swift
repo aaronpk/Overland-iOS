@@ -73,6 +73,23 @@ import WidgetKit
         }
     }
 
+    // Called by the intents right after they start or end a trip. A widget or control reloads as
+    // soon as its intent finishes, before the usual refresh, so this updates the snapshot now.
+    // Ending a trip finishes in the background, so GLManager may still report the trip until then.
+    func tripChanged(inProgress: Bool) {
+        let manager: GLManager = GLManager.shared()
+        var state = SharedTripState.read()
+        state.tripStart = inProgress ? (manager.currentTripStart() ?? Date()) : nil
+        state.tripMode = manager.currentTripMode ?? state.tripMode
+        state.trackingEnabled = manager.trackingEnabled
+        if !inProgress {
+            state.tripDistance = 0
+        }
+        state.updatedAt = Date()
+        save(state)
+        stateChanged()
+    }
+
     @objc func refresh() {
         let manager: GLManager = GLManager.shared()
         var state = SharedTripState()

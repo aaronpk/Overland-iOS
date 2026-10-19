@@ -67,7 +67,7 @@ struct StartTripIntent: AppIntent {
             return .result(dialog: "A \(TripIntentText.modeName(manager.currentTripMode)) trip is already in progress.")
         }
         GLTripActions.startTrip(withMode: mode?.rawValue)
-        SharedStateObserver.shared.stateChanged()
+        SharedStateObserver.shared.tripChanged(inProgress: true)
         return .result(dialog: "Started a \(TripIntentText.modeName(manager.currentTripMode)) trip.")
         #else
         return .result(dialog: "")
@@ -93,7 +93,7 @@ struct EndTripIntent: AppIntent {
         }
         let summary = TripIntentText.tripSummary(manager)
         GLTripActions.endTripRestoringTracking()
-        SharedStateObserver.shared.stateChanged()
+        SharedStateObserver.shared.tripChanged(inProgress: false)
         return .result(dialog: "Ended the \(summary).")
         #else
         return .result(dialog: "")
@@ -122,6 +122,29 @@ struct SendNowIntent: AppIntent {
         #else
         return .result(dialog: "")
         #endif
+    }
+}
+
+// The Control Center toggle. Shortcuts already has Start Trip and End Trip, so this one is hidden.
+@available(iOS 18.0, *)
+struct ToggleTripIntent: SetValueIntent, LiveActivityIntent {
+    static var title: LocalizedStringResource = "Start or End Trip"
+    static var isDiscoverable: Bool { false }
+
+    @Parameter(title: "Trip in Progress")
+    var value: Bool
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        #if OVERLAND_APP
+        if value {
+            GLTripActions.startTrip(withMode: nil)
+        } else {
+            GLTripActions.endTripRestoringTracking()
+        }
+        SharedStateObserver.shared.tripChanged(inProgress: value)
+        #endif
+        return .result()
     }
 }
 
