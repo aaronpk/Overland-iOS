@@ -1540,6 +1540,10 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="apiEndpointField" destination="UKr-2t-LGS" id="TQV-39-goh"/>
                         <outlet property="customHeadersButton" destination="chb-Hd-R7x" id="chb-Ou-T2p"/>
                         <outlet property="deviceIdField" destination="LDo-Kd-T3a" id="uDX-mW-scj"/>
+                        <outlet property="stackView" destination="YYm-TU-Ryi" id="iCD-Ou-s01"/>
+                        <outlet property="endpointLabel" destination="veb-CN-Tnc" id="iCD-Ou-l01"/>
+                        <outlet property="accessTokenLabel" destination="PFy-mc-wMw" id="iCD-Ou-l02"/>
+                        <outlet property="infoTextView" destination="H9G-cG-Gsg" id="iCD-Ou-t01"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hwf-EE-aFB" userLabel="First Responder" sceneMemberID="firstResponder"/>

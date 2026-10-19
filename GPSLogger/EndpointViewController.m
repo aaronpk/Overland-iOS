@@ -15,6 +15,12 @@
 // Edits from the custom headers screen are held here until the Save button is tapped
 @property (strong, nonatomic) NSArray *pendingCustomHeaders;
 
+// Choosing between a server and iCloud Drive
+@property (strong, nonatomic) UISegmentedControl *destinationControl;
+@property (strong, nonatomic) UILabel *fileModeLabel;
+@property (strong, nonatomic) UISegmentedControl *fileModeControl;
+@property (copy, nonatomic) NSString *serverInfoText;
+
 @end
 
 @implementation EndpointViewController
@@ -22,6 +28,65 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.pendingCustomHeaders = [[GLManager sharedManager] customHeaders];
+    self.serverInfoText = self.infoTextView.text;
+
+    // Add the destination choice above the server fields, styled like the other field labels
+    self.destinationControl = [[UISegmentedControl alloc] initWithItems:@[@"Server", @"iCloud Drive"]];
+    [self.destinationControl addTarget:self action:@selector(destinationWasChanged:) forControlEvents:UIControlEventValueChanged];
+    self.fileModeLabel = [self fieldLabelWithText:@"FILES"];
+    self.fileModeControl = [[UISegmentedControl alloc] initWithItems:@[@"One per day", @"Trips only"]];
+    [self.fileModeControl addTarget:self action:@selector(fileModeWasChanged:) forControlEvents:UIControlEventValueChanged];
+
+    NSArray *views = @[[self fieldLabelWithText:@"DESTINATION"], self.destinationControl, self.fileModeLabel, self.fileModeControl];
+    for (NSUInteger i = 0; i < views.count; i++) {
+        [self.stackView insertArrangedSubview:views[i] atIndex:i];
+    }
+    [self.stackView setCustomSpacing:12 afterView:self.destinationControl];
+    [self.stackView setCustomSpacing:12 afterView:self.fileModeControl];
+
+    self.destinationControl.selectedSegmentIndex = [GLManager sharedManager].savesToICloudDrive ? 1 : 0;
+    self.fileModeControl.selectedSegmentIndex = ([GLManager sharedManager].cloudFileMode == GLCloudFileModeTrips) ? 1 : 0;
+    [self updateVisibleFields];
+}
+
+- (UILabel *)fieldLabelWithText:(NSString *)text {
+    UILabel *label = [[UILabel alloc] init];
+    label.text = text;
+    label.font = [UIFont systemFontOfSize:14];
+    label.textAlignment = NSTextAlignmentCenter;
+    return label;
+}
+
+- (BOOL)iCloudDriveSelected {
+    return self.destinationControl.selectedSegmentIndex == 1;
+}
+
+- (void)destinationWasChanged:(UISegmentedControl *)sender {
+    [self.view endEditing:YES];
+    [self updateVisibleFields];
+}
+
+- (void)fileModeWasChanged:(UISegmentedControl *)sender {
+    [self updateVisibleFields];
+}
+
+// The server fields only apply when sending to a server. The device ID applies to both.
+- (void)updateVisibleFields {
+    BOOL iCloud = [self iCloudDriveSelected];
+    for (UIView *view in @[self.endpointLabel, self.apiEndpointField, self.accessTokenLabel, self.accessTokenField, self.customHeadersButton]) {
+        view.hidden = iCloud;
+    }
+    self.fileModeLabel.hidden = !iCloud;
+    self.fileModeControl.hidden = !iCloud;
+
+    if (iCloud) {
+        NSString *files = (self.fileModeControl.selectedSegmentIndex == 1)
+            ? @"Only points recorded during trips are saved, in one file per trip in the Trips folder, named by when the trip started."
+            : @"Points are saved in one file per day, by the UTC date, such as 2026/10/2026-10-19.geojson.";
+        self.infoTextView.text = [NSString stringWithFormat:@"This app can save its location data to GeoJSON files in iCloud Drive instead of sending it to a server. The files appear in the Overland folder in iCloud Drive, in the Files app and on your other devices.\n\n%@\n\nYou can optionally add a Device ID to identify this device. This string will be included in the properties of each point.", files];
+    } else {
+        self.infoTextView.text = self.serverInfoText;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -47,6 +112,17 @@
 }
 
 - (IBAction)saveButtonWasTapped:(UIButton *)sender {
+    if ([self iCloudDriveSelected]) {
+        // The server settings are kept, so switching back to the server restores them
+        [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];
+        [GLManager sharedManager].savesToICloudDrive = YES;
+        [GLManager sharedManager].cloudFileMode = (self.fileModeControl.selectedSegmentIndex == 1) ? GLCloudFileModeTrips : GLCloudFileModeDaily;
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLSettingsChangedNotification object:self];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    [GLManager sharedManager].savesToICloudDrive = NO;
+
     NSURL *newURL = [NSURL URLWithString:self.apiEndpointField.text];
 
     if(newURL != nil && ([newURL.scheme isEqualToString:@"https"] || [newURL.scheme isEqualToString:@"http"])) {

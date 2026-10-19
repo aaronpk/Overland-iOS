@@ -13,6 +13,7 @@
 #import "fmdb/FMDatabase.h"
 @import NetworkExtension;
 #import "Overland-Swift.h"
+#import "GLCloudFileWriter.h"
 @import UserNotifications;
 
 @interface GLManager()
@@ -169,8 +170,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
     NSMutableArray *locationUpdates = [NSMutableArray array];
     
     NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-    
-    if(endpoint == nil) {
+    BOOL saveToICloud = self.savesToICloudDrive;
+
+    if(!saveToICloud && endpoint == nil) {
         NSLog(@"No API endpoint is set, not sending data");
         return;
     }
@@ -197,7 +199,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     NSMutableDictionary *postData;
     
-    if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+    if(self.usesOwntracksFormat) {
         // The queue may be empty, which is handled below before sending
         postData = locationUpdates.firstObject;
     } else {
@@ -227,6 +229,22 @@ const double MPH_to_METERSPERSECOND = 0.447;
             NSDictionary *currentTripInfo = [self currentTripDictionary];
             [postData setObject:currentTripInfo forKey:@"trip"];
         }
+    }
+
+    if(saveToICloud) {
+        if(locationUpdates.count == 0) {
+            self.batchInProgress = NO;
+            return;
+        }
+        [self sendingStarted];
+        [[GLCloudFileWriter sharedWriter] writeFeatures:locationUpdates mode:self.cloudFileMode completion:^(NSString *errorMessage) {
+            if(errorMessage) {
+                [self batchFailed:errorMessage title:@"iCloud Drive"];
+            } else {
+                [self batchWasSent:syncedUpdates response:nil];
+            }
+        }];
+        return;
     }
     
     // If there are any template strings in the URL, replace the values with the data from the most recent location
@@ -279,9 +297,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         } else {
             // Response must be JSON
             if(![responseObject respondsToSelector:@selector(objectForKey:)]) {
-                self.batchInProgress = NO;
-                [self notify:@"Server did not return a JSON object" withTitle:@"Server Error"];
-                [self sendingFinished];
+                [self batchFailed:@"Server did not return a JSON object" title:@"Server Error"];
                 return;
             }
 
@@ -291,53 +307,84 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         
         if(requestWasSuccessfullySent) {
-            self.lastSentDate = NSDate.date;
-            NSDictionary *geocode = [responseDictionary objectForKey:@"geocode"];
-            if([geocode isKindOfClass:[NSDictionary class]]) {
-                self.lastLocationName = [geocode objectForKey:@"full_name"];
-            } else {
-                self.lastLocationName = @"";
-            }
-            
-            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-                for(NSString *key in syncedUpdates) {
-                    [accessor removeDictionaryForKey:key];
-                }
-            }];
-
-            [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-                [accessor countObjectsUsingBlock:^(long num) {
-                    _currentPointsInQueue = num;
-                    NSLog(@"Number remaining: %ld", num);
-                    if(num >= self.pointsPerBatchCurrentValue) {
-                        self.batchInProgress = YES;
-                    } else {
-                        self.batchInProgress = NO;
-                    }
-                }];
-
-                [self sendingFinished];
-            }];
-
-            [self updateSettingsFromResponse:responseDictionary];
+            [self batchWasSent:syncedUpdates response:responseDictionary];
+        } else if([responseObject objectForKey:@"error"]) {
+            [self batchFailed:[responseObject objectForKey:@"error"] title:@"Server Error"];
         } else {
-            
-            self.batchInProgress = NO;
-            
-            if([responseObject objectForKey:@"error"]) {
-                [self notify:[responseObject objectForKey:@"error"] withTitle:@"Server Error"];
-            } else {
-                [self notify:@"Server did not acknowledge the data was received, and did not return an error message" withTitle:@"Server Error"];
-            }
-
-            [self sendingFinished];
+            [self batchFailed:@"Server did not acknowledge the data was received, and did not return an error message" title:@"Server Error"];
         }
     } failure:^(NSString *errorMessage) {
-        self.batchInProgress = NO;
-        [self notify:errorMessage withTitle:@"HTTP Error"];
-        [self sendingFinished];
+        [self batchFailed:errorMessage title:@"HTTP Error"];
     }];
     
+}
+
+// Removes a batch that was sent or saved from the queue. The response is the server's, or nil.
+- (void)batchWasSent:(NSSet *)syncedUpdates response:(NSDictionary *)responseDictionary {
+    self.lastSentDate = NSDate.date;
+    NSDictionary *geocode = [responseDictionary objectForKey:@"geocode"];
+    if([geocode isKindOfClass:[NSDictionary class]]) {
+        self.lastLocationName = [geocode objectForKey:@"full_name"];
+    } else {
+        self.lastLocationName = @"";
+    }
+    
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        for(NSString *key in syncedUpdates) {
+            [accessor removeDictionaryForKey:key];
+        }
+    }];
+
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor countObjectsUsingBlock:^(long num) {
+            _currentPointsInQueue = num;
+            NSLog(@"Number remaining: %ld", num);
+            if(num >= self.pointsPerBatchCurrentValue) {
+                self.batchInProgress = YES;
+            } else {
+                self.batchInProgress = NO;
+            }
+        }];
+
+        [self sendingFinished];
+    }];
+
+    [self updateSettingsFromResponse:responseDictionary];
+}
+
+// Keeps the batch in the queue to try again later
+- (void)batchFailed:(NSString *)message title:(NSString *)title {
+    self.batchInProgress = NO;
+    [self notify:message withTitle:title];
+    [self sendingFinished];
+}
+
+#pragma mark - Destination
+
+- (BOOL)savesToICloudDrive {
+    return [[[NSUserDefaults standardUserDefaults] stringForKey:GLDestinationDefaultsName] isEqualToString:@"icloud"];
+}
+- (void)setSavesToICloudDrive:(BOOL)iCloud {
+    [[NSUserDefaults standardUserDefaults] setObject:(iCloud ? @"icloud" : @"server") forKey:GLDestinationDefaultsName];
+}
+
+- (GLCloudFileMode)cloudFileMode {
+    if([[[NSUserDefaults standardUserDefaults] stringForKey:GLCloudFileModeDefaultsName] isEqualToString:@"trips"]) {
+        return GLCloudFileModeTrips;
+    }
+    return GLCloudFileModeDaily;
+}
+- (void)setCloudFileMode:(GLCloudFileMode)mode {
+    [[NSUserDefaults standardUserDefaults] setObject:(mode == GLCloudFileModeTrips ? @"trips" : @"daily") forKey:GLCloudFileModeDefaultsName];
+}
+
+- (BOOL)hasDestination {
+    return self.savesToICloudDrive || self.apiEndpointURL != nil;
+}
+
+// The OwnTracks format is only for sending to a server. Files in iCloud Drive are always GeoJSON.
+- (BOOL)usesOwntracksFormat {
+    return self.loggingModeCurrentValue == kGLLoggingModeOwntracks && !self.savesToICloudDrive;
 }
 
 - (void)updateSettingsFromResponse:(id _Nullable)responseObject {
@@ -1966,7 +2013,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         
         NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
         NSDictionary *update;
-        if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+        if(self.usesOwntracksFormat) {
             update = [self owntracksDictionaryFromLocation:loc];
         } else {
             update = [self currentDictionaryFromLocation:loc];

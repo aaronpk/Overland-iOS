@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
+#import "GLCloudFileWriter.h"
 @import UserNotifications;
 
 static NSString *const GLNewDataNotification = @"GLNewDataNotification";
@@ -46,6 +47,10 @@ static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEna
 static NSString *const GLCustomHeadersDefaultsName = @"GLCustomHeadersDefaults";
 static NSString *const GLWifiZonesDefaultsName = @"GLWifiZonesDefaults";
 static NSString *const GLScreenScaleDefaultsName = @"GLScreenScaleDefaults";
+// "server" (the default) or "icloud"
+static NSString *const GLDestinationDefaultsName = @"GLDestinationDefaults";
+// "daily" (the default) or "trips"
+static NSString *const GLCloudFileModeDefaultsName = @"GLCloudFileModeDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
@@ -176,6 +181,12 @@ typedef void (^CaseBlock)(void);
 
 - (void)saveNewAPIEndpoint:(NSString *)endpoint andAccessToken:(NSString *)accessToken;
 - (NSString *)apiEndpointURL;
+
+// Save location data to files in iCloud Drive instead of sending it to the server
+@property (nonatomic) BOOL savesToICloudDrive;
+@property (nonatomic) GLCloudFileMode cloudFileMode;
+// YES when there's somewhere to send data: iCloud Drive, or a server URL
+- (BOOL)hasDestination;
 - (NSString *)apiAccessToken;
 - (void)saveNewDeviceId:(NSString *)deviceId;
 - (NSString *)deviceId;

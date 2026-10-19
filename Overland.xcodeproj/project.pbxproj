@@ -40,6 +40,7 @@
 		0FFD31651BAB7A34009B3A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31641BAB7A34009B3A03 /* Assets.xcassets */; };
 		0FFD31681BAB7A34009B3A03 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */; };
 		0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31721BAB7BEA009B3A03 /* GLManager.m */; };
+		0FA2C0DE5E1F00000000C003 /* GLCloudFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FA2C0DE5E1F00000000C002 /* GLCloudFileWriter.m */; };
 		0FFD31781BAB7C7F009B3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31741BAB7C7F009B3A03 /* CoreLocation.framework */; };
 		0FFD31791BAB7C7F009B3A03 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31751BAB7C7F009B3A03 /* CoreMotion.framework */; };
 		0FFD317A1BAB7C7F009B3A03 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFD31761BAB7C7F009B3A03 /* libsqlite3.tbd */; };
@@ -123,6 +124,8 @@
 		0FFD31691BAB7A34009B3A03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0FFD31711BAB7BEA009B3A03 /* GLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLManager.h; sourceTree = "<group>"; };
 		0FFD31721BAB7BEA009B3A03 /* GLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLManager.m; sourceTree = "<group>"; };
+		0FA2C0DE5E1F00000000C001 /* GLCloudFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLCloudFileWriter.h; sourceTree = "<group>"; };
+		0FA2C0DE5E1F00000000C002 /* GLCloudFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLCloudFileWriter.m; sourceTree = "<group>"; };
 		0FFD31741BAB7C7F009B3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0FFD31751BAB7C7F009B3A03 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		0FFD31761BAB7C7F009B3A03 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -271,6 +274,8 @@
 				0FABDE392B329448003ACD20 /* TipJarViewController.m */,
 				0FFD31711BAB7BEA009B3A03 /* GLManager.h */,
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
+				0FA2C0DE5E1F00000000C001 /* GLCloudFileWriter.h */,
+				0FA2C0DE5E1F00000000C002 /* GLCloudFileWriter.m */,
 				0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */,
 				0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */,
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
@@ -496,6 +501,7 @@
 				0FABDE3A2B329448003ACD20 /* TipJarViewController.m in Sources */,
 				0FAC1FEB2B255CA60007F3B1 /* NSArray+map.m in Sources */,
 				0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */,
+				0FA2C0DE5E1F00000000C003 /* GLCloudFileWriter.m in Sources */,
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,
 				0FC4E00A2D0B000000000001 /* CustomHeadersViewController.m in Sources */,
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,

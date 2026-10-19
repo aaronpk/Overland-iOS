@@ -232,7 +232,7 @@ BOOL mapWasDragged = NO;
 }
 
 - (void)sendingFinished {
-    if([[GLManager sharedManager] apiEndpointURL] == nil) {
+    if(![[GLManager sharedManager] hasDestination]) {
         [self setButton:self.sendNowButton title:@"Send Now" color:[self disabledSendNowColor] fontSize:15 enabled:NO];
     } else {
         [self setButton:self.sendNowButton title:@"Send Now" color:[UIColor colorNamed:@"OverlandGreen"] fontSize:15 enabled:YES];

@@ -128,7 +128,9 @@
 }
 
 - (void)updateVisibleSettings {
-    if([GLManager sharedManager].apiEndpointURL != nil) {
+    if([GLManager sharedManager].savesToICloudDrive) {
+        self.apiEndpointField.text = @"iCloud Drive";
+    } else if([GLManager sharedManager].apiEndpointURL != nil) {
         self.apiEndpointField.text = [GLManager sharedManager].apiEndpointURL;
     } else {
         self.apiEndpointField.text = @"tap to set endpoint";

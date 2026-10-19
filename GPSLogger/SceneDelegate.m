@@ -65,6 +65,10 @@
         NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@ unique_id=%@", endpoint, token, deviceId, uniqueId);
         [[GLManager sharedManager] saveNewDeviceId:deviceId];
         [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
+        // A setup link configures a server, so send there instead of iCloud Drive
+        if(endpoint.length > 0) {
+            [GLManager sharedManager].savesToICloudDrive = NO;
+        }
         [[NSUserDefaults standardUserDefaults] setBool:[uniqueId isEqualToString:@"yes"] forKey:GLIncludeUniqueIdDefaultsName];
         NSMutableArray *customHeaders = [NSMutableArray array];
         for (NSURLQueryItem *item in queryItems) {

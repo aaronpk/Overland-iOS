@@ -326,6 +326,17 @@ IMPORTANT: It is very possible to send a setting to the phone that will disable 
 It is best to only send properties in the response that you want to change at that moment, rather than always sending the values on every response. Treat it like pressing the button in the UI, only send the response when you want to press the button.
 
 
+### Saving to iCloud Drive
+
+Instead of sending data to a server, the app can save it as GeoJSON files in iCloud Drive. Choose "iCloud Drive" as the destination on the Server URL screen. The files appear in the Overland folder in iCloud Drive, so they're available in the Files app and on your other devices without running a server. This needs you to be signed in to iCloud with iCloud Drive turned on for Overland.
+
+Each file is a GeoJSON `FeatureCollection` containing the same location records that would be sent to a server. There are two ways to split the data into files:
+
+* **One per day** - Every point is saved in a file for its UTC date, such as `2026/10/2026-10-19.geojson`. Using UTC means a time zone change never skips or repeats a day. Trip records are saved in the file for the day the trip ended.
+* **Trips only** - Only points recorded during a trip are saved, in one file per trip in the `Trips` folder, named by when the trip started, such as `Trips/2026-10-19T13-00-01Z.geojson`. The trip record written when the trip ends is saved in the same file. Points recorded outside a trip are not saved.
+
+Points are saved in batches using the same send interval and batch size settings as a server. The "Owntracks" logging mode doesn't apply to iCloud Drive, so points are always saved as GeoJSON. If iCloud Drive isn't available, points stay in the queue on the phone until they can be saved.
+
 ### Current Location
 
 If the number of locations in the queue are more than twice the batch size, then the request will also contain a property `current` with the most recent location point stored by the device. (This point will not be one of the ones in the batch.) If you need your backend to be aware of the current location, this allows you to ignore the batch being uploaded and instead use just that point.
