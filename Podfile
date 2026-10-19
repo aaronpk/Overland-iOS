@@ -1,6 +1,6 @@
 # Uncomment this line to define a global platform for your project
 
-platform :ios, '11.0'
+platform :ios, '15.0'
 
 target 'Overland' do
 	pod 'AFNetworking', '4.0.1'
@@ -8,10 +8,11 @@ target 'Overland' do
 end
 
 post_install do |installer|
-	# Pods default to their own minimum deployment target, which current Xcode no longer supports
+	# Pods default to their own minimum deployment target, which current Xcode no longer supports.
+	# Match the app's deployment target so the libraries run on every iOS version the app supports.
 	installer.pods_project.targets.each do |target|
 		target.build_configurations.each do |config|
-			config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.0'
+			config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
 		end
 	end
 
