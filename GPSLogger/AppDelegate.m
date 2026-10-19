@@ -46,6 +46,9 @@
     // Finish tip jar transactions that complete while the tip jar isn't open, such as renewals
     [[TipJarStore shared] startObservingTransactions];
 
+    // Keep the widgets' and controls' copy of the trip state up to date
+    [[SharedStateObserver shared] start];
+
     // This key is deprecated in iOS 26, but it's still the only way to tell that the app was
     // relaunched for a location event. It's only used for this tracking stat.
     if([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {

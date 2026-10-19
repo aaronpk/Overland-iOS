@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */; };
+		0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
+		0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
+		0FA3A3F72F12736301815740 /* GLTripActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3335218A802C5C01E5BB3 /* GLTripActions.m */; };
 		0F3E5210201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */; };
 		0F3E5211201E543200DCFAA4 /* OpenSansCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */; };
 		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
@@ -75,6 +79,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0FA368263F0C8CF7E9440051 /* OverlandLiveActivity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OverlandLiveActivity.entitlements; sourceTree = "<group>"; };
+		0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStateObserver.swift; sourceTree = "<group>"; };
+		0FA3B7838C357C30292FEB0B /* SharedTripState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTripState.swift; sourceTree = "<group>"; };
+		0FA3335218A802C5C01E5BB3 /* GLTripActions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLTripActions.m; sourceTree = "<group>"; };
+		0FA37F96307B5014EFE10FFA /* GLTripActions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTripActions.h; sourceTree = "<group>"; };
 		0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSansCondensed-Bold.ttf"; path = "Fonts/OpenSansCondensed-Bold.ttf"; sourceTree = SOURCE_ROOT; };
 		0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSansCondensed-Light.ttf"; path = "Fonts/OpenSansCondensed-Light.ttf"; sourceTree = SOURCE_ROOT; };
 		0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "Fonts/OpenSans-Light.ttf"; sourceTree = SOURCE_ROOT; };
@@ -170,6 +179,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0FA3304F6CF12E6DB41EF33A /* Integrations */ = {
+			isa = PBXGroup;
+			children = (
+				0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */,
+			);
+			path = Integrations;
+			sourceTree = "<group>";
+		};
+		0FA320A51CB2D01CE6CD6EF7 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				0FA3B7838C357C30292FEB0B /* SharedTripState.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		0BE775F16162CE9DF6AE0775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +230,7 @@
 				0FA16DCE2F24E90AC6425AE0 /* OverlandLiveActivityBundle.swift */,
 				0FA17CBB687B2DDE01176F37 /* TripLiveActivityWidget.swift */,
 				0FA13CEC66AD199B21AD42D2 /* Info.plist */,
+				0FA368263F0C8CF7E9440051 /* OverlandLiveActivity.entitlements */,
 			);
 			path = OverlandLiveActivity;
 			sourceTree = "<group>";
@@ -276,6 +302,8 @@
 				0FFD31721BAB7BEA009B3A03 /* GLManager.m */,
 				0FA2C0DE5E1F00000000C001 /* GLCloudFileWriter.h */,
 				0FA2C0DE5E1F00000000C002 /* GLCloudFileWriter.m */,
+				0FA37F96307B5014EFE10FFA /* GLTripActions.h */,
+				0FA3335218A802C5C01E5BB3 /* GLTripActions.m */,
 				0FAC1FEC2B255D460007F3B1 /* NSArray+map.h */,
 				0FAC1FEA2B255CA60007F3B1 /* NSArray+map.m */,
 				0FFD31611BAB7A34009B3A03 /* Main.storyboard */,
@@ -284,6 +312,8 @@
 				0FA18726CB75B3B166029F8E /* TripModes.xcassets */,
 				0FA16810488AF62B153D87E0 /* LiveActivity */,
 				0FA2C0DE5E1F00000000B001 /* TipJar */,
+				0FA320A51CB2D01CE6CD6EF7 /* Shared */,
+				0FA3304F6CF12E6DB41EF33A /* Integrations */,
 				0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */,
 				0FABDE3B2B34F642003ACD20 /* Tips.storekit */,
 				0FFD31691BAB7A34009B3A03 /* Info.plist */,
@@ -488,6 +518,7 @@
 				0FA16490B3131D33B0CB1A0C /* OverlandLiveActivityBundle.swift in Sources */,
 				0FA1F663468D6341CBC4129D /* TripLiveActivityWidget.swift in Sources */,
 				0FA1409378B424718012BD53 /* TripActivityAttributes.swift in Sources */,
+				0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +544,9 @@
 				0FA11FBA259623D911A653DC /* TripActivityAttributes.swift in Sources */,
 				0FA16CC8A66B372B06DD56CB /* TripLiveActivityController.swift in Sources */,
 				0FA2C0DE5E1F00000000B003 /* TipJarStore.swift in Sources */,
+				0FA3A3F72F12736301815740 /* GLTripActions.m in Sources */,
+				0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */,
+				0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +596,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland.LiveActivity;
+				CODE_SIGN_ENTITLEMENTS = OverlandLiveActivity/OverlandLiveActivity.entitlements;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -587,6 +622,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aaronpk.overland.LiveActivity;
+				CODE_SIGN_ENTITLEMENTS = OverlandLiveActivity/OverlandLiveActivity.entitlements;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;

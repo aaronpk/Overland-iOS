@@ -9,6 +9,7 @@
 
 #import "TrackingViewController.h"
 #import "GLManager.h"
+#import "GLTripActions.h"
 
 @interface TrackingViewController ()
 
@@ -507,17 +508,9 @@ BOOL mapWasDragged = NO;
 
 - (IBAction)tripStartStopWasTapped:(id)sender {
     if([GLManager sharedManager].tripInProgress) {
-        [[GLManager sharedManager] endTrip];
-        
-        // If tracking was off when the trip started, turn it off now
-        if([[NSUserDefaults standardUserDefaults] boolForKey:GLTripTrackingEnabledDefaultsName] == NO) {
-            [[GLManager sharedManager] stopAllUpdates];
-        }
+        [GLTripActions endTripRestoringTracking];
     } else {
-        // Keep track of whether tracking was on or off when this trip started
-        [[NSUserDefaults standardUserDefaults] setBool:[GLManager sharedManager].trackingEnabled forKey:GLTripTrackingEnabledDefaultsName];
-
-        [[GLManager sharedManager] startTrip];
+        [GLTripActions startTripWithMode:nil];
     }
     [self updateTripState];
 }

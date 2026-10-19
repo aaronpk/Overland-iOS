@@ -10,6 +10,7 @@
 
 #import "SceneDelegate.h"
 #import "GLManager.h"
+#import "GLTripActions.h"
 #import "NSArray+map.h"
 
 @implementation SceneDelegate
@@ -164,10 +165,9 @@
 
 - (void)handleLaunchFromShortcutItem:(UIApplicationShortcutItem *)shortcutItem {
     if([shortcutItem.type isEqualToString:@"stop"]) {
-        [[GLManager sharedManager] endTrip];
+        [GLTripActions endTripRestoringTracking];
     } else {
-        [GLManager sharedManager].currentTripMode = shortcutItem.type;
-        [[GLManager sharedManager] startTrip];
+        [GLTripActions startTripWithMode:shortcutItem.type];
     }
 }
 
