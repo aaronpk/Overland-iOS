@@ -104,6 +104,8 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 // Set while the user is moving the map, until it stops. Only those moves update the fields, not
 // the map laying itself out or following the fields.
 @property (nonatomic) BOOL userIsMovingMap;
+// Set once the coordinates have been typed, moved on the map, or filled in from the user's location
+@property (nonatomic) BOOL coordinatesWereSet;
 
 @end
 
@@ -237,6 +239,19 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
     self.userIsMovingMap = NO;
 }
 
+// A new zone opened before the app had a location starts with no coordinates. Fill them in from the
+// user's location once the map finds it, unless they've already been entered.
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    CLLocationCoordinate2D existing;
+    CLLocation *location = userLocation.location;
+    if (self.zone || self.coordinatesWereSet || [self fieldCoordinate:&existing] || location == nil || location.horizontalAccuracy < 0) {
+        return;
+    }
+    self.coordinatesWereSet = YES;
+    [self setFieldsToCoordinate:location.coordinate];
+    [self moveMapToCoordinate:location.coordinate zoom:YES];
+}
+
 - (void)mapViewDidChangeVisibleRegion:(MKMapView *)mapView {
     [self updateFieldsFromMap];
 }
@@ -245,10 +260,14 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
     if (!self.userIsMovingMap) {
         return;
     }
+    self.coordinatesWereSet = YES;
+    [self setFieldsToCoordinate:self.mapView.centerCoordinate];
+}
+
+- (void)setFieldsToCoordinate:(CLLocationCoordinate2D)coordinate {
     // 5 decimal places is about a meter, the same as new zones use
-    CLLocationCoordinate2D center = self.mapView.centerCoordinate;
-    self.values[WifiZoneFieldLatitude] = [NSString stringWithFormat:@"%.5f", center.latitude];
-    self.values[WifiZoneFieldLongitude] = [NSString stringWithFormat:@"%.5f", center.longitude];
+    self.values[WifiZoneFieldLatitude] = [NSString stringWithFormat:@"%.5f", coordinate.latitude];
+    self.values[WifiZoneFieldLongitude] = [NSString stringWithFormat:@"%.5f", coordinate.longitude];
     for (NSNumber *field in @[@(WifiZoneFieldLatitude), @(WifiZoneFieldLongitude)]) {
         WifiZoneFieldCell *cell = (WifiZoneFieldCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForField:field.integerValue]];
         cell.textField.text = self.values[field.integerValue];
@@ -361,6 +380,7 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 - (void)textFieldDidChange:(UITextField *)textField {
     self.values[textField.tag] = textField.text ?: @"";
     if (textField.tag == WifiZoneFieldLatitude || textField.tag == WifiZoneFieldLongitude) {
+        self.coordinatesWereSet = YES;
         CLLocationCoordinate2D coordinate;
         if ([self fieldCoordinate:&coordinate]) {
             [self moveMapToCoordinate:coordinate zoom:NO];
