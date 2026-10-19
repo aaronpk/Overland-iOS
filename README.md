@@ -68,7 +68,7 @@ The settings in this section set properties on the CoreLocation API. They are me
   * "Both" will request both types of updates.
 * `Visit Tracking` - Enables "Visit" tracking, which will record an update when the phone gets to a new location after about 3 minutes.
 * `Desired Accuracy` - Sets the [desiredAccuracy](https://developer.apple.com/reference/corelocation/cllocationmanager/1423836-desiredaccuracy) property of the location manager. This is only a request for the general level of accuracy, not a guarantee. Setting to "Best" will use the most battery but will get highest accuracy location updates. Setting to "3km" will save the most battery but will result in infrequent location updates.
-* `Activity Type` - According to Apple, "The location manager uses the information in this property as a cue to determine when location updates may be automatically paused.". See [activityType](https://developer.apple.com/reference/corelocation/cllocationmanager/1620567-activitytype) for more details.
+* `Activity Type` - According to Apple, "The location manager uses the information in this property as a cue to determine when location updates may be automatically paused.". See [activityType](https://developer.apple.com/reference/corelocation/cllocationmanager/1620567-activitytype) for more details. The "Boat" option is only available on iOS 27 and later.
 * `Show Background Location Indicator` - Setting this to "Always" will cause the location indicator in your iOS menu bar to be activated whenever the app is tracking your location. With the visible indicator, your app is more likely to continue to receive data in the background according to [this post on the Apple forums](https://developer.apple.com/forums/thread/726945).
 * `Pause Updates Automatically` - Enabling this will use the iOS API for automatically pausing location updates. When disabled, it will prevent the OS from pausing location updates. Pausing location updates automatically is a great way to save battery when you are not moving for extended periods of time, although it does not always pick up tracking again immediately when you start moving. In some initial testing, the automatic pause tends to trigger about 10 minutes after you've stopped moving.
 * `Location Authorization Status` - When you first launch the app, you'll need to request location permissions from the button here. Once you've requested permission twice, you should see it say "Always", which means the app will be able to collect data in the background. If you change the value in the iOS Settings app, this will show you the current status to help you troubleshoot why the app isn't getting updates in the background anymore.
@@ -247,7 +247,7 @@ The properties on the `location` objects are as follows:
 The following properties are included only if the "Include Tracking Stats" option is selected:
 
 * `pauses` - boolean, whether the "pause updates automatically" preference is checked
-* `activity` - a string denoting the type of activity as indicated by the setting. Possible values are `automotive_navigation`, `fitness`, `other_navigation` and `other`. This can be set on the settings screen.
+* `activity` - a string denoting the type of activity as indicated by the setting. Possible values are `automotive_navigation`, `fitness`, `other_navigation`, `airborne`, `maritime` and `other`. This can be set on the settings screen.
 * `desired_accuracy` - the requested accuracy in meters as configured on the settings screen.
 * `deferred` - the distance in meters to defer location updates, configured on the settings screen.
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
@@ -283,7 +283,7 @@ You can configure all of the settings in the app by having your server return ne
       "tracking_mode": "off|standard|significant|both",
       "visit_tracking": true|false,
       "desired_accuracy": "nav|best|10m|100m|1km|3km",
-      "activity_type": "other|car|fitness|nav|air",
+      "activity_type": "other|car|fitness|nav|air|boat",
       "background_indicator": true|false,
       "pause_automatically": true|false,
       "logging_mode": "all|latest|owntracks",
@@ -295,7 +295,7 @@ You can configure all of the settings in the app by having your server return ne
     },
     "trip": {
       "desired_accuracy": "nav|best|10m|100m|1km|3km",
-      "activity_type": "other|car|fitness|nav|air",
+      "activity_type": "other|car|fitness|nav|air|boat",
       "background_indicator": true|false,
       "prevent_screen_lock": true|false,
       "logging_mode": "all|latest|owntracks",

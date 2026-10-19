@@ -23,6 +23,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    // The boat activity type is only available in iOS 27
+    if (@available(iOS 27.0, *)) {
+        [self.activityType insertSegmentWithTitle:@"Boat" atIndex:self.activityType.numberOfSegments animated:NO];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

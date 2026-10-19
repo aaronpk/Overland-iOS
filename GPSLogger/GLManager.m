@@ -399,6 +399,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
             @"fitness": ^{ self.activityType = CLActivityTypeFitness; },
             @"nav": ^{ self.activityType = CLActivityTypeOtherNavigation; },
             @"air": ^{ self.activityType = CLActivityTypeAirborne; },
+            @"boat": ^{
+                if (@available(iOS 27.0, *)) {
+                    self.activityType = CLActivityTypeMaritime;
+                }
+            },
         };
         [self runBlock:activityTypeBlocks fromDictionary:main forKey:@"activity_type"];
 
@@ -481,6 +486,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
             @"fitness": ^{ self.activityTypeDuringTrip = CLActivityTypeFitness; },
             @"nav": ^{ self.activityTypeDuringTrip = CLActivityTypeOtherNavigation; },
             @"air": ^{ self.activityTypeDuringTrip = CLActivityTypeAirborne; },
+            @"boat": ^{
+                if (@available(iOS 27.0, *)) {
+                    self.activityTypeDuringTrip = CLActivityTypeMaritime;
+                }
+            },
         };
         [self runBlock:activityTypeDuringTripBlocks fromDictionary:trip forKey:@"activity_type"];
 
@@ -1498,6 +1508,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
                     activityType = CLActivityTypeOther;
                 }
                 break;
+            case 6:
+                if (@available(iOS 27.0, *)) {
+                    activityType = CLActivityTypeMaritime;
+                } else {
+                    activityType = CLActivityTypeOther;
+                }
+                break;
             default:
                 activityType = CLActivityTypeOther;
                 break;
@@ -1531,7 +1548,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
             }
             break;
         default:
-            // Types the settings screen doesn't offer, such as CLActivityTypeMaritime
+            if (@available(iOS 27.0, *)) {
+                if(activityType == CLActivityTypeMaritime) {
+                    activityInt = 6;
+                    break;
+                }
+            }
+            // Types the settings screen doesn't offer
             activityInt = 1;
             break;
     }
@@ -1560,6 +1583,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
             case 5:
                 if (@available(iOS 12.0, *)) {
                     activityType = CLActivityTypeAirborne;
+                } else {
+                    activityType = CLActivityTypeOther;
+                }
+                break;
+            case 6:
+                if (@available(iOS 27.0, *)) {
+                    activityType = CLActivityTypeMaritime;
                 } else {
                     activityType = CLActivityTypeOther;
                 }
@@ -1597,7 +1627,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
             }
             break;
         default:
-            // Types the settings screen doesn't offer, such as CLActivityTypeMaritime
+            if (@available(iOS 27.0, *)) {
+                if(activityType == CLActivityTypeMaritime) {
+                    activityInt = 6;
+                    break;
+                }
+            }
+            // Types the settings screen doesn't offer
             activityInt = 1;
             break;
     }
@@ -1779,6 +1815,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
             break;
         default:
             activityType = @"other";
+            if (@available(iOS 27.0, *)) {
+                if([GLManager sharedManager].activityType == CLActivityTypeMaritime) {
+                    activityType = @"maritime";
+                }
+            }
             break;
     }
     
