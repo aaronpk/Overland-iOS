@@ -48,8 +48,12 @@ BOOL mapWasDragged = NO;
     self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
     
     [self.tripView.layer setCornerRadius:6.0];
-    [self.sendNowButton.layer setCornerRadius:4.0];
-    [self.tripStartStopButton.layer setCornerRadius:4.0];
+    if (@available(iOS 26.0, *)) {
+        // Styled with glass in setButton:title:color:fontSize:
+    } else {
+        [self.sendNowButton.layer setCornerRadius:4.0];
+        [self.tripStartStopButton.layer setCornerRadius:4.0];
+    }
     [self setNeedsStatusBarAppearanceUpdate];
     
     // adding Shortcut Code
@@ -190,20 +194,48 @@ BOOL mapWasDragged = NO;
     [self refreshView];
 }
 
+// On iOS 26 and later the buttons use the system's prominent glass style, tinted with their color.
+// Older versions keep the flat colored style.
+- (void)setButton:(UIButton *)button title:(NSString *)title color:(UIColor *)color fontSize:(CGFloat)fontSize enabled:(BOOL)enabled {
+    button.enabled = enabled;
+    if (@available(iOS 26.0, *)) {
+        UIButtonConfiguration *config = [UIButtonConfiguration prominentGlassButtonConfiguration];
+        config.cornerStyle = UIButtonConfigurationCornerStyleLarge;
+        config.title = title;
+        config.baseForegroundColor = [UIColor whiteColor];
+        config.titleTextAttributesTransformer = ^NSDictionary<NSAttributedStringKey, id> *(NSDictionary<NSAttributedStringKey, id> *attributes) {
+            NSMutableDictionary *updated = [attributes mutableCopy];
+            updated[NSFontAttributeName] = [UIFont systemFontOfSize:fontSize weight:UIFontWeightSemibold];
+            // Set the title color here, since a button that has been disabled can otherwise keep a grey title
+            updated[NSForegroundColorAttributeName] = enabled ? [UIColor whiteColor] : [UIColor colorWithWhite:1 alpha:0.6];
+            return updated;
+        };
+        button.tintColor = color;
+        button.backgroundColor = nil;
+        button.configuration = config;
+    } else {
+        [button setTitle:title forState:UIControlStateNormal];
+        button.backgroundColor = color;
+    }
+}
+
+// The glass style dims a disabled button itself, so it keeps the normal color
+- (UIColor *)disabledSendNowColor {
+    if (@available(iOS 26.0, *)) {
+        return [UIColor colorNamed:@"OverlandGreen"];
+    }
+    return [UIColor colorNamed:@"OverlandGreenSecondary"];
+}
+
 - (void)sendingStarted {
-    self.sendNowButton.titleLabel.text = @"Sending...";
-    self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreenSecondary"];
-    self.sendNowButton.enabled = NO;
+    [self setButton:self.sendNowButton title:@"Sending..." color:[self disabledSendNowColor] fontSize:15 enabled:NO];
 }
 
 - (void)sendingFinished {
-    self.sendNowButton.titleLabel.text = @"Send Now";
     if([[GLManager sharedManager] apiEndpointURL] == nil) {
-        self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreenSecondary"];
-        self.sendNowButton.enabled = NO;
+        [self setButton:self.sendNowButton title:@"Send Now" color:[self disabledSendNowColor] fontSize:15 enabled:NO];
     } else {
-        self.sendNowButton.backgroundColor = [UIColor colorNamed:@"OverlandGreen"];
-        self.sendNowButton.enabled = YES;
+        [self setButton:self.sendNowButton title:@"Send Now" color:[UIColor colorNamed:@"OverlandGreen"] fontSize:15 enabled:YES];
     }
 }
 
@@ -389,8 +421,7 @@ BOOL mapWasDragged = NO;
     [self updateTripMode];
 
     if([GLManager sharedManager].tripInProgress) {
-        [self.tripStartStopButton setTitle:@"Stop" forState:UIControlStateNormal];
-        self.tripStartStopButton.backgroundColor = [UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1];
+        [self setButton:self.tripStartStopButton title:@"Stop" color:[UIColor colorWithRed:252.f/255.f green:109.f/255.f blue:111.f/255.f alpha:1] fontSize:16 enabled:YES];
         self.tripDurationLabel.text = [TrackingViewController timeFormatted:[GLManager sharedManager].currentTripDuration];
         self.tripDurationUnitLabel.text = [TrackingViewController timeUnits:[GLManager sharedManager].currentTripDuration];
         double distance = [self metersToDisplayUnits:[GLManager sharedManager].currentTripDistance];
@@ -405,8 +436,7 @@ BOOL mapWasDragged = NO;
         self.tripDistanceLabel.text = [NSString stringWithFormat:format, distance];
         [self updateScreenLockSetting:YES];
     } else {
-        [self.tripStartStopButton setTitle:@"Start" forState:UIControlStateNormal];
-        self.tripStartStopButton.backgroundColor = [UIColor colorNamed:@"OverlandGreen"];
+        [self setButton:self.tripStartStopButton title:@"Start" color:[UIColor colorNamed:@"OverlandGreen"] fontSize:16 enabled:YES];
         self.tripDistanceLabel.text = @" ";
         self.tripDurationLabel.text = @" ";
         [self updateScreenLockSetting:NO];
