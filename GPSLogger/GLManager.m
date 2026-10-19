@@ -25,6 +25,7 @@
 @property BOOL sendInProgress;
 @property BOOL batchInProgress;
 @property (strong, nonatomic) CLLocation *lastLocation;
+@property (strong, nonatomic) CLLocation *lastDeviceLocation;
 @property (strong, nonatomic) CMMotionActivity *lastMotion;
 @property (strong, nonatomic) NSDate *lastSentDate;
 @property (strong, nonatomic) NSString *lastLocationName;
@@ -50,6 +51,7 @@ bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
 bool _tripEndInProgress = NO;
 NSString *_currentWifiHotSpotName = @"";
+NSString *_currentWifiBSSID = @"";
 long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
@@ -1834,9 +1836,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)processNewLocations:(NSArray *)locations {
+    self.lastDeviceLocation = [locations lastObject];
+
     // If a wifi override is configured, replace the input location list with the location in the wifi mapping
     if([GLManager currentWifiHotSpotName]) {
-        CLLocation *wifiLocation = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
+        CLLocation *wifiLocation = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName] bssid:[GLManager currentWifiBSSID]];
         if(wifiLocation) {
             locations = @[wifiLocation];
         }
@@ -1981,6 +1985,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [properties setValue:_deviceId forKey:@"device_id"];
     }
     [properties setValue:[GLManager currentWifiHotSpotName] forKey:@"wifi"];
+    [properties setValue:[GLManager currentWifiBSSID] forKey:@"wifi_bssid"];
     [properties setValue:[self currentBatteryState] forKey:@"battery_state"];
     [properties setValue:[self currentBatteryLevel] forKey:@"battery_level"];
     if([[NSUserDefaults standardUserDefaults] boolForKey:GLIncludeUniqueIdDefaultsName]) {
@@ -2287,30 +2292,47 @@ const double MPH_to_METERSPERSECOND = 0.447;
  also be used to pause location updates when the user gets home.
 */
 
-- (CLLocation *)currentLocationFromWifiName:(NSString *)wifi {
+- (CLLocation *)currentLocationFromWifiName:(NSString *)wifi bssid:(NSString *)bssid {
     if(wifi == nil) {
         return nil;
     }
-    
-    for(NSDictionary *zone in self.wifiZones) {
-        if([zone[@"name"] isEqualToString:wifi]) {
-            double latitude = [zone[@"latitude"] doubleValue];
-            double longitude = [zone[@"longitude"] doubleValue];
-            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
-            NSDate *timestamp = NSDate.date;
 
-            CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
-                                                            altitude:-1
-                                                  horizontalAccuracy:1
-                                                    verticalAccuracy:0
-                                                              course:0
-                                                               speed:0
-                                                           timestamp:timestamp];
-            return loc;
+    // A zone limited to the current access point takes priority over a zone for the whole network
+    NSDictionary *matchingZone = nil;
+    if(bssid.length > 0) {
+        for(NSDictionary *zone in self.wifiZones) {
+            if([zone[@"name"] isEqualToString:wifi] && [[GLManager normalizedBSSID:zone[@"bssid"]] isEqualToString:bssid]) {
+                matchingZone = zone;
+                break;
+            }
+        }
+    }
+    if(matchingZone == nil) {
+        for(NSDictionary *zone in self.wifiZones) {
+            if([zone[@"name"] isEqualToString:wifi] && [zone[@"bssid"] length] == 0) {
+                matchingZone = zone;
+                break;
+            }
         }
     }
 
-    return nil;
+    if(matchingZone == nil) {
+        return nil;
+    }
+
+    double latitude = [matchingZone[@"latitude"] doubleValue];
+    double longitude = [matchingZone[@"longitude"] doubleValue];
+    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(latitude, longitude);
+    NSDate *timestamp = NSDate.date;
+
+    CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord
+                                                    altitude:-1
+                                          horizontalAccuracy:1
+                                            verticalAccuracy:0
+                                                      course:0
+                                                       speed:0
+                                                   timestamp:timestamp];
+    return loc;
 }
 
 - (NSArray *)wifiZones {
@@ -2354,11 +2376,36 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return _currentWifiHotSpotName;
 }
 
+// The address of the current wifi access point as of the last refresh, normalized by
+// normalizedBSSID:, or an empty string if not connected
++ (NSString *)currentWifiBSSID {
+    return _currentWifiBSSID;
+}
+
+// A BSSID as lowercase, colon-separated, two-digit hex octets, or nil if it isn't six octets.
+// iOS can drop leading zeros, e.g. "3c:22:fb:1a:0:11"
++ (NSString *)normalizedBSSID:(NSString *)bssid {
+    NSArray *octets = [[bssid stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@":-"]];
+    if(octets.count != 6) {
+        return nil;
+    }
+    NSCharacterSet *nonHex = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789abcdefABCDEF"] invertedSet];
+    NSMutableArray *normalized = [NSMutableArray arrayWithCapacity:6];
+    for(NSString *octet in octets) {
+        if(octet.length < 1 || octet.length > 2 || [octet rangeOfCharacterFromSet:nonHex].location != NSNotFound) {
+            return nil;
+        }
+        [normalized addObject:[(octet.length == 1 ? [@"0" stringByAppendingString:octet] : octet) lowercaseString]];
+    }
+    return [normalized componentsJoinedByString:@":"];
+}
+
 // CNCopyCurrentNetworkInfo always returns NULL for apps built with the iOS 26 SDK, so this uses
 // NEHotspotNetwork, which only returns the network when the app has precise location access
 + (void)refreshCurrentWifiHotSpotName:(void(^)(NSString *wifiName))completion {
     [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
         _currentWifiHotSpotName = currentNetwork.SSID ?: @"";
+        _currentWifiBSSID = [GLManager normalizedBSSID:currentNetwork.BSSID] ?: @"";
         if(completion) {
             completion(_currentWifiHotSpotName);
         }

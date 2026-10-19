@@ -11,13 +11,25 @@
 
 static NSString *const ZoneCellIdentifier  = @"ZoneCell";
 static NSString *const FieldCellIdentifier = @"FieldCell";
+static NSString *const SwitchCellIdentifier = @"SwitchCell";
 
+// The fields' values are stored at these indexes, and used as the text fields' tags
 typedef NS_ENUM(NSInteger, WifiZoneField) {
     WifiZoneFieldName,
     WifiZoneFieldLatitude,
     WifiZoneFieldLongitude,
-    WifiZoneFieldCount,
+    WifiZoneFieldBSSID,
 };
+
+typedef NS_ENUM(NSInteger, WifiZoneSection) {
+    // Wifi name, latitude and longitude
+    WifiZoneSectionLocation,
+    // The "This access point only" switch, and the access point's address when it's on
+    WifiZoneSectionAccessPoint,
+    WifiZoneSectionCount,
+};
+
+static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 
 #pragma mark - WifiZoneFieldCell
 
@@ -78,11 +90,15 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
 
 // The zone to edit, or nil to add a new one
 @property (nonatomic, copy) NSDictionary *zone;
-// Names of the other zones, which this zone's name can't duplicate
-@property (nonatomic, copy) NSArray<NSString *> *otherZoneNames;
+// The other zones. This zone can't have the same wifi name and access point as one of them.
+@property (nonatomic, copy) NSArray<NSDictionary *> *otherZones;
 @property (nonatomic, copy) void (^completionHandler)(NSDictionary *zone);
 
 @property (nonatomic, strong) NSMutableArray<NSString *> *values;
+@property (nonatomic) BOOL limitToAccessPoint;
+// Once set, the access point lookup no longer changes the switch
+@property (nonatomic) BOOL accessPointSwitchWasChanged;
+@property (nonatomic, strong) UISwitch *accessPointSwitch;
 
 @end
 
@@ -99,54 +115,98 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
     [self.tableView registerClass:[WifiZoneFieldCell class] forCellReuseIdentifier:FieldCellIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 
+    self.accessPointSwitch = [[UISwitch alloc] init];
+    [self.accessPointSwitch addTarget:self action:@selector(accessPointSwitchWasChanged:) forControlEvents:UIControlEventValueChanged];
+
     if (self.zone) {
-        self.values = [@[self.zone[@"name"] ?: @"", self.zone[@"latitude"] ?: @"", self.zone[@"longitude"] ?: @""] mutableCopy];
+        NSString *bssid = self.zone[@"bssid"] ?: @"";
+        self.values = [@[self.zone[@"name"] ?: @"", self.zone[@"latitude"] ?: @"", self.zone[@"longitude"] ?: @"", bssid] mutableCopy];
+        self.limitToAccessPoint = (bssid.length > 0);
     } else {
-        // Start a new zone at the current wifi network and location
+        // Start a new zone at the current wifi network, access point and location
         NSString *latitude = @"";
         NSString *longitude = @"";
-        CLLocation *loc = [GLManager sharedManager].lastLocation;
+        // Use the device's own location, not a wifi zone's location that may have replaced it
+        CLLocation *loc = [GLManager sharedManager].lastDeviceLocation ?: [GLManager sharedManager].lastLocation;
         if (loc) {
             latitude = [NSString stringWithFormat:@"%.5f", loc.coordinate.latitude];
             longitude = [NSString stringWithFormat:@"%.5f", loc.coordinate.longitude];
         }
-        self.values = [@[[GLManager currentWifiHotSpotName] ?: @"", latitude, longitude] mutableCopy];
+        NSString *bssid = [GLManager currentWifiBSSID] ?: @"";
+        self.values = [@[[GLManager currentWifiHotSpotName] ?: @"", latitude, longitude, bssid] mutableCopy];
+        self.limitToAccessPoint = (bssid.length > 0);
 
-        // The cached wifi name may be out of date, so look it up again
+        // The cached wifi network may be out of date, so look it up again
         __weak WifiZoneEditViewController *weakSelf = self;
         [GLManager refreshCurrentWifiHotSpotName:^(NSString *wifiName) {
-            [weakSelf fillInWifiName:wifiName];
+            [weakSelf fillInWifiName:wifiName bssid:[GLManager currentWifiBSSID]];
         }];
+    }
+    self.accessPointSwitch.on = self.limitToAccessPoint;
+
+    [self updateSaveButton];
+}
+
+- (void)fillInWifiName:(NSString *)wifiName bssid:(NSString *)bssid {
+    // Don't replace values that are being typed
+    WifiZoneFieldCell *nameCell = (WifiZoneFieldCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForField:WifiZoneFieldName]];
+    if (wifiName.length > 0 && !nameCell.textField.isEditing) {
+        self.values[WifiZoneFieldName] = wifiName;
+        nameCell.textField.text = wifiName;
+    }
+
+    WifiZoneFieldCell *bssidCell = (WifiZoneFieldCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForField:WifiZoneFieldBSSID]];
+    if (bssid.length > 0 && !bssidCell.textField.isEditing) {
+        self.values[WifiZoneFieldBSSID] = bssid;
+        bssidCell.textField.text = bssid;
+        if (!self.accessPointSwitchWasChanged && !self.limitToAccessPoint) {
+            [self setLimitToAccessPoint:YES animated:YES];
+        }
     }
 
     [self updateSaveButton];
 }
 
-- (void)fillInWifiName:(NSString *)wifiName {
-    WifiZoneFieldCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:WifiZoneFieldName inSection:0]];
-    // Don't replace a name that's being typed
-    if (wifiName.length == 0 || cell.textField.isEditing) {
-        return;
+- (NSIndexPath *)indexPathForField:(WifiZoneField)field {
+    if (field == WifiZoneFieldBSSID) {
+        return [NSIndexPath indexPathForRow:1 inSection:WifiZoneSectionAccessPoint];
     }
-    self.values[WifiZoneFieldName] = wifiName;
-    cell.textField.text = wifiName;
-    [self updateSaveButton];
+    return [NSIndexPath indexPathForRow:field inSection:WifiZoneSectionLocation];
 }
 
 #pragma mark - Table view data source
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return WifiZoneSectionCount;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return WifiZoneFieldCount;
+    if (section == WifiZoneSectionAccessPoint) {
+        return self.limitToAccessPoint ? 2 : 1;
+    }
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == WifiZoneSectionAccessPoint && indexPath.row == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SwitchCellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SwitchCellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        cell.textLabel.text = @"This access point only";
+        cell.accessoryView = self.accessPointSwitch;
+        return cell;
+    }
+
+    WifiZoneField field = (indexPath.section == WifiZoneSectionAccessPoint) ? WifiZoneFieldBSSID : indexPath.row;
     WifiZoneFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:FieldCellIdentifier forIndexPath:indexPath];
     cell.textField.delegate = self;
-    cell.textField.tag = indexPath.row;
-    cell.textField.text = self.values[indexPath.row];
+    cell.textField.tag = field;
+    cell.textField.text = self.values[field];
     [cell.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
 
-    switch (indexPath.row) {
+    switch (field) {
         case WifiZoneFieldName:
             cell.nameLabel.text = @"Wifi Name";
             cell.textField.placeholder = @"SSID";
@@ -165,14 +225,24 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
             cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             cell.textField.returnKeyType = UIReturnKeyDone;
             break;
+        case WifiZoneFieldBSSID:
+            cell.nameLabel.text = @"Address";
+            cell.textField.placeholder = AccessPointPlaceholder;
+            cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
+            cell.textField.returnKeyType = UIReturnKeyDone;
+            break;
     }
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    NSString *problem = [self validationProblem];
-    if (problem) {
+    NSInteger problemSection;
+    NSString *problem = [self validationProblemInSection:&problemSection];
+    if (problem && problemSection == section) {
         return problem;
+    }
+    if (section == WifiZoneSectionAccessPoint) {
+        return @"When this is on, the zone only applies while you're connected through this access point. A zone for one access point takes priority over a zone for the whole network.";
     }
     return @"While you're connected to this wifi network, your location will be reported as this latitude and longitude.";
 }
@@ -186,12 +256,41 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField.tag < WifiZoneFieldLongitude) {
-        WifiZoneFieldCell *next = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:textField.tag + 1 inSection:0]];
+        WifiZoneFieldCell *next = [self.tableView cellForRowAtIndexPath:[self indexPathForField:textField.tag + 1]];
         [next.textField becomeFirstResponder];
     } else {
         [textField resignFirstResponder];
     }
     return YES;
+}
+
+#pragma mark - Access point
+
+- (void)accessPointSwitchWasChanged:(UISwitch *)sender {
+    self.accessPointSwitchWasChanged = YES;
+    if (sender.on && [self trimmedValue:WifiZoneFieldBSSID].length == 0) {
+        self.values[WifiZoneFieldBSSID] = [GLManager currentWifiBSSID] ?: @"";
+    }
+    [self setLimitToAccessPoint:sender.on animated:YES];
+}
+
+- (void)setLimitToAccessPoint:(BOOL)limit animated:(BOOL)animated {
+    if (limit == self.limitToAccessPoint) {
+        return;
+    }
+    [self.view endEditing:YES];
+    self.limitToAccessPoint = limit;
+    self.accessPointSwitch.on = limit;
+    NSArray *rows = @[[self indexPathForField:WifiZoneFieldBSSID]];
+    UITableViewRowAnimation animation = animated ? UITableViewRowAnimationFade : UITableViewRowAnimationNone;
+    [self.tableView performBatchUpdates:^{
+        if (limit) {
+            [self.tableView insertRowsAtIndexPaths:rows withRowAnimation:animation];
+        } else {
+            [self.tableView deleteRowsAtIndexPaths:rows withRowAnimation:animation];
+        }
+    } completion:nil];
+    [self updateSaveButton];
 }
 
 #pragma mark - Validation
@@ -206,16 +305,21 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
     return [scanner scanDouble:&value] && scanner.isAtEnd && fabs(value) <= limit;
 }
 
-// Why the zone can't be saved yet, or nil if it can
-- (NSString *)validationProblem {
+// The access point this zone is limited to, normalized, or an empty string for any access point.
+// Nil if the address entered isn't valid.
+- (NSString *)accessPoint {
+    if (!self.limitToAccessPoint) {
+        return @"";
+    }
+    return [GLManager normalizedBSSID:[self trimmedValue:WifiZoneFieldBSSID]];
+}
+
+// Why the zone can't be saved yet, or nil if it can. The section is where to show the problem.
+- (NSString *)validationProblemInSection:(NSInteger *)section {
+    *section = WifiZoneSectionLocation;
     NSString *name = [self trimmedValue:WifiZoneFieldName];
     if (name.length == 0) {
         return @"Enter the name of the wifi network.";
-    }
-    for (NSString *otherName in self.otherZoneNames) {
-        if ([otherName isEqualToString:name]) {
-            return @"There is already a zone for this wifi network.";
-        }
     }
     if (![self isCoordinate:[self trimmedValue:WifiZoneFieldLatitude] withinLimit:90]) {
         return @"Enter a latitude between -90 and 90.";
@@ -223,38 +327,57 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
     if (![self isCoordinate:[self trimmedValue:WifiZoneFieldLongitude] withinLimit:180]) {
         return @"Enter a longitude between -180 and 180.";
     }
+
+    *section = WifiZoneSectionAccessPoint;
+    NSString *accessPoint = [self accessPoint];
+    if (accessPoint == nil) {
+        return [NSString stringWithFormat:@"Enter the access point's address, like %@.", AccessPointPlaceholder];
+    }
+    for (NSDictionary *other in self.otherZones) {
+        NSString *otherAccessPoint = [GLManager normalizedBSSID:other[@"bssid"]] ?: @"";
+        if ([other[@"name"] isEqualToString:name] && [otherAccessPoint isEqualToString:accessPoint]) {
+            return accessPoint.length > 0 ? @"There is already a zone for this access point." : @"There is already a zone for this whole wifi network.";
+        }
+    }
     return nil;
 }
 
 - (void)updateSaveButton {
-    NSString *problem = [self validationProblem];
+    NSInteger problemSection;
+    NSString *problem = [self validationProblemInSection:&problemSection];
     self.navigationItem.rightBarButtonItem.enabled = (problem == nil);
 
     // Refresh the footer text without reloading the rows, which would end editing
-    UITableViewHeaderFooterView *footer = [self.tableView footerViewForSection:0];
-    if (footer) {
-        [UIView performWithoutAnimation:^{
-            [self.tableView beginUpdates];
-            footer.textLabel.text = [self tableView:self.tableView titleForFooterInSection:0];
+    [UIView performWithoutAnimation:^{
+        [self.tableView beginUpdates];
+        for (NSInteger section = 0; section < WifiZoneSectionCount; section++) {
+            UITableViewHeaderFooterView *footer = [self.tableView footerViewForSection:section];
+            footer.textLabel.text = [self tableView:self.tableView titleForFooterInSection:section];
             [footer setNeedsLayout];
-            [self.tableView endUpdates];
-        }];
-    }
+        }
+        [self.tableView endUpdates];
+    }];
 }
 
 #pragma mark - Actions
 
 - (void)saveButtonTapped:(id)sender {
     [self.view endEditing:YES];
-    if ([self validationProblem]) {
+    NSInteger problemSection;
+    if ([self validationProblemInSection:&problemSection]) {
         return;
     }
+    NSMutableDictionary *zone = [@{
+        @"name": [self trimmedValue:WifiZoneFieldName],
+        @"latitude": [self trimmedValue:WifiZoneFieldLatitude],
+        @"longitude": [self trimmedValue:WifiZoneFieldLongitude],
+    } mutableCopy];
+    NSString *accessPoint = [self accessPoint];
+    if (accessPoint.length > 0) {
+        zone[@"bssid"] = accessPoint;
+    }
     if (self.completionHandler) {
-        self.completionHandler(@{
-            @"name": [self trimmedValue:WifiZoneFieldName],
-            @"latitude": [self trimmedValue:WifiZoneFieldLatitude],
-            @"longitude": [self trimmedValue:WifiZoneFieldLongitude],
-        });
+        self.completionHandler([zone copy]);
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -317,7 +440,8 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
     }
     NSDictionary *zone = self.zones[indexPath.row];
     cell.textLabel.text = zone[@"name"];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", zone[@"latitude"], zone[@"longitude"]];
+    NSString *accessPoint = [zone[@"bssid"] length] > 0 ? zone[@"bssid"] : @"Any access point";
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ · %@, %@", accessPoint, zone[@"latitude"], zone[@"longitude"]];
     return cell;
 }
 
@@ -325,7 +449,7 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
     if (self.zones.count == 0) {
         return nil;
     }
-    return @"While you're connected to one of these wifi networks, your location will be reported as the zone's latitude and longitude instead of the phone's location.";
+    return @"While you're connected to one of these wifi networks, your location will be reported as the zone's latitude and longitude instead of the phone's location. A zone for one access point takes priority over a zone for the whole network.";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -351,13 +475,13 @@ typedef NS_ENUM(NSInteger, WifiZoneField) {
 - (void)showEditorForZoneAtIndex:(NSInteger)index {
     WifiZoneEditViewController *vc = [[WifiZoneEditViewController alloc] initWithStyle:UITableViewStyleInsetGrouped];
 
-    NSMutableArray *otherNames = [NSMutableArray array];
+    NSMutableArray *otherZones = [NSMutableArray array];
     for (NSInteger i = 0; i < (NSInteger)self.zones.count; i++) {
         if (i != index) {
-            [otherNames addObject:self.zones[i][@"name"]];
+            [otherZones addObject:self.zones[i]];
         }
     }
-    vc.otherZoneNames = otherNames;
+    vc.otherZones = otherZones;
 
     if (index != NSNotFound) {
         vc.zone = self.zones[index];

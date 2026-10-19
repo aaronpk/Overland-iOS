@@ -115,6 +115,8 @@ typedef void (^CaseBlock)(void);
 
 + (NSString *)currentWifiHotSpotName;
 + (void)refreshCurrentWifiHotSpotName:(void(^)(NSString *wifiName))completion;
++ (NSString *)currentWifiBSSID;
++ (NSString *)normalizedBSSID:(NSString *)bssid;
 
 @property (strong, nonatomic, readonly) CLLocationManager *locationManager;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;
@@ -151,6 +153,8 @@ typedef void (^CaseBlock)(void);
 @property (readonly) BOOL trackingEnabled;
 @property (readonly) BOOL sendInProgress;
 @property (strong, nonatomic, readonly) CLLocation *lastLocation;
+// The last location reported by the device, before a wifi zone replaces it
+@property (strong, nonatomic, readonly) CLLocation *lastDeviceLocation;
 @property (strong, nonatomic, readonly) NSDictionary *lastLocationDictionary;
 @property (strong, nonatomic, readonly) CMMotionActivity *lastMotion;
 @property (strong, nonatomic, readonly) NSString *lastMotionString;
@@ -187,7 +191,8 @@ typedef void (^CaseBlock)(void);
 
 - (void)requestNotificationPermission;
 
-// Each wifi zone is a dictionary with "name", "latitude" and "longitude" strings
+// Each wifi zone is a dictionary with "name", "latitude" and "longitude" strings, and an optional
+// "bssid" that limits the zone to one access point
 - (NSArray *)wifiZones;
 - (void)saveWifiZones:(NSArray *)zones;
 
