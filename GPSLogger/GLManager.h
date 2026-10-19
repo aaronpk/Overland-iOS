@@ -112,6 +112,7 @@ typedef void (^CaseBlock)(void);
 + (GLManager *)sharedManager;
 
 + (NSString *)currentWifiHotSpotName;
++ (void)refreshCurrentWifiHotSpotName:(void(^)(NSString *wifiName))completion;
 
 @property (strong, nonatomic, readonly) CLLocationManager *locationManager;
 @property (strong, nonatomic, readonly) CMMotionActivityManager *motionActivityManager;

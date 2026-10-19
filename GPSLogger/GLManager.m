@@ -11,7 +11,7 @@
 #import "AFHTTPSessionManager.h"
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
-#import "SystemConfiguration/CaptiveNetwork.h"
+@import NetworkExtension;
 #import "Overland-Swift.h"
 @import UserNotifications;
 
@@ -49,6 +49,7 @@ NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
 bool _tripEndInProgress = NO;
+NSString *_currentWifiHotSpotName = @"";
 long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
@@ -1730,7 +1731,15 @@ const double MPH_to_METERSPERSECOND = 0.447;
         // This probably shouldn't happen, but just in case, don't log anything if they have tracking mode set to off
         return;
     }
-        
+
+    // A wifi zone can replace these locations, so look up the current wifi network first.
+    // The lookup is asynchronous and calls back on the main queue.
+    [GLManager refreshCurrentWifiHotSpotName:^(NSString *wifiName) {
+        [self processNewLocations:locations];
+    }];
+}
+
+- (void)processNewLocations:(NSArray *)locations {
     // If a wifi override is configured, replace the input location list with the location in the wifi mapping
     if([GLManager currentWifiHotSpotName]) {
         CLLocation *wifiLocation = [self currentLocationFromWifiName:[GLManager currentWifiHotSpotName]];
@@ -2225,16 +2234,20 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return [[[defaults dictionaryRepresentation] allKeys] containsObject:key];
 }
 
+// The name of the current wifi network as of the last refresh, or an empty string if not connected
 + (NSString *)currentWifiHotSpotName {
-    NSString *wifiName = @"";
-    NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
-    for (NSString *ifnam in ifs) {
-        NSDictionary *info = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)ifnam);
-        if (info[@"SSID"]) {
-            wifiName = info[@"SSID"];
+    return _currentWifiHotSpotName;
+}
+
+// CNCopyCurrentNetworkInfo always returns NULL for apps built with the iOS 26 SDK, so this uses
+// NEHotspotNetwork, which only returns the network when the app has precise location access
++ (void)refreshCurrentWifiHotSpotName:(void(^)(NSString *wifiName))completion {
+    [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+        _currentWifiHotSpotName = currentNetwork.SSID ?: @"";
+        if(completion) {
+            completion(_currentWifiHotSpotName);
         }
-    }
-    return wifiName;
+    }];
 }
 
 #pragma mark - FMDB
