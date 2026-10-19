@@ -8,7 +8,7 @@
 //
 
 #import "GLManager.h"
-#import "AFHTTPSessionManager.h"
+#import <UIKit/UIKit.h>
 #import "LOLDatabase.h"
 #import "FMDatabase.h"
 @import NetworkExtension;
@@ -53,7 +53,8 @@ NSString *_currentWifiHotSpotName = @"";
 long _currentPointsInQueue;
 NSString *_deviceId;
 CLLocationDistance _currentTripDistanceCached;
-AFHTTPSessionManager *_httpClient;
+NSURLSession *_httpSession;
+NSDictionary *_httpHeaders;
 
 const double FEET_TO_METERS = 0.304;
 const double MPH_to_METERSPERSECOND = 0.447;
@@ -257,7 +258,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     [self sendingStarted];
     
-    [_httpClient POST:endpointURL parameters:postData headers:NULL progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [self postJSON:postData toURL:endpointURL success:^(id _Nullable responseObject) {
         NSLog(@"Response: %@", responseObject);
 
         // With "Consider HTTP 2XX Successful" on, the response can be anything (e.g. the OwnTracks
@@ -324,9 +325,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
             [self sendingFinished];
         }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    } failure:^(NSString *errorMessage) {
         self.batchInProgress = NO;
-        [self notify:error.localizedDescription withTitle:@"HTTP Error"];
+        [self notify:errorMessage withTitle:@"HTTP Error"];
         [self sendingFinished];
     }];
     
@@ -625,16 +626,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }];
 }
 
-- (void)accountInfo:(void(^)(NSString *name))block {
-    NSString *endpoint = [[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName];
-    [_httpClient GET:endpoint parameters:nil headers:nil progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSDictionary *dict = (NSDictionary *)responseObject;
-        block((NSString *)[dict objectForKey:@"name"]);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"Failed to get account info");
-    }];
-}
-
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback {
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
         [accessor countObjectsUsingBlock:^(long num) {
@@ -686,36 +677,95 @@ const double MPH_to_METERSPERSECOND = 0.447;
 #pragma mark - GLManager control (private)
 
 - (void)setupHTTPClient {
-    NSURL *endpoint = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:GLAPIEndpointDefaultsName]];
-    
-    if(endpoint) {
-        _httpClient = [[AFHTTPSessionManager manager] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", endpoint.scheme, endpoint.host]]];
-        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
-        _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
-        if(self.apiAccessToken != nil && ![@"" isEqualToString:self.apiAccessToken]) {
-            if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
-                [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Basic %@:", self.apiAccessToken]
-                                     forHTTPHeaderField:@"Authorization"];
-            } else {
-                [_httpClient.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", self.apiAccessToken]
-                                     forHTTPHeaderField:@"Authorization"];
-            }
-        } else {
-            [_httpClient.requestSerializer setValue:nil forHTTPHeaderField:@"Authorization"];
-        }
+    if(_httpSession == nil) {
+        _httpSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    }
 
-        // Apply custom headers
-        NSArray *customHeaders = [self customHeaders];
-        for (NSDictionary *header in customHeaders) {
-            NSString *key = header[@"key"];
-            NSString *value = header[@"value"];
-            if (key.length > 0 && value.length > 0 && ![GLManager isBlockedCustomHeaderName:key]) {
-                [_httpClient.requestSerializer setValue:value forHTTPHeaderField:key];
-            }
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    if(self.apiAccessToken != nil && ![@"" isEqualToString:self.apiAccessToken]) {
+        if(self.loggingModeCurrentValue == kGLLoggingModeOwntracks) {
+            headers[@"Authorization"] = [NSString stringWithFormat:@"Basic %@:", self.apiAccessToken];
+        } else {
+            headers[@"Authorization"] = [NSString stringWithFormat:@"Bearer %@", self.apiAccessToken];
         }
     }
 
+    // Apply custom headers
+    NSArray *customHeaders = [self customHeaders];
+    for (NSDictionary *header in customHeaders) {
+        NSString *key = header[@"key"];
+        NSString *value = header[@"value"];
+        if (key.length > 0 && value.length > 0 && ![GLManager isBlockedCustomHeaderName:key]) {
+            headers[key] = value;
+        }
+    }
+    _httpHeaders = [headers copy];
+
     _deviceId = [self deviceId];
+}
+
+// Posts a JSON body and calls back on the main queue. Any 2xx status is a success, and
+// responseObject is the parsed JSON, or nil if the body is empty or isn't JSON.
+- (void)postJSON:(id)body toURL:(NSString *)urlString success:(void(^)(id _Nullable responseObject))success failure:(void(^)(NSString *errorMessage))failure {
+    NSURL *url = [NSURL URLWithString:urlString];
+    if(url == nil) {
+        failure(@"The server URL is not valid");
+        return;
+    }
+    if(![NSJSONSerialization isValidJSONObject:body]) {
+        failure(@"The location data couldn't be converted to JSON");
+        return;
+    }
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:body options:0 error:nil];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
+    [_httpHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+        [request setValue:value forHTTPHeaderField:key];
+    }];
+
+    NSURLSessionDataTask *task = [_httpSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSInteger statusCode = [response isKindOfClass:[NSHTTPURLResponse class]] ? ((NSHTTPURLResponse *)response).statusCode : 0;
+        id responseObject = nil;
+        if(data.length > 0) {
+            responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(error) {
+                failure(error.localizedDescription);
+            } else if(statusCode < 200 || statusCode > 299) {
+                failure([NSString stringWithFormat:@"The server responded with HTTP %ld (%@)", (long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+            } else {
+                success(responseObject);
+            }
+        });
+    }];
+    [task resume];
+}
+
+// The same format AFNetworking used, e.g. "Overland/1.3 (iPhone; iOS 26.0; Scale/3.00)",
+// since servers may log or filter on it
+- (NSString *)userAgent {
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString *name = info[(__bridge NSString *)kCFBundleExecutableKey] ?: info[(__bridge NSString *)kCFBundleIdentifierKey];
+    NSString *version = info[@"CFBundleShortVersionString"] ?: info[(__bridge NSString *)kCFBundleVersionKey];
+    return [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", name, version, [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [self screenScale]];
+}
+
+// UIScreen.mainScreen is deprecated, and there's no window when the app is relaunched in the
+// background, so use the window scene's screen and remember its scale for those launches
+- (CGFloat)screenScale {
+    for(UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if([scene isKindOfClass:[UIWindowScene class]]) {
+            CGFloat scale = ((UIWindowScene *)scene).screen.scale;
+            [[NSUserDefaults standardUserDefaults] setDouble:scale forKey:GLScreenScaleDefaultsName];
+            return scale;
+        }
+    }
+    return [[NSUserDefaults standardUserDefaults] doubleForKey:GLScreenScaleDefaultsName];
 }
 
 - (void)restoreTrackingState {

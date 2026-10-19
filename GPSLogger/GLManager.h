@@ -44,6 +44,7 @@ static NSString *const GLTripModeStatsDefaultsName = @"GLTripModeStats";
 static NSString *const GLVisitTrackingEnabledDefaultsName = @"GLVisitTrackingEnabledDefaults";
 static NSString *const GLCustomHeadersDefaultsName = @"GLCustomHeadersDefaults";
 static NSString *const GLWifiZonesDefaultsName = @"GLWifiZonesDefaults";
+static NSString *const GLScreenScaleDefaultsName = @"GLScreenScaleDefaults";
 
 static NSString *const GLPurgeQueueOnNextLaunchDefaultsName = @"GLPurgeQueueOnNextLaunch";
 static NSString *const GLLastScheduledNotificationDateDefaultsName = @"GLLastScheduledNotificationDateDefaults";
@@ -182,7 +183,6 @@ typedef void (^CaseBlock)(void);
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback;
-- (void)accountInfo:(void(^)(NSString *name))block;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
 - (void)requestNotificationPermission;
