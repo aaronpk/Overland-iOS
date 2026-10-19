@@ -8,6 +8,7 @@
 
 #import "WifiZoneViewController.h"
 #import "GLManager.h"
+#import <MapKit/MapKit.h>
 
 static NSString *const ZoneCellIdentifier  = @"ZoneCell";
 static NSString *const FieldCellIdentifier = @"FieldCell";
@@ -86,7 +87,7 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 #pragma mark - WifiZoneEditViewController
 
 // Edits one wifi zone. Nothing is saved here; the completion handler gets the edited zone.
-@interface WifiZoneEditViewController : UITableViewController <UITextFieldDelegate>
+@interface WifiZoneEditViewController : UITableViewController <UITextFieldDelegate, MKMapViewDelegate, UIGestureRecognizerDelegate>
 
 // The zone to edit, or nil to add a new one
 @property (nonatomic, copy) NSDictionary *zone;
@@ -99,6 +100,10 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 // Once set, the access point lookup no longer changes the switch
 @property (nonatomic) BOOL accessPointSwitchWasChanged;
 @property (nonatomic, strong) UISwitch *accessPointSwitch;
+@property (nonatomic, strong) MKMapView *mapView;
+// Set while the user is moving the map, until it stops. Only those moves update the fields, not
+// the map laying itself out or following the fields.
+@property (nonatomic) BOOL userIsMovingMap;
 
 @end
 
@@ -144,6 +149,110 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
     }
     self.accessPointSwitch.on = self.limitToAccessPoint;
 
+    [self setUpMap];
+    [self updateSaveButton];
+}
+
+#pragma mark - Map
+
+// The zone's location is the pin in the middle of the map. Dragging the map moves the zone.
+- (void)setUpMap {
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 270)];
+
+    self.mapView = [[MKMapView alloc] init];
+    self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
+    self.mapView.layer.cornerRadius = 10;
+    self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:self.mapView];
+
+    // These run alongside the map's own gestures, to tell when the user is moving the map
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(mapGestureChanged:)];
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(mapGestureChanged:)];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(mapGestureChanged:)];
+    doubleTap.numberOfTapsRequired = 2;
+    for (UIGestureRecognizer *gesture in @[pan, pinch, doubleTap]) {
+        gesture.delegate = self;
+        [self.mapView addGestureRecognizer:gesture];
+    }
+
+    UIImageView *pin = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"mappin"]];
+    pin.tintColor = [UIColor systemRedColor];
+    pin.preferredSymbolConfiguration = [UIImageSymbolConfiguration configurationWithPointSize:34];
+    pin.translatesAutoresizingMaskIntoConstraints = NO;
+    pin.userInteractionEnabled = NO;
+    [container addSubview:pin];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [self.mapView.topAnchor constraintEqualToAnchor:container.topAnchor constant:16],
+        [self.mapView.bottomAnchor constraintEqualToAnchor:container.bottomAnchor constant:-10],
+        [self.mapView.leadingAnchor constraintEqualToAnchor:container.leadingAnchor constant:20],
+        [self.mapView.trailingAnchor constraintEqualToAnchor:container.trailingAnchor constant:-20],
+
+        // The tip of the pin is the zone's location
+        [pin.centerXAnchor constraintEqualToAnchor:self.mapView.centerXAnchor],
+        [pin.bottomAnchor constraintEqualToAnchor:self.mapView.centerYAnchor],
+    ]];
+    self.tableView.tableHeaderView = container;
+
+    CLLocationCoordinate2D coordinate;
+    if ([self fieldCoordinate:&coordinate]) {
+        [self moveMapToCoordinate:coordinate zoom:YES];
+    }
+}
+
+// The coordinate in the latitude and longitude fields, if they're valid
+- (BOOL)fieldCoordinate:(CLLocationCoordinate2D *)coordinate {
+    NSString *latitude = [self trimmedValue:WifiZoneFieldLatitude];
+    NSString *longitude = [self trimmedValue:WifiZoneFieldLongitude];
+    if (![self isCoordinate:latitude withinLimit:90] || ![self isCoordinate:longitude withinLimit:180]) {
+        return NO;
+    }
+    *coordinate = CLLocationCoordinate2DMake(latitude.doubleValue, longitude.doubleValue);
+    return YES;
+}
+
+- (void)moveMapToCoordinate:(CLLocationCoordinate2D)coordinate zoom:(BOOL)zoom {
+    if (zoom) {
+        [self.mapView setRegion:MKCoordinateRegionMakeWithDistance(coordinate, 300, 300) animated:NO];
+    } else {
+        [self.mapView setCenterCoordinate:coordinate animated:NO];
+    }
+}
+
+- (void)mapGestureChanged:(UIGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateRecognized) {
+        [self.view endEditing:YES];
+        self.userIsMovingMap = YES;
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    // Called when the map stops moving, including after it decelerates
+    [self updateFieldsFromMap];
+    self.userIsMovingMap = NO;
+}
+
+- (void)mapViewDidChangeVisibleRegion:(MKMapView *)mapView {
+    [self updateFieldsFromMap];
+}
+
+- (void)updateFieldsFromMap {
+    if (!self.userIsMovingMap) {
+        return;
+    }
+    // 5 decimal places is about a meter, the same as new zones use
+    CLLocationCoordinate2D center = self.mapView.centerCoordinate;
+    self.values[WifiZoneFieldLatitude] = [NSString stringWithFormat:@"%.5f", center.latitude];
+    self.values[WifiZoneFieldLongitude] = [NSString stringWithFormat:@"%.5f", center.longitude];
+    for (NSNumber *field in @[@(WifiZoneFieldLatitude), @(WifiZoneFieldLongitude)]) {
+        WifiZoneFieldCell *cell = (WifiZoneFieldCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForField:field.integerValue]];
+        cell.textField.text = self.values[field.integerValue];
+    }
     [self updateSaveButton];
 }
 
@@ -251,6 +360,12 @@ static NSString *const AccessPointPlaceholder = @"3c:22:fb:1a:00:11";
 
 - (void)textFieldDidChange:(UITextField *)textField {
     self.values[textField.tag] = textField.text ?: @"";
+    if (textField.tag == WifiZoneFieldLatitude || textField.tag == WifiZoneFieldLongitude) {
+        CLLocationCoordinate2D coordinate;
+        if ([self fieldCoordinate:&coordinate]) {
+            [self moveMapToCoordinate:coordinate zoom:NO];
+        }
+    }
     [self updateSaveButton];
 }
 
