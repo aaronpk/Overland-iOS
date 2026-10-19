@@ -50,6 +50,7 @@ NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
 bool _tripEndInProgress = NO;
+bool _recordedPointWhileStationary = NO;
 NSString *_currentWifiHotSpotName = @"";
 NSString *_currentWifiBSSID = @"";
 long _currentPointsInQueue;
@@ -468,6 +469,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
             self.discardPointsWithoutGPS = [[main objectForKey:@"discard_without_gps"] boolValue];
         }
 
+        if([main objectForKey:@"discard_stationary"] != nil) {
+            self.discardPointsWhileStationary = [[main objectForKey:@"discard_stationary"] boolValue];
+        }
+
     }
 
     NSDictionary *trip = [settings objectForKey:@"trip"];
@@ -543,6 +548,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
         if([trip objectForKey:@"discard_without_gps"] != nil) {
             self.discardPointsWithoutGPSDuringTrip = [[trip objectForKey:@"discard_without_gps"] boolValue];
+        }
+
+        if([trip objectForKey:@"discard_stationary"] != nil) {
+            self.discardPointsWhileStationaryDuringTrip = [[trip objectForKey:@"discard_stationary"] boolValue];
         }
 
     }
@@ -1383,6 +1392,28 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 
+- (BOOL)discardPointsWhileStationary {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:GLDiscardPointsWhileStationaryDefaultsName];
+}
+- (void)setDiscardPointsWhileStationary:(BOOL)discard {
+    [[NSUserDefaults standardUserDefaults] setBool:discard forKey:GLDiscardPointsWhileStationaryDefaultsName];
+}
+
+- (BOOL)discardPointsWhileStationaryDuringTrip {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:GLTripDiscardPointsWhileStationaryDefaultsName];
+}
+- (void)setDiscardPointsWhileStationaryDuringTrip:(BOOL)discard {
+    [[NSUserDefaults standardUserDefaults] setBool:discard forKey:GLTripDiscardPointsWhileStationaryDefaultsName];
+}
+
+- (BOOL)discardPointsWhileStationaryCurrentValue {
+    if(self.tripInProgress) {
+        return self.discardPointsWhileStationaryDuringTrip;
+    } else {
+        return self.discardPointsWhileStationary;
+    }
+}
+
 
 #pragma mark CLLocationManager
 
@@ -1911,6 +1942,17 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 continue;
             }
         }
+
+        // Drop points while the phone is sitting still, which avoids collecting GPS drift overnight.
+        // Keep the first point after stopping, so the server knows where the phone stopped.
+        if(self.discardPointsWhileStationaryCurrentValue && [self deviceIsStationary]) {
+            if(_recordedPointWhileStationary) {
+                continue;
+            }
+            _recordedPointWhileStationary = YES;
+        } else {
+            _recordedPointWhileStationary = NO;
+        }
         
         NSString *timestamp = [GLManager iso8601DateStringFromDate:loc.timestamp];
         NSDictionary *update;
@@ -2035,6 +2077,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [update setValue:topic forKey:@"topic"];
     }
     return update;
+}
+
+// Stationary only counts when no movement is reported as well, since a phone resting on a car's
+// dashboard often reports both driving and stationary. Without motion data this is always NO.
+- (BOOL)deviceIsStationary {
+    CMMotionActivity *motion = self.lastMotion;
+    return motion.stationary && !motion.walking && !motion.running && !motion.cycling && !motion.automotive
+        && motion.confidence != CMMotionActivityConfidenceLow;
 }
 
 - (NSArray *)motionArrayFromLastMotion {

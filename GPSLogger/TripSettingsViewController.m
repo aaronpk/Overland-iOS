@@ -103,6 +103,7 @@
     }
 
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPSDuringTrip;
+    self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationaryDuringTrip;
 
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracyDuringTrip;
     if(d == kCLLocationAccuracyBestForNavigation) {
@@ -158,6 +159,7 @@
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
     self.discardPointsWithoutGPS.enabled = NO;
+    self.discardPointsWhileStationary.enabled = NO;
 }
 
 - (void)unlockAllControls {
@@ -172,6 +174,7 @@
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
     self.discardPointsWithoutGPS.enabled = YES;
+    self.discardPointsWhileStationary.enabled = YES;
 }
 
 -(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {
@@ -289,6 +292,10 @@
 
 - (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender {
     [GLManager sharedManager].discardPointsWithoutGPSDuringTrip = sender.on;
+}
+
+- (IBAction)toggleDiscardPointsWhileStationary:(UISwitch *)sender {
+    [GLManager sharedManager].discardPointsWhileStationaryDuringTrip = sender.on;
 }
 
 - (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender {

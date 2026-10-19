@@ -29,6 +29,7 @@ static NSString *const GLResumesAutomaticallyDefaultsName = @"GLResumesAutomatic
 static NSString *const GLDiscardPointsWithinDistanceDefaultsName = @"GLDiscardPointsWithinDistanceDefaults";
 static NSString *const GLDiscardPointsWithinSecondsDefaultsName = @"GLDiscardPointsWithinSecondsDefaults";
 static NSString *const GLDiscardPointsWithoutGPSDefaultsName = @"GLDiscardPointsWithoutGPSDefaults";
+static NSString *const GLDiscardPointsWhileStationaryDefaultsName = @"GLDiscardPointsWhileStationaryDefaults";
 static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
@@ -59,6 +60,7 @@ static NSString *const GLTripPointsPerBatchDefaultsName = @"GLTripPointsPerBatch
 static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripDiscardPointsWithinDistanceDefaults";
 static NSString *const GLTripDiscardPointsWithinSecondsDefaultsName = @"GLTripDiscardPointsWithinSecondsDefaults";
 static NSString *const GLTripDiscardPointsWithoutGPSDefaultsName = @"GLTripDiscardPointsWithoutGPSDefaults";
+static NSString *const GLTripDiscardPointsWhileStationaryDefaultsName = @"GLTripDiscardPointsWhileStationaryDefaults";
 static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 static NSString *const GLLiveActivityEnabledDefaultsName = @"GLLiveActivityEnabledDefaults";
 /* End */
@@ -130,6 +132,7 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) CLLocationDistance discardPointsWithinDistance;
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) BOOL discardPointsWithoutGPS;
+@property (nonatomic) BOOL discardPointsWhileStationary;
 @property (nonatomic) GLTrackingMode trackingMode;
 @property BOOL visitTrackingEnabled;
 @property (nonatomic) GLLoggingMode loggingMode;
@@ -148,6 +151,7 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) CLLocationDistance discardPointsWithinDistanceDuringTrip;
 @property (nonatomic) int discardPointsWithinSecondsDuringTrip;
 @property (nonatomic) BOOL discardPointsWithoutGPSDuringTrip;
+@property (nonatomic) BOOL discardPointsWhileStationaryDuringTrip;
 /* End */
 
 @property (readonly) BOOL trackingEnabled;

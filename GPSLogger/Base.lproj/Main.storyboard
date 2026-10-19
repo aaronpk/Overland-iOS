@@ -1319,6 +1319,29 @@ IAogA
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="StA-St-m01">
+                                                <rect key="frame" x="0.0" y="1423.5" width="335" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while stationary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Lb-m01">
+                                                        <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Sw-m01">
+                                                        <rect key="frame" x="286" y="0.0" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="toggleDiscardPointsWhileStationary:" destination="8rJ-Kc-sve" eventType="valueChanged" id="StA-Ac-m01"/>
+                                                        </connections>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-m01">
+                                                <rect key="frame" x="0.0" y="1464.5" width="335" height="61"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f4R-mr-A3Z">
                                                 <rect key="frame" x="0.0" y="1423.5" width="335" height="31"/>
                                                 <subviews>
@@ -1392,6 +1415,7 @@ IAogA
                         <outlet property="discardPointsWithinDistance" destination="1Yp-6o-vL0" id="QZn-Xp-P3M"/>
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-m01" id="GpS-Ou-m01"/>
+                        <outlet property="discardPointsWhileStationary" destination="StA-Sw-m01" id="StA-Ou-m01"/>
                         <outlet property="enableNotifications" destination="WZr-zE-f5a" id="hnD-O9-Z8y"/>
                         <outlet property="locationAuthorizationStatus" destination="MKE-WH-3hb" id="zee-wX-dhx"/>
                         <outlet property="locationAuthorizationStatusSection" destination="kGG-ne-BJt" id="A3Z-Zz-1Ue"/>
@@ -2023,6 +2047,29 @@ For details on the format of the data this app sends to the server, please visit
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="StA-St-t01">
+                                                <rect key="frame" x="0.0" y="1011" width="335" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while stationary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Lb-t01">
+                                                        <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Sw-t01">
+                                                        <rect key="frame" x="286" y="0.0" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="toggleDiscardPointsWhileStationary:" destination="Y9g-jV-OC3" eventType="valueChanged" id="StA-Ac-t01"/>
+                                                        </connections>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard points while the motion sensors report the phone is stationary, such as overnight. The first point after stopping is kept. Needs Motion &amp; Fitness access." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StA-Ds-t01">
+                                                <rect key="frame" x="0.0" y="1052" width="335" height="61"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -2050,6 +2097,7 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="discardPointsWithinDistance" destination="FY5-oA-2n1" id="e95-6J-Qqj"/>
                         <outlet property="discardPointsWithinSeconds" destination="UJk-6E-2Kl" id="tOF-QI-Xej"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-t01" id="GpS-Ou-t01"/>
+                        <outlet property="discardPointsWhileStationary" destination="StA-Sw-t01" id="StA-Ou-t01"/>
                         <outlet property="loggingMode" destination="APM-y7-ilb" id="Jpg-pD-GQz"/>
                         <outlet property="pausesAutomatically" destination="QD1-27-rqd" id="ou0-Hg-LLM"/>
                         <outlet property="pointsPerBatchControl" destination="4ai-2r-umg" id="fJW-a2-Rv5"/>

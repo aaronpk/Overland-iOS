@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinDistance;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWithoutGPS;
+@property (strong, nonatomic) IBOutlet UISwitch *discardPointsWhileStationary;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 @property (strong, nonatomic) IBOutlet UISwitch *showLiveActivityDuringTrip;
 
@@ -39,6 +40,7 @@
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender;
 - (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender;
+- (IBAction)toggleDiscardPointsWhileStationary:(UISwitch *)sender;
 - (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;
 - (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender;
 
