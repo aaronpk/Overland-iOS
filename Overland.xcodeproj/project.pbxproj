@@ -36,6 +36,7 @@
 		0FA16490B3131D33B0CB1A0C /* OverlandLiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA16DCE2F24E90AC6425AE0 /* OverlandLiveActivityBundle.swift */; };
 		0FA166B2F344A3980F1227C2 /* TripModes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FA18726CB75B3B166029F8E /* TripModes.xcassets */; };
 		0FA16CC8A66B372B06DD56CB /* TripLiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA128E0AE4C423AD6DEC0EE /* TripLiveActivityController.swift */; };
+		0FA2C0DE5E1F00000000B003 /* TipJarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA2C0DE5E1F00000000B002 /* TipJarStore.swift */; };
 		0FA1CFD434AD1CBBC2E9E03C /* TripModes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FA18726CB75B3B166029F8E /* TripModes.xcassets */; };
 		0FA1F663468D6341CBC4129D /* TripLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA17CBB687B2DDE01176F37 /* TripLiveActivityWidget.swift */; };
 		0FFD31731BAB7BEA009B3A03 /* GLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD31721BAB7BEA009B3A03 /* GLManager.m */; };
@@ -80,6 +81,7 @@
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
 		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
 		0FA128E0AE4C423AD6DEC0EE /* TripLiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripLiveActivityController.swift; sourceTree = "<group>"; };
+		0FA2C0DE5E1F00000000B002 /* TipJarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipJarStore.swift; sourceTree = "<group>"; };
 		0FA13CEC66AD199B21AD42D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0FA14C96E8BC2D9C270B9238 /* TripActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripActivityAttributes.swift; sourceTree = "<group>"; };
 		0FA16DCE2F24E90AC6425AE0 /* OverlandLiveActivityBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlandLiveActivityBundle.swift; sourceTree = "<group>"; };
@@ -216,6 +218,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0FA2C0DE5E1F00000000B001 /* TipJar */ = {
+			isa = PBXGroup;
+			children = (
+				0FA2C0DE5E1F00000000B002 /* TipJarStore.swift */,
+			);
+			path = TipJar;
+			sourceTree = "<group>";
+		};
 		0FA16810488AF62B153D87E0 /* LiveActivity */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +278,7 @@
 				0FA2C0DE5E1F00000000A001 /* PrivacyInfo.xcprivacy */,
 				0FA18726CB75B3B166029F8E /* TripModes.xcassets */,
 				0FA16810488AF62B153D87E0 /* LiveActivity */,
+				0FA2C0DE5E1F00000000B001 /* TipJar */,
 				0FFD31661BAB7A34009B3A03 /* LaunchScreen.storyboard */,
 				0FABDE3B2B34F642003ACD20 /* Tips.storekit */,
 				0FFD31691BAB7A34009B3A03 /* Info.plist */,
@@ -467,6 +478,7 @@
 				0FFD31571BAB7A34009B3A03 /* main.m in Sources */,
 				0FA11FBA259623D911A653DC /* TripActivityAttributes.swift in Sources */,
 				0FA16CC8A66B372B06DD56CB /* TripLiveActivityController.swift in Sources */,
+				0FA2C0DE5E1F00000000B003 /* TipJarStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

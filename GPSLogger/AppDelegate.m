@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "GLManager.h"
 #import "NSArray+map.h"
+#import "Overland-Swift.h"
 
 @interface AppDelegate ()
 
@@ -41,7 +42,10 @@
     NSLog(@"Application launched with options: %@", launchOptions);
     
     [GLManager sharedManager];
-    
+
+    // Finish tip jar transactions that complete while the tip jar isn't open, such as renewals
+    [[TipJarStore shared] startObservingTransactions];
+
     // This key is deprecated in iOS 26, but it's still the only way to tell that the app was
     // relaunched for a location event. It's only used for this tracking stat.
     if([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {

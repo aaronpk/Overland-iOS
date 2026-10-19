@@ -7,11 +7,11 @@
 //
 
 #import "TipJarViewController.h"
-#import <StoreKit/StoreKit.h>
 #import <SafariServices/SafariServices.h>
 #import "GLManager.h"
+#import "Overland-Swift.h"
 
-@interface TipJarViewController () <SKProductsRequestDelegate, SKPaymentTransactionObserver, UITableViewDataSource, UITableViewDelegate>
+@interface TipJarViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @end
 
@@ -74,135 +74,62 @@
 */
 
 - (void)viewWillAppear:(BOOL)animated {
-    if([SKPaymentQueue canMakePayments]){
-
-        NSMutableSet *products = [NSMutableSet setWithArray:[self.yearlyTips allKeys]];
-        [products addObjectsFromArray:[self.monthlyTips allKeys]];
-        [products addObjectsFromArray:[self.onetimeTips allKeys]];
-
-        [self.activityIndicator startAnimating];
-        self.activityIndicator.hidden = NO;
-        
-        // NSLog(@"Fetching product details");
-        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:products];
-        productsRequest.delegate = self;
-        [productsRequest start];
+    if(![TipJarStore shared].canMakePayments) {
+        // Most likely due to parental controls
+        NSLog(@"User cannot make payments");
+        return;
     }
-    else{
-        NSLog(@"User cannot make payments due to parental controls");
-        //this is called the user cannot make payments, most likely due to parental controls
-        
-    }
-    
-    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+
+    NSMutableArray *identifiers = [NSMutableArray arrayWithArray:self.yearlyTipsKeys];
+    [identifiers addObjectsFromArray:self.monthlyTipsKeys];
+    [identifiers addObjectsFromArray:self.onetimeTipsKeys];
+
+    [self.activityIndicator startAnimating];
+    self.activityIndicator.hidden = NO;
+
+    [[TipJarStore shared] loadProductsWithIdentifiers:identifiers completion:^(NSArray<TipJarProduct *> *products) {
+        if(products.count == 0) {
+            NSLog(@"No products available");
+        }
+
+        for(TipJarProduct *product in products) {
+            NSMutableDictionary *item;
+            if(!product.isSubscription) {
+                item = [self.onetimeTips objectForKey:product.productID];
+            } else if(product.isYearly) {
+                item = [self.yearlyTips objectForKey:product.productID];
+            } else {
+                item = [self.monthlyTips objectForKey:product.productID];
+            }
+            [item setObject:product forKey:@"product"];
+        }
+
+        [self.tableView reloadData];
+        [self.activityIndicator stopAnimating];
+        self.activityIndicator.hidden = YES;
+    }];
 }
 
 #pragma mark - StoreKit
 
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
-    int count = (int)[response.products count];
-    
-//    NSLog(@"Invalid Products: %@", response.invalidProductIdentifiers);
-    
-    if(count > 0){
-//        NSLog(@"Products %@", response.products);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            for(SKProduct *product in response.products) {
-                NSMutableDictionary *item;
-                if(product.subscriptionGroupIdentifier == nil) {
-                    item = [self.onetimeTips objectForKey:product.productIdentifier];
-                } else {
-                    if(product.subscriptionPeriod.unit == SKProductPeriodUnitYear) {
-                        item = [self.yearlyTips objectForKey:product.productIdentifier];
-                    } else {
-                        item = [self.monthlyTips objectForKey:product.productIdentifier];
-                    }
-                }
-                [item setObject:product forKey:@"product"];
-            }
-            
-            [self.tableView reloadData];
-            [self.activityIndicator stopAnimating];
-            self.activityIndicator.hidden = YES;
-        });
-    } else {
-        NSLog(@"No products available");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicator stopAnimating];
-            self.activityIndicator.hidden = YES;
-        });
-    }
-}
-
-- (void)purchase:(SKProduct *)product{
-    SKPayment *payment = [SKPayment paymentWithProduct:product];
-
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-    [[SKPaymentQueue defaultQueue] addPayment:payment];
-}
-
-- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
-{
-    NSLog(@"received restored transactions: %i", (int)queue.transactions.count);
-    for(SKPaymentTransaction *transaction in queue.transactions){
-        if(transaction.transactionState == SKPaymentTransactionStateRestored){
-            //called when the user successfully restores a purchase
-            NSLog(@"Transaction state -> Restored");
-
-            //if you have more than one in-app purchase product,
-            //you restore the correct product for the identifier.
-            //For example, you could use
-            //if(productID == kRemoveAdsProductIdentifier)
-            //to get the product identifier for the
-            //restored purchases, you can use
-            //
-            //NSString *productID = transaction.payment.productIdentifier;
-            [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-            break;
-        }
-    }
-}
-
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions{
-    for(SKPaymentTransaction *transaction in transactions){
-        //if you have multiple in app purchases in your app,
-        //you can get the product identifier of this transaction
-        //by using transaction.payment.productIdentifier
-        //
-        //then, check the identifier against the product IDs
-        //that you have defined to check which product the user
-        //just purchased
-
-        switch(transaction.transactionState){
-            case SKPaymentTransactionStatePurchasing: 
-                NSLog(@"Transaction state -> Purchasing");
-                // called when the user is in the process of purchasing, do not add any of your own code here.
+- (void)purchase:(TipJarProduct *)product {
+    [[TipJarStore shared] purchase:product fromViewController:self completion:^(TipJarPurchaseResult result, NSString *errorMessage) {
+        switch(result) {
+            case TipJarPurchaseResultPurchased:
+                NSLog(@"Purchased %@", product.productID);
+                [self showAlertWithTitle:@"Thank You!" message:@"Thanks for supporting Overland!"];
                 break;
-            case SKPaymentTransactionStatePurchased:
-                // this is called when the user has successfully purchased the item
-                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                NSLog(@"Transaction state -> Purchased");
+            case TipJarPurchaseResultPending:
+                NSLog(@"Purchase of %@ is pending", product.productID);
                 break;
-            case SKPaymentTransactionStateRestored:
-                NSLog(@"Transaction state -> Restored");
-                //add the same code as you did from SKPaymentTransactionStatePurchased here
-                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                [self showRestoredPurchasesNotification];
+            case TipJarPurchaseResultCancelled:
+                NSLog(@"Purchase of %@ was cancelled", product.productID);
                 break;
-            case SKPaymentTransactionStateFailed:
-                //called when the transaction does not finish
-                if(transaction.error.code == SKErrorPaymentCancelled){
-                    NSLog(@"Transaction state -> Cancelled");
-                    //the user cancelled the payment ;(
-                }
-                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                break;
-            case SKPaymentTransactionStateDeferred:
-                NSLog(@"Payment transaction deferred");
+            case TipJarPurchaseResultFailed:
+                [self showAlertWithTitle:@"Purchase Failed" message:errorMessage ?: @"The purchase couldn't be completed."];
                 break;
         }
-    }
+    }];
 }
 
 #pragma mark - TableViewDataSource
@@ -231,7 +158,7 @@
     }
 }
 
--(SKProduct *)productForIndexPath:(NSIndexPath *)indexPath {
+-(TipJarProduct *)productForIndexPath:(NSIndexPath *)indexPath {
     NSMutableDictionary *item = [self itemForIndexPath:indexPath];
     return [item objectForKey:@"product"];
 }
@@ -276,31 +203,13 @@
     UILabel *priceLabel = [c viewWithTag:700];
     UILabel *frequencyLabel = [c viewWithTag:701];
     
-    SKProduct *product = [self productForIndexPath:indexPath];
+    TipJarProduct *product = [self productForIndexPath:indexPath];
 
     tipNameLabel.text = [item objectForKey:@"name"];
 
     if(product) {
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
-        [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [numberFormatter setLocale:product.priceLocale];
-        priceLabel.text = [numberFormatter stringFromNumber:product.price];
-        
-        if(product.subscriptionGroupIdentifier == nil) {
-            frequencyLabel.text = @"one time";
-        } else {
-            switch(product.subscriptionPeriod.unit) {
-                case SKProductPeriodUnitDay:
-                    frequencyLabel.text = @"daily"; break;
-                case SKProductPeriodUnitWeek:
-                    frequencyLabel.text = @"weekly"; break;
-                case SKProductPeriodUnitMonth:
-                    frequencyLabel.text = @"monthly"; break;
-                case SKProductPeriodUnitYear:
-                    frequencyLabel.text = @"yearly"; break;
-            }
-        }
+        priceLabel.text = product.displayPrice;
+        frequencyLabel.text = product.frequency;
     } else {
         priceLabel.text = @" ";
         frequencyLabel.text = @" ";
@@ -310,9 +219,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SKProduct *product = [self productForIndexPath:indexPath];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    TipJarProduct *product = [self productForIndexPath:indexPath];
     if(product) {
-        NSLog(@"Purchasing %@", product.localizedTitle);
+        NSLog(@"Purchasing %@", product.productID);
         [self purchase:product];
     }
 }
@@ -331,29 +241,24 @@
 }
 
 - (IBAction)restorePurchasesWasPressed:(UIButton *)sender {
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
     NSLog(@"Restoring purchases");
+    [[TipJarStore shared] restorePurchasesWithCompletion:^(NSString *errorMessage) {
+        if(errorMessage) {
+            [self showAlertWithTitle:@"Restore Failed" message:errorMessage];
+        } else {
+            [self showAlertWithTitle:@"Purchases Restored" message:@"Your purchases have been restored"];
+        }
+    }];
 }
 
-- (BOOL)     paymentQueue:(SKPaymentQueue *)queue 
-    shouldAddStorePayment:(nonnull SKPayment *)payment
-               forProduct:(nonnull SKProduct *)product {
-
-    NSLog(@"Doing whatevr this is");
-    
-    return YES;
-}
-
-- (void)showRestoredPurchasesNotification {
-    
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Purchases Restored"
-                                   message:@"Your purchases have been restored"
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+                                   message:message
                                    preferredStyle:UIAlertControllerStyleAlert];
-     
+
     UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
        handler:^(UIAlertAction * action) {}];
-     
+
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
