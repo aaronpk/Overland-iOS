@@ -96,7 +96,9 @@
         case 120:
             self.discardPointsWithinSeconds.selectedSegmentIndex = 5; break;
     }
-    
+
+    self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPSDuringTrip;
+
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracyDuringTrip;
     if(d == kCLLocationAccuracyBestForNavigation) {
         self.desiredAccuracy.selectedSegmentIndex = 0;
@@ -150,6 +152,7 @@
     self.pointsPerBatchControl.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
+    self.discardPointsWithoutGPS.enabled = NO;
 }
 
 - (void)unlockAllControls {
@@ -163,6 +166,7 @@
     self.pointsPerBatchControl.enabled = YES;
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
+    self.discardPointsWithoutGPS.enabled = YES;
 }
 
 -(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {
@@ -276,6 +280,10 @@
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:GLScreenLockEnabledDefaultsName];
     }
+}
+
+- (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender {
+    [GLManager sharedManager].discardPointsWithoutGPSDuringTrip = sender.on;
 }
 
 - (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender {

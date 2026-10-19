@@ -85,6 +85,7 @@ The settings in this section control features specific to the Overland app.
 * `Resume with Geofence` - This is an attempt at overcoming the limitations of the "Pause Updates Automatically" feature. Setting a radius here will register an "exit" geofence whenever location updates are paused at that location. This will attempt to get the app woken up when the user leaves the area again, and when triggered, will resume tracking with the previous settings.
 * `Min Distance Between Points` - When set, the app will discard any location updates closer than the distance selected. For example you can set the value to 50 meters to only record an update if the phone moves 50 meters from the last location. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point.
 * `Min Time Between Points` - When set, the app will discard any location updates received within the selected amount of time. For example you can set the value to 10 seconds to record an update at most every 10 seconds. Note: This does not have a noticeable effect on battery life, since the OS will have already delivered the location data to the app by this point. The default is 1 second.
+* `Discard points without GPS` - When enabled, the app will discard any location update that has neither an altitude nor a speed. iOS doesn't indicate whether a location came from GPS, but these points usually come from wifi or cell tower positioning, and can be far from where the phone actually is. Off by default.
 * `Enable notifications` - Toggle whether the app should send push notifications about events such as when tracking has been automatically stopped and started.
 * `Configure Wifi Zone` - You can configure a wifi zone to force the app to report an exact location whenever you're connected to a specific wifi SSID. This is useful if you don't want to collect a bunch of noisy data when you're at home.
 
@@ -290,6 +291,7 @@ You can configure all of the settings in the app by having your server return ne
       "resume_with_geofence": "off|100m|200m|500m|1km|2km",
       "min_distance": "off|1m|10m|50m|100m|500m",
       "min_time": "1s|5s|10s|30s|1m|5m",
+      "discard_without_gps": true|false,
     },
     "trip": {
       "desired_accuracy": "nav|best|10m|100m|1km|3km",
@@ -300,6 +302,7 @@ You can configure all of the settings in the app by having your server return ne
       "batch_size": 50|100|200|500|1000,
       "min_distance": "off|1m|10m|50m|100m|500m",
       "min_time": "1s|5s|10s|30s|1m|5m",
+      "discard_without_gps": true|false,
     }
   }
 }

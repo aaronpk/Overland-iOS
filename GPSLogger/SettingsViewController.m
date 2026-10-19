@@ -75,6 +75,7 @@
     self.resumesWithGeofence.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
+    self.discardPointsWithoutGPS.enabled = NO;
     self.enableNotifications.enabled = NO;
     self.locationAuthorizationStatus.enabled = NO;
     self.locationAuthorizationStatusWarning.enabled = NO;
@@ -96,6 +97,7 @@
     self.resumesWithGeofence.enabled = YES;
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
+    self.discardPointsWithoutGPS.enabled = YES;
     self.enableNotifications.enabled = YES;
     self.locationAuthorizationStatus.enabled = YES;
     self.locationAuthorizationStatusWarning.enabled = YES;
@@ -215,7 +217,9 @@
         case 120:
             self.discardPointsWithinSeconds.selectedSegmentIndex = 5; break;
     }
-    
+
+    self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPS;
+
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracy;
     if(d == kCLLocationAccuracyBestForNavigation) {
         self.desiredAccuracy.selectedSegmentIndex = 0;
@@ -445,6 +449,10 @@
             pointsPerBatch = 1000; break;        
     }
     [GLManager sharedManager].pointsPerBatch = pointsPerBatch;
+}
+
+- (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender {
+    [GLManager sharedManager].discardPointsWithoutGPS = sender.on;
 }
 
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender {

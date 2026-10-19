@@ -455,6 +455,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
         };
         [self runBlock:minTimeBlocks fromDictionary:main forKey:@"min_time"];
 
+        if([main objectForKey:@"discard_without_gps"] != nil) {
+            self.discardPointsWithoutGPS = [[main objectForKey:@"discard_without_gps"] boolValue];
+        }
+
     }
 
     NSDictionary *trip = [settings objectForKey:@"trip"];
@@ -522,6 +526,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
             @"5m": ^{ self.discardPointsWithinSecondsDuringTrip = 300; },
         };
         [self runBlock:minTimeDuringTripBlocks fromDictionary:trip forKey:@"min_time"];
+
+        if([trip objectForKey:@"discard_without_gps"] != nil) {
+            self.discardPointsWithoutGPSDuringTrip = [[trip objectForKey:@"discard_without_gps"] boolValue];
+        }
 
     }
 
@@ -1290,6 +1298,28 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 
+- (BOOL)discardPointsWithoutGPS {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:GLDiscardPointsWithoutGPSDefaultsName];
+}
+- (void)setDiscardPointsWithoutGPS:(BOOL)discard {
+    [[NSUserDefaults standardUserDefaults] setBool:discard forKey:GLDiscardPointsWithoutGPSDefaultsName];
+}
+
+- (BOOL)discardPointsWithoutGPSDuringTrip {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:GLTripDiscardPointsWithoutGPSDefaultsName];
+}
+- (void)setDiscardPointsWithoutGPSDuringTrip:(BOOL)discard {
+    [[NSUserDefaults standardUserDefaults] setBool:discard forKey:GLTripDiscardPointsWithoutGPSDefaultsName];
+}
+
+- (BOOL)discardPointsWithoutGPSCurrentValue {
+    if(self.tripInProgress) {
+        return self.discardPointsWithoutGPSDuringTrip;
+    } else {
+        return self.discardPointsWithoutGPS;
+    }
+}
+
 
 #pragma mark CLLocationManager
 
@@ -1751,6 +1781,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
                 // NSLog(@"Discarding location because this point is too close to the previous: %f", distanceBetweenPoints);
                 continue;
             }
+        }
+
+        // iOS doesn't say whether a point came from GPS, but points from wifi or cell tower
+        // positioning have neither an altitude nor a speed
+        if(self.discardPointsWithoutGPSCurrentValue && loc.verticalAccuracy < 0 && loc.speed < 0) {
+            continue;
         }
 
         if(self.discardPointsWithinSecondsCurrentValue > 1) {
