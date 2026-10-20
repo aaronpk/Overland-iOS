@@ -72,7 +72,7 @@ struct StatusWidgetView: View {
                 .frame(maxWidth: 130)
             }
         default:
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 10) {
                 status
                 TripButton(state: state)
             }
@@ -123,10 +123,9 @@ struct StatusWidgetView: View {
                 .foregroundStyle(.red)
                 .lineLimit(2)
         } else if let lastSent = state.lastSentDate {
-            (Text("Sent ") + Text(lastSent, style: .relative) + Text(" ago"))
+            LastSentText(date: lastSent)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .lineLimit(1)
         }
     }
 
@@ -146,7 +145,7 @@ struct StatusWidgetView: View {
                 if state.lastSendError != nil {
                     Text("Couldn't send")
                 } else if let lastSent = state.lastSentDate {
-                    Text("Sent ") + Text(lastSent, style: .relative) + Text(" ago")
+                    LastSentText(date: lastSent)
                 }
             }
         }
@@ -187,6 +186,18 @@ struct StatusWidgetView: View {
             Label("\(state.trackingEnabled ? "Tracking" : "Not tracking") · \(state.queueCount) queued",
                   systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
         }
+    }
+}
+
+// How long ago data was last sent, as an up arrow and a time that counts up on its own, such as
+// "12 min, 54 sec". The counting text always includes seconds, so it's kept short to fit.
+struct LastSentText: View {
+    let date: Date
+
+    var body: some View {
+        (Text(Image(systemName: "arrow.up")) + Text(" ") + Text(date, style: .relative))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
     }
 }
 
