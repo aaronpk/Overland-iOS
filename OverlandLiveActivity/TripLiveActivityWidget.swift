@@ -32,7 +32,7 @@ struct TripLiveActivityWidget: Widget {
                             Spacer()
                             TripStat(value: TripFormat.distance(context.state.distance), unit: TripFormat.distanceUnit)
                         }
-                        EndTripButton()
+                        TripActionButtons()
                     }
                 }
             } compactLeading: {
@@ -70,23 +70,34 @@ struct TripLockScreenView: View {
                     TripStat(value: TripFormat.speed(state.speed), unit: TripFormat.speedUnit)
                 }
             }
-            EndTripButton()
+            TripActionButtons()
         }
         .padding()
     }
 }
 
-// Ends the trip from the Lock Screen or Dynamic Island. Buttons in Live Activities need iOS 17.
-struct EndTripButton: View {
+// Ends the trip, or sends the queued data now, from the Lock Screen or Dynamic Island. Buttons in
+// Live Activities need iOS 17.
+struct TripActionButtons: View {
     var body: some View {
         if #available(iOS 17.0, *) {
-            Button(intent: EndTripIntent()) {
-                Label("End Trip", systemImage: "stop.fill")
-                    .font(.subheadline.bold())
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 10) {
+                Button(intent: SendNowIntent()) {
+                    Label("Send Now", systemImage: "arrow.up")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(.green)
+
+                Button(intent: EndTripIntent()) {
+                    Label("End Trip", systemImage: "stop.fill")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.red)
         }
     }
 }
