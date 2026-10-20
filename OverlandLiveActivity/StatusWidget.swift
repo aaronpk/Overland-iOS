@@ -97,6 +97,8 @@ struct StatusWidgetView: View {
                         .lineLimit(1)
                 }
             }
+            // On a tinted Home Screen, the header and buttons take the tint color
+            .widgetAccentable()
             if let start = state.tripStart {
                 ElapsedTime(start: start)
                     .font(.title2.bold())
@@ -212,6 +214,7 @@ struct TripButton: View {
                     Label("End Trip", systemImage: "stop.fill")
                         .font(.caption.bold())
                         .frame(maxWidth: .infinity)
+                        .widgetAccentable()
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
@@ -229,6 +232,7 @@ struct TripButton: View {
                     }
                     .font(.caption.bold())
                     .frame(maxWidth: .infinity)
+                    .widgetAccentable()
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.green)
@@ -244,6 +248,7 @@ struct SendNowButton: View {
                 Label("Send Now", systemImage: "arrow.up")
                     .font(.caption.bold())
                     .frame(maxWidth: .infinity)
+                    .widgetAccentable()
             }
             .buttonStyle(.bordered)
         }
