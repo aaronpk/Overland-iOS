@@ -100,6 +100,8 @@ There are some additional settings specific to trips:
 
 * `Show Location Indicator During Trips` - Choose whether you want the device to show the location indicator when a trip is in progress. Enable this to help the app run continuously in the background.
 * `Prevent screen lock during trip` - Does what it says. This is another way you can be sure the app won't get killed by iOS in the background.
+* `Show trip as Live Activity` - Shows the trip in progress on the Lock Screen and in the Dynamic Island, with its mode, elapsed time, distance and speed. On iOS 17 and later it has buttons to send the queued data now and to end the trip.
+* `Save to Apple Health` - Saves walk, run and bicycle trips to Apple Health as workouts, with their distance and GPS route, when the trip ends. Other trip modes aren't saved. If you also record workouts on an Apple Watch, the same activity may show up twice. If a workout can't be saved, the reason appears under the switch, and the app tries again the next time it starts. Off by default.
 
 
 #### System Settings
@@ -129,6 +131,26 @@ Query Parameters:
 * `device_id` - Set the user-defined device ID here
 * `unique_id=yes` - Set this to `yes` to toggle the "Unique ID" setting
 
+
+### Shortcuts and Siri
+
+On iOS 17 and later, Overland's actions are available in the Shortcuts app, Siri, Spotlight and the Action button. You can also use them in Shortcuts automations, for example to start a car trip when your phone connects to CarPlay.
+
+* `Start Trip` - Starts a trip, optionally in a given mode. Siri understands phrases like "Start a bike trip in Overland".
+* `End Trip` - Ends the trip in progress ("End my trip in Overland").
+* `Send Data Now` - Sends the queued data now ("Send Overland data now").
+* `Turn Tracking On or Off`
+* `Get Tracking Status` - Returns whether Overland is tracking, the trip in progress, how many points are queued, and when data was last sent ("Is Overland tracking").
+* `Set Trip Mode` - Sets the mode for the next trip, or changes the mode of the trip in progress.
+* `Set Trip Activity Type` and `Set Trip Location Accuracy` - Change the same settings as the Trip Settings screen. The accuracy applies right away during a trip, and the activity type applies from the next trip.
+
+When a trip started from a shortcut ends, tracking is turned back off if it was off before the trip, the same as starting a trip in the app.
+
+### Widgets and Controls
+
+* `Home Screen widget` - Shows whether Overland is tracking, or the trip in progress with its mode, elapsed time and distance, plus how many points are queued and how long ago data was last sent. On iOS 17 and later it has buttons to start or end a trip, and in the medium size, to send the queued data now. The Start button shows the mode the trip will use.
+* `Lock Screen widgets` - The same information in the rectangular, circular and inline Lock Screen sizes.
+* `Controls` - On iOS 18 and later, add the "Overland Trip" toggle or the "Send Overland Data" button to Control Center, the Lock Screen or the Action button.
 
 ### Usage Profiles
 
