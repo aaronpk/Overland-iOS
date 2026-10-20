@@ -53,8 +53,7 @@ BOOL mapWasDragged = NO;
     intervalMap = @[@1, @5, @10, @15, @30, @60, @120, @300, @600, @1800, @-1];
     intervalMapStrings = @[@"1s", @"5s", @"10s", @"15s", @"30s", @"1m", @"2m", @"5m", @"10m", @"30m", @"off"];
 
-    UIImage *pattern = [UIImage imageNamed:@"topobkg"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:pattern];
+    self.view.backgroundColor = [TrackingViewController backgroundPatternColor];
     
     [self.tripView.layer setCornerRadius:6.0];
     if (@available(iOS 26.0, *)) {
@@ -65,6 +64,9 @@ BOOL mapWasDragged = NO;
     }
     [self setUpSendErrorBanner];
     [self extendMapUnderTabBar];
+    if (@available(iOS 17.0, *)) {
+        [self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withAction:@selector(redrawAllViews)];
+    }
     [self setNeedsStatusBarAppearanceUpdate];
     
     // adding Shortcut Code
@@ -83,6 +85,38 @@ BOOL mapWasDragged = NO;
     
     currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
     [self.mapView addAnnotation:currentLocationAnnotation];
+}
+
+// The background image has light and dark versions, but a pattern color only uses the version it
+// was made with. This color uses the version for the current appearance each time it changes.
++ (UIColor *)backgroundPatternColor {
+    static UIColor *light;
+    static UIColor *dark;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UITraitCollection *lightTraits = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight];
+        UITraitCollection *darkTraits = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark];
+        light = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topobkg" inBundle:nil compatibleWithTraitCollection:lightTraits]];
+        dark = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topobkg" inBundle:nil compatibleWithTraitCollection:darkTraits]];
+    });
+    return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traits) {
+        return traits.userInterfaceStyle == UIUserInterfaceStyleDark ? dark : light;
+    }];
+}
+
+// The labels don't always redraw when the appearance switches between light and dark, such as when
+// the app was launched in the background and is then opened. Until something else redraws them,
+// they keep text colored for the old appearance, like black text on the dark background. So redraw
+// everything when the appearance changes or the app comes to the foreground.
+- (void)redrawAllViews {
+    [self setNeedsDisplayInViewAndSubviews:self.view];
+}
+
+- (void)setNeedsDisplayInViewAndSubviews:(UIView *)view {
+    [view setNeedsDisplay];
+    for(UIView *subview in view.subviews) {
+        [self setNeedsDisplayInViewAndSubviews:subview];
+    }
 }
 
 // On iOS 26 the tab bar floats over the content, so let the map run to the bottom of the screen
@@ -122,6 +156,11 @@ BOOL mapWasDragged = NO;
 
 - (void)viewWillAppear:(BOOL)animated {
     [self sendingFinished];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(redrawAllViews)
+                                                 name:UISceneWillEnterForegroundNotification
+                                               object:nil];
 
     [self updateVisibleSettings];
 
