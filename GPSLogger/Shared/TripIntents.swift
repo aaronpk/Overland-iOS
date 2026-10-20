@@ -11,33 +11,34 @@
 import AppIntents
 import Foundation
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 enum TripModeAppEnum: String, AppEnum {
     // The same identifiers as +[GLManager GLTripModes]
     case walk, run, bicycle, car, taxi, bus, tram, train, metro, gondola, monorail, sleigh, plane, boat, scooter
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Trip Mode"
 
+    // Includes other names Siri and Shortcuts accept for a mode, such as "bike" for Bicycle
     static var caseDisplayRepresentations: [TripModeAppEnum: DisplayRepresentation] = [
-        .walk: DisplayRepresentation(title: "Walk", image: .init(named: "walk")),
-        .run: DisplayRepresentation(title: "Run", image: .init(named: "run")),
-        .bicycle: DisplayRepresentation(title: "Bicycle", image: .init(named: "bicycle")),
-        .car: DisplayRepresentation(title: "Car", image: .init(named: "car")),
+        .walk: DisplayRepresentation(title: "Walk", image: .init(named: "walk"), synonyms: ["Walking", "Hike"]),
+        .run: DisplayRepresentation(title: "Run", image: .init(named: "run"), synonyms: ["Running", "Jog"]),
+        .bicycle: DisplayRepresentation(title: "Bicycle", image: .init(named: "bicycle"), synonyms: ["Bike", "Cycling", "Cycle"]),
+        .car: DisplayRepresentation(title: "Car", image: .init(named: "car"), synonyms: ["Drive", "Driving"]),
         .taxi: DisplayRepresentation(title: "Taxi", image: .init(named: "taxi")),
         .bus: DisplayRepresentation(title: "Bus", image: .init(named: "bus")),
-        .tram: DisplayRepresentation(title: "Tram", image: .init(named: "tram")),
-        .train: DisplayRepresentation(title: "Train", image: .init(named: "train")),
-        .metro: DisplayRepresentation(title: "Metro", image: .init(named: "metro")),
-        .gondola: DisplayRepresentation(title: "Gondola", image: .init(named: "gondola")),
+        .tram: DisplayRepresentation(title: "Tram", image: .init(named: "tram"), synonyms: ["Streetcar", "Light Rail"]),
+        .train: DisplayRepresentation(title: "Train", image: .init(named: "train"), synonyms: ["Rail"]),
+        .metro: DisplayRepresentation(title: "Metro", image: .init(named: "metro"), synonyms: ["Subway", "Underground"]),
+        .gondola: DisplayRepresentation(title: "Gondola", image: .init(named: "gondola"), synonyms: ["Cable Car"]),
         .monorail: DisplayRepresentation(title: "Monorail", image: .init(named: "monorail")),
         .sleigh: DisplayRepresentation(title: "Sleigh", image: .init(named: "sleigh")),
-        .plane: DisplayRepresentation(title: "Plane", image: .init(named: "plane")),
-        .boat: DisplayRepresentation(title: "Boat", image: .init(named: "boat")),
+        .plane: DisplayRepresentation(title: "Plane", image: .init(named: "plane"), synonyms: ["Flight", "Flying"]),
+        .boat: DisplayRepresentation(title: "Boat", image: .init(named: "boat"), synonyms: ["Ferry", "Sailing"]),
         .scooter: DisplayRepresentation(title: "Scooter", image: .init(named: "scooter")),
     ]
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 struct StartTripIntent: AppIntent {
     static var title: LocalizedStringResource = "Start Trip"
     #if !OVERLAND_APP
@@ -75,7 +76,7 @@ struct StartTripIntent: AppIntent {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 struct EndTripIntent: AppIntent {
     static var title: LocalizedStringResource = "End Trip"
     #if !OVERLAND_APP
@@ -101,7 +102,7 @@ struct EndTripIntent: AppIntent {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 struct SendNowIntent: AppIntent {
     static var title: LocalizedStringResource = "Send Data Now"
     #if !OVERLAND_APP
@@ -161,7 +162,7 @@ extension SendNowIntent: LiveActivityIntent {}
 enum TripIntentText {
     static func modeName(_ mode: String?) -> String {
         guard let mode = mode else { return "" }
-        if #available(iOS 16.0, *), let appMode = TripModeAppEnum(rawValue: mode) {
+        if #available(iOS 17.0, *), let appMode = TripModeAppEnum(rawValue: mode) {
             return String(localized: TripModeAppEnum.caseDisplayRepresentations[appMode]!.title).lowercased()
         }
         return mode

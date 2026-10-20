@@ -28,9 +28,9 @@ BOOL dragInProgress = NO;
 BOOL mapWasDragged = NO;
 
 - (void)registerUserActivity {
-    // On iOS 16 and later, the app's App Intents offer this in Siri and Shortcuts instead. Shortcuts
+    // On iOS 17 and later, the app's App Intents offer this in Siri and Shortcuts instead. Shortcuts
     // people already made from this activity still work, since SceneDelegate still handles it.
-    if (@available(iOS 16.0, *)) {
+    if (@available(iOS 17.0, *)) {
         return;
     }
 
