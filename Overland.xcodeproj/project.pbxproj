@@ -127,7 +127,6 @@
 		0FB85ABF1BE0151800F25126 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		0FC4E00A2D0B000000000002 /* CustomHeadersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomHeadersViewController.h; sourceTree = "<group>"; };
 		0FC4E00A2D0B000000000003 /* CustomHeadersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomHeadersViewController.m; sourceTree = "<group>"; };
-		0FCF53231F81AAAC00577A0F /* GPSLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GPSLogger.entitlements; sourceTree = "<group>"; };
 		0FCF53241F81AB0800577A0F /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		0FCF532C1F83FDBC00577A0F /* EndpointViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EndpointViewController.h; sourceTree = "<group>"; };
 		0FCF532D1F83FDBC00577A0F /* EndpointViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EndpointViewController.m; sourceTree = "<group>"; };
@@ -298,7 +297,6 @@
 		0FFD31541BAB7A34009B3A03 /* GPSLogger */ = {
 			isa = PBXGroup;
 			children = (
-				0FCF53231F81AAAC00577A0F /* GPSLogger.entitlements */,
 				0FFD31581BAB7A34009B3A03 /* AppDelegate.h */,
 				0FFD31591BAB7A34009B3A03 /* AppDelegate.m */,
 				0FAC1FEF2B25FBC10007F3B1 /* SceneDelegate.h */,
