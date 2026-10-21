@@ -2153,10 +2153,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 // Stationary only counts when no movement is reported as well, since a phone resting on a car's
 // dashboard often reports both driving and stationary. Without motion data this is always NO.
+// Low confidence counts too: after arriving somewhere, stationary readings are often low confidence
+// for many minutes, and a stop started by mistake ends as soon as real movement is reported.
 - (BOOL)deviceIsStationary {
     CMMotionActivity *motion = self.lastMotion;
-    return motion.stationary && !motion.walking && !motion.running && !motion.cycling && !motion.automotive
-        && motion.confidence != CMMotionActivityConfidenceLow;
+    return motion.stationary && !motion.walking && !motion.running && !motion.cycling && !motion.automotive;
 }
 
 - (NSArray *)motionArrayFromLastMotion {
