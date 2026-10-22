@@ -781,6 +781,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         failure(@"The server URL is not valid");
         return;
     }
+    // The current location and trip info are added to the body when sending, so they haven't
+    // been through the queue's serializer
+    body = [GLManager JSONSafeObject:body];
     if(![NSJSONSerialization isValidJSONObject:body]) {
         failure(@"The location data couldn't be converted to JSON");
         return;
@@ -2575,7 +2578,31 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 + (NSData *)dataWithJSONObject:(id)object error:(NSError **)error;
 {
-    return [NSJSONSerialization dataWithJSONObject:object options:0 error:error];
+    return [NSJSONSerialization dataWithJSONObject:[self JSONSafeObject:object] options:0 error:error];
+}
+
+// JSON can't represent NaN or infinity, and NSJSONSerialization throws an exception for them,
+// which would crash the app while it's writing to the queue. Replace them with null instead.
++ (id)JSONSafeObject:(id)object {
+    if([object isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *safe = [NSMutableDictionary dictionaryWithCapacity:[object count]];
+        [(NSDictionary *)object enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+            safe[key] = [self JSONSafeObject:value];
+        }];
+        return safe;
+    } else if([object isKindOfClass:[NSArray class]]) {
+        NSMutableArray *safe = [NSMutableArray arrayWithCapacity:[object count]];
+        for(id value in (NSArray *)object) {
+            [safe addObject:[self JSONSafeObject:value]];
+        }
+        return safe;
+    } else if([object isKindOfClass:[NSNumber class]]) {
+        double value = [object doubleValue];
+        if(isnan(value) || isinf(value)) {
+            return [NSNull null];
+        }
+    }
+    return object;
 }
 
 + (NSString *)iso8601DateStringFromDate:(NSDate *)date {
