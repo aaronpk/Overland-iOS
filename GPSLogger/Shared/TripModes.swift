@@ -9,11 +9,12 @@
 //
 
 import Foundation
+import UIKit
 
 struct TripMode: Codable, Equatable {
     let id: String
     var name: String
-    // An SF Symbol name
+    // An SF Symbol name, or one of the custom symbols in TripModes.xcassets
     var symbol: String
     // The Tracker map zooms in closer for slower modes
     var closeZoom: Bool
@@ -26,9 +27,9 @@ struct TripMode: Codable, Equatable {
         TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking", "Hike"], healthWorkout: "walking"),
         TripMode(id: "run", name: "Run", symbol: "figure.run", closeZoom: true, synonyms: ["Running", "Jog"], healthWorkout: "running"),
         TripMode(id: "bicycle", name: "Bicycle", symbol: "bicycle", closeZoom: true, synonyms: ["Bike", "Cycling", "Cycle"], healthWorkout: "cycling"),
-        TripMode(id: "ebike", name: "E-Bike", symbol: "bicycle", closeZoom: true, synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
+        TripMode(id: "ebike", name: "E-Bike", symbol: "overland.ebike", closeZoom: true, synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
         TripMode(id: "car", name: "Car", symbol: "car.fill", closeZoom: false, synonyms: ["Drive", "Driving"]),
-        TripMode(id: "taxi", name: "Taxi", symbol: "car.fill", closeZoom: false),
+        TripMode(id: "taxi", name: "Taxi", symbol: "overland.taxi", closeZoom: false),
         TripMode(id: "bus", name: "Bus", symbol: "bus.fill", closeZoom: false),
         TripMode(id: "tram", name: "Tram", symbol: "tram.fill", closeZoom: false, synonyms: ["Streetcar", "Light Rail"]),
         TripMode(id: "train", name: "Train", symbol: "train.side.front.car", closeZoom: false, synonyms: ["Rail"]),
@@ -80,6 +81,16 @@ struct TripMode: Codable, Equatable {
 
     @objc(symbolForModeID:) static func symbol(_ id: String) -> String {
         mode(id)?.symbol ?? unknownSymbol
+    }
+
+    // SF Symbols has no e-bike or taxi, so TripModes.xcassets has custom symbols for those.
+    // Their names start with "overland." so they're loaded from the asset catalog.
+    @objc(isCustomSymbol:) static func isCustomSymbol(_ symbol: String) -> Bool {
+        symbol.hasPrefix("overland.")
+    }
+
+    @objc(imageForSymbol:) static func image(symbol: String) -> UIImage? {
+        isCustomSymbol(symbol) ? UIImage(named: symbol) : UIImage(systemName: symbol)
     }
 
     @objc(closeZoomForModeID:) static func closeZoom(_ id: String) -> Bool {

@@ -7,11 +7,23 @@
 
 import SwiftUI
 
+extension Image {
+    // A trip mode's icon, which may be one of the custom symbols in TripModes.xcassets
+    init(tripMode mode: String) {
+        let symbol = TripModeStore.symbol(mode)
+        if TripModeStore.isCustomSymbol(symbol) {
+            self.init(symbol)
+        } else {
+            self.init(systemName: symbol)
+        }
+    }
+}
+
 struct TripModeIcon: View {
     let mode: String
 
     var body: some View {
-        Image(systemName: TripModeStore.symbol(mode))
+        Image(tripMode: mode)
             .resizable()
             .scaledToFit()
             .foregroundStyle(.green)

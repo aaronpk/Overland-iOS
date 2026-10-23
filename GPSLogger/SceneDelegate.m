@@ -113,7 +113,10 @@
                 return [GLTripModeStore containsModeID:mode];
             }]];
         app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-            UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:[GLTripModeStore symbolForModeID:obj]];
+            NSString *symbol = [GLTripModeStore symbolForModeID:obj];
+            UIApplicationShortcutIcon *icon = [GLTripModeStore isCustomSymbol:symbol]
+                ? [UIApplicationShortcutIcon iconWithTemplateImageName:symbol]
+                : [UIApplicationShortcutIcon iconWithSystemImageName:symbol];
             return [[UIApplicationShortcutItem alloc] initWithType:obj
                                                     localizedTitle:[GLTripModeStore nameForModeID:obj]
                                                  localizedSubtitle:nil

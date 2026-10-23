@@ -31,7 +31,7 @@ struct TripControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: "com.aaronpk.overland.TripControl", provider: Provider()) { value in
             ControlWidgetToggle(isOn: value.tripInProgress, action: ToggleTripIntent()) {
-                Label("Trip", systemImage: TripModeStore.symbol(value.mode))
+                Label { Text("Trip") } icon: { Image(tripMode: value.mode) }
             } valueLabel: { isOn in
                 Text(isOn ? "\(TripFormat.modeName(value.mode)) Trip" : "Start \(TripFormat.modeName(value.mode))")
             }

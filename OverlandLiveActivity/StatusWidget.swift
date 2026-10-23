@@ -134,7 +134,7 @@ struct StatusWidgetView: View {
     private var rectangular: some View {
         VStack(alignment: .leading, spacing: 1) {
             if let start = state.tripStart {
-                Label(TripFormat.modeName(state.tripMode), systemImage: TripModeStore.symbol(state.tripMode))
+                Label { Text(TripFormat.modeName(state.tripMode)) } icon: { Image(tripMode: state.tripMode) }
                     .font(.headline)
                 ElapsedTime(start: start)
                     .multilineTextAlignment(.leading)
@@ -159,7 +159,7 @@ struct StatusWidgetView: View {
             AccessoryWidgetBackground()
             VStack(spacing: 1) {
                 if let start = state.tripStart {
-                    Image(systemName: TripModeStore.symbol(state.tripMode))
+                    Image(tripMode: state.tripMode)
                     Text(start, style: .timer)
                         .font(.caption2)
                         .multilineTextAlignment(.center)
@@ -182,7 +182,7 @@ struct StatusWidgetView: View {
             Label {
                 Text(start, style: .timer)
             } icon: {
-                Image(systemName: TripModeStore.symbol(state.tripMode))
+                Image(tripMode: state.tripMode)
             }
         } else {
             Label("\(state.trackingEnabled ? "Tracking" : "Not tracking") · \(state.queueCount) queued",
@@ -224,7 +224,7 @@ struct TripButton: View {
                     Label {
                         Text("Start")
                     } icon: {
-                        Image(systemName: TripModeStore.symbol(state.tripMode))
+                        Image(tripMode: state.tripMode)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 22, height: 22)

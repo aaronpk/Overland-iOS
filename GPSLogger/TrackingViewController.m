@@ -537,7 +537,7 @@ BOOL mapWasDragged = NO;
 - (void)updateTripMode {
     NSString *mode = [GLManager sharedManager].currentTripMode;
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:40];
-    self.currentModeImage.image = [UIImage systemImageNamed:[GLTripModeStore symbolForModeID:mode] withConfiguration:config];
+    self.currentModeImage.image = [[GLTripModeStore imageForSymbol:[GLTripModeStore symbolForModeID:mode]] imageWithConfiguration:config];
     self.currentModeLabel.text = [GLTripModeStore nameForModeID:mode];
 }
 

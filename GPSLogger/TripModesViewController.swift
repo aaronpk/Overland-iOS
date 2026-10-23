@@ -108,7 +108,7 @@ extension TripModeStore {
         var content = UIListContentConfiguration.valueCell()
         if indexPath.section == 0 {
             let mode = modes[indexPath.row]
-            content.image = UIImage(systemName: mode.symbol)
+            content.image = TripModeStore.image(symbol: mode.symbol)
             content.imageProperties.tintColor = .label
             content.text = mode.name
             if let workout = HealthWorkout.forKey(mode.healthWorkout) {
@@ -333,7 +333,7 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
         case .symbol:
             var content = UIListContentConfiguration.valueCell()
             content.text = "Icon"
-            content.image = UIImage(systemName: symbol)
+            content.image = TripModeStore.image(symbol: symbol)
             content.imageProperties.tintColor = .label
             cell.contentConfiguration = content
             cell.accessoryType = .disclosureIndicator
@@ -431,13 +431,13 @@ final class HealthWorkoutPickerViewController: UITableViewController {
 // MARK: - Choosing an icon
 
 final class TripModeSymbolPickerViewController: UICollectionViewController {
-    // SF Symbols that suit trip modes. Ones missing on this iOS version are left out.
+    // SF Symbols that suit trip modes, and the app's custom ones. Ones missing on this iOS version are left out.
     private static let groups: [(title: String, symbols: [String])] = [
         ("On Foot", ["figure.walk", "figure.run", "figure.hiking", "figure.stairs", "figure.roll",
                      "figure.roll.runningpace", "figure.walk.motion", "figure.and.child.holdinghands",
                      "dog.fill", "stroller.fill"]),
-        ("Wheels", ["bicycle", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
-                    "figure.skating", "motorcycle.fill", "car.fill", "car.side.fill", "suv.side.fill",
+        ("Wheels", ["bicycle", "overland.ebike", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
+                    "figure.skating", "motorcycle.fill", "car.fill", "overland.taxi", "car.side.fill", "suv.side.fill",
                     "truck.box.fill", "bolt.car.fill", "bus.fill", "bus.doubledecker.fill"]),
         ("Rail", ["tram.fill", "train.side.front.car", "tram.fill.tunnel", "lightrail.fill", "cablecar.fill",
                   "tram.circle.fill"]),
@@ -449,7 +449,7 @@ final class TripModeSymbolPickerViewController: UICollectionViewController {
         ("Other", ["figure.equestrian.sports", "figure.golf", "figure.climbing", "tent.fill", "binoculars.fill",
                    "camera.fill", "briefcase.fill", "cart.fill", "house.fill", "building.2.fill", "map.fill",
                    "location.fill", "star.fill", "heart.fill"]),
-    ].map { ($0.0, $0.1.filter { UIImage(systemName: $0) != nil }) }.filter { !$0.1.isEmpty }
+    ].map { ($0.0, $0.1.filter { TripModeStore.image(symbol: $0) != nil }) }.filter { !$0.1.isEmpty }
 
     private let selected: String
     private let onSelect: (String) -> Void
@@ -509,7 +509,7 @@ final class TripModeSymbolPickerViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! SymbolCell
         let symbol = Self.groups[indexPath.section].symbols[indexPath.item]
         let isSelected = symbol == selected
-        cell.imageView.image = UIImage(systemName: symbol)
+        cell.imageView.image = TripModeStore.image(symbol: symbol)
         cell.imageView.tintColor = isSelected ? .white : .label
         var background = UIBackgroundConfiguration.clear()
         background.backgroundColor = isSelected ? (UIColor(named: "OverlandGreen") ?? .systemGreen) : .secondarySystemGroupedBackground

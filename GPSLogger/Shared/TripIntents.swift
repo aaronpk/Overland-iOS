@@ -22,8 +22,9 @@ struct TripModeEntity: AppEntity {
 
     var displayRepresentation: DisplayRepresentation {
         let mode = TripModeStore.mode(id)
+        let symbol = TripModeStore.symbol(id)
         return DisplayRepresentation(title: "\(mode?.name ?? id)",
-                                     image: .init(systemName: TripModeStore.symbol(id)),
+                                     image: TripModeStore.isCustomSymbol(symbol) ? .init(named: symbol) : .init(systemName: symbol),
                                      synonyms: (mode?.synonyms ?? []).map { "\($0)" })
     }
 }
