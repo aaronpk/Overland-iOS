@@ -2,7 +2,8 @@
 //  HealthTripRecorder.swift
 //  Overland
 //
-//  Saves walk, run and bicycle trips to Apple Health as workouts with their route.
+//  Saves trips to Apple Health as workouts with their route, for trip modes that have an Apple
+//  Health workout type.
 //
 //  It keeps its own copy of the trip's route, in a file separate from GLManager's queue and trip
 //  database, so nothing here can affect the location data Overland sends. During a trip it adds
@@ -15,18 +16,70 @@
 import CoreLocation
 import HealthKit
 
+// The Apple Health workouts a trip mode can be saved as. Only outdoor workouts that can have a route.
+struct HealthWorkout {
+    // Stored in TripMode.healthWorkout, so it never changes
+    let key: String
+    let name: String
+    let activityType: HKWorkoutActivityType
+    // The distance sample saved with the workout, or nil to save only the route
+    let distanceType: HKQuantityTypeIdentifier?
+
+    static let all: [HealthWorkout] = {
+        var all = [
+            HealthWorkout(key: "walking", name: "Walking", activityType: .walking, distanceType: .distanceWalkingRunning),
+            HealthWorkout(key: "running", name: "Running", activityType: .running, distanceType: .distanceWalkingRunning),
+            HealthWorkout(key: "hiking", name: "Hiking", activityType: .hiking, distanceType: .distanceWalkingRunning),
+            HealthWorkout(key: "cycling", name: "Cycling", activityType: .cycling, distanceType: .distanceCycling),
+            HealthWorkout(key: "handCycling", name: "Hand Cycling", activityType: .handCycling, distanceType: .distanceCycling),
+            HealthWorkout(key: "wheelchairWalkPace", name: "Wheelchair Walk Pace", activityType: .wheelchairWalkPace, distanceType: .distanceWheelchair),
+            HealthWorkout(key: "wheelchairRunPace", name: "Wheelchair Run Pace", activityType: .wheelchairRunPace, distanceType: .distanceWheelchair),
+            HealthWorkout(key: "paddleSports", name: "Paddling", activityType: .paddleSports, distanceType: nil),
+            HealthWorkout(key: "rowing", name: "Rowing", activityType: .rowing, distanceType: nil),
+            HealthWorkout(key: "sailing", name: "Sailing", activityType: .sailing, distanceType: nil),
+            HealthWorkout(key: "surfing", name: "Surfing", activityType: .surfingSports, distanceType: nil),
+            HealthWorkout(key: "crossCountrySkiing", name: "Cross-Country Skiing", activityType: .crossCountrySkiing, distanceType: nil),
+            HealthWorkout(key: "downhillSkiing", name: "Downhill Skiing", activityType: .downhillSkiing, distanceType: .distanceDownhillSnowSports),
+            HealthWorkout(key: "snowboarding", name: "Snowboarding", activityType: .snowboarding, distanceType: .distanceDownhillSnowSports),
+            HealthWorkout(key: "skating", name: "Skating", activityType: .skatingSports, distanceType: nil),
+            HealthWorkout(key: "equestrian", name: "Horseback Riding", activityType: .equestrianSports, distanceType: nil),
+            HealthWorkout(key: "golf", name: "Golf", activityType: .golf, distanceType: nil),
+            HealthWorkout(key: "climbing", name: "Climbing", activityType: .climbing, distanceType: nil),
+            HealthWorkout(key: "other", name: "Other", activityType: .other, distanceType: nil),
+        ]
+        // Distance types added in iOS 18
+        if #available(iOS 18.0, *) {
+            let distanceTypes: [String: HKQuantityTypeIdentifier] = [
+                "paddleSports": .distancePaddleSports,
+                "rowing": .distanceRowing,
+                "crossCountrySkiing": .distanceCrossCountrySkiing,
+                "skating": .distanceSkatingSports,
+            ]
+            all = all.map { workout in
+                guard let distanceType = distanceTypes[workout.key] else { return workout }
+                return HealthWorkout(key: workout.key, name: workout.name, activityType: workout.activityType,
+                                     distanceType: distanceType)
+            }
+        }
+        return all
+    }()
+
+    static func forKey(_ key: String?) -> HealthWorkout? {
+        all.first { $0.key == key }
+    }
+
+    // The workout a trip in this mode is saved as, or nil if it isn't saved
+    static func forMode(_ mode: String) -> HealthWorkout? {
+        forKey(TripModeStore.healthWorkout(mode))
+    }
+}
+
 @objc final class HealthTripRecorder: NSObject {
     @objc static let shared = HealthTripRecorder()
 
     private static let enabledDefaultsKey = "HealthTripRecorderEnabled"
     private static let lastErrorDefaultsKey = "HealthTripRecorderLastError"
     private static let savedTripsDefaultsKey = "HealthTripRecorderSavedTrips"
-
-    private static let workoutTypes: [String: HKWorkoutActivityType] = [
-        "walk": .walking,
-        "run": .running,
-        "bicycle": .cycling,
-    ]
 
     private let store = HKHealthStore()
     // Route files are written and read on this queue
@@ -62,12 +115,11 @@ import HealthKit
     // Asks to save workouts, routes and distances. The completion runs on the main queue with nil if
     // Overland can save workouts, or a message to show.
     @objc func requestAuthorization(completion: @escaping (String?) -> Void) {
-        let types: Set<HKSampleType> = [
-            HKObjectType.workoutType(),
-            HKSeriesType.workoutRoute(),
-            HKQuantityType(.distanceWalkingRunning),
-            HKQuantityType(.distanceCycling),
-        ]
+        // Every distance type, so a mode's workout can be changed later without asking again
+        var types: Set<HKSampleType> = [HKObjectType.workoutType(), HKSeriesType.workoutRoute()]
+        for case let distanceType? in HealthWorkout.all.map(\.distanceType) {
+            types.insert(HKQuantityType(distanceType))
+        }
         store.requestAuthorization(toShare: types, read: nil) { [self] _, error in
             DispatchQueue.main.async { [self] in
                 if let error = error {
@@ -198,7 +250,7 @@ import HealthKit
 
     private func finishTrip(start: Date, end: Date, mode: String, distance: CLLocationDistance) {
         let url = routeFile(start: start)
-        guard isEnabled, Self.workoutTypes[mode] != nil, let route = readRouteFile(url) else {
+        guard isEnabled, HealthWorkout.forMode(mode) != nil, let route = readRouteFile(url) else {
             // Not saved to Health, such as a car trip
             try? FileManager.default.removeItem(at: url)
             return
@@ -214,7 +266,7 @@ import HealthKit
             if let current = current, Int(current.timeIntervalSince1970) == Int(seconds) {
                 continue
             }
-            guard isEnabled, let route = readRouteFile(url), Self.workoutTypes[route.mode] != nil,
+            guard isEnabled, let route = readRouteFile(url), HealthWorkout.forMode(route.mode) != nil,
                   let last = route.locations.last else {
                 try? FileManager.default.removeItem(at: url)
                 continue
@@ -230,7 +282,7 @@ import HealthKit
                       locations: [CLLocation], file: URL) {
         let tripID = "overland-trip-\(Int(start.timeIntervalSince1970))"
         var saved = UserDefaults.standard.stringArray(forKey: Self.savedTripsDefaultsKey) ?? []
-        guard let activityType = Self.workoutTypes[mode], end > start, !saved.contains(tripID) else {
+        guard let workout = HealthWorkout.forMode(mode), end > start, !saved.contains(tripID) else {
             try? FileManager.default.removeItem(at: file)
             return
         }
@@ -240,7 +292,7 @@ import HealthKit
         Task {
             defer { done.signal() }
             do {
-                try await saveWorkout(activityType: activityType, tripID: tripID, start: start, end: end,
+                try await saveWorkout(workout, tripID: tripID, start: start, end: end,
                                       distance: distance, locations: locations)
                 saved.append(tripID)
                 UserDefaults.standard.set(Array(saved.suffix(50)), forKey: Self.savedTripsDefaultsKey)
@@ -257,16 +309,19 @@ import HealthKit
         done.wait()
     }
 
-    private func saveWorkout(activityType: HKWorkoutActivityType, tripID: String, start: Date, end: Date,
+    private func saveWorkout(_ healthWorkout: HealthWorkout, tripID: String, start: Date, end: Date,
                              distance: CLLocationDistance, locations: [CLLocation]) async throws {
         let configuration = HKWorkoutConfiguration()
-        configuration.activityType = activityType
+        configuration.activityType = healthWorkout.activityType
         configuration.locationType = .outdoor
 
         let builder = HKWorkoutBuilder(healthStore: store, configuration: configuration, device: .local())
         try await builder.beginCollection(at: start)
-        if distance > 0 {
-            let distanceType = HKQuantityType(activityType == .cycling ? .distanceCycling : .distanceWalkingRunning)
+        // Saving a distance type Overland isn't allowed to save would fail the whole workout, which can
+        // happen when a mode's workout was changed after Health access was given
+        if distance > 0, let identifier = healthWorkout.distanceType,
+           store.authorizationStatus(for: HKQuantityType(identifier)) == .sharingAuthorized {
+            let distanceType = HKQuantityType(identifier)
             let sample = HKQuantitySample(type: distanceType,
                                           quantity: HKQuantity(unit: .meter(), doubleValue: distance),
                                           start: start, end: end)

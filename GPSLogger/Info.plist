@@ -49,7 +49,7 @@
 	<key>NSHealthShareUsageDescription</key>
 	<string>Overland only saves workouts to Apple Health. It doesn’t read your health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Overland saves your walk, run and bike trips to Apple Health as workouts, with their distance and route.</string>
+	<string>Overland saves your trips to Apple Health as workouts, with their distance and route, for trip modes that have a workout type, such as walk, run and bike.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Please allow "Always" to enable the app to track in the background</string>
 	<key>NSLocationAlwaysUsageDescription</key>

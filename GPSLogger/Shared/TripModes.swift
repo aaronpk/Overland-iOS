@@ -19,11 +19,13 @@ struct TripMode: Codable, Equatable {
     var closeZoom: Bool
     // Other names Siri and Shortcuts accept for this mode
     var synonyms: [String] = []
+    // The Apple Health workout this mode's trips are saved as, a key in HealthWorkout.all, or nil
+    var healthWorkout: String? = nil
 
     static let defaults: [TripMode] = [
-        TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking", "Hike"]),
-        TripMode(id: "run", name: "Run", symbol: "figure.run", closeZoom: true, synonyms: ["Running", "Jog"]),
-        TripMode(id: "bicycle", name: "Bicycle", symbol: "bicycle", closeZoom: true, synonyms: ["Bike", "Cycling", "Cycle"]),
+        TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking", "Hike"], healthWorkout: "walking"),
+        TripMode(id: "run", name: "Run", symbol: "figure.run", closeZoom: true, synonyms: ["Running", "Jog"], healthWorkout: "running"),
+        TripMode(id: "bicycle", name: "Bicycle", symbol: "bicycle", closeZoom: true, synonyms: ["Bike", "Cycling", "Cycle"], healthWorkout: "cycling"),
         TripMode(id: "ebike", name: "E-Bike", symbol: "bicycle", closeZoom: true, synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
         TripMode(id: "car", name: "Car", symbol: "car.fill", closeZoom: false, synonyms: ["Drive", "Driving"]),
         TripMode(id: "taxi", name: "Taxi", symbol: "car.fill", closeZoom: false),
@@ -82,5 +84,9 @@ struct TripMode: Codable, Equatable {
 
     @objc(closeZoomForModeID:) static func closeZoom(_ id: String) -> Bool {
         mode(id)?.closeZoom ?? false
+    }
+
+    static func healthWorkout(_ id: String) -> String? {
+        mode(id)?.healthWorkout
     }
 }

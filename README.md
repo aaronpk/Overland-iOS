@@ -101,7 +101,7 @@ There are some additional settings specific to trips:
 * `Show Location Indicator During Trips` - Choose whether you want the device to show the location indicator when a trip is in progress. Enable this to help the app run continuously in the background.
 * `Prevent screen lock during trip` - Does what it says. This is another way you can be sure the app won't get killed by iOS in the background.
 * `Show trip as Live Activity` - Shows the trip in progress on the Lock Screen and in the Dynamic Island, with its mode, elapsed time, distance and speed. On iOS 17 and later it has buttons to send the queued data now and to end the trip.
-* `Save to Apple Health` - Saves walk, run and bicycle trips to Apple Health as workouts, with their distance and GPS route, when the trip ends. Other trip modes aren't saved. If you also record workouts on an Apple Watch, the same activity may show up twice. If a workout can't be saved, the reason appears under the switch, and the app tries again the next time it starts. Off by default.
+* `Save to Apple Health` - Saves trips to Apple Health as workouts, with their distance and GPS route, when the trip ends. Only trip modes that have an Apple Health workout type are saved: by default Walk (Walking), Run (Running) and Bicycle (Cycling). The mode at the end of the trip decides the workout type. If you also record workouts on an Apple Watch, the same activity may show up twice. If a workout can't be saved, the reason appears under the switch, and the app tries again the next time it starts. Off by default.
 
 
 #### System Settings

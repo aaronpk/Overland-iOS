@@ -66,7 +66,7 @@
         return;
     }
     self.saveToHealth.on = [HealthTripRecorder shared].isEnabled;
-    NSString *info = @"Walk, run and bike trips are saved as workouts with their route. If you also record workouts on Apple Watch, you may see both.";
+    NSString *info = @"Trips are saved as workouts with their route, for trip modes that have an Apple Health workout type, such as Walk, Run and Bicycle. If you also record workouts on Apple Watch, you may see both.";
     NSString *error = [HealthTripRecorder shared].lastError;
     if(error) {
         info = [NSString stringWithFormat:@"%@\n\n⚠️ %@", info, error];
