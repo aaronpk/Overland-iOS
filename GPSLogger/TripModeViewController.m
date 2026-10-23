@@ -76,6 +76,13 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
     editButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:editButton];
 
+    UIButton *doneButton = [UIButton systemButtonWithPrimaryAction:[UIAction actionWithTitle:@"Done" image:nil identifier:nil handler:^(UIAction *action) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    doneButton.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    doneButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:doneButton];
+
     // Editing the modes saves them right away
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(modesChanged)
@@ -108,6 +115,8 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
         [title.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [editButton.centerYAnchor constraintEqualToAnchor:title.centerYAnchor],
         [editButton.trailingAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor],
+        [doneButton.centerYAnchor constraintEqualToAnchor:title.centerYAnchor],
+        [doneButton.leadingAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.leadingAnchor],
         [collectionView.topAnchor constraintEqualToAnchor:title.bottomAnchor constant:8],
         [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
