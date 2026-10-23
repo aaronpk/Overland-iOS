@@ -220,7 +220,7 @@ struct TripButton: View {
                 .tint(.red)
             } else {
                 // Shows the mode's icon, so it's clear what kind of trip this starts
-                Button(intent: StartTripIntent(mode: TripModeAppEnum(rawValue: state.tripMode))) {
+                Button(intent: StartTripIntent(mode: TripModeEntity(id: state.tripMode))) {
                     Label {
                         Text("Start")
                     } icon: {

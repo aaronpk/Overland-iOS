@@ -107,7 +107,11 @@
 
     // Register home screen actions
     if(![GLManager sharedManager].tripInProgress) {
-        NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
+        // Leave out modes that have been deleted
+        NSArray *tripModes = [[[GLManager sharedManager] tripModesByFrequency] filteredArrayUsingPredicate:
+            [NSPredicate predicateWithBlock:^BOOL(NSString *mode, NSDictionary *bindings) {
+                return [GLTripModeStore containsModeID:mode];
+            }]];
         app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
             UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:[GLTripModeStore symbolForModeID:obj]];
             return [[UIApplicationShortcutItem alloc] initWithType:obj

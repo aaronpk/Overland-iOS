@@ -51,6 +51,7 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
 
 @interface TripModeViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (strong, nonatomic) NSArray<NSString *> *modes;
+@property (strong, nonatomic) UICollectionView *collectionView;
 @end
 
 @implementation TripModeViewController
@@ -66,6 +67,20 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
     title.textAlignment = NSTextAlignmentCenter;
     title.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:title];
+
+    UIButton *editButton = [UIButton systemButtonWithPrimaryAction:[UIAction actionWithTitle:@"Edit" image:nil identifier:nil handler:^(UIAction *action) {
+        TripModesViewController *vc = [[TripModesViewController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nav animated:YES completion:nil];
+    }]];
+    editButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:editButton];
+
+    // Editing the modes saves them right away
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(modesChanged)
+                                                 name:GLSettingsChangedNotification
+                                               object:nil];
 
     // Three columns, like the original grid
     NSCollectionLayoutItem *item = [NSCollectionLayoutItem itemWithLayoutSize:
@@ -86,15 +101,23 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
     [collectionView registerClass:TripModeCell.class forCellWithReuseIdentifier:TripModeCellIdentifier];
     collectionView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:collectionView];
+    self.collectionView = collectionView;
 
     [NSLayoutConstraint activateConstraints:@[
         [title.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:20],
         [title.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [editButton.centerYAnchor constraintEqualToAnchor:title.centerYAnchor],
+        [editButton.trailingAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor],
         [collectionView.topAnchor constraintEqualToAnchor:title.bottomAnchor constant:8],
         [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
         [collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
     ]];
+}
+
+- (void)modesChanged {
+    self.modes = GLTripModeStore.allModeIDs;
+    [self.collectionView reloadData];
 }
 
 #pragma mark - Collection view

@@ -30,9 +30,43 @@
         [self.activityType insertSegmentWithTitle:@"Boat" atIndex:self.activityType.numberOfSegments animated:NO];
     }
 
+    [self addTripModesSetting];
     if(HealthTripRecorder.isAvailable) {
         [self addHealthSetting];
     }
+}
+
+// The Trip Modes row goes before the Live Activity row, in the storyboard's stack of settings
+- (void)addTripModesSetting {
+    UIView *liveActivityRow = self.showLiveActivityDuringTrip.superview;
+    UIStackView *settings = (UIStackView *)liveActivityRow.superview;
+    NSUInteger index = [settings.arrangedSubviews indexOfObject:liveActivityRow];
+    if(![settings isKindOfClass:[UIStackView class]] || index == NSNotFound) {
+        return;
+    }
+
+    UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
+    config.title = @"Trip Modes";
+    config.image = [UIImage systemImageNamed:@"chevron.right"];
+    config.imagePlacement = NSDirectionalRectEdgeTrailing;
+    config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleSmall];
+    config.contentInsets = NSDirectionalEdgeInsetsZero;
+    config.titleTextAttributesTransformer = ^NSDictionary *(NSDictionary *attributes) {
+        NSMutableDictionary *updated = [attributes mutableCopy];
+        updated[NSFontAttributeName] = [UIFont systemFontOfSize:17];
+        return updated;
+    };
+    UIButton *button = [UIButton buttonWithConfiguration:config primaryAction:nil];
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeading;
+    [button addTarget:self action:@selector(tripModesButtonWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+    [settings insertArrangedSubview:button atIndex:index];
+}
+
+- (void)tripModesButtonWasTapped:(UIButton *)sender {
+    TripModesViewController *vc = [[TripModesViewController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 // The Apple Health row goes after the Live Activity row, in the storyboard's stack of settings

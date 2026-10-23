@@ -47,7 +47,7 @@ struct SetTripModeIntent: AppIntent {
     static var description = IntentDescription("Sets the mode for the next trip, without starting it. During a trip, it changes the mode of the trip in progress.")
 
     @Parameter(title: "Mode")
-    var mode: TripModeAppEnum
+    var mode: TripModeEntity
 
     static var parameterSummary: some ParameterSummary {
         Summary("Set the trip mode to \(\.$mode)")
@@ -56,9 +56,9 @@ struct SetTripModeIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let manager: GLManager = GLManager.shared()
-        manager.currentTripMode = mode.rawValue
+        manager.currentTripMode = mode.id
         SharedStateObserver.shared.stateChanged()
-        let name = TripIntentText.modeName(mode.rawValue)
+        let name = TripIntentText.modeName(mode.id)
         return .result(dialog: manager.tripInProgress() ? "Changed this trip to \(name)." : "The next trip will be \(name).")
     }
 }

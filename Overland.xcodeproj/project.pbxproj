@@ -25,6 +25,7 @@
 		0F3E5211201E543200DCFAA4 /* OpenSansCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520F201E543200DCFAA4 /* OpenSansCondensed-Light.ttf */; };
 		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
+		0FA3AA05AB12CD34EF560005 /* TripModesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
 		0FA11FBA259623D911A653DC /* TripActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA14C96E8BC2D9C270B9238 /* TripActivityAttributes.swift */; };
 		0FA1373CC66D67A35F3F31C6 /* OverlandLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0FA1D141E0978A09277D576D /* OverlandLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -105,6 +106,7 @@
 		0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "Fonts/OpenSans-Light.ttf"; sourceTree = SOURCE_ROOT; };
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
+		0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModesViewController.swift; sourceTree = "<group>"; };
 		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0FA128E0AE4C423AD6DEC0EE /* TripLiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripLiveActivityController.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				0FFD315C1BAB7A34009B3A03 /* TrackingViewController.m */,
 				0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */,
 				0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */,
+				0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */,
 				0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */,
 				0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */,
 				0FF590312B1FA22E00E3AAA3 /* TripSettingsViewController.h */,
@@ -560,6 +563,7 @@
 				0FCF532E1F83FDBC00577A0F /* EndpointViewController.m in Sources */,
 				0FC4E00A2D0B000000000001 /* CustomHeadersViewController.m in Sources */,
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,
+				0FA3AA05AB12CD34EF560005 /* TripModesViewController.swift in Sources */,
 				0FAC1FEE2B25FBB50007F3B1 /* SceneDelegate.m in Sources */,
 				0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */,
 				0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */,

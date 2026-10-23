@@ -11,33 +11,43 @@
 import AppIntents
 import Foundation
 
+// A trip mode in Shortcuts and Siri. It's an entity rather than an enum, so modes added in the app
+// show up too. The query reads the modes from the App Group, so it works in both targets.
 @available(iOS 17.0, *)
-enum TripModeAppEnum: String, AppEnum {
-    // The built-in mode IDs in TripMode.defaults
-    case walk, run, bicycle, car, taxi, bus, tram, train, metro, gondola, monorail, sleigh, plane, boat, scooter, ebike
-
+struct TripModeEntity: AppEntity {
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Trip Mode"
+    static var defaultQuery = TripModeQuery()
 
-    // Includes other names Siri and Shortcuts accept for a mode, such as "bike" for Bicycle. These
-    // have to be literals, so they repeat the names and symbols in TripMode.defaults.
-    static var caseDisplayRepresentations: [TripModeAppEnum: DisplayRepresentation] = [
-        .walk: DisplayRepresentation(title: "Walk", image: .init(systemName: "figure.walk"), synonyms: ["Walking", "Hike"]),
-        .run: DisplayRepresentation(title: "Run", image: .init(systemName: "figure.run"), synonyms: ["Running", "Jog"]),
-        .bicycle: DisplayRepresentation(title: "Bicycle", image: .init(systemName: "bicycle"), synonyms: ["Bike", "Cycling", "Cycle"]),
-        .car: DisplayRepresentation(title: "Car", image: .init(systemName: "car.fill"), synonyms: ["Drive", "Driving"]),
-        .taxi: DisplayRepresentation(title: "Taxi", image: .init(systemName: "car.fill")),
-        .bus: DisplayRepresentation(title: "Bus", image: .init(systemName: "bus.fill")),
-        .tram: DisplayRepresentation(title: "Tram", image: .init(systemName: "tram.fill"), synonyms: ["Streetcar", "Light Rail"]),
-        .train: DisplayRepresentation(title: "Train", image: .init(systemName: "train.side.front.car"), synonyms: ["Rail"]),
-        .metro: DisplayRepresentation(title: "Metro", image: .init(systemName: "tram.fill.tunnel"), synonyms: ["Subway", "Underground"]),
-        .gondola: DisplayRepresentation(title: "Gondola", image: .init(systemName: "cablecar.fill"), synonyms: ["Cable Car"]),
-        .monorail: DisplayRepresentation(title: "Monorail", image: .init(systemName: "lightrail.fill")),
-        .sleigh: DisplayRepresentation(title: "Sleigh", image: .init(systemName: "snowflake")),
-        .plane: DisplayRepresentation(title: "Plane", image: .init(systemName: "airplane"), synonyms: ["Flight", "Flying"]),
-        .boat: DisplayRepresentation(title: "Boat", image: .init(systemName: "sailboat.fill"), synonyms: ["Ferry", "Sailing"]),
-        .scooter: DisplayRepresentation(title: "Scooter", image: .init(systemName: "scooter")),
-        .ebike: DisplayRepresentation(title: "E-Bike", image: .init(systemName: "bicycle"), synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
-    ]
+    let id: String
+
+    var displayRepresentation: DisplayRepresentation {
+        let mode = TripModeStore.mode(id)
+        return DisplayRepresentation(title: "\(mode?.name ?? id)",
+                                     image: .init(systemName: TripModeStore.symbol(id)),
+                                     synonyms: (mode?.synonyms ?? []).map { "\($0)" })
+    }
+}
+
+@available(iOS 17.0, *)
+struct TripModeQuery: EntityStringQuery {
+    func entities(for identifiers: [String]) async throws -> [TripModeEntity] {
+        identifiers.filter { TripModeStore.contains($0) }.map(TripModeEntity.init)
+    }
+
+    func suggestedEntities() async throws -> [TripModeEntity] {
+        TripModeStore.modes.map { TripModeEntity(id: $0.id) }
+    }
+
+    // Matches the name, the ID or one of the synonyms, such as "bike" for Bicycle
+    func entities(matching string: String) async throws -> [TripModeEntity] {
+        let query = string.trimmingCharacters(in: .whitespaces).lowercased()
+        return TripModeStore.modes
+            .filter { mode in
+                ([mode.name, mode.id] + mode.synonyms).contains { $0.lowercased() == query }
+                    || mode.name.lowercased().contains(query)
+            }
+            .map { TripModeEntity(id: $0.id) }
+    }
 }
 
 @available(iOS 17.0, *)
@@ -50,11 +60,11 @@ struct StartTripIntent: AppIntent {
     static var description = IntentDescription("Starts a trip in Overland. Tracking turns on for the trip, and back off when the trip ends if it was off before.")
 
     @Parameter(title: "Mode", description: "Leave empty to use the last trip mode.")
-    var mode: TripModeAppEnum?
+    var mode: TripModeEntity?
 
     init() {}
 
-    init(mode: TripModeAppEnum?) {
+    init(mode: TripModeEntity?) {
         self.mode = mode
     }
 
@@ -69,7 +79,7 @@ struct StartTripIntent: AppIntent {
         if manager.tripInProgress() {
             return .result(dialog: "A \(TripIntentText.modeName(manager.currentTripMode)) trip is already in progress.")
         }
-        GLTripActions.startTrip(withMode: mode?.rawValue)
+        GLTripActions.startTrip(withMode: mode?.id)
         SharedStateObserver.shared.tripChanged(inProgress: true)
         return .result(dialog: "Started a \(TripIntentText.modeName(manager.currentTripMode)) trip.")
         #else
