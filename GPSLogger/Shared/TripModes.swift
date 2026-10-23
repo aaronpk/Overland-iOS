@@ -2,8 +2,9 @@
 //  TripModes.swift
 //  Overland
 //
-//  The list of trip modes, in the order the picker shows them. A mode's ID is what servers receive
-//  as trip_mode, so it never changes once a mode exists; the name and symbol are only for display.
+//  The list of trip modes, in the order the picker shows them. A mode's ID identifies it inside the
+//  app (the current mode, stats, Shortcuts, widgets), so it never changes once a mode exists. Servers
+//  receive its server value, which is the ID unless the user changed it.
 //  The list is stored in the App Group so the widget extension can show names and symbols.
 //  Compiled into both targets.
 //
@@ -22,6 +23,8 @@ struct TripMode: Codable, Equatable {
     var synonyms: [String] = []
     // The Apple Health workout this mode's trips are saved as, a key in HealthWorkout.all, or nil
     var healthWorkout: String? = nil
+    // What servers receive as trip_mode and as the trip's mode, or nil to send the ID
+    var serverValue: String? = nil
 
     static let defaults: [TripMode] = [
         TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking", "Hike"], healthWorkout: "walking"),
@@ -77,6 +80,17 @@ struct TripMode: Codable, Equatable {
 
     @objc(nameForModeID:) static func name(_ id: String) -> String {
         mode(id)?.name ?? id
+    }
+
+    // A mode removed during a trip keeps sending its ID
+    @objc(serverValueForModeID:) static func serverValue(_ id: String) -> String {
+        mode(id)?.serverValue ?? id
+    }
+
+    // For trip_mode in remote config: the mode that sends this value, or else the mode with this ID
+    @objc(modeIDForServerValue:) static func modeID(serverValue value: String) -> String? {
+        let modes = self.modes
+        return (modes.first { ($0.serverValue ?? $0.id) == value } ?? modes.first { $0.id == value })?.id
     }
 
     @objc(symbolForModeID:) static func symbol(_ id: String) -> String {

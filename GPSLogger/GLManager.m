@@ -422,8 +422,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     NSString *tripMode = [settings objectForKey:@"trip_mode"];
     if([tripMode respondsToSelector:@selector(isEqualToString:)]) {
-        if([GLTripModeStore containsModeID:tripMode]) {
-            self.currentTripMode = tripMode;
+        NSString *modeID = [GLTripModeStore modeIDForServerValue:tripMode];
+        if(modeID) {
+            self.currentTripMode = modeID;
         }
     }
     
@@ -1129,7 +1130,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (NSDictionary *)currentTripDictionary {
     return @{
-            @"mode": self.currentTripMode,
+            @"mode": [GLTripModeStore serverValueForModeID:self.currentTripMode],
             @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
             @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
             @"start_location": (self.currentTripStartLocationDictionary ?: [NSNull null]),
@@ -1249,7 +1250,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                       @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
                                               @"timestamp": timestamp,
                                               @"type": @"trip",
-                                              @"mode": self.currentTripMode,
+                                              @"mode": [GLTripModeStore serverValueForModeID:self.currentTripMode],
                                               @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
                                               @"end": timestamp,
                                               @"start_location": (self.tripStartLocationDictionary ?: [NSNull null]),
@@ -2029,7 +2030,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
             // Add the trip start time as trip_id, and the current trip mode, in the location update
             if(self.tripInProgress) {
                 [properties setValue:[GLManager iso8601DateStringFromDate:self.currentTripStart] forKey:@"trip_id"];
-                [properties setValue:self.currentTripMode forKey:@"trip_mode"];
+                [properties setValue:[GLTripModeStore serverValueForModeID:self.currentTripMode] forKey:@"trip_mode"];
             }
         }
 

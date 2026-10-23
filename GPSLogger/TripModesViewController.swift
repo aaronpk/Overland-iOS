@@ -187,7 +187,7 @@ extension TripModeStore {
 
 final class TripModeEditViewController: UITableViewController, UITextFieldDelegate {
     private enum Row {
-        case name, symbol, health, zoom, id
+        case name, symbol, health, zoom, serverValue
     }
 
     // nil while adding a mode
@@ -197,14 +197,8 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
     private var healthWorkout: String?
     private var closeZoom: Bool
     private let nameField = UITextField()
-
-    private var sections: [[Row]] {
-        var sections: [[Row]] = [[.name], [.symbol], [.health], [.zoom]]
-        if original != nil {
-            sections.append([.id])
-        }
-        return sections
-    }
+    private let serverValueField = UITextField()
+    private let sections: [[Row]] = [[.name], [.symbol], [.health], [.zoom], [.serverValue]]
 
     init(mode: TripMode?) {
         original = mode
@@ -231,6 +225,18 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
         nameField.clearButtonMode = .whileEditing
         nameField.delegate = self
         nameField.addTarget(self, action: #selector(nameChanged), for: .editingChanged)
+
+        // Empty sends the mode's ID, shown as the placeholder
+        serverValueField.text = original?.serverValue
+        serverValueField.font = .monospacedSystemFont(ofSize: 17, weight: .regular)
+        serverValueField.autocapitalizationType = .none
+        serverValueField.autocorrectionType = .no
+        serverValueField.spellCheckingType = .no
+        serverValueField.keyboardType = .asciiCapable
+        serverValueField.returnKeyType = .done
+        serverValueField.clearButtonMode = .whileEditing
+        serverValueField.delegate = self
+        updateServerValuePlaceholder()
         updateSaveButton()
     }
 
@@ -248,7 +254,17 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
 
     @objc private func nameChanged() {
         name = nameField.text ?? ""
+        updateServerValuePlaceholder()
         updateSaveButton()
+    }
+
+    // The ID a new mode will get, or an existing mode's ID
+    private var defaultServerValue: String {
+        original?.id ?? TripModeStore.newID(forName: name.trimmingCharacters(in: .whitespaces))
+    }
+
+    private func updateServerValuePlaceholder() {
+        serverValueField.placeholder = defaultServerValue
     }
 
     private func updateSaveButton() {
@@ -263,6 +279,9 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
     @objc private func save() {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !trimmedName.isEmpty else { return }
+        let id = defaultServerValue
+        let value = (serverValueField.text ?? "").trimmingCharacters(in: .whitespaces)
+        let serverValue = value.isEmpty || value == id ? nil : value
 
         var modes = TripModeStore.modes
         if let original = original, let index = modes.firstIndex(where: { $0.id == original.id }) {
@@ -270,9 +289,10 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
             modes[index].symbol = symbol
             modes[index].healthWorkout = healthWorkout
             modes[index].closeZoom = closeZoom
+            modes[index].serverValue = serverValue
         } else {
-            modes.append(TripMode(id: TripModeStore.newID(forName: trimmedName), name: trimmedName, symbol: symbol,
-                                  closeZoom: closeZoom, healthWorkout: healthWorkout))
+            modes.append(TripMode(id: id, name: trimmedName, symbol: symbol,
+                                  closeZoom: closeZoom, healthWorkout: healthWorkout, serverValue: serverValue))
         }
         TripModeStore.save(modes)
 
@@ -297,7 +317,7 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
         case .symbol: return "Icon"
         case .health: return "Apple Health"
         case .zoom: return "Map"
-        case .id: return "trip_mode"
+        case .serverValue: return "Server Value"
         }
     }
 
@@ -309,8 +329,8 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
                 : "Turn on Save to Apple Health in Trip Settings to save trips as workouts."
         case .zoom:
             return "How close the Tracker map zooms in during a trip."
-        case .id:
-            return "Sent to your server with each point and trip. It stays the same if you rename the mode."
+        case .serverValue:
+            return "Sent to your server as trip_mode on each point and as the trip's mode. Leave it empty to send the value shown. Renaming the mode doesn't change it."
         default:
             return nil
         }
@@ -352,13 +372,17 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
             control.selectedSegmentIndex = closeZoom ? 0 : 1
             control.addTarget(self, action: #selector(zoomChanged(_:)), for: .valueChanged)
             cell.accessoryView = control
-        case .id:
+        case .serverValue:
             cell.selectionStyle = .none
-            var content = UIListContentConfiguration.valueCell()
-            content.text = original?.id
-            content.textProperties.font = .monospacedSystemFont(ofSize: 15, weight: .regular)
-            content.textProperties.color = .secondaryLabel
-            cell.contentConfiguration = content
+            serverValueField.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(serverValueField)
+            NSLayoutConstraint.activate([
+                serverValueField.leadingAnchor.constraint(equalTo: cell.contentView.layoutMarginsGuide.leadingAnchor),
+                serverValueField.trailingAnchor.constraint(equalTo: cell.contentView.layoutMarginsGuide.trailingAnchor),
+                serverValueField.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                serverValueField.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                serverValueField.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            ])
         }
         return cell
     }

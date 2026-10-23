@@ -100,7 +100,7 @@ There are some additional settings specific to trips:
 
 * `Show Location Indicator During Trips` - Choose whether you want the device to show the location indicator when a trip is in progress. Enable this to help the app run continuously in the background.
 * `Prevent screen lock during trip` - Does what it says. This is another way you can be sure the app won't get killed by iOS in the background.
-* `Trip Modes` - Add your own trip modes, and rename, reorder or delete the built-in ones. Each mode has a name, an icon (an SF Symbol), an Apple Health workout type, and how close the Tracker map zooms in. A mode's `trip_mode` value is made from its name when it's created, such as `kayak`, and never changes, even if the mode is renamed. "Restore Default Modes" brings back deleted built-in modes and resets their settings, and keeps your own modes. You can also open this from the Edit button on the trip mode picker.
+* `Trip Modes` - Add your own trip modes, and rename, reorder or delete the built-in ones. Each mode has a name, an icon (an SF Symbol), an Apple Health workout type, how close the Tracker map zooms in, and a server value. The server value is what's sent to your server as `trip_mode` and as the trip's `mode`. It's the mode's ID unless you change it, so you can match whatever values your server expects. A new mode's ID is made from its name, such as `kayak`, and the built-in modes use the IDs listed under `trip_mode` below. Renaming a mode doesn't change its server value. "Restore Default Modes" brings back deleted built-in modes and resets their settings, and keeps your own modes. You can also open this from the Edit button on the trip mode picker.
 * `Show trip as Live Activity` - Shows the trip in progress on the Lock Screen and in the Dynamic Island, with its mode, elapsed time, distance and speed. On iOS 17 and later it has buttons to send the queued data now and to end the trip.
 * `Save to Apple Health` - Saves trips to Apple Health as workouts, with their distance and GPS route, when the trip ends. Only trip modes that have an Apple Health workout type are saved: by default Walk (Walking), Run (Running) and Bicycle (Cycling), and you can choose the type for any mode under Trip Modes. The mode at the end of the trip decides the workout type. If you also record workouts on an Apple Watch, the same activity may show up twice. If a workout can't be saved, the reason appears under the switch, and the app tries again the next time it starts. Off by default.
 
@@ -272,7 +272,7 @@ The properties on the `location` objects are as follows:
 The following properties are included only while a trip is in progress:
 
 * `trip_id` - the ISO8601 timestamp of when the trip started, which is the same for every point in the trip
-* `trip_mode` - the trip mode when this point was recorded, such as `walk` or `car`, or the ID of a mode the user added, such as `kayak`. If the mode is changed during a trip, later points have the new mode.
+* `trip_mode` - the server value of the trip mode when this point was recorded. By default this is the mode's ID, such as `walk` or `car`, or the ID of a mode the user added, such as `kayak`, but the user can change it in Trip Modes. If the mode is changed during a trip, later points have the new mode.
 
 The following properties are included only if the "Include Tracking Stats" option is selected:
 
@@ -308,7 +308,7 @@ You can configure all of the settings in the app by having your server return ne
   "result": "ok",
   "set": {
     "send_interval": "1s|5s|10s|15s|30s|1m|2m|5m|10m|30m|off",
-    "trip_mode": "walk|run|bicycle|ebike|car|taxi|bus|tram|train|metro|gondola|monorail|sleigh|plane|boat|scooter|<a custom mode's ID>",
+    "trip_mode": "walk|run|bicycle|ebike|car|taxi|bus|tram|train|metro|gondola|monorail|sleigh|plane|boat|scooter|<a mode's server value or ID>",
     "main": {
       "tracking_mode": "off|standard|significant|both",
       "visit_tracking": true|false,
@@ -370,7 +370,7 @@ If the number of locations in the queue are more than twice the batch size, then
 If a trip is active, an object called `trip` will be included in the request as well, with information about the current trip. This object will contain the following properties:
 
 * `distance` - current trip distance in meters as calculated by the device
-* `mode` - the trip mode as a string
+* `mode` - the trip mode's server value, the same as `trip_mode` on points
 * `current_location` - a `location` record that represents the most recent location of the device
 * `start_location` - a `location` record that represents the location at the start of the trip
 * `start` - an ISO8601 timestamp representing the time the trip was started. this may be slightly different from the timestamp in the start location.
