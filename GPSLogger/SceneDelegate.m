@@ -12,6 +12,7 @@
 #import "GLManager.h"
 #import "GLTripActions.h"
 #import "NSArray+map.h"
+#import "Overland-Swift.h"
 
 @implementation SceneDelegate
 
@@ -108,9 +109,9 @@
     if(![GLManager sharedManager].tripInProgress) {
         NSArray *tripModes = [[GLManager sharedManager] tripModesByFrequency];
         app.shortcutItems = [tripModes mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-            UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithTemplateImageName:obj];
+            UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithSystemImageName:[GLTripModeStore symbolForModeID:obj]];
             return [[UIApplicationShortcutItem alloc] initWithType:obj
-                                                    localizedTitle:obj
+                                                    localizedTitle:[GLTripModeStore nameForModeID:obj]
                                                  localizedSubtitle:nil
                                                               icon:icon
                                                           userInfo:nil];

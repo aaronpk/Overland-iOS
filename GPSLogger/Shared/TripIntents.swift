@@ -13,28 +13,30 @@ import Foundation
 
 @available(iOS 17.0, *)
 enum TripModeAppEnum: String, AppEnum {
-    // The same identifiers as +[GLManager GLTripModes]
-    case walk, run, bicycle, car, taxi, bus, tram, train, metro, gondola, monorail, sleigh, plane, boat, scooter
+    // The built-in mode IDs in TripMode.defaults
+    case walk, run, bicycle, car, taxi, bus, tram, train, metro, gondola, monorail, sleigh, plane, boat, scooter, ebike
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Trip Mode"
 
-    // Includes other names Siri and Shortcuts accept for a mode, such as "bike" for Bicycle
+    // Includes other names Siri and Shortcuts accept for a mode, such as "bike" for Bicycle. These
+    // have to be literals, so they repeat the names and symbols in TripMode.defaults.
     static var caseDisplayRepresentations: [TripModeAppEnum: DisplayRepresentation] = [
-        .walk: DisplayRepresentation(title: "Walk", image: .init(named: "walk"), synonyms: ["Walking", "Hike"]),
-        .run: DisplayRepresentation(title: "Run", image: .init(named: "run"), synonyms: ["Running", "Jog"]),
-        .bicycle: DisplayRepresentation(title: "Bicycle", image: .init(named: "bicycle"), synonyms: ["Bike", "Cycling", "Cycle"]),
-        .car: DisplayRepresentation(title: "Car", image: .init(named: "car"), synonyms: ["Drive", "Driving"]),
-        .taxi: DisplayRepresentation(title: "Taxi", image: .init(named: "taxi")),
-        .bus: DisplayRepresentation(title: "Bus", image: .init(named: "bus")),
-        .tram: DisplayRepresentation(title: "Tram", image: .init(named: "tram"), synonyms: ["Streetcar", "Light Rail"]),
-        .train: DisplayRepresentation(title: "Train", image: .init(named: "train"), synonyms: ["Rail"]),
-        .metro: DisplayRepresentation(title: "Metro", image: .init(named: "metro"), synonyms: ["Subway", "Underground"]),
-        .gondola: DisplayRepresentation(title: "Gondola", image: .init(named: "gondola"), synonyms: ["Cable Car"]),
-        .monorail: DisplayRepresentation(title: "Monorail", image: .init(named: "monorail")),
-        .sleigh: DisplayRepresentation(title: "Sleigh", image: .init(named: "sleigh")),
-        .plane: DisplayRepresentation(title: "Plane", image: .init(named: "plane"), synonyms: ["Flight", "Flying"]),
-        .boat: DisplayRepresentation(title: "Boat", image: .init(named: "boat"), synonyms: ["Ferry", "Sailing"]),
-        .scooter: DisplayRepresentation(title: "Scooter", image: .init(named: "scooter")),
+        .walk: DisplayRepresentation(title: "Walk", image: .init(systemName: "figure.walk"), synonyms: ["Walking", "Hike"]),
+        .run: DisplayRepresentation(title: "Run", image: .init(systemName: "figure.run"), synonyms: ["Running", "Jog"]),
+        .bicycle: DisplayRepresentation(title: "Bicycle", image: .init(systemName: "bicycle"), synonyms: ["Bike", "Cycling", "Cycle"]),
+        .car: DisplayRepresentation(title: "Car", image: .init(systemName: "car.fill"), synonyms: ["Drive", "Driving"]),
+        .taxi: DisplayRepresentation(title: "Taxi", image: .init(systemName: "car.fill")),
+        .bus: DisplayRepresentation(title: "Bus", image: .init(systemName: "bus.fill")),
+        .tram: DisplayRepresentation(title: "Tram", image: .init(systemName: "tram.fill"), synonyms: ["Streetcar", "Light Rail"]),
+        .train: DisplayRepresentation(title: "Train", image: .init(systemName: "train.side.front.car"), synonyms: ["Rail"]),
+        .metro: DisplayRepresentation(title: "Metro", image: .init(systemName: "tram.fill.tunnel"), synonyms: ["Subway", "Underground"]),
+        .gondola: DisplayRepresentation(title: "Gondola", image: .init(systemName: "cablecar.fill"), synonyms: ["Cable Car"]),
+        .monorail: DisplayRepresentation(title: "Monorail", image: .init(systemName: "lightrail.fill")),
+        .sleigh: DisplayRepresentation(title: "Sleigh", image: .init(systemName: "snowflake")),
+        .plane: DisplayRepresentation(title: "Plane", image: .init(systemName: "airplane"), synonyms: ["Flight", "Flying"]),
+        .boat: DisplayRepresentation(title: "Boat", image: .init(systemName: "sailboat.fill"), synonyms: ["Ferry", "Sailing"]),
+        .scooter: DisplayRepresentation(title: "Scooter", image: .init(systemName: "scooter")),
+        .ebike: DisplayRepresentation(title: "E-Bike", image: .init(systemName: "bicycle"), synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
     ]
 }
 
@@ -162,10 +164,7 @@ extension SendNowIntent: LiveActivityIntent {}
 enum TripIntentText {
     static func modeName(_ mode: String?) -> String {
         guard let mode = mode else { return "" }
-        if #available(iOS 17.0, *), let appMode = TripModeAppEnum(rawValue: mode) {
-            return String(localized: TripModeAppEnum.caseDisplayRepresentations[appMode]!.title).lowercased()
-        }
-        return mode
+        return TripModeStore.name(mode).lowercased()
     }
 
     // For example "bicycle trip (23 min, 4.2 km)"

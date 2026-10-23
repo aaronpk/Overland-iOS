@@ -10,6 +10,7 @@
 #import "TrackingViewController.h"
 #import "GLManager.h"
 #import "GLTripActions.h"
+#import "Overland-Swift.h"
 
 @interface TrackingViewController ()
 
@@ -406,8 +407,7 @@ BOOL mapWasDragged = NO;
 
 - (int)mapAltitude {
     int altitude;
-    NSString *m = [GLManager sharedManager].currentTripMode;
-    if([m isEqualToString:@"walk"] || [m isEqualToString:@"run"] || [m isEqualToString:@"bicycle"] || [m isEqualToString:@"scooter"]) {
+    if([GLTripModeStore closeZoomForModeID:[GLManager sharedManager].currentTripMode]) {
         altitude = 1000;
     } else {
         altitude = 3000;
@@ -535,8 +535,10 @@ BOOL mapWasDragged = NO;
 }
 
 - (void)updateTripMode {
-    self.currentModeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [GLManager sharedManager].currentTripMode]];
-    self.currentModeLabel.text = [GLManager sharedManager].currentTripMode;
+    NSString *mode = [GLManager sharedManager].currentTripMode;
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:40];
+    self.currentModeImage.image = [UIImage systemImageNamed:[GLTripModeStore symbolForModeID:mode] withConfiguration:config];
+    self.currentModeLabel.text = [GLTripModeStore nameForModeID:mode];
 }
 
 - (void)updateTripState {

@@ -5,6 +5,7 @@
 
 #import "GLTripActions.h"
 #import "GLManager.h"
+#import "Overland-Swift.h"
 
 @implementation GLTripActions
 
@@ -13,7 +14,7 @@
     if(manager.tripInProgress) {
         return;
     }
-    if(mode != nil && [[GLManager GLTripModes] containsObject:mode]) {
+    if(mode != nil && [GLTripModeStore containsModeID:mode]) {
         manager.currentTripMode = mode;
     }
 

@@ -307,7 +307,7 @@ You can configure all of the settings in the app by having your server return ne
   "result": "ok",
   "set": {
     "send_interval": "1s|5s|10s|15s|30s|1m|2m|5m|10m|30m|off",
-    "trip_mode": "walk|run|bicycle|car|taxi|bus|tram|train|metro|gondola|monorail|sleigh|plane|boat|scooter",
+    "trip_mode": "walk|run|bicycle|car|taxi|bus|tram|train|metro|gondola|monorail|sleigh|plane|boat|scooter|ebike",
     "main": {
       "tracking_mode": "off|standard|significant|both",
       "visit_tracking": true|false,

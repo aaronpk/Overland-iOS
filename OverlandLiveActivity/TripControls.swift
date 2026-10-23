@@ -10,29 +10,6 @@ import AppIntents
 import SwiftUI
 import WidgetKit
 
-// Controls can only show symbol images, so each trip mode has an SF Symbol
-enum TripModeSymbol {
-    static func name(_ mode: String) -> String {
-        switch mode {
-        case "walk": return "figure.walk"
-        case "run": return "figure.run"
-        case "bicycle": return "bicycle"
-        case "car", "taxi": return "car.fill"
-        case "bus": return "bus.fill"
-        case "tram": return "tram.fill"
-        case "train": return "train.side.front.car"
-        case "metro": return "tram.fill.tunnel"
-        case "gondola": return "cablecar.fill"
-        case "monorail": return "lightrail.fill"
-        case "sleigh": return "snowflake"
-        case "plane": return "airplane"
-        case "boat": return "sailboat.fill"
-        case "scooter": return "scooter"
-        default: return "location.fill"
-        }
-    }
-}
-
 @available(iOS 18.0, *)
 struct TripControl: ControlWidget {
     struct Value {
@@ -42,7 +19,7 @@ struct TripControl: ControlWidget {
 
     struct Provider: ControlValueProvider {
         var previewValue: Value {
-            Value(tripInProgress: false, mode: "bicycle")
+            Value(tripInProgress: false, mode: TripModeStore.defaultModeID)
         }
 
         func currentValue() async throws -> Value {
@@ -54,7 +31,7 @@ struct TripControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: "com.aaronpk.overland.TripControl", provider: Provider()) { value in
             ControlWidgetToggle(isOn: value.tripInProgress, action: ToggleTripIntent()) {
-                Label("Trip", systemImage: TripModeSymbol.name(value.mode))
+                Label("Trip", systemImage: TripModeStore.symbol(value.mode))
             } valueLabel: { isOn in
                 Text(isOn ? "\(TripFormat.modeName(value.mode)) Trip" : "Start \(TripFormat.modeName(value.mode))")
             }

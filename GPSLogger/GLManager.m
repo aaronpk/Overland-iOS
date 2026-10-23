@@ -49,7 +49,6 @@ static NSString *const GLLocationQueueName = @"GLLocationQueue";
 static NSString *const GLNotificationCategoryTripName = @"TRIP";
 
 NSNumber *_sendingInterval;
-NSArray *_tripModes;
 bool _currentTripHasNewData;
 bool _storeNextLocationAsTripStart = NO;
 bool _tripEndInProgress = NO;
@@ -423,10 +422,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     NSString *tripMode = [settings objectForKey:@"trip_mode"];
     if([tripMode respondsToSelector:@selector(isEqualToString:)]) {
-        for(int i=0; i<[GLManager GLTripModes].count; i++) {
-            if([tripMode isEqualToString:[GLManager GLTripModes][i]]) {
-                self.currentTripMode = [GLManager GLTripModes][i];
-            }
+        if([GLTripModeStore containsModeID:tripMode]) {
+            self.currentTripMode = tripMode;
         }
     }
     
@@ -1050,25 +1047,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 #pragma mark - Trips
 
-+ (NSArray *)GLTripModes {
-    if(!_tripModes) {
-        _tripModes = @[GLTripModeWalk, GLTripModeRun, GLTripModeBicycle,
-                       GLTripModeCar, GLTripModeTaxi, GLTripModeBus,
-                       GLTripModeTram, GLTripModeTrain, GLTripModeMetro,
-                       GLTripModeGondola, GLTripModeMonorail, GLTripModeSleigh,
-                       GLTripModePlane, GLTripModeBoat, GLTripModeScooter];
-        }
-    return _tripModes;
-}
-
 - (BOOL)tripInProgress {
     return [[NSUserDefaults standardUserDefaults] objectForKey:GLTripStartTimeDefaultsName] != nil;
 }
 
 - (NSString *)currentTripMode {
     NSString *mode = [[NSUserDefaults standardUserDefaults] stringForKey:GLTripModeDefaultsName];
-    if(!mode) {
-        mode = @"bicycle";
+    // A trip keeps its mode even if the mode is removed from the list during the trip
+    if(mode && self.tripInProgress) {
+        return mode;
+    }
+    if(![GLTripModeStore containsModeID:mode]) {
+        mode = GLTripModeStore.defaultModeID;
     }
     return mode;
 }

@@ -10,6 +10,4 @@
 
 @interface TripModeViewController : UIViewController
 
-- (IBAction)tripModeButtonWasTapped:(UITapGestureRecognizer *)sender;
-
 @end

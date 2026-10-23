@@ -11,8 +11,7 @@ struct TripModeIcon: View {
     let mode: String
 
     var body: some View {
-        Image(mode)
-            .renderingMode(.template)
+        Image(systemName: TripModeStore.symbol(mode))
             .resizable()
             .scaledToFit()
             .foregroundStyle(.green)
@@ -56,7 +55,7 @@ enum TripFormat {
     static var speedUnit: String { usesMetricSystem ? "km/h" : "mph" }
 
     static func modeName(_ mode: String) -> String {
-        mode.capitalized
+        TripModeStore.name(mode)
     }
 
     static func distance(_ meters: Double) -> String {

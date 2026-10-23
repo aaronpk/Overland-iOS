@@ -75,22 +75,6 @@ static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
 static NSString *const GLTripStartLocationDefaultsName = @"GLTripStartLocationDefaults";
 
-static NSString *const GLTripModeWalk = @"walk";
-static NSString *const GLTripModeRun = @"run";
-static NSString *const GLTripModeBicycle = @"bicycle";
-static NSString *const GLTripModeCar = @"car";
-static NSString *const GLTripModeTaxi = @"taxi";
-static NSString *const GLTripModeBus = @"bus";
-static NSString *const GLTripModeTrain = @"train";
-static NSString *const GLTripModePlane = @"plane";
-static NSString *const GLTripModeTram = @"tram";
-static NSString *const GLTripModeGondola = @"gondola";
-static NSString *const GLTripModeMonorail = @"monorail";
-static NSString *const GLTripModeSleigh = @"sleigh";
-static NSString *const GLTripModeMetro = @"metro";
-static NSString *const GLTripModeBoat = @"boat";
-static NSString *const GLTripModeScooter = @"scooter";
-
 typedef enum {
     kGLTrackingModeOff,
     kGLTrackingModeStandard,
@@ -217,7 +201,6 @@ typedef void (^CaseBlock)(void);
 
 #pragma mark - Trips
 
-+ (NSArray *)GLTripModes;
 - (BOOL)tripInProgress;
 @property (nonatomic) NSString *currentTripMode;
 - (NSDate *)currentTripStart;

@@ -11,7 +11,7 @@ import Foundation
 @available(iOS 16.1, *)
 struct TripActivityAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
-        // Trip mode, which is also the name of its image in TripModes.xcassets
+        // Trip mode ID, see TripModeStore
         var mode: String
         // Meters
         var distance: Double

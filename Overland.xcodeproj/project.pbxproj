@@ -17,6 +17,8 @@
 		0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA363257C4BFB8311081ABB /* TripIntents.swift */; };
 		0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */; };
 		0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
+		0FA3AA02AB12CD34EF560002 /* TripModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA01AB12CD34EF560001 /* TripModes.swift */; };
+		0FA3AA03AB12CD34EF560003 /* TripModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA01AB12CD34EF560001 /* TripModes.swift */; };
 		0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
 		0FA3A3F72F12736301815740 /* GLTripActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3335218A802C5C01E5BB3 /* GLTripActions.m */; };
 		0F3E5210201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */; };
@@ -28,9 +30,7 @@
 		0FA1373CC66D67A35F3F31C6 /* OverlandLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0FA1D141E0978A09277D576D /* OverlandLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0FA1409378B424718012BD53 /* TripActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA14C96E8BC2D9C270B9238 /* TripActivityAttributes.swift */; };
 		0FA16490B3131D33B0CB1A0C /* OverlandLiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA16DCE2F24E90AC6425AE0 /* OverlandLiveActivityBundle.swift */; };
-		0FA166B2F344A3980F1227C2 /* TripModes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FA18726CB75B3B166029F8E /* TripModes.xcassets */; };
 		0FA16CC8A66B372B06DD56CB /* TripLiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA128E0AE4C423AD6DEC0EE /* TripLiveActivityController.swift */; };
-		0FA1CFD434AD1CBBC2E9E03C /* TripModes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FA18726CB75B3B166029F8E /* TripModes.xcassets */; };
 		0FA1F663468D6341CBC4129D /* TripLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA17CBB687B2DDE01176F37 /* TripLiveActivityWidget.swift */; };
 		0FA2C0DE5E1F00000000A002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0FA2C0DE5E1F00000000A001 /* PrivacyInfo.xcprivacy */; };
 		0FA2C0DE5E1F00000000B003 /* TipJarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA2C0DE5E1F00000000B002 /* TipJarStore.swift */; };
@@ -97,6 +97,7 @@
 		0FA368263F0C8CF7E9440051 /* OverlandLiveActivity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OverlandLiveActivity.entitlements; sourceTree = "<group>"; };
 		0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStateObserver.swift; sourceTree = "<group>"; };
 		0FA3B7838C357C30292FEB0B /* SharedTripState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTripState.swift; sourceTree = "<group>"; };
+		0FA3AA01AB12CD34EF560001 /* TripModes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModes.swift; sourceTree = "<group>"; };
 		0FA3335218A802C5C01E5BB3 /* GLTripActions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLTripActions.m; sourceTree = "<group>"; };
 		0FA37F96307B5014EFE10FFA /* GLTripActions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTripActions.h; sourceTree = "<group>"; };
 		0F3E520E201E543200DCFAA4 /* OpenSansCondensed-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSansCondensed-Bold.ttf"; path = "Fonts/OpenSansCondensed-Bold.ttf"; sourceTree = SOURCE_ROOT; };
@@ -111,7 +112,6 @@
 		0FA14C96E8BC2D9C270B9238 /* TripActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripActivityAttributes.swift; sourceTree = "<group>"; };
 		0FA16DCE2F24E90AC6425AE0 /* OverlandLiveActivityBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlandLiveActivityBundle.swift; sourceTree = "<group>"; };
 		0FA17CBB687B2DDE01176F37 /* TripLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripLiveActivityWidget.swift; sourceTree = "<group>"; };
-		0FA18726CB75B3B166029F8E /* TripModes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TripModes.xcassets; sourceTree = "<group>"; };
 		0FA1D141E0978A09277D576D /* OverlandLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OverlandLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FA2C0DE5E1F00000000A001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		0FA2C0DE5E1F00000000B002 /* TipJarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipJarStore.swift; sourceTree = "<group>"; };
@@ -207,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				0FA3B7838C357C30292FEB0B /* SharedTripState.swift */,
+				0FA3AA01AB12CD34EF560001 /* TripModes.swift */,
 				0FA363257C4BFB8311081ABB /* TripIntents.swift */,
 			);
 			path = Shared;
@@ -329,7 +330,6 @@
 				0FFD31641BAB7A34009B3A03 /* Assets.xcassets */,
 				0FA340492A8B76F051F75FD3 /* AppIcon.icon */,
 				0FA2C0DE5E1F00000000A001 /* PrivacyInfo.xcprivacy */,
-				0FA18726CB75B3B166029F8E /* TripModes.xcassets */,
 				0FA16810488AF62B153D87E0 /* LiveActivity */,
 				0FA2C0DE5E1F00000000B001 /* TipJar */,
 				0FA320A51CB2D01CE6CD6EF7 /* Shared */,
@@ -469,7 +469,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FA166B2F344A3980F1227C2 /* TripModes.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,7 +485,6 @@
 				0FA2C0DE5E1F00000000A002 /* PrivacyInfo.xcprivacy in Resources */,
 				0FFD31631BAB7A34009B3A03 /* Main.storyboard in Resources */,
 				0FE280B12B0180620062936E /* Settings.bundle in Resources */,
-				0FA1CFD434AD1CBBC2E9E03C /* TripModes.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,6 +538,7 @@
 				0FA1F663468D6341CBC4129D /* TripLiveActivityWidget.swift in Sources */,
 				0FA1409378B424718012BD53 /* TripActivityAttributes.swift in Sources */,
 				0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */,
+				0FA3AA02AB12CD34EF560002 /* TripModes.swift in Sources */,
 				0FA388001240FD65C4469F9F /* TripIntents.swift in Sources */,
 				0FA38B2F78A1A177EE03B3F8 /* TripControls.swift in Sources */,
 				0FA36E9BA6A598E3D4E9FC9E /* TripViews.swift in Sources */,
@@ -571,6 +570,7 @@
 				0FA2C0DE5E1F00000000B003 /* TipJarStore.swift in Sources */,
 				0FA3A3F72F12736301815740 /* GLTripActions.m in Sources */,
 				0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */,
+				0FA3AA03AB12CD34EF560003 /* TripModes.swift in Sources */,
 				0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */,
 				0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */,
 				0FA33D161509DED340841E2B /* OverlandAppIntents.swift in Sources */,

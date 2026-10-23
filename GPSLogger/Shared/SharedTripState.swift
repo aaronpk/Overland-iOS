@@ -16,7 +16,7 @@ struct SharedTripState: Codable, Equatable {
     var trackingEnabled = false
     // Set while a trip is in progress
     var tripStart: Date?
-    var tripMode = "bicycle"
+    var tripMode = TripModeStore.defaultModeID
     // Meters, as of updatedAt
     var tripDistance: Double = 0
     var queueCount = 0
