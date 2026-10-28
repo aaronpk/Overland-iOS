@@ -50,6 +50,7 @@ struct TripMode: Codable, Equatable {
         TripMode(id: "train", name: "Train", symbol: "overland.train", closeZoom: false, synonyms: ["Rail"]),
         TripMode(id: "monorail", name: "Monorail", symbol: "overland.monorail", closeZoom: false),
         TripMode(id: "gondola", name: "Gondola", symbol: "overland.gondola", closeZoom: false, synonyms: ["Cable Car"]),
+        TripMode(id: "funicular", name: "Funicular", symbol: "overland.funicular", closeZoom: false, synonyms: ["Incline", "Cliff Railway"]),
         // Water and air
         TripMode(id: "boat", name: "Boat", symbol: "overland.boat", closeZoom: false, synonyms: ["Ferry", "Sailing"]),
         TripMode(id: "plane", name: "Plane", symbol: "overland.plane", closeZoom: false, synonyms: ["Flight", "Flying"]),
