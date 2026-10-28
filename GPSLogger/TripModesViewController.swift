@@ -457,26 +457,30 @@ final class HealthWorkoutPickerViewController: UITableViewController {
 // MARK: - Choosing an icon
 
 final class TripModeSymbolPickerViewController: UICollectionViewController {
-    // The app's own icons, which are sent to servers with a trip, then SF Symbols that suit trip
-    // modes, which are sent by name only. Ones missing on this iOS version are left out.
+    // The app's own icons, which are sent to servers with a trip, then Apple's SF Symbols that suit
+    // trip modes, which servers only get the name of. Ones missing on this iOS version are left out.
     private static let groups: [(title: String, symbols: [String])] = [
-        ("Overland", TripMode.defaults.map(\.symbol)),
-        ("On Foot", ["figure.walk", "figure.run", "figure.hiking", "figure.stairs", "figure.roll",
-                     "figure.roll.runningpace", "figure.walk.motion", "figure.and.child.holdinghands",
-                     "dog.fill", "stroller.fill"]),
-        ("Wheels", ["bicycle", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
-                    "figure.skating", "motorcycle.fill", "car.fill", "car.side.fill", "suv.side.fill",
-                    "truck.box.fill", "bolt.car.fill", "bus.fill", "bus.doubledecker.fill"]),
-        ("Rail", ["tram.fill", "train.side.front.car", "tram.fill.tunnel", "lightrail.fill", "cablecar.fill",
-                  "tram.circle.fill"]),
-        ("Water", ["sailboat.fill", "ferry.fill", "figure.open.water.swim", "figure.rower",
-                   "figure.surfing", "water.waves", "fish.fill"]),
-        ("Snow", ["figure.skiing.crosscountry", "figure.skiing.downhill", "figure.snowboarding", "snowflake",
-                  "mountain.2.fill"]),
-        ("Air", ["airplane", "airplane.departure", "airplane.arrival", "parachute.fill", "balloon.fill"]),
-        ("Other", ["figure.equestrian.sports", "figure.golf", "figure.climbing", "tent.fill", "binoculars.fill",
-                   "camera.fill", "briefcase.fill", "cart.fill", "house.fill", "building.2.fill", "map.fill",
-                   "location.fill", "star.fill", "heart.fill"]),
+        ("On Foot", ["walk", "run", "hike", "nordicwalk", "wheelchair", "stroller", "dog"].map { "overland." + $0 }),
+        ("Wheels", ["bicycle", "ebike", "scooter", "escooter", "skate", "skateboard", "motorcycle", "moped"].map { "overland." + $0 }),
+        ("Snow and Ice", ["ski", "snowboard", "snowshoe", "iceskate", "sleigh", "snowmobile"].map { "overland." + $0 }),
+        ("Road", ["car", "taxi", "bus", "van", "truck", "trailer", "tractor"].map { "overland." + $0 }),
+        ("Rail and Cable", ["tram", "metro", "train", "monorail", "cablecar", "funicular", "gondola"].map { "overland." + $0 }),
+        ("Water", ["boat", "ferry", "kayak", "rowing", "surf", "kitesurf", "swim", "scuba"].map { "overland." + $0 }),
+        ("Air", ["plane", "takeoff", "landing", "helicopter", "paraglide"].map { "overland." + $0 }),
+        ("Apple Symbols (servers only get the name)", [
+            "figure.walk", "figure.run", "figure.hiking", "figure.stairs", "figure.roll", "figure.roll.runningpace",
+            "figure.walk.motion", "figure.and.child.holdinghands", "dog.fill", "stroller.fill",
+            "bicycle", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
+            "figure.skating", "motorcycle.fill", "car.fill", "car.side.fill", "suv.side.fill",
+            "truck.box.fill", "bolt.car.fill", "bus.fill", "bus.doubledecker.fill",
+            "tram.fill", "train.side.front.car", "tram.fill.tunnel", "lightrail.fill", "cablecar.fill", "tram.circle.fill",
+            "sailboat.fill", "ferry.fill", "figure.open.water.swim", "figure.rower", "figure.surfing", "water.waves", "fish.fill",
+            "figure.skiing.crosscountry", "figure.skiing.downhill", "figure.snowboarding", "snowflake", "mountain.2.fill",
+            "airplane", "airplane.departure", "airplane.arrival", "parachute.fill", "balloon.fill",
+            "figure.equestrian.sports", "figure.golf", "figure.climbing", "tent.fill", "binoculars.fill",
+            "camera.fill", "briefcase.fill", "cart.fill", "house.fill", "building.2.fill", "map.fill",
+            "location.fill", "star.fill", "heart.fill",
+        ]),
     ].map { ($0.0, $0.1.filter { TripModeStore.image(symbol: $0) != nil }) }.filter { !$0.1.isEmpty }
 
     private let selected: String
