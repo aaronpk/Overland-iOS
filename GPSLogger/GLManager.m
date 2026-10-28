@@ -1261,6 +1261,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                               @"steps": [NSNumber numberWithInteger:numberOfSteps],
                                               }]
                                       };
+        // The mode's icon, so servers can show it: "icon" for the app's own icons, or "sf_symbol"
+        [currentTrip[@"properties"] addEntriesFromDictionary:[GLTripModeStore iconPropertiesForModeID:self.currentTripMode]];
         [self addMetadataToUpdate:currentTrip];
         if(autopause) {
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
