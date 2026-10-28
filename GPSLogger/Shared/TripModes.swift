@@ -27,26 +27,32 @@ struct TripMode: Codable, Equatable {
     var serverValue: String? = nil
 
     static let defaults: [TripMode] = [
+        // On foot
         TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking"], healthWorkout: "walking"),
         TripMode(id: "run", name: "Run", symbol: "figure.run", closeZoom: true, synonyms: ["Running", "Jog"], healthWorkout: "running"),
         TripMode(id: "hike", name: "Hike", symbol: "figure.hiking", closeZoom: true, synonyms: ["Hiking"], healthWorkout: "hiking"),
+        // Small wheels
         TripMode(id: "bicycle", name: "Bicycle", symbol: "bicycle", closeZoom: true, synonyms: ["Bike", "Cycling", "Cycle"], healthWorkout: "cycling"),
         TripMode(id: "ebike", name: "E-Bike", symbol: "overland.ebike", closeZoom: true, synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
+        TripMode(id: "scooter", name: "Scooter", symbol: "scooter", closeZoom: true),
+        TripMode(id: "skate", name: "Skate", symbol: "figure.skating", closeZoom: true, synonyms: ["Skating", "Ice Skating", "Roller Skating"], healthWorkout: "skating"),
+        // Snow
+        TripMode(id: "ski", name: "Ski", symbol: "figure.skiing.downhill", closeZoom: true, synonyms: ["Skiing"], healthWorkout: "downhillSkiing"),
+        TripMode(id: "snowboard", name: "Snowboard", symbol: "figure.snowboarding", closeZoom: true, synonyms: ["Snowboarding"], healthWorkout: "snowboarding"),
+        TripMode(id: "sleigh", name: "Sleigh", symbol: "snowflake", closeZoom: false),
+        // Road
         TripMode(id: "car", name: "Car", symbol: "car.fill", closeZoom: false, synonyms: ["Drive", "Driving"]),
         TripMode(id: "taxi", name: "Taxi", symbol: "overland.taxi", closeZoom: false),
         TripMode(id: "bus", name: "Bus", symbol: "bus.fill", closeZoom: false),
+        // Rail and cable
         TripMode(id: "tram", name: "Tram", symbol: "tram.fill", closeZoom: false, synonyms: ["Streetcar", "Light Rail"]),
-        TripMode(id: "train", name: "Train", symbol: "train.side.front.car", closeZoom: false, synonyms: ["Rail"]),
         TripMode(id: "metro", name: "Metro", symbol: "tram.fill.tunnel", closeZoom: false, synonyms: ["Subway", "Underground"]),
-        TripMode(id: "gondola", name: "Gondola", symbol: "cablecar.fill", closeZoom: false, synonyms: ["Cable Car"]),
+        TripMode(id: "train", name: "Train", symbol: "train.side.front.car", closeZoom: false, synonyms: ["Rail"]),
         TripMode(id: "monorail", name: "Monorail", symbol: "lightrail.fill", closeZoom: false),
-        TripMode(id: "sleigh", name: "Sleigh", symbol: "snowflake", closeZoom: false),
-        TripMode(id: "ski", name: "Ski", symbol: "figure.skiing.downhill", closeZoom: true, synonyms: ["Skiing"], healthWorkout: "downhillSkiing"),
-        TripMode(id: "snowboard", name: "Snowboard", symbol: "figure.snowboarding", closeZoom: true, synonyms: ["Snowboarding"], healthWorkout: "snowboarding"),
-        TripMode(id: "plane", name: "Plane", symbol: "airplane", closeZoom: false, synonyms: ["Flight", "Flying"]),
+        TripMode(id: "gondola", name: "Gondola", symbol: "cablecar.fill", closeZoom: false, synonyms: ["Cable Car"]),
+        // Water and air
         TripMode(id: "boat", name: "Boat", symbol: "sailboat.fill", closeZoom: false, synonyms: ["Ferry", "Sailing"]),
-        TripMode(id: "scooter", name: "Scooter", symbol: "scooter", closeZoom: true),
-        TripMode(id: "skate", name: "Skate", symbol: "figure.skating", closeZoom: true, synonyms: ["Skating", "Ice Skating", "Roller Skating"], healthWorkout: "skating"),
+        TripMode(id: "plane", name: "Plane", symbol: "airplane", closeZoom: false, synonyms: ["Flight", "Flying"]),
     ]
 
     // The built-in modes before Hike, Ski, Snowboard and Skate were added, for lists saved before
