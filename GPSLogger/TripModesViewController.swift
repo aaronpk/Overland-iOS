@@ -15,7 +15,9 @@ import WidgetKit
 extension TripModeStore {
     static func save(_ modes: [TripMode]) {
         guard !modes.isEmpty, let data = try? JSONEncoder().encode(modes) else { return }
-        UserDefaults(suiteName: SharedTripState.appGroup)?.set(data, forKey: "TripModes")
+        let defaults = UserDefaults(suiteName: SharedTripState.appGroup)
+        defaults?.set(data, forKey: "TripModes")
+        defaults?.set(TripMode.defaults.map(\.id), forKey: builtInIDsKey)
         modesChanged()
     }
 

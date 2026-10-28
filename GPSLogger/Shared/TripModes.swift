@@ -27,8 +27,9 @@ struct TripMode: Codable, Equatable {
     var serverValue: String? = nil
 
     static let defaults: [TripMode] = [
-        TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking", "Hike"], healthWorkout: "walking"),
+        TripMode(id: "walk", name: "Walk", symbol: "figure.walk", closeZoom: true, synonyms: ["Walking"], healthWorkout: "walking"),
         TripMode(id: "run", name: "Run", symbol: "figure.run", closeZoom: true, synonyms: ["Running", "Jog"], healthWorkout: "running"),
+        TripMode(id: "hike", name: "Hike", symbol: "figure.hiking", closeZoom: true, synonyms: ["Hiking"], healthWorkout: "hiking"),
         TripMode(id: "bicycle", name: "Bicycle", symbol: "bicycle", closeZoom: true, synonyms: ["Bike", "Cycling", "Cycle"], healthWorkout: "cycling"),
         TripMode(id: "ebike", name: "E-Bike", symbol: "overland.ebike", closeZoom: true, synonyms: ["Ebike", "Electric Bike", "Electric Bicycle"]),
         TripMode(id: "car", name: "Car", symbol: "car.fill", closeZoom: false, synonyms: ["Drive", "Driving"]),
@@ -40,14 +41,24 @@ struct TripMode: Codable, Equatable {
         TripMode(id: "gondola", name: "Gondola", symbol: "cablecar.fill", closeZoom: false, synonyms: ["Cable Car"]),
         TripMode(id: "monorail", name: "Monorail", symbol: "lightrail.fill", closeZoom: false),
         TripMode(id: "sleigh", name: "Sleigh", symbol: "snowflake", closeZoom: false),
+        TripMode(id: "ski", name: "Ski", symbol: "figure.skiing.downhill", closeZoom: true, synonyms: ["Skiing"], healthWorkout: "downhillSkiing"),
+        TripMode(id: "snowboard", name: "Snowboard", symbol: "figure.snowboarding", closeZoom: true, synonyms: ["Snowboarding"], healthWorkout: "snowboarding"),
         TripMode(id: "plane", name: "Plane", symbol: "airplane", closeZoom: false, synonyms: ["Flight", "Flying"]),
         TripMode(id: "boat", name: "Boat", symbol: "sailboat.fill", closeZoom: false, synonyms: ["Ferry", "Sailing"]),
         TripMode(id: "scooter", name: "Scooter", symbol: "scooter", closeZoom: true),
+        TripMode(id: "skate", name: "Skate", symbol: "figure.skating", closeZoom: true, synonyms: ["Skating", "Ice Skating", "Roller Skating"], healthWorkout: "skating"),
     ]
+
+    // The built-in modes before Hike, Ski, Snowboard and Skate were added, for lists saved before
+    // the app started recording which built-in modes a saved list knew about
+    static let originalIDs: Set<String> = ["walk", "run", "bicycle", "ebike", "car", "taxi", "bus", "tram", "train",
+                                           "metro", "gondola", "monorail", "sleigh", "plane", "boat", "scooter"]
 }
 
 @objc(GLTripModeStore) final class TripModeStore: NSObject {
     private static let defaultsKey = "TripModes"
+    // The IDs of the built-in modes when the list was last saved
+    static let builtInIDsKey = "TripModesBuiltInIDs"
     // Used for a mode that isn't in the list, such as one deleted during a trip
     private static let unknownSymbol = "location.fill"
 
@@ -58,7 +69,11 @@ struct TripMode: Codable, Equatable {
               let modes = try? JSONDecoder().decode([TripMode].self, from: data), !modes.isEmpty else {
             return TripMode.defaults
         }
-        return modes
+        // Add built-in modes that are newer than the saved list. Ones the list knew about and
+        // doesn't have were deleted, so they stay deleted.
+        let known = defaults?.stringArray(forKey: builtInIDsKey).map(Set.init) ?? TripMode.originalIDs
+        let savedIDs = Set(modes.map(\.id))
+        return modes + TripMode.defaults.filter { !known.contains($0.id) && !savedIDs.contains($0.id) }
     }
 
     static func mode(_ id: String?) -> TripMode? {
