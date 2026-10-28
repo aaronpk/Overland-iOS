@@ -205,7 +205,7 @@ final class TripModeEditViewController: UITableViewController, UITextFieldDelega
     init(mode: TripMode?) {
         original = mode
         name = mode?.name ?? ""
-        symbol = mode?.symbol ?? "figure.walk"
+        symbol = mode?.symbol ?? "overland.walk"
         healthWorkout = mode?.healthWorkout
         closeZoom = mode?.closeZoom ?? true
         super.init(style: .insetGrouped)
@@ -457,13 +457,15 @@ final class HealthWorkoutPickerViewController: UITableViewController {
 // MARK: - Choosing an icon
 
 final class TripModeSymbolPickerViewController: UICollectionViewController {
-    // SF Symbols that suit trip modes, and the app's custom ones. Ones missing on this iOS version are left out.
+    // The app's own icons, which are sent to servers with a trip, then SF Symbols that suit trip
+    // modes, which are sent by name only. Ones missing on this iOS version are left out.
     private static let groups: [(title: String, symbols: [String])] = [
+        ("Overland", TripMode.defaults.map(\.symbol)),
         ("On Foot", ["figure.walk", "figure.run", "figure.hiking", "figure.stairs", "figure.roll",
                      "figure.roll.runningpace", "figure.walk.motion", "figure.and.child.holdinghands",
                      "dog.fill", "stroller.fill"]),
-        ("Wheels", ["bicycle", "overland.ebike", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
-                    "figure.skating", "motorcycle.fill", "car.fill", "overland.taxi", "car.side.fill", "suv.side.fill",
+        ("Wheels", ["bicycle", "figure.outdoor.cycle", "figure.hand.cycling", "scooter", "figure.skateboarding",
+                    "figure.skating", "motorcycle.fill", "car.fill", "car.side.fill", "suv.side.fill",
                     "truck.box.fill", "bolt.car.fill", "bus.fill", "bus.doubledecker.fill"]),
         ("Rail", ["tram.fill", "train.side.front.car", "tram.fill.tunnel", "lightrail.fill", "cablecar.fill",
                   "tram.circle.fill"]),
