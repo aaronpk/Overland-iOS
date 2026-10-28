@@ -283,6 +283,15 @@ The following properties are included only if the "Include Tracking Stats" optio
 * `significant_change` - a string indicating the significant change mode, `disabled`, `enabled` or `exclusive`.
 * `locations_in_payload` - the number of locations that were sent in the batch along with this location
 
+### Trip Records
+
+When a trip ends, a trip record is added to the `locations` array along with the points. It's a GeoJSON Feature at the trip's last location, and its properties include `"type": "trip"`, the trip's `mode` (the mode's server value), `start` and `end` (ISO8601), `duration` (seconds), `distance` (meters), `start_location` and `end_location` (location Features), `steps`, and `stopped_automatically`, along with the same device properties as a location, such as `battery_level` and `wifi`.
+
+The trip record also has the mode's icon, so you can show it the way the app does:
+
+* `icon` - for the built-in modes, and any mode using one of Overland's own icons: the icon as an SVG data URI, such as `data:image/svg+xml;base64,PHN2Zy...`, which you can use as an image's `src`. It's a single black path in a square viewBox, so you can recolor it with CSS (for example as a `mask-image`). These are about 0.5 to 1.6 KB.
+* `sf_symbol` - for a mode the user gave an SF Symbol: the symbol's name, such as `figure.kayaking`. SF Symbols' license doesn't allow sending the image itself, so map the name to an icon of your own.
+
 ### Response
 
 Your server must reply with a JSON response containing:
