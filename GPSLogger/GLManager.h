@@ -73,6 +73,18 @@ static NSString *const GLLiveActivityEnabledDefaultsName = @"GLLiveActivityEnabl
 /* End */
 
 static NSString *const GLTripTrackingEnabledDefaultsName = @"GLTripTrackingEnabledDefaults";
+// Trip Settings: ask to end the trip after stopping (TripEndPrompt.swift)
+static NSString *const GLTripAskToEndWhenStoppedDefaultsName = @"GLTripAskToEndWhenStoppedDefaults";
+static NSString *const GLLastTripEndDefaultsName = @"GLLastTripEndDefaults";
+
+// The notification category with the End Trip action, and the userInfo of a prompt that ends the
+// trip at the time the phone stopped rather than when the action is tapped
+static NSString *const GLNotificationCategoryTripName = @"TRIP";
+static NSString *const GLEndTripPromptTripStartKey = @"trip_start";
+static NSString *const GLEndTripPromptStoppedAtKey = @"stopped_at";
+static NSString *const GLEndTripPromptLatitudeKey = @"latitude";
+static NSString *const GLEndTripPromptLongitudeKey = @"longitude";
+static NSString *const GLEndTripPromptAccuracyKey = @"horizontal_accuracy";
 static NSString *const GLTripModeDefaultsName = @"GLTripModeDefaults";
 static NSString *const GLTripStartTimeDefaultsName = @"GLTripStartTimeDefaults";
 static NSString *const GLTripStartLocationDefaultsName = @"GLTripStartLocationDefaults";
@@ -213,6 +225,11 @@ typedef void (^CaseBlock)(void);
 - (NSTimeInterval)currentTripDuration;
 - (void)startTrip;
 - (void)endTrip;
+// Ends the trip as if it had ended at endDate, at the given location: the trip record's end time,
+// duration, distance and steps stop there. nil for both means now, the same as endTrip.
+- (void)endTripAtDate:(NSDate * _Nullable)endDate location:(CLLocation * _Nullable)location;
+// When the last trip ended, which can be earlier than when it was ended
+@property (strong, nonatomic, readonly) NSDate * _Nullable lastTripEndDate;
 - (NSArray *)tripModesByFrequency;
 
 #pragma mark -

@@ -46,7 +46,6 @@
 @implementation GLManager
 
 static NSString *const GLLocationQueueName = @"GLLocationQueue";
-static NSString *const GLNotificationCategoryTripName = @"TRIP";
 
 NSNumber *_sendingInterval;
 bool _currentTripHasNewData;
@@ -639,6 +638,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
             [GLAutoStop shared].secondsDuringTrip = [autoStopTime intValue];
         }
 
+        if([trip objectForKey:@"ask_to_end_when_stopped"] != nil) {
+            [[NSUserDefaults standardUserDefaults] setBool:[[trip objectForKey:@"ask_to_end_when_stopped"] boolValue] forKey:GLTripAskToEndWhenStoppedDefaultsName];
+        }
+
         if([trip objectForKey:@"discard_without_gps"] != nil) {
             self.discardPointsWithoutGPSDuringTrip = [[trip objectForKey:@"discard_without_gps"] boolValue];
         }
@@ -1130,6 +1133,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLTripStartTimeDefaultsName];
 }
 
+- (NSDate *)lastTripEndDate {
+    return (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:GLLastTripEndDefaultsName];
+}
+
 - (NSTimeInterval)currentTripDuration {
     if(!self.tripInProgress) {
         return -1;
@@ -1148,11 +1155,24 @@ const double MPH_to_METERSPERSECOND = 0.447;
         return _currentTripDistanceCached;
     }
 
+    CLLocationDistance distance = [self tripDistanceUntil:nil];
+    _currentTripDistanceCached = distance;
+    _currentTripHasNewData = NO;
+    return distance;
+}
+
+// The trip's distance from its points up to endDate, or all of them if nil
+- (CLLocationDistance)tripDistanceUntil:(NSDate *)endDate {
     CLLocationDistance distance = 0;
     CLLocation *lastLocation;
     CLLocation *loc;
     
-    FMResultSet *s = [self.tripdb executeQuery:@"SELECT latitude, longitude FROM trips ORDER BY timestamp"];
+    FMResultSet *s;
+    if(endDate) {
+        s = [self.tripdb executeQuery:@"SELECT latitude, longitude FROM trips WHERE timestamp <= ? ORDER BY timestamp", [NSNumber numberWithInt:[endDate timeIntervalSince1970]]];
+    } else {
+        s = [self.tripdb executeQuery:@"SELECT latitude, longitude FROM trips ORDER BY timestamp"];
+    }
     while([s next]) {
         loc = [[CLLocation alloc] initWithLatitude:[s doubleForColumnIndex:0] longitude:[s doubleForColumnIndex:1]];
         
@@ -1163,8 +1183,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
         lastLocation = loc;
     }
 
-    _currentTripDistanceCached = distance;
-    _currentTripHasNewData = NO;
     return distance;
 }
 
@@ -1224,7 +1242,15 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self endTripFromAutopause:NO];
 }
 
+- (void)endTripAtDate:(NSDate *)endDate location:(CLLocation *)location {
+    [self endTripAtDate:endDate location:location autopause:NO];
+}
+
 - (void)endTripFromAutopause:(BOOL)autopause {
+    [self endTripAtDate:nil location:nil autopause:autopause];
+}
+
+- (void)endTripAtDate:(NSDate *)endDate location:(CLLocation *)location autopause:(BOOL)autopause {
     _storeNextLocationAsTripStart = NO;
 
     // Restore locationManager settings to values not during a trip
@@ -1241,22 +1267,22 @@ const double MPH_to_METERSPERSECOND = 0.447;
     _tripEndInProgress = YES;
 
     if([CMPedometer isStepCountingAvailable]) {
-        [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:[NSDate date] withHandler:^(CMPedometerData *pedometerData, NSError *error) {
+        [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:(endDate ?: [NSDate date]) withHandler:^(CMPedometerData *pedometerData, NSError *error) {
             // This handler runs on a background queue. Finish on the main queue, since location
             // updates write to the trip database there and FMDatabase isn't thread-safe.
             NSInteger steps = pedometerData ? [pedometerData.numberOfSteps integerValue] : 0;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self finishEndingTrip:autopause steps:steps];
+                [self finishEndingTrip:autopause steps:steps endDate:endDate location:location];
             });
         }];
     } else {
-        [self finishEndingTrip:autopause steps:0];
+        [self finishEndingTrip:autopause steps:0 endDate:endDate location:location];
     }
 }
 
-- (void)finishEndingTrip:(BOOL)autopause steps:(NSInteger)numberOfSteps {
+- (void)finishEndingTrip:(BOOL)autopause steps:(NSInteger)numberOfSteps endDate:(NSDate *)endDate location:(CLLocation *)location {
     [self endTripLiveActivity];
-    [self writeTripToDB:autopause steps:numberOfSteps];
+    [self writeTripToDB:autopause steps:numberOfSteps endDate:endDate location:location];
     _tripEndInProgress = NO;
 
     // Send after the trip record is written so it goes out with this batch
@@ -1290,17 +1316,24 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return tripModes;
 }
 
-- (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps {
+- (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps endDate:(NSDate *)endDate location:(CLLocation *)location {
+    // Without an end date the trip ends now, at the last location. With one, the end time,
+    // duration, distance and location are as of then.
+    NSDate *end = endDate ?: [NSDate date];
+    CLLocation *endLocation = location ?: self.lastLocation;
+    NSDictionary *endLocationDictionary = location ? [self currentDictionaryFromLocation:location] : self.lastLocationDictionary;
+    NSTimeInterval duration = endDate ? [endDate timeIntervalSinceDate:self.currentTripStart] : self.currentTripDuration;
+    CLLocationDistance distance = endDate ? [self tripDistanceUntil:endDate] : self.currentTripDistance;
 
     [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
-        NSString *timestamp = [GLManager iso8601DateStringFromDate:[NSDate date]];
+        NSString *timestamp = [GLManager iso8601DateStringFromDate:end];
         NSDictionary *currentTrip = @{
                                       @"type": @"Feature",
                                       @"geometry": @{
                                               @"type": @"Point",
                                               @"coordinates": @[
-                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.longitude],
-                                                      [NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]
+                                                      [NSNumber numberWithDouble:endLocation.coordinate.longitude],
+                                                      [NSNumber numberWithDouble:endLocation.coordinate.latitude]
                                                       ]
                                               },
                                       @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
@@ -1310,9 +1343,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                               @"start": [GLManager iso8601DateStringFromDate:self.currentTripStart],
                                               @"end": timestamp,
                                               @"start_location": (self.tripStartLocationDictionary ?: [NSNull null]),
-                                              @"end_location":(self.lastLocationDictionary ?: [NSNull null]),
-                                              @"duration": [NSNumber numberWithDouble:self.currentTripDuration],
-                                              @"distance": [NSNumber numberWithDouble:self.currentTripDistance],
+                                              @"end_location":(endLocationDictionary ?: [NSNull null]),
+                                              @"duration": [NSNumber numberWithDouble:duration],
+                                              @"distance": [NSNumber numberWithDouble:distance],
                                               @"stopped_automatically": @(autopause),
                                               @"steps": [NSNumber numberWithInteger:numberOfSteps],
                                               }]
@@ -1325,6 +1358,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
         [accessor setDictionary:currentTrip forKey:[NSString stringWithFormat:@"%@-trip",timestamp]];
     }];
+
+    // Before the trip start is removed, since the Apple Health recorder reads this when it is
+    [[NSUserDefaults standardUserDefaults] setObject:end forKey:GLLastTripEndDefaultsName];
 
     self.tripStartLocationDictionary = nil;
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:GLTripStartTimeDefaultsName];
@@ -1978,8 +2014,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     }
     
-    // If a trip is active, ask if they would like to end the trip
-    if(self.tripInProgress) {
+    // If a trip is active, ask if they would like to end the trip. Not when "Ask to End Trip When
+    // Stopped" is on, which sends its own prompt for the same stop.
+    if(self.tripInProgress && ![[NSUserDefaults standardUserDefaults] boolForKey:GLTripAskToEndWhenStoppedDefaultsName]) {
         [self askToEndTrip];
     }
     
@@ -2539,7 +2576,27 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(nonnull UNNotificationResponse *)response withCompletionHandler:(nonnull void (^)(void))completionHandler
 {
     if([@"END_TRIP" isEqualToString:response.actionIdentifier]) {
-        [self endTrip];
+        // A prompt sent after the phone stopped ends the trip when it stopped, as long as it's
+        // still the same trip. Times are seconds since 1970.
+        NSDictionary *info = response.notification.request.content.userInfo;
+        NSNumber *tripStart = info[GLEndTripPromptTripStartKey];
+        NSNumber *stoppedAt = info[GLEndTripPromptStoppedAtKey];
+        if(self.tripInProgress && tripStart && stoppedAt
+           && fabs([self.currentTripStart timeIntervalSince1970] - [tripStart doubleValue]) < 1
+           && [stoppedAt doubleValue] > [tripStart doubleValue]) {
+            NSDate *stopDate = [NSDate dateWithTimeIntervalSince1970:[stoppedAt doubleValue]];
+            CLLocation *stopLocation = nil;
+            if(info[GLEndTripPromptLatitudeKey] && info[GLEndTripPromptLongitudeKey]) {
+                stopLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake([info[GLEndTripPromptLatitudeKey] doubleValue], [info[GLEndTripPromptLongitudeKey] doubleValue])
+                                                             altitude:0
+                                                   horizontalAccuracy:[info[GLEndTripPromptAccuracyKey] doubleValue]
+                                                     verticalAccuracy:-1
+                                                            timestamp:stopDate];
+            }
+            [self endTripAtDate:stopDate location:stopLocation];
+        } else {
+            [self endTrip];
+        }
 
         // If location updates were off when the trip was started, disable location now
         if([[NSUserDefaults standardUserDefaults] boolForKey:GLTripTrackingEnabledDefaultsName] == NO) {
