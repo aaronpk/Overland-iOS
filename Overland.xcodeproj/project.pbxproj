@@ -16,6 +16,7 @@
 		0FA388001240FD65C4469F9F /* TripIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA363257C4BFB8311081ABB /* TripIntents.swift */; };
 		0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA363257C4BFB8311081ABB /* TripIntents.swift */; };
 		0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */; };
+		0FA3AA0AAB12CD34EF56000A /* WifiOnlySending.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA09AB12CD34EF560009 /* WifiOnlySending.swift */; };
 		0FA32D2DFE72CCAF1CBCC987 /* SharedTripState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3B7838C357C30292FEB0B /* SharedTripState.swift */; };
 		0FA3AA02AB12CD34EF560002 /* TripModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA01AB12CD34EF560001 /* TripModes.swift */; };
 		0FA3AA03AB12CD34EF560003 /* TripModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA01AB12CD34EF560001 /* TripModes.swift */; };
@@ -100,6 +101,7 @@
 		0FA363257C4BFB8311081ABB /* TripIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripIntents.swift; sourceTree = "<group>"; };
 		0FA368263F0C8CF7E9440051 /* OverlandLiveActivity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OverlandLiveActivity.entitlements; sourceTree = "<group>"; };
 		0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStateObserver.swift; sourceTree = "<group>"; };
+		0FA3AA09AB12CD34EF560009 /* WifiOnlySending.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiOnlySending.swift; sourceTree = "<group>"; };
 		0FA3B7838C357C30292FEB0B /* SharedTripState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTripState.swift; sourceTree = "<group>"; };
 		0FA3AA01AB12CD34EF560001 /* TripModes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModes.swift; sourceTree = "<group>"; };
 		0FA3335218A802C5C01E5BB3 /* GLTripActions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLTripActions.m; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				0FA31EEAFEE992D486B6DD53 /* SharedStateObserver.swift */,
+				0FA3AA09AB12CD34EF560009 /* WifiOnlySending.swift */,
 				0FA3BE36FCCC7B08321D3B28 /* OverlandAppIntents.swift */,
 				0FA3E4340E10D97F838BE4EA /* HealthTripRecorder.swift */,
 			);
@@ -586,6 +589,7 @@
 				0FA3266C3526D9E8A8BDD619 /* SharedTripState.swift in Sources */,
 				0FA3AA03AB12CD34EF560003 /* TripModes.swift in Sources */,
 				0FA32669E011B5C5BD0C537F /* SharedStateObserver.swift in Sources */,
+				0FA3AA0AAB12CD34EF56000A /* WifiOnlySending.swift in Sources */,
 				0FA3BC5894F86DF912DE3564 /* TripIntents.swift in Sources */,
 				0FA33D161509DED340841E2B /* OverlandAppIntents.swift in Sources */,
 				0FA3AA8D21392AEFF02C81AA /* HealthTripRecorder.swift in Sources */,

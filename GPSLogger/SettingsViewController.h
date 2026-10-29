@@ -26,6 +26,7 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWithoutGPS;
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWhileStationary;
+@property (strong, nonatomic) IBOutlet UISwitch *sendOnlyOnWifi;
 @property (strong, nonatomic) IBOutlet UISwitch *enableNotifications;
 @property (strong, nonatomic) IBOutlet UIStackView *locationAuthorizationStatusSection;
 @property (strong, nonatomic) IBOutlet UILabel *locationAuthorizationStatus;

@@ -41,6 +41,9 @@
 
     NSLog(@"Application launched with options: %@", launchOptions);
     
+    // Start watching the network connection before anything is sent, for "Send only on Wi-Fi"
+    [GLWifiOnlySending shared];
+
     [GLManager sharedManager];
 
     // Finish tip jar transactions that complete while the tip jar isn't open, such as renewals

@@ -64,6 +64,7 @@ BOOL mapWasDragged = NO;
         [self.tripStartStopButton.layer setCornerRadius:4.0];
     }
     [self setUpSendErrorBanner];
+    [self updateSendErrorBanner];
     [self extendMapUnderTabBar];
     if (@available(iOS 17.0, *)) {
         [self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withAction:@selector(redrawAllViews)];
@@ -190,6 +191,17 @@ BOOL mapWasDragged = NO;
                                                  name:GLSendingFinishedNotification
                                                object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateSendErrorBanner)
+                                                 name:GLWifiOnlySending.changedNotification
+                                               object:nil];
+
+    // Switching between a server and iCloud Drive changes whether sending waits for Wi-Fi
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateSendErrorBanner)
+                                                 name:GLSettingsChangedNotification
+                                               object:nil];
+
     self.viewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                              target:self
                                                            selector:@selector(refreshView)
@@ -307,8 +319,8 @@ BOOL mapWasDragged = NO;
     [self setButton:self.sendNowButton title:@"Sending..." color:[self disabledSendNowColor] fontSize:15 enabled:NO];
 }
 
-// A banner at the top of the map, shown while the last send or save has failed. Tapping it shows
-// the whole message.
+// A banner at the top of the map, shown while the last send or save has failed, or while sending
+// waits for Wi-Fi. Tapping it shows the whole message.
 - (void)setUpSendErrorBanner {
     UIButtonConfiguration *config = [UIButtonConfiguration filledButtonConfiguration];
     config.baseBackgroundColor = [UIColor systemRedColor];
@@ -336,18 +348,32 @@ BOOL mapWasDragged = NO;
 
 - (void)updateSendErrorBanner {
     NSString *title = [GLManager sharedManager].lastSendErrorTitle;
-    self.sendErrorBanner.hidden = (title == nil);
+    BOOL waitingForWifi = [GLWifiOnlySending shared].waitingForWifi;
+    self.sendErrorBanner.hidden = (title == nil && !waitingForWifi);
     if (title) {
         UIButtonConfiguration *config = self.sendErrorBanner.configuration;
         config.title = [NSString stringWithFormat:@"⚠️ %@. Tap for details.", title];
+        config.baseBackgroundColor = [UIColor systemRedColor];
+        self.sendErrorBanner.configuration = config;
+        [self.view bringSubviewToFront:self.sendErrorBanner];
+    } else if (waitingForWifi) {
+        UIButtonConfiguration *config = self.sendErrorBanner.configuration;
+        config.title = @"Waiting for Wi-Fi to send";
+        config.baseBackgroundColor = [UIColor systemGrayColor];
         self.sendErrorBanner.configuration = config;
         [self.view bringSubviewToFront:self.sendErrorBanner];
     }
 }
 
 - (void)sendErrorBannerWasTapped:(UIButton *)sender {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[GLManager sharedManager].lastSendErrorTitle
-                                                                   message:[GLManager sharedManager].lastSendErrorMessage
+    NSString *title = [GLManager sharedManager].lastSendErrorTitle;
+    NSString *message = [GLManager sharedManager].lastSendErrorMessage;
+    if (title == nil) {
+        title = @"Waiting for Wi-Fi";
+        message = @"\"Send only on Wi-Fi\" is on in Settings, so points stay in the queue until the phone is on Wi-Fi. Tap Send Now to send them anyway.";
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];

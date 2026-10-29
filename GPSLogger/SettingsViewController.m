@@ -84,6 +84,7 @@
     self.discardPointsWithinSeconds.enabled = NO;
     self.discardPointsWithoutGPS.enabled = NO;
     self.discardPointsWhileStationary.enabled = NO;
+    self.sendOnlyOnWifi.enabled = NO;
     self.enableNotifications.enabled = NO;
     self.locationAuthorizationStatus.enabled = NO;
     self.locationAuthorizationStatusWarning.enabled = NO;
@@ -107,6 +108,7 @@
     self.discardPointsWithinSeconds.enabled = YES;
     self.discardPointsWithoutGPS.enabled = YES;
     self.discardPointsWhileStationary.enabled = YES;
+    self.sendOnlyOnWifi.enabled = YES;
     self.enableNotifications.enabled = YES;
     self.locationAuthorizationStatus.enabled = YES;
     self.locationAuthorizationStatusWarning.enabled = YES;
@@ -231,6 +233,7 @@
 
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPS;
     self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationary;
+    self.sendOnlyOnWifi.on = [GLWifiOnlySending shared].enabled;
 
     CLLocationAccuracy d = [GLManager sharedManager].desiredAccuracy;
     if(d == kCLLocationAccuracyBestForNavigation) {
@@ -470,6 +473,10 @@
 
 - (IBAction)toggleDiscardPointsWhileStationary:(UISwitch *)sender {
     [GLManager sharedManager].discardPointsWhileStationary = sender.on;
+}
+
+- (IBAction)toggleSendOnlyOnWifi:(UISwitch *)sender {
+    [GLWifiOnlySending shared].enabled = sender.on;
 }
 
 - (IBAction)toggleNotificationsEnabled:(UISwitch *)sender {
