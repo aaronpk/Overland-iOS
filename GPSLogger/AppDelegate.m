@@ -55,6 +55,9 @@
     // Save walk, run and bike trips to Apple Health, if that's turned on
     [[HealthTripRecorder shared] start];
 
+    // Ask to end a trip after the phone stops, if that's turned on
+    [[GLTripEndPrompt shared] start];
+
     // This key is deprecated in iOS 26, but it's still the only way to tell that the app was
     // relaunched for a location event. It's only used for this tracking stat.
     if([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {

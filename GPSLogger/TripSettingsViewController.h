@@ -35,6 +35,7 @@
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWhileStationary;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
 @property (strong, nonatomic) IBOutlet UISwitch *showLiveActivityDuringTrip;
+@property (strong, nonatomic) IBOutlet UISwitch *askToEndTripWhenStopped;
 
 - (IBAction)settingsLockSliderWasChanged:(UISlider *)sender;
 

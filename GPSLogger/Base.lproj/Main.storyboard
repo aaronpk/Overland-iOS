@@ -1773,6 +1773,29 @@ For details on the format of the data this app sends to the server, please visit
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AeS-St-t01">
+                                                <rect key="frame" x="0.0" y="0.0" width="335" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ask to End Trip When Stopped" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AeS-Lb-t01">
+                                                        <rect key="frame" x="0.0" y="0.0" width="286" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="AeS-Sw-t01">
+                                                        <rect key="frame" x="286" y="0.0" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="toggleAskToEndTripWhenStopped:" destination="Y9g-jV-OC3" eventType="valueChanged" id="AeS-Ac-t01"/>
+                                                        </connections>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="When you stop moving during a trip, send a notification asking whether to end it. Ending it from the notification ends the trip at the time you stopped." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AeS-Ds-t01">
+                                                <rect key="frame" x="0.0" y="0.0" width="335" height="61"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-04-ast">
                                                 <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
                                                 <subviews>
@@ -2029,6 +2052,7 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="pausesAutomatically" destination="QD1-27-rqd" id="ou0-Hg-LLM"/>
                         <outlet property="pointsPerBatchControl" destination="4ai-2r-umg" id="fJW-a2-Rv5"/>
                         <outlet property="preventScreenLockDuringTrip" destination="4Uo-QH-0SA" id="Sm0-jM-Yor"/>
+                        <outlet property="askToEndTripWhenStopped" destination="AeS-Sw-t01" id="AeS-Ou-t01"/>
                         <outlet property="showLiveActivityDuringTrip" destination="LvA-Sw-s01" id="LvA-Ou-o01"/>
                         <outlet property="settingsLockSlider" destination="XZE-e2-wId" id="dgh-2J-apG"/>
                         <outlet property="showBackgroundLocationIndicator" destination="PjU-ec-DLt" id="SeT-qS-RVg"/>

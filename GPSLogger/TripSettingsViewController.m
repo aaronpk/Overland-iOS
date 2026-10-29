@@ -148,6 +148,7 @@
 - (void)updateVisibleSettings {
     self.preventScreenLockDuringTrip.on = [[NSUserDefaults standardUserDefaults] boolForKey:GLScreenLockEnabledDefaultsName];
     self.showLiveActivityDuringTrip.on = [GLManager sharedManager].liveActivityEnabled;
+    self.askToEndTripWhenStopped.on = [GLTripEndPrompt shared].enabled;
     [self updateHealthSetting];
 
     self.activityType.selectedSegmentIndex = [GLManager sharedManager].activityTypeDuringTrip - 1;
@@ -243,6 +244,7 @@
     self.showLiveActivityDuringTrip.enabled = NO;
     self.loggingMode.enabled = NO;
     self.pointsPerBatchControl.enabled = NO;
+    self.askToEndTripWhenStopped.enabled = NO;
     self.autoStopRadius.enabled = NO;
     self.autoStopTime.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
@@ -262,6 +264,7 @@
     self.showLiveActivityDuringTrip.enabled = YES;
     self.loggingMode.enabled = YES;
     self.pointsPerBatchControl.enabled = YES;
+    self.askToEndTripWhenStopped.enabled = YES;
     self.autoStopRadius.enabled = YES;
     self.autoStopTime.enabled = [GLAutoStop shared].radiusDuringTrip > 0;
     self.discardPointsWithinDistance.enabled = YES;
@@ -385,6 +388,10 @@
 
 - (IBAction)toggleDiscardPointsWhileStationary:(UISwitch *)sender {
     [GLManager sharedManager].discardPointsWhileStationaryDuringTrip = sender.on;
+}
+
+- (IBAction)toggleAskToEndTripWhenStopped:(UISwitch *)sender {
+    [GLTripEndPrompt shared].enabled = sender.on;
 }
 
 - (IBAction)toggleShowLiveActivityDuringTripEnabled:(UISwitch *)sender {
