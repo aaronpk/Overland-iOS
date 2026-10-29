@@ -31,6 +31,7 @@ static NSString *const GLDiscardPointsWithinDistanceDefaultsName = @"GLDiscardPo
 static NSString *const GLDiscardPointsWithinSecondsDefaultsName = @"GLDiscardPointsWithinSecondsDefaults";
 static NSString *const GLDiscardPointsWithoutGPSDefaultsName = @"GLDiscardPointsWithoutGPSDefaults";
 static NSString *const GLDiscardPointsWhileStationaryDefaultsName = @"GLDiscardPointsWhileStationaryDefaults";
+static NSString *const GLDiscardPointsWorseThanAccuracyDefaultsName = @"GLDiscardPointsWorseThanAccuracyDefaults";
 static NSString *const GLIncludeTrackingStatsDefaultsName = @"GLIncludeTrackingStatsDefaultsName";
 static NSString *const GLActivityTypeDefaultsName = @"GLActivityTypeDefaults";
 static NSString *const GLDesiredAccuracyDefaultsName = @"GLDesiredAccuracyDefaults";
@@ -66,6 +67,7 @@ static NSString *const GLTripDiscardPointsWithinDistanceDefaultsName = @"GLTripD
 static NSString *const GLTripDiscardPointsWithinSecondsDefaultsName = @"GLTripDiscardPointsWithinSecondsDefaults";
 static NSString *const GLTripDiscardPointsWithoutGPSDefaultsName = @"GLTripDiscardPointsWithoutGPSDefaults";
 static NSString *const GLTripDiscardPointsWhileStationaryDefaultsName = @"GLTripDiscardPointsWhileStationaryDefaults";
+static NSString *const GLTripDiscardPointsWorseThanAccuracyDefaultsName = @"GLTripDiscardPointsWorseThanAccuracyDefaults";
 static NSString *const GLScreenLockEnabledDefaultsName = @"GLScreenLockEnabledDefaults";
 static NSString *const GLLiveActivityEnabledDefaultsName = @"GLLiveActivityEnabledDefaults";
 /* End */
@@ -122,6 +124,8 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) int discardPointsWithinSeconds;
 @property (nonatomic) BOOL discardPointsWithoutGPS;
 @property (nonatomic) BOOL discardPointsWhileStationary;
+// Meters, or -1 for off
+@property (nonatomic) CLLocationAccuracy discardPointsWorseThanAccuracy;
 @property (nonatomic) GLTrackingMode trackingMode;
 @property BOOL visitTrackingEnabled;
 @property (nonatomic) GLLoggingMode loggingMode;
@@ -141,6 +145,7 @@ typedef void (^CaseBlock)(void);
 @property (nonatomic) int discardPointsWithinSecondsDuringTrip;
 @property (nonatomic) BOOL discardPointsWithoutGPSDuringTrip;
 @property (nonatomic) BOOL discardPointsWhileStationaryDuringTrip;
+@property (nonatomic) CLLocationAccuracy discardPointsWorseThanAccuracyDuringTrip;
 /* End */
 
 @property (readonly) BOOL trackingEnabled;

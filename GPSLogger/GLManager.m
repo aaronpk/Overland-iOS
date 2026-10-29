@@ -525,6 +525,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
         };
         [self runBlock:minTimeBlocks fromDictionary:main forKey:@"min_time"];
 
+        // A number of meters, or "off"
+        id maxAccuracy = [main objectForKey:@"max_accuracy"];
+        if([maxAccuracy respondsToSelector:@selector(doubleValue)]) {
+            self.discardPointsWorseThanAccuracy = [maxAccuracy doubleValue] > 0 ? [maxAccuracy doubleValue] : -1;
+        }
+
         if([main objectForKey:@"discard_without_gps"] != nil) {
             self.discardPointsWithoutGPS = [[main objectForKey:@"discard_without_gps"] boolValue];
         }
@@ -605,6 +611,11 @@ const double MPH_to_METERSPERSECOND = 0.447;
             @"5m": ^{ self.discardPointsWithinSecondsDuringTrip = 300; },
         };
         [self runBlock:minTimeDuringTripBlocks fromDictionary:trip forKey:@"min_time"];
+
+        id maxAccuracy = [trip objectForKey:@"max_accuracy"];
+        if([maxAccuracy respondsToSelector:@selector(doubleValue)]) {
+            self.discardPointsWorseThanAccuracyDuringTrip = [maxAccuracy doubleValue] > 0 ? [maxAccuracy doubleValue] : -1;
+        }
 
         if([trip objectForKey:@"discard_without_gps"] != nil) {
             self.discardPointsWithoutGPSDuringTrip = [[trip objectForKey:@"discard_without_gps"] boolValue];
@@ -1460,6 +1471,36 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 }
 
+- (CLLocationAccuracy)discardPointsWorseThanAccuracy {
+    if([self defaultsKeyExists:GLDiscardPointsWorseThanAccuracyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLDiscardPointsWorseThanAccuracyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setDiscardPointsWorseThanAccuracy:(CLLocationAccuracy)accuracy {
+    [[NSUserDefaults standardUserDefaults] setDouble:accuracy forKey:GLDiscardPointsWorseThanAccuracyDefaultsName];
+}
+
+- (CLLocationAccuracy)discardPointsWorseThanAccuracyDuringTrip {
+    if([self defaultsKeyExists:GLTripDiscardPointsWorseThanAccuracyDefaultsName]) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:GLTripDiscardPointsWorseThanAccuracyDefaultsName];
+    } else {
+        return -1;
+    }
+}
+- (void)setDiscardPointsWorseThanAccuracyDuringTrip:(CLLocationAccuracy)accuracy {
+    [[NSUserDefaults standardUserDefaults] setDouble:accuracy forKey:GLTripDiscardPointsWorseThanAccuracyDefaultsName];
+}
+
+- (CLLocationAccuracy)discardPointsWorseThanAccuracyCurrentValue {
+    if(self.tripInProgress) {
+        return self.discardPointsWorseThanAccuracyDuringTrip;
+    } else {
+        return self.discardPointsWorseThanAccuracy;
+    }
+}
+
 - (BOOL)discardPointsWhileStationary {
     return [[NSUserDefaults standardUserDefaults] boolForKey:GLDiscardPointsWhileStationaryDefaultsName];
 }
@@ -1988,6 +2029,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     for(int i=startIndex; i<locations.count; i++) {
         CLLocation *loc = locations[i];
+
+        // Drop points less accurate than the setting, such as ones from cell tower positioning.
+        // A negative accuracy means the location is invalid.
+        CLLocationAccuracy maxAccuracy = self.discardPointsWorseThanAccuracyCurrentValue;
+        if(maxAccuracy > 0 && (loc.horizontalAccuracy < 0 || loc.horizontalAccuracy > maxAccuracy)) {
+            continue;
+        }
         
         // If Discard is enabled, check if this point is too close to the previous
         if(self.discardPointsWithinDistanceCurrentValue > 0) {
