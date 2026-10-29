@@ -25,6 +25,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *discardPointsWithinDistanceLabel;
 @property (strong, nonatomic) IBOutlet UISlider *discardPointsWithinSeconds;
 @property (strong, nonatomic) IBOutlet UILabel *discardPointsWithinSecondsLabel;
+@property (strong, nonatomic) IBOutlet UISlider *discardPointsWorseThanAccuracy;
+@property (strong, nonatomic) IBOutlet UILabel *discardPointsWorseThanAccuracyLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWithoutGPS;
 @property (strong, nonatomic) IBOutlet UISwitch *discardPointsWhileStationary;
 @property (strong, nonatomic) IBOutlet UISwitch *preventScreenLockDuringTrip;
@@ -41,6 +43,7 @@
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISlider *)sender;
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISlider *)sender;
+- (IBAction)discardPointsWorseThanAccuracyWasChanged:(UISlider *)sender;
 - (IBAction)toggleDiscardPointsWithoutGPS:(UISwitch *)sender;
 - (IBAction)toggleDiscardPointsWhileStationary:(UISwitch *)sender;
 - (IBAction)togglePreventScreenLockDuringTripEnabled:(UISwitch *)sender;

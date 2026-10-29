@@ -177,6 +177,10 @@
     self.discardPointsWithinSeconds.value = [GLDiscardSliders sliderValueForSeconds:discardSeconds];
     self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:discardSeconds];
 
+    CLLocationAccuracy discardAccuracy = [GLManager sharedManager].discardPointsWorseThanAccuracyDuringTrip;
+    self.discardPointsWorseThanAccuracy.value = [GLDiscardSliders sliderValueForAccuracy:discardAccuracy];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:discardAccuracy];
+
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPSDuringTrip;
     self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationaryDuringTrip;
 
@@ -233,6 +237,7 @@
     self.pointsPerBatchControl.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
+    self.discardPointsWorseThanAccuracy.enabled = NO;
     self.discardPointsWithoutGPS.enabled = NO;
     self.discardPointsWhileStationary.enabled = NO;
     self.saveToHealth.enabled = NO;
@@ -249,6 +254,7 @@
     self.pointsPerBatchControl.enabled = YES;
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
+    self.discardPointsWorseThanAccuracy.enabled = YES;
     self.discardPointsWithoutGPS.enabled = YES;
     self.discardPointsWhileStationary.enabled = YES;
     self.saveToHealth.enabled = YES;
@@ -290,6 +296,12 @@
     int seconds = (int)[GLDiscardSliders secondsForSliderValue:sender.value];
     self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:seconds];
     [GLManager sharedManager].discardPointsWithinSecondsDuringTrip = seconds;
+}
+
+- (IBAction)discardPointsWorseThanAccuracyWasChanged:(UISlider *)sender {
+    CLLocationAccuracy accuracy = [GLDiscardSliders accuracyForSliderValue:sender.value];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:accuracy];
+    [GLManager sharedManager].discardPointsWorseThanAccuracyDuringTrip = accuracy;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

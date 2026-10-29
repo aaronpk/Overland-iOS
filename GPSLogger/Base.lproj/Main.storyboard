@@ -992,6 +992,40 @@ IAogA
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-00-acc">
+                                                <rect key="frame" x="0.0" y="1321" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-03-acc">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max Accuracy of Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-01-acc">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-04-acc">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-05-acc">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="discardPointsWorseThanAccuracyWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="MAm-02-acc"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if its accuracy is worse than the selected distance, such as a point from cell tower positioning." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAm-06-acc">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpS-St-m01">
                                                 <rect key="frame" x="0.0" y="1423.5" width="335" height="31"/>
                                                 <subviews>
@@ -1112,6 +1146,8 @@ IAogA
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
                         <outlet property="discardPointsWithinDistanceLabel" destination="MDm-Vl-001" id="MDm-Ou-001"/>
                         <outlet property="discardPointsWithinSecondsLabel" destination="MTm-Vl-001" id="MTm-Ou-001"/>
+                        <outlet property="discardPointsWorseThanAccuracy" destination="MAm-05-acc" id="MAm-Ou-001"/>
+                        <outlet property="discardPointsWorseThanAccuracyLabel" destination="MAm-04-acc" id="MAm-Ou-002"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-m01" id="GpS-Ou-m01"/>
                         <outlet property="discardPointsWhileStationary" destination="StA-Sw-m01" id="StA-Ou-m01"/>
                         <outlet property="sendOnlyOnWifi" destination="WiF-Sw-m01" id="WiF-Ou-m01"/>
@@ -1733,6 +1769,40 @@ For details on the format of the data this app sends to the server, please visit
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-06-acc">
+                                                <rect key="frame" x="0.0" y="908.5" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-03-acc">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max Accuracy of Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-01-acc">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-04-acc">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-05-acc">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="discardPointsWorseThanAccuracyWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="MAt-02-acc"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if its accuracy is worse than the selected distance, such as a point from cell tower positioning." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAt-00-acc">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpS-St-t01">
                                                 <rect key="frame" x="0.0" y="1011" width="335" height="31"/>
                                                 <subviews>
@@ -1807,6 +1877,8 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="discardPointsWithinSeconds" destination="UJk-6E-2Kl" id="tOF-QI-Xej"/>
                         <outlet property="discardPointsWithinDistanceLabel" destination="MDt-Vl-001" id="MDt-Ou-001"/>
                         <outlet property="discardPointsWithinSecondsLabel" destination="MTt-Vl-001" id="MTt-Ou-001"/>
+                        <outlet property="discardPointsWorseThanAccuracy" destination="MAt-05-acc" id="MAt-Ou-001"/>
+                        <outlet property="discardPointsWorseThanAccuracyLabel" destination="MAt-04-acc" id="MAt-Ou-002"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-t01" id="GpS-Ou-t01"/>
                         <outlet property="discardPointsWhileStationary" destination="StA-Sw-t01" id="StA-Ou-t01"/>
                         <outlet property="loggingMode" destination="APM-y7-ilb" id="Jpg-pD-GQz"/>

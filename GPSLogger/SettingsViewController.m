@@ -82,6 +82,7 @@
     self.resumesWithGeofence.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
+    self.discardPointsWorseThanAccuracy.enabled = NO;
     self.discardPointsWithoutGPS.enabled = NO;
     self.discardPointsWhileStationary.enabled = NO;
     self.sendOnlyOnWifi.enabled = NO;
@@ -106,6 +107,7 @@
     self.resumesWithGeofence.enabled = YES;
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
+    self.discardPointsWorseThanAccuracy.enabled = YES;
     self.discardPointsWithoutGPS.enabled = YES;
     self.discardPointsWhileStationary.enabled = YES;
     self.sendOnlyOnWifi.enabled = YES;
@@ -204,6 +206,10 @@
     int discardSeconds = [GLManager sharedManager].discardPointsWithinSeconds;
     self.discardPointsWithinSeconds.value = [GLDiscardSliders sliderValueForSeconds:discardSeconds];
     self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:discardSeconds];
+
+    CLLocationAccuracy discardAccuracy = [GLManager sharedManager].discardPointsWorseThanAccuracy;
+    self.discardPointsWorseThanAccuracy.value = [GLDiscardSliders sliderValueForAccuracy:discardAccuracy];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:discardAccuracy];
 
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPS;
     self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationary;
@@ -372,6 +378,12 @@
     int seconds = (int)[GLDiscardSliders secondsForSliderValue:sender.value];
     self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:seconds];
     [GLManager sharedManager].discardPointsWithinSeconds = seconds;
+}
+
+- (IBAction)discardPointsWorseThanAccuracyWasChanged:(UISlider *)sender {
+    CLLocationAccuracy accuracy = [GLDiscardSliders accuracyForSliderValue:sender.value];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:accuracy];
+    [GLManager sharedManager].discardPointsWorseThanAccuracy = accuracy;
 }
 
 - (IBAction)activityTypeControlWasChanged:(UISegmentedControl *)sender {

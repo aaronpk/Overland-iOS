@@ -2,10 +2,10 @@
 //  DiscardSliders.swift
 //  Overland
 //
-//  Converts between the positions of the Min Distance and Min Time sliders on the Settings and
-//  Trip Settings screens and the values GLManager stores. The sliders go from 0 to 1, squared, so
-//  the short distances and times, which need finer steps, get more of the slider. Values snap to
-//  round numbers.
+//  Converts between the positions of the Min Distance, Max Accuracy and Min Time sliders on the
+//  Settings and Trip Settings screens and the values GLManager stores. The sliders go from 0 to 1,
+//  squared, so the short distances and times, which need finer steps, get more of the slider.
+//  Values snap to round numbers.
 //
 
 import Foundation
@@ -14,6 +14,7 @@ import Foundation
     // GLManager stores -1 for "off"
     private static let distanceOff: Double = -1
     private static let maxDistance: Double = 500
+    private static let maxAccuracy: Double = 1000
     private static let minSeconds = 1
     private static let maxSeconds = 300
 
@@ -32,6 +33,19 @@ import Foundation
 
     @objc static func text(forDistance distance: Double) -> String {
         distance <= 0 ? "Off" : "\(Int(distance)) m"
+    }
+
+    // MARK: Max accuracy of points, in meters
+
+    @objc static func sliderValue(forAccuracy accuracy: Double) -> Float {
+        if accuracy <= 0 { return 0 }
+        return Float((min(accuracy, maxAccuracy) / maxAccuracy).squareRoot())
+    }
+
+    @objc static func accuracy(forSliderValue value: Float) -> Double {
+        let meters = maxAccuracy * Double(value * value)
+        if meters < 0.5 { return distanceOff }
+        return min(maxAccuracy, snap(meters, steps: [(10, 1), (100, 5), (500, 10), (.infinity, 50)]))
     }
 
     // MARK: Min time between points, in seconds
