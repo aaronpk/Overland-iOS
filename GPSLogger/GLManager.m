@@ -531,6 +531,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
             self.discardPointsWorseThanAccuracy = [maxAccuracy doubleValue] > 0 ? [maxAccuracy doubleValue] : -1;
         }
 
+        // Meters, or "off"
+        id autoStopRadius = [main objectForKey:@"auto_stop_radius"];
+        if([autoStopRadius respondsToSelector:@selector(doubleValue)]) {
+            [GLAutoStop shared].radius = [autoStopRadius doubleValue] > 0 ? [autoStopRadius doubleValue] : -1;
+        }
+
+        // Seconds
+        id autoStopTime = [main objectForKey:@"auto_stop_time"];
+        if([autoStopTime respondsToSelector:@selector(intValue)] && [autoStopTime intValue] > 0) {
+            [GLAutoStop shared].seconds = [autoStopTime intValue];
+        }
+
         if([main objectForKey:@"discard_without_gps"] != nil) {
             self.discardPointsWithoutGPS = [[main objectForKey:@"discard_without_gps"] boolValue];
         }
@@ -615,6 +627,16 @@ const double MPH_to_METERSPERSECOND = 0.447;
         id maxAccuracy = [trip objectForKey:@"max_accuracy"];
         if([maxAccuracy respondsToSelector:@selector(doubleValue)]) {
             self.discardPointsWorseThanAccuracyDuringTrip = [maxAccuracy doubleValue] > 0 ? [maxAccuracy doubleValue] : -1;
+        }
+
+        id autoStopRadius = [trip objectForKey:@"auto_stop_radius"];
+        if([autoStopRadius respondsToSelector:@selector(doubleValue)]) {
+            [GLAutoStop shared].radiusDuringTrip = [autoStopRadius doubleValue] > 0 ? [autoStopRadius doubleValue] : -1;
+        }
+
+        id autoStopTime = [trip objectForKey:@"auto_stop_time"];
+        if([autoStopTime respondsToSelector:@selector(intValue)] && [autoStopTime intValue] > 0) {
+            [GLAutoStop shared].secondsDuringTrip = [autoStopTime intValue];
         }
 
         if([trip objectForKey:@"discard_without_gps"] != nil) {
@@ -876,6 +898,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
 - (void)enableTracking {
     self.trackingEnabled = YES;
+
+    // Updates are starting again, so auto-stop starts watching from scratch
+    [[GLAutoStop shared] reset];
 
     if(self.tripInProgress) {
         self.locationManager.activityType = self.activityTypeDuringTrip;
@@ -2138,6 +2163,19 @@ const double MPH_to_METERSPERSECOND = 0.447;
         }
     }
 
+    // Auto-stop uses the phone's real location, not a wifi zone's. It only stops continuous
+    // updates, so it doesn't apply when tracking only significant location changes.
+    BOOL continuousUpdates = self.tripInProgress || self.trackingMode == kGLTrackingModeStandard || self.trackingMode == kGLTrackingModeStandardAndSignificant;
+    if(self.lastDeviceLocation) {
+        if([GLAutoStop shared].stopped) {
+            if([[GLAutoStop shared] shouldResumeAt:self.lastDeviceLocation]) {
+                [self resumeFromAutoStop];
+            }
+        } else if(continuousUpdates && [[GLAutoStop shared] shouldStopAfter:self.lastDeviceLocation]) {
+            [self stopUpdatesAutomatically];
+        }
+    }
+
     [self sendQueueIfTimeElapsed];
     
     [self scheduleLocalNotification];
@@ -2239,6 +2277,42 @@ const double MPH_to_METERSPERSECOND = 0.447;
     
     [self notify:@"Location updates paused" withTitle:@"Paused"];
     
+    [self finishPausingUpdates];
+}
+
+// Auto-stop: the phone has stayed within the auto-stop radius long enough. Stop updates the way iOS
+// pauses them, but keep significant location changes running as a way to start again, in case
+// Resume with Geofence is off.
+- (void)stopUpdatesAutomatically {
+    [self.locationManager stopUpdatingLocation];
+    [self.locationManager stopUpdatingHeading];
+    [self.locationManager startMonitoringSignificantLocationChanges];
+    [[GLAutoStop shared] markStoppedAt:self.lastDeviceLocation];
+
+    [self logAction:@"auto_stopped_location_updates"];
+
+    [self notify:@"Location updates stopped automatically" withTitle:@"Paused"];
+
+    [self finishPausingUpdates];
+}
+
+// A location from outside the auto-stop radius arrived, from a significant location change
+- (void)resumeFromAutoStop {
+    for(CLRegion *region in self.locationManager.monitoredRegions) {
+        if([region.identifier isEqualToString:@"resume-from-pause"]) {
+            [self.locationManager stopMonitoringForRegion:region];
+        }
+    }
+
+    [self logAction:@"auto_resumed_location_updates"];
+    [self notify:@"Location updates resumed" withTitle:@"Resumed"];
+
+    // Restarts updates with the current settings, and resets auto-stop
+    [self enableTracking];
+}
+
+// The part of pausing that's the same whether iOS paused updates or auto-stop stopped them
+- (void)finishPausingUpdates {
     // Create an exit geofence to help it resume automatically
     if(self.resumesAfterDistance > 0) {
         CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:self.lastLocation.coordinate radius:self.resumesAfterDistance identifier:@"resume-from-pause"];
