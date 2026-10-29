@@ -174,8 +174,10 @@
 - (void)handleLaunchFromShortcutItem:(UIApplicationShortcutItem *)shortcutItem {
     if([shortcutItem.type isEqualToString:@"stop"]) {
         [GLTripActions endTripRestoringTracking];
+        [IntentDonations tripEnded];
     } else {
         [GLTripActions startTripWithMode:shortcutItem.type];
+        [IntentDonations tripStartedWithMode:[GLManager sharedManager].currentTripMode];
     }
 }
 

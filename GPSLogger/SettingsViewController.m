@@ -10,6 +10,7 @@
 #import "SettingsViewController.h"
 #import "GLManager.h"
 #import "WifiZoneViewController.h"
+#import "Overland-Swift.h"
 
 #import  <Intents/Intents.h>
 #import <SafariServices/SafariServices.h>
@@ -268,6 +269,7 @@
     } else {
         [[GLManager sharedManager] stopAllUpdates];
     }
+    [IntentDonations trackingChangedWithEnabled:sender.selectedSegmentIndex == 1];
 }
 
 -(IBAction)loggingModeWasChanged:(UISegmentedControl *)sender {

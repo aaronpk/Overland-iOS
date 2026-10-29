@@ -582,8 +582,10 @@ BOOL mapWasDragged = NO;
 - (IBAction)tripStartStopWasTapped:(id)sender {
     if([GLManager sharedManager].tripInProgress) {
         [GLTripActions endTripRestoringTracking];
+        [IntentDonations tripEnded];
     } else {
         [GLTripActions startTripWithMode:nil];
+        [IntentDonations tripStartedWithMode:[GLManager sharedManager].currentTripMode];
     }
     [self updateTripState];
 }

@@ -247,3 +247,24 @@ struct OverlandShortcuts: AppShortcutsProvider {
     // Matches the app icon
     static var shortcutTileColor: ShortcutTileColor = .orange
 }
+
+// Tells iOS when a trip starts or ends, or tracking turns on or off, from inside the app, so Siri
+// can learn when you usually do it and suggest the action. Intents run from Siri, Shortcuts,
+// widgets and controls are donated by the system, so this is only called from the app's own
+// buttons and quick actions.
+@objc final class IntentDonations: NSObject {
+    @objc static func tripStarted(mode: String) {
+        guard #available(iOS 17.0, *) else { return }
+        IntentDonationManager.shared.donate(intent: StartTripIntent(mode: TripModeEntity(id: mode)))
+    }
+
+    @objc static func tripEnded() {
+        guard #available(iOS 17.0, *) else { return }
+        IntentDonationManager.shared.donate(intent: EndTripIntent())
+    }
+
+    @objc static func trackingChanged(enabled: Bool) {
+        guard #available(iOS 17.0, *) else { return }
+        IntentDonationManager.shared.donate(intent: SetTrackingIntent(enabled: enabled))
+    }
+}
