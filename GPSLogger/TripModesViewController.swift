@@ -48,9 +48,7 @@ extension TripModeStore {
         if #available(iOS 18.0, *) {
             ControlCenter.shared.reloadAllControls()
         }
-        if #available(iOS 17.0, *) {
-            OverlandShortcuts.updateAppShortcutParameters()
-        }
+        AppShortcutParameters.update()
     }
 }
 

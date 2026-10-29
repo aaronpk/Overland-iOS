@@ -58,6 +58,9 @@
     // Ask to end a trip after the phone stops, if that's turned on
     [[GLTripEndPrompt shared] start];
 
+    // Give Siri the trip modes, so "Start a car trip" starts a car trip
+    [AppShortcutParameters update];
+
     // This key is deprecated in iOS 26, but it's still the only way to tell that the app was
     // relaunched for a location event. It's only used for this tracking stat.
     if([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) {

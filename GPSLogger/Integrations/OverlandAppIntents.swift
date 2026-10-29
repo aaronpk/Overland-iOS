@@ -208,7 +208,11 @@ struct OverlandShortcuts: AppShortcutsProvider {
             intent: StartTripIntent(),
             phrases: [
                 "Start a trip in \(.applicationName)",
+                "Start a trip on \(.applicationName)",
                 "Start a \(\.$mode) trip in \(.applicationName)",
+                "Start a \(\.$mode) trip on \(.applicationName)",
+                "Start \(\.$mode) trip in \(.applicationName)",
+                "Start \(\.$mode) trip on \(.applicationName)",
                 "Start tracking a \(\.$mode) trip with \(.applicationName)",
             ],
             shortTitle: "Start Trip",
@@ -246,6 +250,16 @@ struct OverlandShortcuts: AppShortcutsProvider {
 
     // Matches the app icon
     static var shortcutTileColor: ShortcutTileColor = .orange
+}
+
+// Siri only recognizes the phrases with a trip mode in them once it has been given the list of
+// modes, and until then it hears "Start a car trip" as "Start a trip". Called at launch, and again
+// whenever the modes change.
+@objc final class AppShortcutParameters: NSObject {
+    @objc static func update() {
+        guard #available(iOS 17.0, *) else { return }
+        OverlandShortcuts.updateAppShortcutParameters()
+    }
 }
 
 // Tells iOS when a trip starts or ends, or tracking turns on or off, from inside the app, so Siri
