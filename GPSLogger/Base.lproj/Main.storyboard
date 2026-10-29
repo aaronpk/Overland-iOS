@@ -927,26 +927,29 @@ IAogA
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ZHW-Da-VCn">
                                                 <rect key="frame" x="0.0" y="1218.5" width="335" height="92.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Distance Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8e8-qP-aSn">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MDm-Rw-001">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1Yp-6o-vL0">
-                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
-                                                        <segments>
-                                                            <segment title="Off"/>
-                                                            <segment title="1m"/>
-                                                            <segment title="10m"/>
-                                                            <segment title="50m"/>
-                                                            <segment title="100m"/>
-                                                            <segment title="500m"/>
-                                                        </segments>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Distance Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8e8-qP-aSn">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MDm-Vl-001">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1Yp-6o-vL0">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
                                                         <connections>
-                                                            <action selector="discardPointsWithinDistanceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="Gbt-5S-Mg7"/>
+                                                            <action selector="discardPointsWithinDistanceWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="MDm-Ac-001"/>
                                                         </connections>
-                                                    </segmentedControl>
+                                                    </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if it is within the selected distance of the previous point." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z63-hp-PnT">
                                                         <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -958,26 +961,29 @@ IAogA
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AbM-St-EgN">
                                                 <rect key="frame" x="0.0" y="1321" width="335" height="92.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-pE-bDa">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MTm-Rw-001">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PK5-vL-Tv4">
-                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
-                                                        <segments>
-                                                            <segment title="1s"/>
-                                                            <segment title="5s"/>
-                                                            <segment title="10s"/>
-                                                            <segment title="30s"/>
-                                                            <segment title="1m"/>
-                                                            <segment title="2m"/>
-                                                        </segments>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1B-pE-bDa">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MTm-Vl-001">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="PK5-vL-Tv4">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
                                                         <connections>
-                                                            <action selector="discardPointsWithinSecondsWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="q6c-4r-3Bw"/>
+                                                            <action selector="discardPointsWithinSecondsWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="MTm-Ac-001"/>
                                                         </connections>
-                                                    </segmentedControl>
+                                                    </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if it is received within selected time of the previous point." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dM7-X2-q6w">
                                                         <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1104,6 +1110,8 @@ IAogA
                         <outlet property="desiredAccuracy" destination="mZU-DS-xA9" id="uZm-xV-o15"/>
                         <outlet property="discardPointsWithinDistance" destination="1Yp-6o-vL0" id="QZn-Xp-P3M"/>
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
+                        <outlet property="discardPointsWithinDistanceLabel" destination="MDm-Vl-001" id="MDm-Ou-001"/>
+                        <outlet property="discardPointsWithinSecondsLabel" destination="MTm-Vl-001" id="MTm-Ou-001"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-m01" id="GpS-Ou-m01"/>
                         <outlet property="discardPointsWhileStationary" destination="StA-Sw-m01" id="StA-Ou-m01"/>
                         <outlet property="sendOnlyOnWifi" destination="WiF-Sw-m01" id="WiF-Ou-m01"/>
@@ -1660,26 +1668,29 @@ For details on the format of the data this app sends to the server, please visit
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NQe-IN-SE4">
                                                 <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Distance Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-7u-igQ">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MDt-Rw-001">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="FY5-oA-2n1">
-                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
-                                                        <segments>
-                                                            <segment title="Off"/>
-                                                            <segment title="1m"/>
-                                                            <segment title="10m"/>
-                                                            <segment title="50m"/>
-                                                            <segment title="100m"/>
-                                                            <segment title="500m"/>
-                                                        </segments>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Distance Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIP-7u-igQ">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MDt-Vl-001">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="FY5-oA-2n1">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
                                                         <connections>
-                                                            <action selector="discardPointsWithinDistanceWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="5db-ai-eql"/>
+                                                            <action selector="discardPointsWithinDistanceWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="MDt-Ac-001"/>
                                                         </connections>
-                                                    </segmentedControl>
+                                                    </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if it is within the selected distance of the previous point." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WY4-cO-4l8">
                                                         <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1691,26 +1702,29 @@ For details on the format of the data this app sends to the server, please visit
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Xel-Dj-ruH">
                                                 <rect key="frame" x="0.0" y="908.5" width="335" height="92.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FFj-Ri-N1t">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MTt-Rw-001">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="UJk-6E-2Kl">
-                                                        <rect key="frame" x="0.0" y="20.5" width="335" height="32"/>
-                                                        <segments>
-                                                            <segment title="1s"/>
-                                                            <segment title="5s"/>
-                                                            <segment title="10s"/>
-                                                            <segment title="30s"/>
-                                                            <segment title="1m"/>
-                                                            <segment title="2m"/>
-                                                        </segments>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min Time Between Points" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FFj-Ri-N1t">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MTt-Vl-001">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="UJk-6E-2Kl">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
                                                         <connections>
-                                                            <action selector="discardPointsWithinSecondsWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="eyT-Oo-hCu"/>
+                                                            <action selector="discardPointsWithinSecondsWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="MTt-Ac-001"/>
                                                         </connections>
-                                                    </segmentedControl>
+                                                    </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard a point if it is received within selected time of the previous point." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Xp-86-H2D">
                                                         <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1791,6 +1805,8 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="desiredAccuracy" destination="tFA-1v-pRu" id="4r0-Fk-aCN"/>
                         <outlet property="discardPointsWithinDistance" destination="FY5-oA-2n1" id="e95-6J-Qqj"/>
                         <outlet property="discardPointsWithinSeconds" destination="UJk-6E-2Kl" id="tOF-QI-Xej"/>
+                        <outlet property="discardPointsWithinDistanceLabel" destination="MDt-Vl-001" id="MDt-Ou-001"/>
+                        <outlet property="discardPointsWithinSecondsLabel" destination="MTt-Vl-001" id="MTt-Ou-001"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-t01" id="GpS-Ou-t01"/>
                         <outlet property="discardPointsWhileStationary" destination="StA-Sw-t01" id="StA-Ou-t01"/>
                         <outlet property="loggingMode" destination="APM-y7-ilb" id="Jpg-pD-GQz"/>

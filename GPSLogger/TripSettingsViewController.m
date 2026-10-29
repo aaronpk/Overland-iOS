@@ -170,38 +170,12 @@
     self.pausesAutomatically.selectedSegmentIndex = ([GLManager sharedManager].pausesAutomaticallyDuringTrip ? 1 : 0);
     
     CLLocationDistance discardDistance = [GLManager sharedManager].discardPointsWithinDistanceDuringTrip;
-    int dIdx = 0;
-    switch((int)discardDistance) {
-        case -1:
-            dIdx = 0; break;
-        case 1:
-            dIdx = 1; break;
-        case 10:
-            dIdx = 2; break;
-        case 50:
-            dIdx = 3; break;
-        case 100:
-            dIdx = 4; break;
-        case 500:
-            dIdx = 5; break;
-    }
-    self.discardPointsWithinDistance.selectedSegmentIndex = dIdx;
-    
+    self.discardPointsWithinDistance.value = [GLDiscardSliders sliderValueForDistance:discardDistance];
+    self.discardPointsWithinDistanceLabel.text = [GLDiscardSliders textForDistance:discardDistance];
+
     int discardSeconds = [GLManager sharedManager].discardPointsWithinSecondsDuringTrip;
-    switch(discardSeconds) {
-        case 1:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 0; break;
-        case 5:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 1; break;
-        case 10:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 2; break;
-        case 30:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 3; break;
-        case 60:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 4; break;
-        case 120:
-            self.discardPointsWithinSeconds.selectedSegmentIndex = 5; break;
-    }
+    self.discardPointsWithinSeconds.value = [GLDiscardSliders sliderValueForSeconds:discardSeconds];
+    self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:discardSeconds];
 
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPSDuringTrip;
     self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationaryDuringTrip;
@@ -306,41 +280,15 @@
     }
 }
 
-- (IBAction)discardPointsWithinDistanceWasChanged:(UISegmentedControl *)sender {
-    CLLocationDistance distance = -1;
-    switch(sender.selectedSegmentIndex) {
-        case 0:
-            distance = -1; break;
-        case 1:
-            distance = 1; break;
-        case 2:
-            distance = 10; break;
-        case 3:
-            distance = 50; break;
-        case 4:
-            distance = 100; break;
-        case 5:
-            distance = 500; break;
-    }
+- (IBAction)discardPointsWithinDistanceWasChanged:(UISlider *)sender {
+    CLLocationDistance distance = [GLDiscardSliders distanceForSliderValue:sender.value];
+    self.discardPointsWithinDistanceLabel.text = [GLDiscardSliders textForDistance:distance];
     [GLManager sharedManager].discardPointsWithinDistanceDuringTrip = distance;
 }
 
-- (IBAction)discardPointsWithinSecondsWasChanged:(UISegmentedControl *)sender {
-    int seconds = 1;
-    switch(sender.selectedSegmentIndex) {
-        case 0:
-            seconds = 1; break;
-        case 1:
-            seconds = 5; break;
-        case 2:
-            seconds = 10; break;
-        case 3:
-            seconds = 30; break;
-        case 4:
-            seconds = 60; break;
-        case 5:
-            seconds = 120; break;
-    }
+- (IBAction)discardPointsWithinSecondsWasChanged:(UISlider *)sender {
+    int seconds = (int)[GLDiscardSliders secondsForSliderValue:sender.value];
+    self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:seconds];
     [GLManager sharedManager].discardPointsWithinSecondsDuringTrip = seconds;
 }
 
