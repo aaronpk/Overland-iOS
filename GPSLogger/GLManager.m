@@ -420,6 +420,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     };
     [self runBlock:sendIntervalBlocks fromDictionary:settings forKey:@"send_interval"];
 
+    if([settings objectForKey:@"send_wifi_only"] != nil) {
+        [GLWifiOnlySending shared].enabled = [[settings objectForKey:@"send_wifi_only"] boolValue];
+    }
+
     NSString *tripMode = [settings objectForKey:@"trip_mode"];
     if([tripMode respondsToSelector:@selector(isEqualToString:)]) {
         NSString *modeID = [GLTripModeStore modeIDForServerValue:tripMode];
@@ -969,6 +973,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
         NSLog(@"Send is already in progress");
         return;
     }
+
+    // "Send only on Wi-Fi" is on and the phone is on cellular. lastSentDate isn't updated, so
+    // this sends at the first chance once the phone is on Wi-Fi.
+    if([GLWifiOnlySending shared].waitingForWifi) {
+        return;
+    }
     
     BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending;
 
@@ -982,7 +992,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)sendQueueIfNotInProgress {
-    if(self.sendInProgress) {
+    if(self.sendInProgress || [GLWifiOnlySending shared].waitingForWifi) {
         return;
     }
     
@@ -1143,7 +1153,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         return;
     }
     
-    [self sendQueueNow];
+    if(![GLWifiOnlySending shared].waitingForWifi) {
+        [self sendQueueNow];
+    }
 
     [self.tripdb open];
     _currentTripDistanceCached = 0;
@@ -1206,7 +1218,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
     _tripEndInProgress = NO;
 
     // Send after the trip record is written so it goes out with this batch
-    [self sendQueueNow];
+    if(![GLWifiOnlySending shared].waitingForWifi) {
+        [self sendQueueNow];
+    }
 }
 
 - (void)incrementTripMode:(NSString *)tripMode {
