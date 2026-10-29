@@ -1042,6 +1042,12 @@ const double MPH_to_METERSPERSECOND = 0.447;
     // Schedule a local notification for 10 minutes into the future to remind the user to launch the app.
     // We'll cancel the notification when we get an update from the system, so this should only
     // run if the app is shut down for some reason.
+
+    // Auto-stop stopped updates on purpose, so there's nothing to remind about. Significant
+    // location changes still arrive here while it's stopped.
+    if([GLAutoStop shared].stopped) {
+        return;
+    }
     
     int scheduleRateLimit = 60;
     int reminderIntervalSeconds = 600;
@@ -2275,7 +2281,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
     [self logAction:@"paused_location_updates"];
     
-    [self notify:@"Location updates paused" withTitle:@"Paused"];
+    // With auto-stop on, stopping and starting is expected, so don't notify about it
+    if(![GLAutoStop shared].active) {
+        [self notify:@"Location updates paused" withTitle:@"Paused"];
+    }
     
     [self finishPausingUpdates];
 }
@@ -2291,7 +2300,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
 
     [self logAction:@"auto_stopped_location_updates"];
 
-    [self notify:@"Location updates stopped automatically" withTitle:@"Paused"];
+    // The reminder that tracking has stopped would fire, since no more updates arrive to cancel it
+    [self cancelLocalNotification];
 
     [self finishPausingUpdates];
 }
@@ -2305,7 +2315,6 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 
     [self logAction:@"auto_resumed_location_updates"];
-    [self notify:@"Location updates resumed" withTitle:@"Resumed"];
 
     // Restarts updates with the current settings, and resets auto-stop
     [self enableTracking];
@@ -2333,14 +2342,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
     NSLog(@"Did exit region");
     [self logAction:@"exited_pause_region"];
-    [self notify:@"Starting updates from exiting the geofence" withTitle:@"Resumed"];
+    if(![GLAutoStop shared].active) {
+        [self notify:@"Starting updates from exiting the geofence" withTitle:@"Resumed"];
+    }
     [self.locationManager stopMonitoringForRegion:region];
     [self enableTracking];
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
     [self logAction:@"resumed_location_updates"];
-    [self notify:@"Location updates resumed" withTitle:@"Resumed"];
+    if(![GLAutoStop shared].active) {
+        [self notify:@"Location updates resumed" withTitle:@"Resumed"];
+    }
 }
 
 #pragma mark - AppDelegate Methods

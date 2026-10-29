@@ -33,6 +33,10 @@ import Foundation
 
     @objc var stopped: Bool { stoppedLocation != nil }
 
+    // Auto-stop is turned on for the current settings, or it stopped the updates. GLManager doesn't
+    // show the paused and resumed notifications while it is.
+    @objc var active: Bool { currentRadius > 0 || stopped }
+
     // MARK: Settings
 
     // Meters, or -1 for off, the default
