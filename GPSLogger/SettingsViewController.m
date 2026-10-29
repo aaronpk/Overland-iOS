@@ -80,6 +80,8 @@
     self.loggingMode.enabled = NO;
     self.pointsPerBatchControl.enabled = NO;
     self.resumesWithGeofence.enabled = NO;
+    self.autoStopRadius.enabled = NO;
+    self.autoStopTime.enabled = NO;
     self.discardPointsWithinDistance.enabled = NO;
     self.discardPointsWithinSeconds.enabled = NO;
     self.discardPointsWorseThanAccuracy.enabled = NO;
@@ -105,6 +107,8 @@
     self.loggingMode.enabled = YES;
     self.pointsPerBatchControl.enabled = YES;
     self.resumesWithGeofence.enabled = YES;
+    self.autoStopRadius.enabled = YES;
+    self.autoStopTime.enabled = [GLAutoStop shared].radius > 0;
     self.discardPointsWithinDistance.enabled = YES;
     self.discardPointsWithinSeconds.enabled = YES;
     self.discardPointsWorseThanAccuracy.enabled = YES;
@@ -199,17 +203,25 @@
     }
     self.resumesWithGeofence.selectedSegmentIndex = gIdx;
     
+    CLLocationDistance autoStopRadius = [GLAutoStop shared].radius;
+    self.autoStopRadius.value = [GLSettingsSliders sliderValueForAutoStopRadius:autoStopRadius];
+    self.autoStopRadiusLabel.text = [GLSettingsSliders textForDistance:autoStopRadius];
+
+    int autoStopSeconds = (int)[GLAutoStop shared].seconds;
+    self.autoStopTime.value = [GLSettingsSliders sliderValueForAutoStopSeconds:autoStopSeconds];
+    self.autoStopTimeLabel.text = [GLSettingsSliders textForSeconds:autoStopSeconds];
+
     CLLocationDistance discardDistance = [GLManager sharedManager].discardPointsWithinDistance;
-    self.discardPointsWithinDistance.value = [GLDiscardSliders sliderValueForDistance:discardDistance];
-    self.discardPointsWithinDistanceLabel.text = [GLDiscardSliders textForDistance:discardDistance];
+    self.discardPointsWithinDistance.value = [GLSettingsSliders sliderValueForDistance:discardDistance];
+    self.discardPointsWithinDistanceLabel.text = [GLSettingsSliders textForDistance:discardDistance];
 
     int discardSeconds = [GLManager sharedManager].discardPointsWithinSeconds;
-    self.discardPointsWithinSeconds.value = [GLDiscardSliders sliderValueForSeconds:discardSeconds];
-    self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:discardSeconds];
+    self.discardPointsWithinSeconds.value = [GLSettingsSliders sliderValueForSeconds:discardSeconds];
+    self.discardPointsWithinSecondsLabel.text = [GLSettingsSliders textForSeconds:discardSeconds];
 
     CLLocationAccuracy discardAccuracy = [GLManager sharedManager].discardPointsWorseThanAccuracy;
-    self.discardPointsWorseThanAccuracy.value = [GLDiscardSliders sliderValueForAccuracy:discardAccuracy];
-    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:discardAccuracy];
+    self.discardPointsWorseThanAccuracy.value = [GLSettingsSliders sliderValueForAccuracy:discardAccuracy];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLSettingsSliders textForDistance:discardAccuracy];
 
     self.discardPointsWithoutGPS.on = [GLManager sharedManager].discardPointsWithoutGPS;
     self.discardPointsWhileStationary.on = [GLManager sharedManager].discardPointsWhileStationary;
@@ -368,21 +380,35 @@
     [GLManager sharedManager].showBackgroundLocationIndicator = m;
 }
 
+- (IBAction)autoStopRadiusWasChanged:(UISlider *)sender {
+    CLLocationDistance radius = [GLSettingsSliders autoStopRadiusForSliderValue:sender.value];
+    self.autoStopRadiusLabel.text = [GLSettingsSliders textForDistance:radius];
+    [GLAutoStop shared].radius = radius;
+    // The time only matters while auto-stop is on
+    self.autoStopTime.enabled = radius > 0;
+}
+
+- (IBAction)autoStopTimeWasChanged:(UISlider *)sender {
+    NSInteger seconds = [GLSettingsSliders autoStopSecondsForSliderValue:sender.value];
+    self.autoStopTimeLabel.text = [GLSettingsSliders textForSeconds:seconds];
+    [GLAutoStop shared].seconds = seconds;
+}
+
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISlider *)sender {
-    CLLocationDistance distance = [GLDiscardSliders distanceForSliderValue:sender.value];
-    self.discardPointsWithinDistanceLabel.text = [GLDiscardSliders textForDistance:distance];
+    CLLocationDistance distance = [GLSettingsSliders distanceForSliderValue:sender.value];
+    self.discardPointsWithinDistanceLabel.text = [GLSettingsSliders textForDistance:distance];
     [GLManager sharedManager].discardPointsWithinDistance = distance;
 }
 
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISlider *)sender {
-    int seconds = (int)[GLDiscardSliders secondsForSliderValue:sender.value];
-    self.discardPointsWithinSecondsLabel.text = [GLDiscardSliders textForSeconds:seconds];
+    int seconds = (int)[GLSettingsSliders secondsForSliderValue:sender.value];
+    self.discardPointsWithinSecondsLabel.text = [GLSettingsSliders textForSeconds:seconds];
     [GLManager sharedManager].discardPointsWithinSeconds = seconds;
 }
 
 - (IBAction)discardPointsWorseThanAccuracyWasChanged:(UISlider *)sender {
-    CLLocationAccuracy accuracy = [GLDiscardSliders accuracyForSliderValue:sender.value];
-    self.discardPointsWorseThanAccuracyLabel.text = [GLDiscardSliders textForDistance:accuracy];
+    CLLocationAccuracy accuracy = [GLSettingsSliders accuracyForSliderValue:sender.value];
+    self.discardPointsWorseThanAccuracyLabel.text = [GLSettingsSliders textForDistance:accuracy];
     [GLManager sharedManager].discardPointsWorseThanAccuracy = accuracy;
 }
 

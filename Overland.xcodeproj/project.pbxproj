@@ -27,7 +27,7 @@
 		0F3E5213201E551000DCFAA4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F3E5212201E54FB00DCFAA4 /* OpenSans-Light.ttf */; };
 		0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */; };
 		0FA3AA08AB12CD34EF560008 /* TripModeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA07AB12CD34EF560007 /* TripModeIcons.swift */; };
-		0FA3AA0CAB12CD34EF56000C /* DiscardSliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA0BAB12CD34EF56000B /* DiscardSliders.swift */; };
+		0FA3AA0CAB12CD34EF56000C /* SettingsSliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA0BAB12CD34EF56000B /* SettingsSliders.swift */; };
 		0FA3AA0EAB12CD34EF56000E /* AutoStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */; };
 		0FA3AA05AB12CD34EF560005 /* TripModesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
@@ -114,7 +114,7 @@
 		0F444F0A1BD04A7E00106C2E /* TripModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripModeViewController.h; sourceTree = "<group>"; };
 		0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripModeViewController.m; sourceTree = "<group>"; };
 		0FA3AA07AB12CD34EF560007 /* TripModeIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModeIcons.swift; sourceTree = "<group>"; };
-		0FA3AA0BAB12CD34EF56000B /* DiscardSliders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscardSliders.swift; sourceTree = "<group>"; };
+		0FA3AA0BAB12CD34EF56000B /* SettingsSliders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSliders.swift; sourceTree = "<group>"; };
 		0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoStop.swift; sourceTree = "<group>"; };
 		0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModesViewController.swift; sourceTree = "<group>"; };
 		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 				0F444F0B1BD04A7E00106C2E /* TripModeViewController.m */,
 				0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */,
 				0FA3AA07AB12CD34EF560007 /* TripModeIcons.swift */,
-				0FA3AA0BAB12CD34EF56000B /* DiscardSliders.swift */,
+				0FA3AA0BAB12CD34EF56000B /* SettingsSliders.swift */,
 				0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */,
 				0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */,
 				0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */,
@@ -583,7 +583,7 @@
 				0F444F0C1BD04A7E00106C2E /* TripModeViewController.m in Sources */,
 				0FA3AA05AB12CD34EF560005 /* TripModesViewController.swift in Sources */,
 				0FA3AA08AB12CD34EF560008 /* TripModeIcons.swift in Sources */,
-				0FA3AA0CAB12CD34EF56000C /* DiscardSliders.swift in Sources */,
+				0FA3AA0CAB12CD34EF56000C /* SettingsSliders.swift in Sources */,
 				0FA3AA0EAB12CD34EF56000E /* AutoStop.swift in Sources */,
 				0FAC1FEE2B25FBB50007F3B1 /* SceneDelegate.m in Sources */,
 				0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */,

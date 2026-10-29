@@ -893,6 +893,74 @@ IAogA
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-06-ast">
+                                                <rect key="frame" x="0.0" y="1218.5" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-03-ast">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-Stop Radius" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-01-ast">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-04-ast">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-00-ast">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="autoStopRadiusWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="ARm-02-ast"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stop location updates when the phone stays within this distance for the time below. Use instead of Pause Updates Automatically, and with Resume with Geofence to start again when you leave." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARm-05-ast">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-06-ast">
+                                                <rect key="frame" x="0.0" y="1218.5" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-03-ast">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-Stop After" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-01-ast">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-04-ast">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-00-ast">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="autoStopTimeWasChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="ATm-02-ast"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How long the phone has to stay within the radius before location updates stop." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATm-05-ast">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uzB-j5-cmR">
                                                 <rect key="frame" x="0.0" y="1096" width="335" height="112.5"/>
                                                 <subviews>
@@ -1146,6 +1214,10 @@ IAogA
                         <outlet property="discardPointsWithinSeconds" destination="PK5-vL-Tv4" id="xhb-fT-aga"/>
                         <outlet property="discardPointsWithinDistanceLabel" destination="MDm-Vl-001" id="MDm-Ou-001"/>
                         <outlet property="discardPointsWithinSecondsLabel" destination="MTm-Vl-001" id="MTm-Ou-001"/>
+                        <outlet property="autoStopRadius" destination="ARm-00-ast" id="Am0-Ou-ast"/>
+                        <outlet property="autoStopRadiusLabel" destination="ARm-04-ast" id="Am1-Ou-ast"/>
+                        <outlet property="autoStopTime" destination="ATm-00-ast" id="Am2-Ou-ast"/>
+                        <outlet property="autoStopTimeLabel" destination="ATm-04-ast" id="Am3-Ou-ast"/>
                         <outlet property="discardPointsWorseThanAccuracy" destination="MAm-05-acc" id="MAm-Ou-001"/>
                         <outlet property="discardPointsWorseThanAccuracyLabel" destination="MAm-04-acc" id="MAm-Ou-002"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-m01" id="GpS-Ou-m01"/>
@@ -1701,6 +1773,74 @@ For details on the format of the data this app sends to the server, please visit
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-04-ast">
+                                                <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-02-ast">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-Stop Radius" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-06-ast">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-03-ast">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-00-ast">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="autoStopRadiusWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="ARt-01-ast"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stop location updates when the phone stays within this distance for the time below. Use instead of Pause Updates Automatically, and with Resume with Geofence to start again when you leave." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARt-05-ast">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-04-ast">
+                                                <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-02-ast">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                        <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-Stop After" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-06-ast">
+                                                            <rect key="frame" x="0.0" y="0.0" width="335" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-03-ast">
+                                                                <rect key="frame" x="300" y="0.0" width="35" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-00-ast">
+                                                        <rect key="frame" x="-2" y="20.5" width="339" height="32"/>
+                                                        <connections>
+                                                            <action selector="autoStopTimeWasChanged:" destination="Y9g-jV-OC3" eventType="valueChanged" id="ATt-01-ast"/>
+                                                        </connections>
+                                                    </slider>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How long the phone has to stay within the radius before location updates stop." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATt-05-ast">
+                                                        <rect key="frame" x="0.0" y="51.5" width="335" height="41"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NQe-IN-SE4">
                                                 <rect key="frame" x="0.0" y="806" width="335" height="92.5"/>
                                                 <subviews>
@@ -1877,6 +2017,10 @@ For details on the format of the data this app sends to the server, please visit
                         <outlet property="discardPointsWithinSeconds" destination="UJk-6E-2Kl" id="tOF-QI-Xej"/>
                         <outlet property="discardPointsWithinDistanceLabel" destination="MDt-Vl-001" id="MDt-Ou-001"/>
                         <outlet property="discardPointsWithinSecondsLabel" destination="MTt-Vl-001" id="MTt-Ou-001"/>
+                        <outlet property="autoStopRadius" destination="ARt-00-ast" id="At0-Ou-ast"/>
+                        <outlet property="autoStopRadiusLabel" destination="ARt-03-ast" id="At1-Ou-ast"/>
+                        <outlet property="autoStopTime" destination="ATt-00-ast" id="At2-Ou-ast"/>
+                        <outlet property="autoStopTimeLabel" destination="ATt-03-ast" id="At3-Ou-ast"/>
                         <outlet property="discardPointsWorseThanAccuracy" destination="MAt-05-acc" id="MAt-Ou-001"/>
                         <outlet property="discardPointsWorseThanAccuracyLabel" destination="MAt-04-acc" id="MAt-Ou-002"/>
                         <outlet property="discardPointsWithoutGPS" destination="GpS-Sw-t01" id="GpS-Ou-t01"/>

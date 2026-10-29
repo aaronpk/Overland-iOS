@@ -21,6 +21,10 @@
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *loggingMode;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *pointsPerBatchControl;
+@property (strong, nonatomic) IBOutlet UISlider *autoStopRadius;
+@property (strong, nonatomic) IBOutlet UILabel *autoStopRadiusLabel;
+@property (strong, nonatomic) IBOutlet UISlider *autoStopTime;
+@property (strong, nonatomic) IBOutlet UILabel *autoStopTimeLabel;
 @property (strong, nonatomic) IBOutlet UISlider *discardPointsWithinDistance;
 @property (strong, nonatomic) IBOutlet UILabel *discardPointsWithinDistanceLabel;
 @property (strong, nonatomic) IBOutlet UISlider *discardPointsWithinSeconds;
@@ -41,6 +45,8 @@
 
 - (IBAction)loggingModeWasChanged:(UISegmentedControl *)sender;
 - (IBAction)pointsPerBatchWasChanged:(UISegmentedControl *)sender;
+- (IBAction)autoStopRadiusWasChanged:(UISlider *)sender;
+- (IBAction)autoStopTimeWasChanged:(UISlider *)sender;
 - (IBAction)discardPointsWithinDistanceWasChanged:(UISlider *)sender;
 - (IBAction)discardPointsWithinSecondsWasChanged:(UISlider *)sender;
 - (IBAction)discardPointsWorseThanAccuracyWasChanged:(UISlider *)sender;
