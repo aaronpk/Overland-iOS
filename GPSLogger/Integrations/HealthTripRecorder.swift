@@ -163,7 +163,11 @@ struct HealthWorkout {
             // The trip being recorded ended
             let mode = manager.currentTripMode ?? ""
             let distance = lastTripDistance
-            let end = Date()
+            // A trip ended from the "you stopped" prompt ends when the phone stopped
+            var end = Date()
+            if let tripEnd = manager.lastTripEndDate, tripEnd > recording, tripEnd < end {
+                end = tripEnd
+            }
             recordingStart = nil
             queue.async { [self] in
                 finishTrip(start: recording, end: end, mode: mode, distance: distance)
