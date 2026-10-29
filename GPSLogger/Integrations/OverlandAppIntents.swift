@@ -214,6 +214,15 @@ struct OverlandShortcuts: AppShortcutsProvider {
                 "Start \(\.$mode) trip in \(.applicationName)",
                 "Start \(\.$mode) trip on \(.applicationName)",
                 "Start tracking a \(\.$mode) trip with \(.applicationName)",
+                // Without "trip", such as "Start a walk" or "Start running"
+                "Start a \(\.$mode) in \(.applicationName)",
+                "Start a \(\.$mode) on \(.applicationName)",
+                "Start a \(\.$mode) with \(.applicationName)",
+                "Start \(\.$mode) in \(.applicationName)",
+                "Start \(\.$mode) with \(.applicationName)",
+                "Go for a \(\.$mode) with \(.applicationName)",
+                "Track a \(\.$mode) with \(.applicationName)",
+                "Track my \(\.$mode) with \(.applicationName)",
             ],
             shortTitle: "Start Trip",
             systemImageName: "play.circle"
