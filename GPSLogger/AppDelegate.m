@@ -55,6 +55,9 @@
     // Save walk, run and bike trips to Apple Health, if that's turned on
     [[HealthTripRecorder shared] start];
 
+    // Keep today's points for the path on the Tracker map
+    [[GLMapPath shared] start];
+
     // Ask to end a trip after the phone stops, if that's turned on
     [[GLTripEndPrompt shared] start];
 
