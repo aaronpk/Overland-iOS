@@ -385,6 +385,14 @@ BOOL mapWasDragged = NO;
     [self.expandMapButton addTarget:self action:@selector(expandMapWasTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.expandMapButton];
 
+    // The map's own compass would sit under this button, so it goes below it instead. It only
+    // shows while the map is rotated.
+    self.mapView.showsCompass = NO;
+    MKCompassButton *compass = [MKCompassButton compassButtonWithMapView:self.mapView];
+    compass.compassVisibility = MKFeatureVisibilityAdaptive;
+    compass.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:compass];
+
     self.expandMapButtonTop = [self.expandMapButton.topAnchor constraintEqualToAnchor:self.mapView.topAnchor constant:12];
     self.expandMapButtonBelowBanner = [self.expandMapButton.topAnchor constraintEqualToAnchor:self.sendErrorBanner.bottomAnchor constant:10];
     [NSLayoutConstraint activateConstraints:@[
@@ -392,6 +400,8 @@ BOOL mapWasDragged = NO;
         [self.expandMapButton.trailingAnchor constraintEqualToAnchor:self.mapView.trailingAnchor constant:-12],
         [self.expandMapButton.widthAnchor constraintEqualToConstant:40],
         [self.expandMapButton.heightAnchor constraintEqualToConstant:40],
+        [compass.topAnchor constraintEqualToAnchor:self.expandMapButton.bottomAnchor constant:10],
+        [compass.centerXAnchor constraintEqualToAnchor:self.expandMapButton.centerXAnchor],
     ]];
 }
 
