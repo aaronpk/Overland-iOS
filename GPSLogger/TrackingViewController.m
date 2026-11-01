@@ -17,6 +17,8 @@
 @property (strong, nonatomic) NSTimer *viewRefreshTimer;
 // Shows why the last send failed, since notifications may be turned off
 @property (strong, nonatomic) UIButton *sendErrorBanner;
+// Today's path and the unsent points on the map
+@property (strong, nonatomic) GLMapPathOverlays *pathOverlays;
 
 @end
 
@@ -87,6 +89,8 @@ BOOL mapWasDragged = NO;
     
     currentLocationAnnotation = [[MKPointAnnotation alloc] initWithCoordinate:lastLocation.coordinate];
     [self.mapView addAnnotation:currentLocationAnnotation];
+
+    self.pathOverlays = [[GLMapPathOverlays alloc] initWithMapView:self.mapView];
 }
 
 // The background image has light and dark versions, but a pattern color only uses the version it
@@ -224,10 +228,13 @@ BOOL mapWasDragged = NO;
     }
     
     [self updateTripMode];
+
+    [self.pathOverlays attach];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [self.viewRefreshTimer invalidate];
+    [self.pathOverlays detach];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -243,6 +250,9 @@ BOOL mapWasDragged = NO;
 #pragma mark - MKMapViewDelegate
 
 - (MKAnnotationView * _Nullable)mapView:(MKMapView *)mapView viewForAnnotation:(nonnull id<MKAnnotation>)annotation {
+    if(annotation != currentLocationAnnotation) {
+        return nil;
+    }
     MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current"];
     if(annotationView == nil) {
         annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
@@ -251,6 +261,10 @@ BOOL mapWasDragged = NO;
     }
     annotationView.image = [UIImage imageNamed:@"map-dot"];
     return annotationView;
+}
+
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    return [self.pathOverlays rendererFor:overlay] ?: [[MKOverlayRenderer alloc] initWithOverlay:overlay];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
