@@ -19,6 +19,13 @@ static NSString *const GLSendingStartedNotification = @"GLSendingStartedNotifica
 static NSString *const GLSendingFinishedNotification = @"GLSendingFinishedNotification";
 static NSString *const GLSettingsChangedNotification = @"GLSettingsChangedNotification";
 
+// In GLNewDataNotification's userInfo when it's posted for new points: the locations that were
+// added to the queue, in order, and their queue keys
+static NSString *const GLNewDataLocationsKey = @"locations";
+static NSString *const GLNewDataQueueKeysKey = @"queue_keys";
+// In GLSendingFinishedNotification's userInfo after a batch was sent: the queue keys removed
+static NSString *const GLSentQueueKeysKey = @"queue_keys";
+
 static NSString *const GLAPIEndpointDefaultsName = @"GLAPIEndpointDefaults";
 static NSString *const GLAPIAccessTokenDefaultsName = @"GLAPIAccessTokenDefaults";
 static NSString *const GLDeviceIdDefaultsName = @"GLDeviceIdDefaults";
@@ -207,6 +214,9 @@ typedef void (^CaseBlock)(void);
 
 - (void)numberOfLocationsInQueue:(void(^)(long num))callback;
 - (void)numberOfObjectsInQueue:(void(^)(long locations, long trips, long stats))callback;
+// The locations in the queue, without visits, trip records and tracking stats, with their queue
+// keys. Not in any particular order.
+- (void)queuedLocations:(void(^)(NSArray<NSString *> *keys, NSArray<CLLocation *> *locations))callback;
 - (NSSet <__kindof CLRegion *>*)monitoredRegions;
 
 - (void)requestNotificationPermission;
