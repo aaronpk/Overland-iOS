@@ -2,9 +2,9 @@
 //  SharedStateObserver.swift
 //  Overland
 //
-//  Keeps SharedTripState up to date for the widgets and controls. It only watches what GLManager
-//  already broadcasts, its notifications and the settings it saves, so GLManager doesn't need to
-//  know about widgets.
+//  Keeps SharedTripState up to date for the widgets and controls, and the Home Screen quick actions
+//  up to date with the trip. It only watches what GLManager already broadcasts, its notifications
+//  and the settings it saves, so GLManager doesn't need to know about widgets.
 //
 
 import UIKit
@@ -101,6 +101,9 @@ import WidgetKit
         }
         state.lastSentDate = manager.lastSentDate
         state.lastSendError = manager.lastSendErrorTitle
+
+        // The Home Screen quick actions show Stop Trip during a trip, so they change with it too
+        GLTripActions.updateQuickActions()
 
         manager.numberOfLocations(inQueue: { count in
             DispatchQueue.main.async { [self] in

@@ -7,7 +7,7 @@
 //  This only uses GLManager's public API.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 // Ends the trip, and turns tracking off if it was off when the trip started. Does nothing if no
 // trip is running.
 + (void)endTripRestoringTracking;
+
+// Sets the Home Screen quick actions: the trip modes when no trip is running, or Stop Trip during
+// a trip. iOS shows whatever was set last, so this is called whenever a trip starts or ends, even
+// in the background, such as from the Live Activity, as well as when the app leaves the foreground.
++ (void)updateQuickActions;
 
 @end
 
