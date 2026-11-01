@@ -348,7 +348,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
             }
         }];
 
-        [self sendingFinished];
+        [self sendingFinishedWithSentKeys:syncedUpdates];
     }];
 
     [self updateSettingsFromResponse:responseDictionary];
@@ -763,6 +763,51 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }];
 }
 
+- (void)queuedLocations:(void(^)(NSArray<NSString *> *keys, NSArray<CLLocation *> *locations))callback {
+    NSMutableArray *keys = [NSMutableArray array];
+    NSMutableArray *locations = [NSMutableArray array];
+    NSISO8601DateFormatter *formatter = [[NSISO8601DateFormatter alloc] init];
+    [self.db accessCollection:GLLocationQueueName withBlock:^(id<LOLDatabaseAccessor> accessor) {
+        [accessor enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *object) {
+            if(![object isKindOfClass:[NSDictionary class]]) {
+                return NO;
+            }
+            id lat, lon;
+            NSDate *date;
+            if([object objectForKey:@"_type"]) {
+                // OwnTracks
+                if(![[object objectForKey:@"_type"] isEqual:@"location"]) {
+                    return NO;
+                }
+                lat = [object objectForKey:@"lat"];
+                lon = [object objectForKey:@"lon"];
+                id tst = [object objectForKey:@"tst"];
+                date = [tst isKindOfClass:[NSNumber class]] ? [NSDate dateWithTimeIntervalSince1970:[tst doubleValue]] : nil;
+            } else {
+                NSDictionary *properties = [object objectForKey:@"properties"];
+                NSArray *coordinates = [[object objectForKey:@"geometry"] objectForKey:@"coordinates"];
+                if(![properties isKindOfClass:[NSDictionary class]] || [properties objectForKey:@"action"]
+                   || [[properties objectForKey:@"type"] isEqual:@"trip"]
+                   || ![coordinates isKindOfClass:[NSArray class]] || coordinates.count < 2) {
+                    return NO;
+                }
+                lon = coordinates[0];
+                lat = coordinates[1];
+                id timestamp = [properties objectForKey:@"timestamp"];
+                date = [timestamp isKindOfClass:[NSString class]] ? [formatter dateFromString:timestamp] : nil;
+            }
+            if(![lat isKindOfClass:[NSNumber class]] || ![lon isKindOfClass:[NSNumber class]] || date == nil) {
+                return NO;
+            }
+            CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([lat doubleValue], [lon doubleValue]);
+            [keys addObject:key];
+            [locations addObject:[[CLLocation alloc] initWithCoordinate:coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:-1 timestamp:date]];
+            return NO;
+        }];
+    }];
+    callback(keys, locations);
+}
+
 
 - (void)requestAuthorizationPermission {
     bool isFirstRequest = false;
@@ -998,8 +1043,14 @@ const double MPH_to_METERSPERSECOND = 0.447;
 }
 
 - (void)sendingFinished {
+    [self sendingFinishedWithSentKeys:nil];
+}
+
+// The keys of the records that were sent go in the notification, for the map's unsent line
+- (void)sendingFinishedWithSentKeys:(NSSet *)sentKeys {
     self.sendInProgress = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self];
+    NSDictionary *userInfo = sentKeys ? @{GLSentQueueKeysKey: [sentKeys allObjects]} : nil;
+    [[NSNotificationCenter defaultCenter] postNotificationName:GLSendingFinishedNotification object:self userInfo:userInfo];
 }
 
 - (void)sendQueueIfTimeElapsed {
@@ -2101,7 +2152,10 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
     
     BOOL didAddData = NO;
-    
+    // The points added to the queue, for the map's path lines
+    NSMutableArray *addedLocations = [NSMutableArray array];
+    NSMutableArray *addedKeys = [NSMutableArray array];
+
     for(int i=startIndex; i<locations.count; i++) {
         CLLocation *loc = locations[i];
 
@@ -2182,6 +2236,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
             [accessor setDictionary:update forKey:timestamp];
         }];
         didAddData = YES;
+        [addedLocations addObject:loc];
+        [addedKeys addObject:timestamp];
         
         if([loc.timestamp timeIntervalSinceDate:self.currentTripStart] >= 0  // only if the location is newer than the trip start
            && loc.horizontalAccuracy <= 200 // only if the location is accurate enough
@@ -2206,7 +2262,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     }
 
     if(didAddData) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:GLNewDataNotification object:self
+                                                          userInfo:@{GLNewDataLocationsKey: addedLocations, GLNewDataQueueKeysKey: addedKeys}];
 
         if(self.tripInProgress && self.liveActivityEnabled) {
             [self updateTripLiveActivityForcingUpdate:NO];
