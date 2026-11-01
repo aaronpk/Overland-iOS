@@ -46,9 +46,16 @@ import UIKit
         tracking.translatesAutoresizingMaskIntoConstraints = false
         let trackingBackground = makeBackground(for: tracking)
 
-        let controls = UIStackView(arrangedSubviews: [trackingBackground, fit])
+        // The map's own compass would sit under these buttons, so it goes below them instead.
+        // It only shows while the map is rotated.
+        mapView.showsCompass = false
+        let compass = MKCompassButton(mapView: mapView)
+        compass.compassVisibility = .adaptive
+
+        let controls = UIStackView(arrangedSubviews: [trackingBackground, fit, compass])
         controls.axis = .vertical
         controls.spacing = 10
+        controls.alignment = .center
         controls.translatesAutoresizingMaskIntoConstraints = false
 
         setUpLegend()
