@@ -31,6 +31,7 @@
 		0FA3AA0EAB12CD34EF56000E /* AutoStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */; };
 		0FA3AA10AB12CD34EF560010 /* TripEndPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA0FAB12CD34EF56000F /* TripEndPrompt.swift */; };
 		0FA3AA12AB12CD34EF560012 /* MapPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA11AB12CD34EF560011 /* MapPath.swift */; };
+		0FA3AA14AB12CD34EF560014 /* FullMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA13AB12CD34EF560013 /* FullMapViewController.swift */; };
 		0FA3AA05AB12CD34EF560005 /* TripModesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */; };
 		0F70ECDA1FA663F2006F43C2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */; };
 		0FA11FBA259623D911A653DC /* TripActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA14C96E8BC2D9C270B9238 /* TripActivityAttributes.swift */; };
@@ -120,6 +121,7 @@
 		0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoStop.swift; sourceTree = "<group>"; };
 		0FA3AA0FAB12CD34EF56000F /* TripEndPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripEndPrompt.swift; sourceTree = "<group>"; };
 		0FA3AA11AB12CD34EF560011 /* MapPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPath.swift; sourceTree = "<group>"; };
+		0FA3AA13AB12CD34EF560013 /* FullMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullMapViewController.swift; sourceTree = "<group>"; };
 		0FA3AA04AB12CD34EF560004 /* TripModesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModesViewController.swift; sourceTree = "<group>"; };
 		0F702B012B2E1F670076E6B9 /* Overland-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Overland-Bridging-Header.h"; sourceTree = "<group>"; };
 		0F70ECD91FA663F2006F43C2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -330,6 +332,7 @@
 				0FA3AA0DAB12CD34EF56000D /* AutoStop.swift */,
 				0FA3AA0FAB12CD34EF56000F /* TripEndPrompt.swift */,
 				0FA3AA11AB12CD34EF560011 /* MapPath.swift */,
+				0FA3AA13AB12CD34EF560013 /* FullMapViewController.swift */,
 				0FFD315E1BAB7A34009B3A03 /* SettingsViewController.h */,
 				0FFD315F1BAB7A34009B3A03 /* SettingsViewController.m */,
 				0FF590312B1FA22E00E3AAA3 /* TripSettingsViewController.h */,
@@ -593,6 +596,7 @@
 				0FA3AA0EAB12CD34EF56000E /* AutoStop.swift in Sources */,
 				0FA3AA10AB12CD34EF560010 /* TripEndPrompt.swift in Sources */,
 				0FA3AA12AB12CD34EF560012 /* MapPath.swift in Sources */,
+				0FA3AA14AB12CD34EF560014 /* FullMapViewController.swift in Sources */,
 				0FAC1FEE2B25FBB50007F3B1 /* SceneDelegate.m in Sources */,
 				0FFD315D1BAB7A34009B3A03 /* TrackingViewController.m in Sources */,
 				0FFD317F1BAB7CC7009B3A03 /* LOLDatabase.m in Sources */,

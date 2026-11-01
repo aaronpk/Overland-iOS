@@ -19,6 +19,10 @@
 @property (strong, nonatomic) UIButton *sendErrorBanner;
 // Today's path and the unsent points on the map
 @property (strong, nonatomic) GLMapPathOverlays *pathOverlays;
+// Opens the map full screen. It sits below the send error banner while that's showing.
+@property (strong, nonatomic) UIButton *expandMapButton;
+@property (strong, nonatomic) NSLayoutConstraint *expandMapButtonTop;
+@property (strong, nonatomic) NSLayoutConstraint *expandMapButtonBelowBanner;
 
 @end
 
@@ -66,6 +70,7 @@ BOOL mapWasDragged = NO;
         [self.tripStartStopButton.layer setCornerRadius:4.0];
     }
     [self setUpSendErrorBanner];
+    [self setUpExpandMapButton];
     [self updateSendErrorBanner];
     [self extendMapUnderTabBar];
     if (@available(iOS 17.0, *)) {
@@ -360,10 +365,47 @@ BOOL mapWasDragged = NO;
     ]];
 }
 
+// A round button in the top right corner of the map, which opens it full screen
+- (void)setUpExpandMapButton {
+    UIButtonConfiguration *config;
+    if (@available(iOS 26.0, *)) {
+        config = [UIButtonConfiguration glassButtonConfiguration];
+    } else {
+        config = [UIButtonConfiguration filledButtonConfiguration];
+        config.baseBackgroundColor = [UIColor secondarySystemBackgroundColor];
+        config.baseForegroundColor = [UIColor labelColor];
+    }
+    config.image = [UIImage systemImageNamed:@"arrow.up.left.and.arrow.down.right"];
+    config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightMedium];
+    config.cornerStyle = UIButtonConfigurationCornerStyleCapsule;
+
+    self.expandMapButton = [UIButton buttonWithConfiguration:config primaryAction:nil];
+    self.expandMapButton.accessibilityLabel = @"Expand Map";
+    self.expandMapButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.expandMapButton addTarget:self action:@selector(expandMapWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.expandMapButton];
+
+    self.expandMapButtonTop = [self.expandMapButton.topAnchor constraintEqualToAnchor:self.mapView.topAnchor constant:12];
+    self.expandMapButtonBelowBanner = [self.expandMapButton.topAnchor constraintEqualToAnchor:self.sendErrorBanner.bottomAnchor constant:10];
+    [NSLayoutConstraint activateConstraints:@[
+        self.expandMapButtonTop,
+        [self.expandMapButton.trailingAnchor constraintEqualToAnchor:self.mapView.trailingAnchor constant:-12],
+        [self.expandMapButton.widthAnchor constraintEqualToConstant:40],
+        [self.expandMapButton.heightAnchor constraintEqualToConstant:40],
+    ]];
+}
+
+- (void)expandMapWasTapped:(id)sender {
+    GLFullMapViewController *fullMap = [[GLFullMapViewController alloc] initWithRegion:self.mapView.region];
+    [self presentViewController:fullMap animated:YES completion:nil];
+}
+
 - (void)updateSendErrorBanner {
     NSString *title = [GLManager sharedManager].lastSendErrorTitle;
     BOOL waitingForWifi = [GLWifiOnlySending shared].waitingForWifi;
     self.sendErrorBanner.hidden = (title == nil && !waitingForWifi);
+    self.expandMapButtonTop.active = self.sendErrorBanner.hidden;
+    self.expandMapButtonBelowBanner.active = !self.sendErrorBanner.hidden;
     if (title) {
         UIButtonConfiguration *config = self.sendErrorBanner.configuration;
         config.title = [NSString stringWithFormat:@"⚠️ %@. Tap for details.", title];
