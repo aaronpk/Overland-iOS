@@ -1285,6 +1285,13 @@ const double MPH_to_METERSPERSECOND = 0.447;
     [self writeTripToDB:autopause steps:numberOfSteps endDate:endDate location:location];
     _tripEndInProgress = NO;
 
+    // Trips always use standard updates, so switch back to the tracking mode, such as significant
+    // changes only. Not when updates paused, since they stay paused until the phone moves, and
+    // not when tracking was turned off because it was off before the trip.
+    if(!autopause && self.trackingEnabled) {
+        [self enableTracking];
+    }
+
     // Send after the trip record is written so it goes out with this batch
     if(![GLWifiOnlySending shared].waitingForWifi) {
         [self sendQueueNow];
