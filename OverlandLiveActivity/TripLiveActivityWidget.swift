@@ -76,8 +76,8 @@ struct TripLockScreenView: View {
     }
 }
 
-// Ends the trip, or sends the queued data now, from the Lock Screen or Dynamic Island. Buttons in
-// Live Activities need iOS 17.
+// Sends the queued data now, or opens the app to end the trip, from the Lock Screen or Dynamic
+// Island. Buttons in Live Activities need iOS 17.
 struct TripActionButtons: View {
     var body: some View {
         if #available(iOS 17.0, *) {
@@ -90,13 +90,15 @@ struct TripActionButtons: View {
                 .buttonStyle(.bordered)
                 .tint(.green)
 
-                Button(intent: EndTripIntent()) {
+                // Opens the app, which asks before ending the trip, so a stray tap can't end it
+                Link(destination: URL(string: "overland://end-trip")!) {
                     Label("End Trip", systemImage: "stop.fill")
                         .font(.subheadline.bold())
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                        .background(.red, in: Capsule())
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.red)
             }
         }
     }

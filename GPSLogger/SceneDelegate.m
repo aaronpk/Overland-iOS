@@ -56,7 +56,10 @@
     UIOpenURLContext *context = [URLContexts anyObject];
     NSURL *url = context.URL;
     
-    if([[url host] isEqualToString:@"setup"]) {
+    if([[url host] isEqualToString:@"end-trip"]) {
+        // From the Live Activity's End Trip button
+        [TripEndConfirmation presentIn:self.window];
+    } else if([[url host] isEqualToString:@"setup"]) {
         NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
         NSArray *queryItems  = urlComponents.queryItems;
         NSString *endpoint = [self queryValueForKey:@"url" fromQueryItems:queryItems];
@@ -112,6 +115,15 @@
     if(connectionOptions.shortcutItem != nil) {
         NSLog(@"App launched. connectionOptions = %@", connectionOptions);
         [self handleLaunchFromShortcutItem:connectionOptions.shortcutItem];
+    }
+
+    // A link that launches the app, such as the Live Activity's End Trip button. Wait until the
+    // window is set up before showing anything.
+    if(connectionOptions.URLContexts.count > 0) {
+        NSSet<UIOpenURLContext *> *contexts = connectionOptions.URLContexts;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self scene:scene openURLContexts:contexts];
+        });
     }
 
     // A Siri shortcut that launches the app arrives here, rather than in scene:continueUserActivity:
