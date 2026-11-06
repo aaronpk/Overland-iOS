@@ -31,8 +31,11 @@
 NSArray *intervalMap;
 NSArray *intervalMapStrings;
 MKPointAnnotation *currentLocationAnnotation;
-BOOL dragInProgress = NO;
-BOOL mapWasDragged = NO;
+BOOL gestureInProgress = NO;
+// When the user last panned, zoomed or rotated the map
+NSDate *lastMapInteraction = nil;
+// How long the map waits after that before following the current location again
+static const NSTimeInterval kMapFollowPause = 30;
 
 - (void)registerUserActivity {
     // On iOS 17 and later, the app's App Intents offer this in Siri and Shortcuts instead. Shortcuts
@@ -82,9 +85,16 @@ BOOL mapWasDragged = NO;
     // get Bundle ID and add ...
     [self registerUserActivity];
     
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
-    [panRecognizer setDelegate:self];
-    [self.mapView addGestureRecognizer:panRecognizer];
+    // Watch for the user moving the map, alongside the map's own gestures
+    NSArray<UIGestureRecognizer *> *recognizers = @[
+        [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didTouchMap:)],
+        [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(didTouchMap:)],
+        [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(didTouchMap:)],
+    ];
+    for(UIGestureRecognizer *recognizer in recognizers) {
+        recognizer.delegate = self;
+        [self.mapView addGestureRecognizer:recognizer];
+    }
     
     CLLocation *lastLocation = [GLManager sharedManager].lastLocation;
     self.mapView.showsUserLocation = NO;
@@ -278,14 +288,19 @@ BOOL mapWasDragged = NO;
     return YES;
 }
 
-- (void)didDragMap:(UIGestureRecognizer *)gestureRecognizer {
-//    [UIView setAnimationsEnabled:NO];
-    if(gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        dragInProgress = YES;
-        mapWasDragged = YES;
-    }
-    if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        dragInProgress = NO;
+- (void)didTouchMap:(UIGestureRecognizer *)gestureRecognizer {
+    lastMapInteraction = [NSDate date];
+    switch(gestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            gestureInProgress = YES;
+            break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateFailed:
+            gestureInProgress = NO;
+            break;
+        default:
+            break;
     }
 }
 
@@ -471,13 +486,13 @@ BOOL mapWasDragged = NO;
     MKMapRect smallerRect = [self.mapView mapRectThatFits:self.mapView.visibleMapRect edgePadding:insets];
     BOOL outOfBounds = !MKMapRectContainsPoint(smallerRect, point);
 
-    // Pan the map if the map is not currently being dragged and the point is near the edge
+    // Leave the map where the user put it for a while, so they can look around today's path
+    BOOL recentlyMoved = gestureInProgress
+        || (lastMapInteraction != nil && -[lastMapInteraction timeIntervalSinceNow] < kMapFollowPause);
+
+    // Pan the map if the point is near the edge, unless the user just moved it
     MKMapCamera *camera;
-    if(outOfBounds && !dragInProgress) {
-        if(outOfBounds) {
-            // Reset
-            mapWasDragged = NO;
-        }
+    if(outOfBounds && !recentlyMoved) {
         camera = [[MKMapCamera alloc] init];
         camera.centerCoordinate = location.coordinate;
         // camera.altitude = [self mapAltitude];
