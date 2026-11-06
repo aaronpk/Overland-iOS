@@ -106,6 +106,10 @@ static const NSTimeInterval kMapFollowPause = 30;
     [self.mapView addAnnotation:currentLocationAnnotation];
 
     self.pathOverlays = [[GLMapPathOverlays alloc] initWithMapView:self.mapView];
+
+    // Longer mode names, like Self-Driving, shrink a little to fit under the icon
+    self.currentModeLabel.adjustsFontSizeToFitWidth = YES;
+    self.currentModeLabel.minimumScaleFactor = 0.75;
 }
 
 // The background image has light and dark versions, but a pattern color only uses the version it

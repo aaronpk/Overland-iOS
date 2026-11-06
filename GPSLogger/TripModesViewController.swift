@@ -461,7 +461,7 @@ final class TripModeSymbolPickerViewController: UICollectionViewController {
         ("On Foot", ["walk", "run", "hike", "nordicwalk", "wheelchair", "stroller", "dog"].map { "overland." + $0 }),
         ("Wheels", ["bicycle", "ebike", "scooter", "escooter", "skate", "skateboard", "motorcycle", "moped"].map { "overland." + $0 }),
         ("Snow and Ice", ["ski", "snowboard", "snowshoe", "iceskate", "sleigh", "snowmobile"].map { "overland." + $0 }),
-        ("Road", ["car", "taxi", "bus", "van", "truck", "trailer", "tractor"].map { "overland." + $0 }),
+        ("Road", ["car", "taxi", "selfdriving", "bus", "van", "truck", "trailer", "tractor"].map { "overland." + $0 }),
         ("Rail and Cable", ["tram", "metro", "train", "monorail", "cablecar", "funicular", "gondola"].map { "overland." + $0 }),
         ("Water", ["boat", "ferry", "kayak", "rowing", "surf", "kitesurf", "swim", "scuba"].map { "overland." + $0 }),
         ("Air", ["plane", "takeoff", "landing", "helicopter", "paraglide"].map { "overland." + $0 }),

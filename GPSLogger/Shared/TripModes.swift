@@ -43,6 +43,8 @@ struct TripMode: Codable, Equatable {
         // Road
         TripMode(id: "car", name: "Car", symbol: "overland.car", closeZoom: false, synonyms: ["Drive", "Driving"]),
         TripMode(id: "taxi", name: "Taxi", symbol: "overland.taxi", closeZoom: false),
+        TripMode(id: "selfdriving", name: "Self-Driving", symbol: "overland.selfdriving", closeZoom: false,
+                 synonyms: ["Self-Driving Car", "Self Driving Car", "Driverless Car", "Autonomous Car", "Robotaxi"]),
         TripMode(id: "bus", name: "Bus", symbol: "overland.bus", closeZoom: false),
         // Rail and cable
         TripMode(id: "tram", name: "Tram", symbol: "overland.tram", closeZoom: false, synonyms: ["Streetcar", "Light Rail"]),
