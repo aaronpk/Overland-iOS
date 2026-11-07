@@ -1010,6 +1010,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
             [[NSNotificationCenter defaultCenter] postNotificationName:GLNewActivityNotification object:self];
         }];
     }
+    [[GLBarometer shared] start];
 
     NSLog(@"Location Authorization Status %@", self.authorizationStatusAsString);
     
@@ -1034,6 +1035,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self.motionActivityManager stopActivityUpdates];
         self.lastMotion = nil;
     }
+    [[GLBarometer shared] stop];
     [self cancelLocalNotification];
 }
 
@@ -1321,19 +1323,18 @@ const double MPH_to_METERSPERSECOND = 0.447;
         [self.pedometer queryPedometerDataFromDate:self.currentTripStart toDate:(endDate ?: [NSDate date]) withHandler:^(CMPedometerData *pedometerData, NSError *error) {
             // This handler runs on a background queue. Finish on the main queue, since location
             // updates write to the trip database there and FMDatabase isn't thread-safe.
-            NSInteger steps = pedometerData ? [pedometerData.numberOfSteps integerValue] : 0;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self finishEndingTrip:autopause steps:steps endDate:endDate location:location];
+                [self finishEndingTrip:autopause pedometerData:pedometerData endDate:endDate location:location];
             });
         }];
     } else {
-        [self finishEndingTrip:autopause steps:0 endDate:endDate location:location];
+        [self finishEndingTrip:autopause pedometerData:nil endDate:endDate location:location];
     }
 }
 
-- (void)finishEndingTrip:(BOOL)autopause steps:(NSInteger)numberOfSteps endDate:(NSDate *)endDate location:(CLLocation *)location {
+- (void)finishEndingTrip:(BOOL)autopause pedometerData:(CMPedometerData *)pedometerData endDate:(NSDate *)endDate location:(CLLocation *)location {
     [self endTripLiveActivity];
-    [self writeTripToDB:autopause steps:numberOfSteps endDate:endDate location:location];
+    [self writeTripToDB:autopause pedometerData:pedometerData endDate:endDate location:location];
     _tripEndInProgress = NO;
 
     // Trips always use standard updates, so switch back to the tracking mode, such as significant
@@ -1374,7 +1375,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
     return tripModes;
 }
 
-- (void)writeTripToDB:(BOOL)autopause steps:(NSInteger)numberOfSteps endDate:(NSDate *)endDate location:(CLLocation *)location {
+- (void)writeTripToDB:(BOOL)autopause pedometerData:(CMPedometerData *)pedometerData endDate:(NSDate *)endDate location:(CLLocation *)location {
+    NSInteger numberOfSteps = pedometerData ? [pedometerData.numberOfSteps integerValue] : 0;
     // Without an end date the trip ends now, at the last location. With one, the end time,
     // duration, distance and location are as of then.
     NSDate *end = endDate ?: [NSDate date];
@@ -1410,6 +1412,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
                                       };
         // The mode's icon, so servers can show it: "icon" for the app's own icons, or "sf_symbol"
         [currentTrip[@"properties"] addEntriesFromDictionary:[GLTripModeStore iconPropertiesForModeID:self.currentTripMode]];
+        // Only on phones that count floors
+        [currentTrip[@"properties"] setValue:pedometerData.floorsAscended forKey:@"floors_ascended"];
+        [currentTrip[@"properties"] setValue:pedometerData.floorsDescended forKey:@"floors_descended"];
         [self addMetadataToUpdate:currentTrip];
         if(autopause) {
             [self notify:@"Trip ended automatically" withTitle:@"Tracker"];
@@ -2327,6 +2332,8 @@ const double MPH_to_METERSPERSECOND = 0.447;
                      }]
              };
     [self addMetadataToUpdate:update];
+    // Barometric pressure and altitude, when there's a reading from around the time of this point
+    [update[@"properties"] addEntriesFromDictionary:[[GLBarometer shared] propertiesForDate:loc.timestamp]];
     return update;
 }
 
@@ -2339,6 +2346,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
         @"acc": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
         @"batt": [NSNumber numberWithInt:[[self currentBatteryLevel] doubleValue] * 100],
     }];
+    [update setValue:[[GLBarometer shared] pressureForDate:loc.timestamp] forKey:@"p"];
     if(_deviceId && _deviceId.length > 0) {
         NSString *topic = [NSString stringWithFormat:@"owntracks/%@", _deviceId];
         [update setValue:topic forKey:@"topic"];
