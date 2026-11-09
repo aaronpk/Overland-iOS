@@ -484,7 +484,7 @@ IAogA
                         <outlet property="tripDurationUnitLabel" destination="Imb-OC-pQY" id="taa-vd-MH0"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
                         <outlet property="tripView" destination="FAz-8W-iDJ" id="wVF-Kt-ZEk"/>
-                        <segue destination="zgY-Zn-asN" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
+                        <segue destination="TmN-av-C01" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -505,6 +505,22 @@ IAogA
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="749.60000000000002" y="-320.68965517241384"/>
+        </scene>
+        <!--Trip Mode Navigation Controller-->
+        <scene sceneID="TmN-av-S01">
+            <objects>
+                <navigationController id="TmN-av-C01" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="TmN-av-B01">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="zgY-Zn-asN" kind="relationship" relationship="rootViewController" id="TmN-av-R01"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TmN-av-F01" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1130" y="-320"/>
         </scene>
         <!--Trip Mode View Controller-->
         <scene sceneID="lKK-yr-4p2">

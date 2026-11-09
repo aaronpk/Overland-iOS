@@ -61,27 +61,16 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
 
     self.modes = GLTripModeStore.allModeIDs;
 
-    UILabel *title = [[UILabel alloc] init];
-    title.text = @"TRIP MODE";
-    title.font = [UIFont systemFontOfSize:14];
-    title.textAlignment = NSTextAlignmentCenter;
-    title.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:title];
-
-    UIButton *editButton = [UIButton systemButtonWithPrimaryAction:[UIAction actionWithTitle:@"Edit" image:nil identifier:nil handler:^(UIAction *action) {
+    // On iOS 26 the Done item is a prominent checkmark
+    self.title = @"Trip Mode";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithPrimaryAction:[UIAction actionWithTitle:@"Edit" image:nil identifier:nil handler:^(UIAction *action) {
         TripModesViewController *vc = [[TripModesViewController alloc] initWithStyle:UITableViewStyleInsetGrouped];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nav animated:YES completion:nil];
     }]];
-    editButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:editButton];
-
-    UIButton *doneButton = [UIButton systemButtonWithPrimaryAction:[UIAction actionWithTitle:@"Done" image:nil identifier:nil handler:^(UIAction *action) {
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone primaryAction:[UIAction actionWithHandler:^(UIAction *action) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }]];
-    doneButton.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    doneButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:doneButton];
 
     // Editing the modes saves them right away
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -111,13 +100,7 @@ static NSString *const TripModeCellIdentifier = @"TripModeCell";
     self.collectionView = collectionView;
 
     [NSLayoutConstraint activateConstraints:@[
-        [title.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:20],
-        [title.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [editButton.centerYAnchor constraintEqualToAnchor:title.centerYAnchor],
-        [editButton.trailingAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor],
-        [doneButton.centerYAnchor constraintEqualToAnchor:title.centerYAnchor],
-        [doneButton.leadingAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.leadingAnchor],
-        [collectionView.topAnchor constraintEqualToAnchor:title.bottomAnchor constant:8],
+        [collectionView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
         [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
         [collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],

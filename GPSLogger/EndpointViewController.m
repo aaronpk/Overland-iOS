@@ -32,7 +32,7 @@
 
     // On iOS 26 the Done item is a prominent checkmark
     self.title = @"Server URL";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(saveButtonWasTapped:)];
 
