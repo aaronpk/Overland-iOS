@@ -219,6 +219,11 @@ static const NSTimeInterval kMapFollowPause = 30;
                                                  name:GLWifiOnlySending.changedNotification
                                                object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateSendErrorBanner)
+                                                 name:GLReducedResourceSending.changedNotification
+                                               object:nil];
+
     // Switching between a server and iCloud Drive changes whether sending waits for Wi-Fi
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateSendErrorBanner)
@@ -432,7 +437,8 @@ static const NSTimeInterval kMapFollowPause = 30;
 - (void)updateSendErrorBanner {
     NSString *title = [GLManager sharedManager].lastSendErrorTitle;
     BOOL waitingForWifi = [GLWifiOnlySending shared].waitingForWifi;
-    self.sendErrorBanner.hidden = (title == nil && !waitingForWifi);
+    BOOL slowingSends = [GLReducedResourceSending shared].slowingSends;
+    self.sendErrorBanner.hidden = (title == nil && !waitingForWifi && !slowingSends);
     self.expandMapButtonTop.active = self.sendErrorBanner.hidden;
     self.expandMapButtonBelowBanner.active = !self.sendErrorBanner.hidden;
     if (title) {
@@ -447,15 +453,24 @@ static const NSTimeInterval kMapFollowPause = 30;
         config.baseBackgroundColor = [UIColor systemGrayColor];
         self.sendErrorBanner.configuration = config;
         [self.view bringSubviewToFront:self.sendErrorBanner];
+    } else if (slowingSends) {
+        UIButtonConfiguration *config = self.sendErrorBanner.configuration;
+        config.title = @"Sending every 5 minutes to save resources";
+        config.baseBackgroundColor = [UIColor systemGrayColor];
+        self.sendErrorBanner.configuration = config;
+        [self.view bringSubviewToFront:self.sendErrorBanner];
     }
 }
 
 - (void)sendErrorBannerWasTapped:(UIButton *)sender {
     NSString *title = [GLManager sharedManager].lastSendErrorTitle;
     NSString *message = [GLManager sharedManager].lastSendErrorMessage;
-    if (title == nil) {
+    if (title == nil && [GLWifiOnlySending shared].waitingForWifi) {
         title = @"Waiting for Wi-Fi";
         message = @"\"Send only on Wi-Fi\" is on in Settings, so points stay in the queue until the phone is on Wi-Fi. Tap Send Now to send them anyway.";
+    } else if (title == nil) {
+        title = @"Sending Less Often";
+        message = @"iOS has asked apps to cut back on their resource use, so Overland is sending every 5 minutes instead of at the Send Interval. Points are still recorded as usual. Tap Send Now to send them right away.";
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
@@ -607,6 +622,8 @@ static const NSTimeInterval kMapFollowPause = 30;
     if([GLManager sharedManager].sendingInterval != val) {
         [self updateSendIntervalLabel];
         [GLManager sharedManager].sendingInterval = val;
+        // A longer interval can end the "sending every 5 minutes" banner
+        [self updateSendErrorBanner];
     }
 }
 
