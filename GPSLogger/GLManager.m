@@ -1072,7 +1072,9 @@ const double MPH_to_METERSPERSECOND = 0.447;
         return;
     }
     
-    BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:[self.sendingInterval doubleValue]] compare:NSDate.date] == NSOrderedAscending;
+    // On iOS 27, sends are spaced out while the system asks apps to reduce their resource usage
+    NSTimeInterval interval = MAX([self.sendingInterval doubleValue], [GLReducedResourceSending shared].minimumSendInterval);
+    BOOL timeElapsed = [(NSDate *)[self.lastSentDate dateByAddingTimeInterval:interval] compare:NSDate.date] == NSOrderedAscending;
 
     // Send if time has elapsed,
     // or if we're in the middle of flushing
