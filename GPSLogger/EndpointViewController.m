@@ -12,7 +12,7 @@
 
 @interface EndpointViewController ()
 
-// Edits from the custom headers screen are held here until the Save button is tapped
+// Edits from the custom headers screen are held here until the save button is tapped
 @property (strong, nonatomic) NSArray *pendingCustomHeaders;
 
 // Choosing between a server and iCloud Drive
@@ -29,6 +29,12 @@
     [super viewDidLoad];
     self.pendingCustomHeaders = [[GLManager sharedManager] customHeaders];
     self.serverInfoText = self.infoTextView.text;
+
+    // On iOS 26 the Done item is a prominent checkmark
+    self.title = @"Server URL";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(saveButtonWasTapped:)];
 
     // Add the destination choice above the server fields, styled like the other field labels
     self.destinationControl = [[UISegmentedControl alloc] initWithItems:@[@"Server", @"iCloud Drive"]];
@@ -115,7 +121,7 @@
     }
 }
 
-- (IBAction)saveButtonWasTapped:(UIButton *)sender {
+- (void)saveButtonWasTapped:(id)sender {
     if ([self iCloudDriveSelected]) {
         // The server settings are kept, so switching back to the server restores them
         [[GLManager sharedManager] saveNewDeviceId:self.deviceIdField.text];

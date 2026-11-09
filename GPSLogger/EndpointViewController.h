@@ -19,7 +19,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *accessTokenLabel;
 @property (strong, nonatomic) IBOutlet UITextView *infoTextView;
 
-- (IBAction)saveButtonWasTapped:(UIButton *)sender;
 - (IBAction)customHeadersButtonTapped:(UIButton *)sender;
 
 @end

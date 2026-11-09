@@ -1241,11 +1241,27 @@ IAogA
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="98m-w9-m6q">
                     <connections>
-                        <segue destination="oz3-vM-59N" kind="presentation" id="wsV-gs-ASp"/>
+                        <segue destination="EpN-av-C01" kind="presentation" id="wsV-gs-ASp"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="750" y="360"/>
+        </scene>
+        <!--Endpoint Navigation Controller-->
+        <scene sceneID="EpN-av-S01">
+            <objects>
+                <navigationController id="EpN-av-C01" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EpN-av-B01">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="oz3-vM-59N" kind="relationship" relationship="rootViewController" id="EpN-av-R01"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EpN-av-F01" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1130" y="360"/>
         </scene>
         <!--Endpoint View Controller-->
         <scene sceneID="nmW-Vq-hML">
@@ -1306,13 +1322,6 @@ IAogA
                                             <action selector="customHeadersButtonTapped:" destination="oz3-vM-59N" eventType="touchUpInside" id="chb-Ac-T1n"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhm-5d-E1l">
-                                        <rect key="frame" x="0.0" y="211" width="335" height="30"/>
-                                        <state key="normal" title="Save"/>
-                                        <connections>
-                                            <action selector="saveButtonWasTapped:" destination="oz3-vM-59N" eventType="touchUpInside" id="cGG-Ai-1Y3"/>
-                                        </connections>
-                                    </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H9G-cG-Gsg">
                                         <rect key="frame" x="0.0" y="211" width="335" height="416"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1329,9 +1338,6 @@ For details on the format of the data this app sends to the server, please visit
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="H9G-cG-Gsg" firstAttribute="top" secondItem="dhm-5d-E1l" secondAttribute="bottom" constant="4" id="w6k-pj-Szd"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
