@@ -5,7 +5,8 @@
 //  The trip actions for Shortcuts, Siri, widgets, controls and the Live Activity. This file is
 //  compiled into the app and the widget extension, so the extension's buttons can refer to the
 //  intents. On iOS 17+ they're LiveActivityIntents, which the system always runs in the app's
-//  process, so the code that calls GLManager is only compiled into the app (OVERLAND_APP).
+//  process, so the code that calls GLManager is only compiled into the app (OVERLAND_APP). On
+//  iOS 27 they also say so directly, with allowedExecutionTargets.
 //
 
 import AppIntents
@@ -48,6 +49,25 @@ struct TripModeQuery: EntityStringQuery {
                     || mode.name.lowercased().contains(query)
             }
             .map { TripModeEntity(id: $0.id) }
+    }
+}
+
+// Failures shown as errors in Shortcuts and Siri, so a shortcut stops instead of carrying on
+@available(iOS 17.0, *)
+enum OverlandIntentError: Error, CustomLocalizedStringResourceConvertible {
+    case noDestination
+    case boatNeedsIOS27
+    case locationNotAlways
+
+    var localizedStringResource: LocalizedStringResource {
+        switch self {
+        case .noDestination:
+            return "Overland doesn't have anywhere to send data yet. Set a server URL or choose iCloud Drive in Overland's settings."
+        case .boatNeedsIOS27:
+            return "The Boat activity type needs iOS 27 or later."
+        case .locationNotAlways:
+            return "Tracking is on, but Overland's location access isn't set to Always, so it can't track in the background. Change it in the Settings app."
+        }
     }
 }
 
@@ -129,7 +149,7 @@ struct SendNowIntent: AppIntent {
         #if OVERLAND_APP
         let manager: GLManager = GLManager.shared()
         if !manager.hasDestination() {
-            return .result(dialog: "Overland doesn't have anywhere to send data yet. Set a server URL or choose iCloud Drive in Overland's settings.")
+            throw OverlandIntentError.noDestination
         }
         manager.sendQueueNow()
         return .result(dialog: "Sending Overland's data now.")
@@ -170,6 +190,23 @@ extension StartTripIntent: LiveActivityIntent {}
 extension EndTripIntent: LiveActivityIntent {}
 @available(iOS 17.0, *)
 extension SendNowIntent: LiveActivityIntent {}
+
+@available(iOS 27.0, *)
+extension StartTripIntent {
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
+}
+@available(iOS 27.0, *)
+extension EndTripIntent {
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
+}
+@available(iOS 27.0, *)
+extension SendNowIntent {
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
+}
+@available(iOS 27.0, *)
+extension ToggleTripIntent {
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
+}
 
 #if OVERLAND_APP
 enum TripIntentText {

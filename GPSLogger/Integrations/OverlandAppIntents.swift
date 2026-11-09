@@ -37,6 +37,11 @@ struct SetTrackingIntent: AppIntent {
             manager.stopAllUpdates()
         }
         SharedStateObserver.shared.stateChanged()
+        // Tracking stays on, since it still works while the app is open
+        let status = manager.locationManager.authorizationStatus
+        if enabled && status != .authorizedAlways && status != .notDetermined {
+            throw OverlandIntentError.locationNotAlways
+        }
         return .result(dialog: enabled ? "Overland is tracking your location." : "Overland stopped tracking your location.")
     }
 }
@@ -110,7 +115,7 @@ struct SetTripActivityTypeIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         guard let type = activityType.activityType else {
-            return .result(dialog: "The Boat activity type needs iOS 27 or later.")
+            throw OverlandIntentError.boatNeedsIOS27
         }
         GLManager.shared().activityTypeDuringTrip = type
         return .result(dialog: "Trips will use the \(String(localized: TripActivityTypeAppEnum.caseDisplayRepresentations[activityType]!.title)) activity type, starting with the next trip.")
