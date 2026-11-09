@@ -17,8 +17,10 @@ struct TripLiveActivityWidget: Widget {
                     HStack(spacing: 6) {
                         TripModeIcon(mode: context.state.mode)
                             .frame(width: 24, height: 24)
-                        Text(TripFormat.modeName(context.state.mode))
-                            .font(.headline)
+                        IfIslandIsWide {
+                            Text(TripFormat.modeName(context.state.mode))
+                                .font(.headline)
+                        }
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
@@ -30,7 +32,9 @@ struct TripLiveActivityWidget: Widget {
                             ElapsedTime(start: context.attributes.tripStart)
                                 .font(.title2.bold())
                             Spacer()
-                            TripStat(value: TripFormat.distance(context.state.distance), unit: TripFormat.distanceUnit)
+                            IfIslandIsWide {
+                                TripStat(value: TripFormat.distance(context.state.distance), unit: TripFormat.distanceUnit)
+                            }
                         }
                         TripActionButtons()
                     }
@@ -45,6 +49,32 @@ struct TripLiveActivityWidget: Widget {
                 TripModeIcon(mode: context.state.mode)
                     .frame(width: 20, height: 20)
             }
+        }
+    }
+}
+
+// Leaves its content out when the Dynamic Island is narrower than usual (iOS 27), so the mode
+// name and distance don't crowd out the time and speed
+struct IfIslandIsWide<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        if #available(iOS 27.0, *) {
+            NarrowIslandAware(content: content)
+        } else {
+            content
+        }
+    }
+}
+
+@available(iOS 27.0, *)
+private struct NarrowIslandAware<Content: View>: View {
+    @Environment(\.isDynamicIslandLimitedInWidth) private var limitedInWidth
+    let content: Content
+
+    var body: some View {
+        if !limitedInWidth {
+            content
         }
     }
 }
