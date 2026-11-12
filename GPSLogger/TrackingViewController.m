@@ -23,6 +23,12 @@
 @property (strong, nonatomic) UIButton *expandMapButton;
 @property (strong, nonatomic) NSLayoutConstraint *expandMapButtonTop;
 @property (strong, nonatomic) NSLayoutConstraint *expandMapButtonBelowBanner;
+// On a wide screen, like an unfolded iPhone Duo, the map fills the left half and the stats and
+// controls move to the right half. The storyboard's constraints stack them for a phone.
+@property (strong, nonatomic) IBOutlet UIView *statsView;
+@property (strong, nonatomic) IBOutlet UIStackView *controlsStack;
+@property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *phoneLayoutConstraints;
+@property (strong, nonatomic) GLSplitLayout *splitLayout;
 
 @end
 
@@ -76,6 +82,7 @@ static const NSTimeInterval kMapFollowPause = 30;
     [self setUpExpandMapButton];
     [self updateSendErrorBanner];
     [self extendMapUnderTabBar];
+    [self setUpWideLayout];
     if (@available(iOS 17.0, *)) {
         [self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withAction:@selector(redrawAllViews)];
     }
@@ -167,6 +174,29 @@ static const NSTimeInterval kMapFollowPause = 30;
         // The storyboard gives the tab bar a solid background, which would hide the map behind it
         self.tabBarController.tabBar.backgroundColor = nil;
     }
+}
+
+// The stats band's background still runs to the edge of the screen, but its text and the controls
+// stay out of the area on the right that the status bar and the tab bar use when unfolded
+- (void)setUpWideLayout {
+    UIView *contentView = self.mapView.superview;
+    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
+    NSArray *wideConstraints = @[
+        [self.statsView.leadingAnchor constraintEqualToAnchor:contentView.centerXAnchor],
+        [self.locationSpeedUnitLabel.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor constant:-8],
+        [self.controlsStack.leadingAnchor constraintEqualToAnchor:contentView.centerXAnchor constant:20],
+        [self.controlsStack.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor constant:-20],
+        [self.mapView.topAnchor constraintEqualToAnchor:contentView.topAnchor],
+        [self.mapView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor],
+        [self.mapView.trailingAnchor constraintEqualToAnchor:contentView.centerXAnchor],
+    ];
+    self.splitLayout = [[GLSplitLayout alloc] initWithPhoneConstraints:self.phoneLayoutConstraints wideConstraints:wideConstraints];
+}
+
+// Switches between the phone and wide layouts, such as when an iPhone Duo is folded or unfolded
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self.splitLayout updateForSize:self.view.bounds.size];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

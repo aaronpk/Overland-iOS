@@ -484,6 +484,17 @@ IAogA
                         <outlet property="tripDurationUnitLabel" destination="Imb-OC-pQY" id="taa-vd-MH0"/>
                         <outlet property="tripStartStopButton" destination="ttD-4z-q87" id="cGb-Nt-iVn"/>
                         <outlet property="tripView" destination="FAz-8W-iDJ" id="wVF-Kt-ZEk"/>
+                        <outlet property="statsView" destination="05S-Qj-3zI" id="SpL-tA-01"/>
+                        <outlet property="controlsStack" destination="9iG-7h-Ohb" id="SpL-tA-02"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="59R-uI-g8j" collectionClass="NSMutableArray" id="SpL-tA-03"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="19h-Or-M6C" collectionClass="NSMutableArray" id="SpL-tA-04"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="ijR-CK-Vh6" collectionClass="NSMutableArray" id="SpL-tA-05"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="inb-1o-OEk" collectionClass="NSMutableArray" id="SpL-tA-06"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="vhv-fb-YRH" collectionClass="NSMutableArray" id="SpL-tA-07"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="uVP-oR-OHh" collectionClass="NSMutableArray" id="SpL-tA-08"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="bfb-j9-HkD" collectionClass="NSMutableArray" id="SpL-tA-09"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="1ft-De-oSF" collectionClass="NSMutableArray" id="SpL-tA-10"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="29N-Ez-zct" collectionClass="NSMutableArray" id="SpL-tA-11"/>
                         <segue destination="TmN-av-C01" kind="presentation" identifier="tripMode" id="QS9-v7-TJR"/>
                     </connections>
                 </viewController>
