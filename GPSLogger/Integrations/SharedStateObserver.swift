@@ -35,6 +35,14 @@ import WidgetKit
         }
 
         refresh()
+
+        // Widgets keep showing what they last drew until something reloads them, so after an
+        // update they'd show the old version's layout until the next trip or tracking change.
+        // The app starts only a few times a day, so this costs little of the reload budget.
+        WidgetCenter.shared.reloadAllTimelines()
+        if #available(iOS 18.0, *) {
+            ControlCenter.shared.reloadAllControls()
+        }
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?,
