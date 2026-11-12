@@ -19,7 +19,6 @@ struct SharedTripState: Codable, Equatable {
     var tripMode = TripModeStore.defaultModeID
     // Meters, as of updatedAt
     var tripDistance: Double = 0
-    var queueCount = 0
     var lastSentDate: Date?
     // The title of the last send error, or nil if the last send succeeded
     var lastSendError: String?

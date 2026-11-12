@@ -3,7 +3,7 @@
 //  OverlandLiveActivity
 //
 //  A Home Screen and Lock Screen widget showing whether Overland is tracking, the trip in
-//  progress, and how much data is waiting to be sent. It reads the state the app shares in the
+//  progress, and when data was last sent. It reads the state the app shares in the
 //  App Group. The app reloads it when the state changes.
 //
 
@@ -20,7 +20,6 @@ struct StatusProvider: TimelineProvider {
     func placeholder(in context: Context) -> StatusEntry {
         var state = SharedTripState()
         state.trackingEnabled = true
-        state.queueCount = 12
         state.lastSentDate = Date().addingTimeInterval(-300)
         return StatusEntry(date: Date(), state: state)
     }
@@ -44,7 +43,7 @@ struct StatusWidget: Widget {
                 .widgetBackground()
         }
         .configurationDisplayName("Overland")
-        .description("Shows whether Overland is tracking, the trip in progress, and the data waiting to be sent.")
+        .description("Shows whether Overland is tracking, the trip in progress, and when data was last sent.")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryCircular, .accessoryInline])
     }
 }
@@ -79,7 +78,7 @@ struct StatusWidgetView: View {
         }
     }
 
-    // The trip, or whether tracking is on, then the queue and when data was last sent
+    // The trip, or whether tracking is on, then when data was last sent
     private var status: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
@@ -106,19 +105,16 @@ struct StatusWidgetView: View {
                 TripStat(value: TripFormat.distance(state.tripDistance), unit: TripFormat.distanceUnit)
             }
             Spacer(minLength: 0)
-            // The small widget doesn't have room for these alongside a trip and its button
+            // The small widget doesn't have room for this alongside a trip and its button
             if !(family == .systemSmall && state.tripInProgress) {
-                queueStatus
+                sendStatus
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder
-    private var queueStatus: some View {
-        Text("\(state.queueCount) queued")
-            .font(.caption)
-            .foregroundStyle(.secondary)
+    private var sendStatus: some View {
         if let error = state.lastSendError {
             Label(error, systemImage: "exclamationmark.triangle.fill")
                 .font(.caption2)
@@ -143,7 +139,6 @@ struct StatusWidgetView: View {
                 Label(state.trackingEnabled ? "Tracking" : "Not Tracking",
                       systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
                     .font(.headline)
-                Text("\(state.queueCount) queued")
                 if state.lastSendError != nil {
                     Text("Couldn't send")
                 } else if let lastSent = state.lastSentDate {
@@ -167,9 +162,6 @@ struct StatusWidgetView: View {
                         .minimumScaleFactor(0.6)
                 } else {
                     Image(systemName: state.trackingEnabled ? "location.fill" : "location.slash")
-                    Text("\(state.queueCount)")
-                        .font(.caption.bold())
-                        .minimumScaleFactor(0.6)
                 }
             }
             .padding(4)
@@ -185,7 +177,7 @@ struct StatusWidgetView: View {
                 Image(tripMode: state.tripMode)
             }
         } else {
-            Label("\(state.trackingEnabled ? "Tracking" : "Not tracking") · \(state.queueCount) queued",
+            Label(state.trackingEnabled ? "Tracking" : "Not tracking",
                   systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
         }
     }
