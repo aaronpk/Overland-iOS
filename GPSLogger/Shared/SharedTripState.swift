@@ -17,9 +17,26 @@ struct SharedTripState: Codable, Equatable {
     // Set while a trip is in progress
     var tripStart: Date?
     var tripMode = TripModeStore.defaultModeID
+    // The mode that was selected before tripMode, for the widget's second Start button
+    var previousTripMode: String?
     var updatedAt = Date()
 
     var tripInProgress: Bool { tripStart != nil }
+
+    // The mode for the second Start button: the previous mode, or the first other mode until
+    // there is one, such as right after installing, or if it was deleted
+    var otherTripMode: String? {
+        if let previous = previousTripMode, previous != tripMode, TripModeStore.contains(previous) {
+            return previous
+        }
+        return TripModeStore.modes.first { $0.id != tripMode }?.id
+    }
+
+    // When the mode changed since the old state, the old mode becomes the previous one
+    mutating func keepPreviousTripMode(from old: SharedTripState) {
+        let previous = old.tripMode != tripMode ? old.tripMode : old.previousTripMode
+        previousTripMode = previous != tripMode ? previous : nil
+    }
 
     private static var defaults: UserDefaults? { UserDefaults(suiteName: appGroup) }
 

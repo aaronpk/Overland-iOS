@@ -68,9 +68,11 @@ import WidgetKit
     // Ending a trip finishes in the background, so GLManager may still report the trip until then.
     func tripChanged(inProgress: Bool) {
         let manager: GLManager = GLManager.shared()
-        var state = SharedTripState.read()
+        let old = SharedTripState.read()
+        var state = old
         state.tripStart = inProgress ? (manager.currentTripStart() ?? Date()) : nil
         state.tripMode = manager.currentTripMode ?? state.tripMode
+        state.keepPreviousTripMode(from: old)
         state.trackingEnabled = manager.trackingEnabled
         state.updatedAt = Date()
         save(state)
@@ -82,6 +84,7 @@ import WidgetKit
         var state = SharedTripState()
         state.trackingEnabled = manager.trackingEnabled
         state.tripMode = manager.currentTripMode ?? state.tripMode
+        state.keepPreviousTripMode(from: SharedTripState.read())
         if manager.tripInProgress() {
             state.tripStart = manager.currentTripStart()
         }

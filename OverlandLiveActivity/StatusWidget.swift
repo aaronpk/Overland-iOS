@@ -147,7 +147,8 @@ struct StatusWidgetView: View {
     }
 }
 
-// Starts a trip in the last trip mode, or ends the trip in progress. Buttons in widgets need iOS 17.
+// Ends the trip in progress, or starts one in the app's selected trip mode or the mode used before
+// it. Buttons in widgets need iOS 17.
 struct TripButton: View {
     let state: SharedTripState
 
@@ -163,23 +164,40 @@ struct TripButton: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
             } else {
-                // Shows the mode's icon, so it's clear what kind of trip this starts
-                Button(intent: StartTripIntent(mode: TripModeEntity(id: state.tripMode))) {
-                    Label {
-                        Text("Start")
-                    } icon: {
-                        Image(tripMode: state.tripMode)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 22, height: 22)
+                VStack(spacing: 6) {
+                    StartTripButton(mode: state.tripMode)
+                        .buttonStyle(.borderedProminent)
+                    if let other = state.otherTripMode {
+                        StartTripButton(mode: other)
+                            .buttonStyle(.bordered)
                     }
-                    .font(.caption.bold())
-                    .frame(maxWidth: .infinity)
-                    .widgetAccentable()
                 }
-                .buttonStyle(.borderedProminent)
                 .tint(.green)
             }
+        }
+    }
+}
+
+// Shows the mode's icon and name, so it's clear what kind of trip each button starts
+@available(iOS 17.0, *)
+struct StartTripButton: View {
+    let mode: String
+
+    var body: some View {
+        Button(intent: StartTripIntent(mode: TripModeEntity(id: mode))) {
+            Label {
+                Text(TripFormat.modeName(mode))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            } icon: {
+                Image(tripMode: mode)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+            }
+            .font(.caption.bold())
+            .frame(maxWidth: .infinity)
+            .widgetAccentable()
         }
     }
 }
