@@ -61,8 +61,11 @@ import Foundation
         altitudeReadings = []
     }
 
-    // The properties to add to a location record at this time, or none without a recent reading
-    @objc(propertiesForDate:) func properties(for date: Date) -> [String: NSNumber] {
+    // The properties to add to a location record at this time, or none without a recent reading.
+    // The date is optional because GLManager builds records from a nil location before the first
+    // fix, such as right after the phone restarts, and a nil NSDate can't become a Date.
+    @objc(propertiesForDate:) func properties(for date: Date?) -> [String: NSNumber] {
+        guard let date else { return [:] }
         var properties: [String: NSNumber] = [:]
         for reading in [Self.nearest(to: date, in: pressureReadings), Self.nearest(to: date, in: altitudeReadings)] {
             properties.merge(reading?.values ?? [:]) { current, _ in current }
@@ -71,8 +74,9 @@ import Foundation
     }
 
     // In kPa, for the OwnTracks format's "p"
-    @objc(pressureForDate:) func pressure(for date: Date) -> NSNumber? {
-        Self.nearest(to: date, in: pressureReadings)?.values["pressure"]
+    @objc(pressureForDate:) func pressure(for date: Date?) -> NSNumber? {
+        guard let date else { return nil }
+        return Self.nearest(to: date, in: pressureReadings)?.values["pressure"]
     }
 
     private static func adding(_ reading: Reading, to readings: [Reading]) -> [Reading] {
