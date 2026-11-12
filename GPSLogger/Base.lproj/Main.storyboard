@@ -1233,6 +1233,11 @@ IAogA
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="settings" id="cPa-gy-q4n"/>
                     <connections>
+                        <outlet property="settingsStack" destination="iRd-Km-HqH" id="SpL-sT-01"/>
+                        <outlet property="scrollView" destination="Pz2-ZM-9gF" id="SpL-sT-02"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="1kH-Uo-cGl" collectionClass="NSMutableArray" id="SpL-sT-03"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="u33-WL-fSM" collectionClass="NSMutableArray" id="SpL-sT-04"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="Ly7-IB-UkY" collectionClass="NSMutableArray" id="SpL-sT-05"/>
                         <outlet property="activityType" destination="NGq-b5-JzA" id="p6I-5c-8xw"/>
                         <outlet property="apiEndpointField" destination="seG-TQ-mcO" id="oC9-tY-7iT"/>
                         <outlet property="continuousTrackingMode" destination="Akh-qL-9sA" id="fzx-Or-Dnd"/>
@@ -2067,6 +2072,11 @@ For details on the format of the data this app sends to the server, please visit
                     </view>
                     <tabBarItem key="tabBarItem" title="Trip Settings" image="figure.walk.circle.fill" catalog="system" id="RmS-Nw-lb6"/>
                     <connections>
+                        <outlet property="settingsStack" destination="0nc-KH-1Lc" id="SpL-tS-01"/>
+                        <outlet property="scrollView" destination="umb-ZR-xzH" id="SpL-tS-02"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="H0J-xK-aEU" collectionClass="NSMutableArray" id="SpL-tS-03"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="1YU-iW-Ug3" collectionClass="NSMutableArray" id="SpL-tS-04"/>
+                        <outletCollection property="phoneLayoutConstraints" destination="9H2-IB-vz2" collectionClass="NSMutableArray" id="SpL-tS-05"/>
                         <outlet property="activityType" destination="sLW-Hg-Quz" id="k61-wN-29t"/>
                         <outlet property="desiredAccuracy" destination="tFA-1v-pRu" id="4r0-Fk-aCN"/>
                         <outlet property="discardPointsWithinDistance" destination="FY5-oA-2n1" id="e95-6J-Qqj"/>

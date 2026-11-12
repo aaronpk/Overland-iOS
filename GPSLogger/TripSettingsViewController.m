@@ -16,6 +16,11 @@
 
 @property (strong, nonatomic) UISwitch *saveToHealth;
 @property (strong, nonatomic) UILabel *saveToHealthInfo;
+// On a wide screen, like an unfolded iPhone Duo, the settings move to the right half
+@property (strong, nonatomic) IBOutlet UIStackView *settingsStack;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *phoneLayoutConstraints;
+@property (strong, nonatomic) GLSplitLayout *splitLayout;
 
 @end
 
@@ -34,6 +39,14 @@
     if(HealthTripRecorder.isAvailable) {
         [self addHealthSetting];
     }
+
+    NSArray *wideConstraints = [GLSplitLayout rightHalfConstraintsWithStack:self.settingsStack scrollView:self.scrollView safeArea:self.view.safeAreaLayoutGuide];
+    self.splitLayout = [[GLSplitLayout alloc] initWithPhoneConstraints:self.phoneLayoutConstraints wideConstraints:wideConstraints];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self.splitLayout updateForSize:self.view.bounds.size];
 }
 
 // The Trip Modes row goes before the Live Activity row, in the storyboard's stack of settings

@@ -17,6 +17,12 @@
 
 @interface SettingsViewController ()
 
+// On a wide screen, like an unfolded iPhone Duo, the settings move to the right half
+@property (strong, nonatomic) IBOutlet UIStackView *settingsStack;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *phoneLayoutConstraints;
+@property (strong, nonatomic) GLSplitLayout *splitLayout;
+
 @end
 
 @implementation SettingsViewController
@@ -29,6 +35,14 @@
     if (@available(iOS 27.0, *)) {
         [self.activityType insertSegmentWithTitle:@"Boat" atIndex:self.activityType.numberOfSegments animated:NO];
     }
+
+    NSArray *wideConstraints = [GLSplitLayout rightHalfConstraintsWithStack:self.settingsStack scrollView:self.scrollView safeArea:self.view.safeAreaLayoutGuide];
+    self.splitLayout = [[GLSplitLayout alloc] initWithPhoneConstraints:self.phoneLayoutConstraints wideConstraints:wideConstraints];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self.splitLayout updateForSize:self.view.bounds.size];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
