@@ -13,25 +13,19 @@ import WidgetKit
 @objc final class SharedStateObserver: NSObject {
     @objc static let shared = SharedStateObserver()
 
-    // The settings GLManager saves when tracking turns on or off, a trip starts or ends, the trip
-    // mode changes, or data is sent
+    // The settings GLManager saves when tracking turns on or off, a trip starts or ends, or the
+    // trip mode changes
     private let watchedDefaults = [GLTrackingStateDefaultsName, GLTripStartTimeDefaultsName,
-                                   GLTripModeDefaultsName, GLLastSentDateDefaultsName]
-    // Widget reloads from the background count against a daily budget, so a change to only when
-    // data was last sent reloads widgets this often. Trip and tracking changes reload right away.
-    private let minorReloadInterval: TimeInterval = 15 * 60
+                                   GLTripModeDefaultsName]
 
     private var started = false
     private var refreshScheduled = false
-    private var lastMinorReload = Date.distantPast
 
     @objc func start() {
         guard !started else { return }
         started = true
 
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(stateChanged),
-                           name: Notification.Name(GLSendingFinishedNotification), object: nil)
         center.addObserver(self, selector: #selector(stateChanged),
                            name: Notification.Name(GLSettingsChangedNotification), object: nil)
         center.addObserver(self, selector: #selector(stateChanged),
@@ -83,8 +77,6 @@ import WidgetKit
         if manager.tripInProgress() {
             state.tripStart = manager.currentTripStart()
         }
-        state.lastSentDate = manager.lastSentDate
-        state.lastSendError = manager.lastSendErrorTitle
 
         // The Home Screen quick actions show Stop Trip during a trip, so they change with it too
         GLTripActions.updateQuickActions()
@@ -96,23 +88,12 @@ import WidgetKit
         let old = SharedTripState.read()
         state.write()
 
-        let tripOrTrackingChanged = old.trackingEnabled != state.trackingEnabled
+        if old.trackingEnabled != state.trackingEnabled
             || old.tripStart != state.tripStart
-            || old.tripMode != state.tripMode
-            || old.lastSendError != state.lastSendError
-        let lastSentChanged = old.lastSentDate != state.lastSentDate
-
-        if tripOrTrackingChanged {
+            || old.tripMode != state.tripMode {
             WidgetCenter.shared.reloadAllTimelines()
             if #available(iOS 18.0, *) {
                 ControlCenter.shared.reloadAllControls()
-            }
-        } else if lastSentChanged {
-            // Reloads while the app is open don't count against the budget
-            let appIsActive = UIApplication.shared.applicationState == .active
-            if appIsActive || Date().timeIntervalSince(lastMinorReload) >= minorReloadInterval {
-                lastMinorReload = Date()
-                WidgetCenter.shared.reloadAllTimelines()
             }
         }
     }

@@ -17,9 +17,6 @@ struct SharedTripState: Codable, Equatable {
     // Set while a trip is in progress
     var tripStart: Date?
     var tripMode = TripModeStore.defaultModeID
-    var lastSentDate: Date?
-    // The title of the last send error, or nil if the last send succeeded
-    var lastSendError: String?
     var updatedAt = Date()
 
     var tripInProgress: Bool { tripStart != nil }

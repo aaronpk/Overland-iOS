@@ -2,11 +2,11 @@
 //  StatusWidget.swift
 //  OverlandLiveActivity
 //
-//  A Home Screen and Lock Screen widget showing whether Overland is tracking, the trip in
-//  progress, and when data was last sent. It reads the state the app shares in the
-//  App Group. The app reloads it when the state changes. It only shows what's either fixed until
-//  the next change or counts up on its own, like the trip timer, since the app can only reload it
-//  every so often from the background, and a number that lags behind the timer looks broken.
+//  A Home Screen and Lock Screen widget showing whether Overland is tracking, or the trip in
+//  progress. It reads the state the app shares in the App Group, and the app reloads it when the
+//  state changes. It only shows what stays the same until the app reloads it, or counts up on its
+//  own like the trip timer. The app can only reload it every so often from the background, so
+//  anything else, like the distance or the last send, looks stuck next to the timer.
 //
 
 import AppIntents
@@ -22,7 +22,6 @@ struct StatusProvider: TimelineProvider {
     func placeholder(in context: Context) -> StatusEntry {
         var state = SharedTripState()
         state.trackingEnabled = true
-        state.lastSentDate = Date().addingTimeInterval(-300)
         return StatusEntry(date: Date(), state: state)
     }
 
@@ -31,8 +30,8 @@ struct StatusProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<StatusEntry>) -> Void) {
-        // The timer and "sent ago" text update on their own. The app reloads the widget when
-        // anything else changes, and this picks up anything that was missed.
+        // The timer updates on its own. The app reloads the widget when anything else changes,
+        // and this picks up anything that was missed.
         let entry = StatusEntry(date: Date(), state: SharedTripState.read())
         completion(Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(30 * 60))))
     }
@@ -45,7 +44,7 @@ struct StatusWidget: Widget {
                 .widgetBackground()
         }
         .configurationDisplayName("Overland")
-        .description("Shows whether Overland is tracking, the trip in progress, and when data was last sent.")
+        .description("Shows whether Overland is tracking, or the trip in progress.")
         .supportedFamilies([.systemSmall, .accessoryRectangular, .accessoryCircular, .accessoryInline])
     }
 }
@@ -70,7 +69,7 @@ struct StatusWidgetView: View {
         }
     }
 
-    // The trip, or whether tracking is on, then when data was last sent
+    // The trip and its timer, or whether tracking is on
     private var status: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
@@ -95,26 +94,8 @@ struct StatusWidgetView: View {
                     .font(.title2.bold())
             }
             Spacer(minLength: 0)
-            // There isn't room for this alongside a trip and its button
-            if !state.tripInProgress {
-                sendStatus
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    @ViewBuilder
-    private var sendStatus: some View {
-        if let error = state.lastSendError {
-            Label(error, systemImage: "exclamationmark.triangle.fill")
-                .font(.caption2)
-                .foregroundStyle(.red)
-                .lineLimit(2)
-        } else if let lastSent = state.lastSentDate {
-            LastSentText(date: lastSent)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
     }
 
     private var rectangular: some View {
@@ -127,11 +108,6 @@ struct StatusWidgetView: View {
                 Label(state.trackingEnabled ? "Tracking" : "Not Tracking",
                       systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
                     .font(.headline)
-                if state.lastSendError != nil {
-                    Text("Couldn't send")
-                } else if let lastSent = state.lastSentDate {
-                    LastSentText(date: lastSent)
-                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -168,18 +144,6 @@ struct StatusWidgetView: View {
             Label(state.trackingEnabled ? "Tracking" : "Not tracking",
                   systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
         }
-    }
-}
-
-// How long ago data was last sent, as an up arrow and a time that counts up on its own, such as
-// "12 min, 54 sec". The counting text always includes seconds, so it's kept short to fit.
-struct LastSentText: View {
-    let date: Date
-
-    var body: some View {
-        (Text(Image(systemName: "arrow.up")) + Text(" ") + Text(date, style: .relative))
-            .lineLimit(1)
-            .minimumScaleFactor(0.8)
     }
 }
 
