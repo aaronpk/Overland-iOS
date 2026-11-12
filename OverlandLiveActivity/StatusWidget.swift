@@ -4,7 +4,9 @@
 //
 //  A Home Screen and Lock Screen widget showing whether Overland is tracking, the trip in
 //  progress, and when data was last sent. It reads the state the app shares in the
-//  App Group. The app reloads it when the state changes.
+//  App Group. The app reloads it when the state changes. It only shows what's either fixed until
+//  the next change or counts up on its own, like the trip timer, since the app can only reload it
+//  every so often from the background, and a number that lags behind the timer looks broken.
 //
 
 import AppIntents
@@ -44,7 +46,7 @@ struct StatusWidget: Widget {
         }
         .configurationDisplayName("Overland")
         .description("Shows whether Overland is tracking, the trip in progress, and when data was last sent.")
-        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryCircular, .accessoryInline])
+        .supportedFamilies([.systemSmall, .accessoryRectangular, .accessoryCircular, .accessoryInline])
     }
 }
 
@@ -60,16 +62,6 @@ struct StatusWidgetView: View {
             circular
         case .accessoryRectangular:
             rectangular
-        case .systemMedium:
-            HStack(alignment: .top, spacing: 16) {
-                status
-                VStack(spacing: 8) {
-                    Spacer(minLength: 0)
-                    TripButton(state: state)
-                    SendNowButton()
-                }
-                .frame(maxWidth: 130)
-            }
         default:
             VStack(alignment: .leading, spacing: 10) {
                 status
@@ -99,14 +91,12 @@ struct StatusWidgetView: View {
             // On a tinted Home Screen, the header and buttons take the tint color
             .widgetAccentable()
             if let start = state.tripStart {
-                ElapsedTime(start: start)
+                ElapsedTime(start: start, alignment: .leading)
                     .font(.title2.bold())
-                    .multilineTextAlignment(.leading)
-                TripStat(value: TripFormat.distance(state.tripDistance), unit: TripFormat.distanceUnit)
             }
             Spacer(minLength: 0)
-            // The small widget doesn't have room for this alongside a trip and its button
-            if !(family == .systemSmall && state.tripInProgress) {
+            // There isn't room for this alongside a trip and its button
+            if !state.tripInProgress {
                 sendStatus
             }
         }
@@ -132,9 +122,7 @@ struct StatusWidgetView: View {
             if let start = state.tripStart {
                 Label { Text(TripFormat.modeName(state.tripMode)) } icon: { Image(tripMode: state.tripMode) }
                     .font(.headline)
-                ElapsedTime(start: start)
-                    .multilineTextAlignment(.leading)
-                Text("\(TripFormat.distance(state.tripDistance)) \(TripFormat.distanceUnit)")
+                ElapsedTime(start: start, alignment: .leading)
             } else {
                 Label(state.trackingEnabled ? "Tracking" : "Not Tracking",
                       systemImage: state.trackingEnabled ? "location.fill" : "location.slash")
@@ -232,20 +220,6 @@ struct TripButton: View {
     }
 }
 
-struct SendNowButton: View {
-    var body: some View {
-        if #available(iOS 17.0, *) {
-            Button(intent: SendNowIntent()) {
-                Label("Send Now", systemImage: "arrow.up")
-                    .font(.caption.bold())
-                    .frame(maxWidth: .infinity)
-                    .widgetAccentable()
-            }
-            .buttonStyle(.bordered)
-        }
-    }
-}
-
 extension View {
     func widgetBackground() -> some View {
         modifier(WidgetBackground())
@@ -260,7 +234,7 @@ struct WidgetBackground: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 17.0, *) {
             content.containerBackground(.fill.tertiary, for: .widget)
-        } else if family == .systemSmall || family == .systemMedium {
+        } else if family == .systemSmall {
             content.padding().background(Color(.systemBackground))
         } else {
             content

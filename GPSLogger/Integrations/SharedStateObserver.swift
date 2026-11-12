@@ -17,18 +17,12 @@ import WidgetKit
     // mode changes, or data is sent
     private let watchedDefaults = [GLTrackingStateDefaultsName, GLTripStartTimeDefaultsName,
                                    GLTripModeDefaultsName, GLLastSentDateDefaultsName]
-    // New points change the trip distance, but arrive often, so they only
-    // refresh the snapshot this often
-    private let newDataRefreshInterval: TimeInterval = 60
-    // Widget reloads from the background count against a daily budget, so changes to only the
-    // distance and dates reload widgets this often. Trip and tracking changes reload right away.
-    // During a trip the distance changes quickly, so it's worth more of the budget.
+    // Widget reloads from the background count against a daily budget, so a change to only when
+    // data was last sent reloads widgets this often. Trip and tracking changes reload right away.
     private let minorReloadInterval: TimeInterval = 15 * 60
-    private let tripMinorReloadInterval: TimeInterval = 5 * 60
 
     private var started = false
     private var refreshScheduled = false
-    private var lastRefresh = Date.distantPast
     private var lastMinorReload = Date.distantPast
 
     @objc func start() {
@@ -42,8 +36,6 @@ import WidgetKit
                            name: Notification.Name(GLSettingsChangedNotification), object: nil)
         center.addObserver(self, selector: #selector(stateChanged),
                            name: UIApplication.didEnterBackgroundNotification, object: nil)
-        center.addObserver(self, selector: #selector(newData),
-                           name: Notification.Name(GLNewDataNotification), object: nil)
         for key in watchedDefaults {
             UserDefaults.standard.addObserver(self, forKeyPath: key, options: [], context: nil)
         }
@@ -54,12 +46,6 @@ import WidgetKit
     override func observeValue(forKeyPath keyPath: String?, of object: Any?,
                                change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         stateChanged()
-    }
-
-    @objc private func newData() {
-        if Date().timeIntervalSince(lastRefresh) >= newDataRefreshInterval {
-            stateChanged()
-        }
     }
 
     // Changes often arrive together, such as a trip ending and the send that follows it, so wait
@@ -84,9 +70,6 @@ import WidgetKit
         state.tripStart = inProgress ? (manager.currentTripStart() ?? Date()) : nil
         state.tripMode = manager.currentTripMode ?? state.tripMode
         state.trackingEnabled = manager.trackingEnabled
-        if !inProgress {
-            state.tripDistance = 0
-        }
         state.updatedAt = Date()
         save(state)
         stateChanged()
@@ -99,7 +82,6 @@ import WidgetKit
         state.tripMode = manager.currentTripMode ?? state.tripMode
         if manager.tripInProgress() {
             state.tripStart = manager.currentTripStart()
-            state.tripDistance = max(0, manager.currentTripDistance())
         }
         state.lastSentDate = manager.lastSentDate
         state.lastSendError = manager.lastSendErrorTitle
@@ -113,25 +95,22 @@ import WidgetKit
     private func save(_ state: SharedTripState) {
         let old = SharedTripState.read()
         state.write()
-        lastRefresh = Date()
 
         let tripOrTrackingChanged = old.trackingEnabled != state.trackingEnabled
             || old.tripStart != state.tripStart
             || old.tripMode != state.tripMode
             || old.lastSendError != state.lastSendError
-        let countsChanged = old.lastSentDate != state.lastSentDate
-            || old.tripDistance != state.tripDistance
+        let lastSentChanged = old.lastSentDate != state.lastSentDate
 
         if tripOrTrackingChanged {
             WidgetCenter.shared.reloadAllTimelines()
             if #available(iOS 18.0, *) {
                 ControlCenter.shared.reloadAllControls()
             }
-        } else if countsChanged {
+        } else if lastSentChanged {
             // Reloads while the app is open don't count against the budget
             let appIsActive = UIApplication.shared.applicationState == .active
-            let interval = state.tripInProgress ? tripMinorReloadInterval : minorReloadInterval
-            if appIsActive || Date().timeIntervalSince(lastMinorReload) >= interval {
+            if appIsActive || Date().timeIntervalSince(lastMinorReload) >= minorReloadInterval {
                 lastMinorReload = Date()
                 WidgetCenter.shared.reloadAllTimelines()
             }

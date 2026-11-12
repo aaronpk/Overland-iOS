@@ -31,13 +31,15 @@ struct TripModeIcon: View {
 }
 
 // Counts up from the trip start without needing updates from the app
+// A timer text takes all the width it's offered, so its alignment decides where the time sits
 struct ElapsedTime: View {
     let start: Date
+    var alignment: TextAlignment = .trailing
 
     var body: some View {
         Text(timerInterval: start...Date.distantFuture, countsDown: false)
             .monospacedDigit()
-            .multilineTextAlignment(.trailing)
+            .multilineTextAlignment(alignment)
     }
 }
 
