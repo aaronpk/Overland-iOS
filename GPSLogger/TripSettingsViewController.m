@@ -16,7 +16,7 @@
 
 @property (strong, nonatomic) UISwitch *saveToHealth;
 @property (strong, nonatomic) UILabel *saveToHealthInfo;
-// On a wide screen, like an unfolded iPhone Duo, the settings move to the right half
+// On a wide screen, like an unfolded iPhone Duo, the settings are centered at a readable width
 @property (strong, nonatomic) IBOutlet UIStackView *settingsStack;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *phoneLayoutConstraints;
@@ -40,7 +40,7 @@
         [self addHealthSetting];
     }
 
-    NSArray *wideConstraints = [GLSplitLayout rightHalfConstraintsWithStack:self.settingsStack scrollView:self.scrollView safeArea:self.view.safeAreaLayoutGuide];
+    NSArray *wideConstraints = [GLSplitLayout centeredConstraintsWithStack:self.settingsStack scrollView:self.scrollView];
     self.splitLayout = [[GLSplitLayout alloc] initWithPhoneConstraints:self.phoneLayoutConstraints wideConstraints:wideConstraints];
 }
 

@@ -42,12 +42,12 @@ import UIKit
         }
     }
 
-    // For a settings screen: a stack in a scroll view, moved into the right half and kept out of the
-    // area on the right that the status bar and the tab bar use when unfolded
-    @objc static func rightHalfConstraints(stack: UIView, scrollView: UIScrollView, safeArea: UILayoutGuide) -> [NSLayoutConstraint] {
+    // For a settings screen: a stack in a scroll view, centered at a readable width instead of
+    // stretching across the whole screen
+    @objc static func centeredConstraints(stack: UIView, scrollView: UIScrollView) -> [NSLayoutConstraint] {
         return [
-            stack.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.centerXAnchor, constant: 20),
-            stack.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            stack.widthAnchor.constraint(equalToConstant: 560),
+            stack.centerXAnchor.constraint(equalTo: scrollView.frameLayoutGuide.centerXAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
         ]
     }
