@@ -1358,7 +1358,7 @@ IAogA
                                         <rect key="frame" x="0.0" y="211" width="335" height="416"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="SNz-9b-NAI"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" priority="700" id="SNz-9b-NAI"/>
                                         </constraints>
                                         <string key="text">This app can send its location data to a server of your choosing. Enter a URL above and the app will send its data there. It is recommended to include an access token, which will be sent in the Authorization HTTP header to the endpoint. 
 
